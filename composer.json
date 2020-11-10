@@ -1,0 +1,14 @@
+{
+    "name": "bssb/app",
+    "description": "Website and API powering the Beat Saber Server Browser mod (https://bssb.app)",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Roy de Jong",
+            "email": "roy@softwarepunt.nl"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
