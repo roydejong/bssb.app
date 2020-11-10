@@ -1,0 +1,15 @@
+{
+  "ServerCode": "XXXXX",
+  "GameName": "XXXXX",
+  "OwnerId": "XXXXX",
+  "OwnerName": "XXXXX",
+  "PlayerCount": 1,
+  "PlayerLimit": 5,
+  "IsModded": true,
+  "LobbyState": 3,
+  "LevelId": "custom_level_CC1F0E38897056C29A89BFB427FE5E3F6F9B08C1",
+  "SongName": "Getting Higher and Higher",
+  "SongAuthor": "40meterP",
+  "Difficulty": 4,
+  "Platform": "oculus"
+}
