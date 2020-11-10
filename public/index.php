@@ -1,9 +1,14 @@
 <?php
 
 use app\HTTP\IncomingRequest;
+use app\HTTP\RequestRouter;
 
 require_once "../bootstrap.php";
 
-$request = IncomingRequest::deduce();
+$router = new RequestRouter();
 
-var_dump($request);
+$router->register("/", function () {
+    die("hi");
+});
+
+$router->dispatch(IncomingRequest::deduce());
