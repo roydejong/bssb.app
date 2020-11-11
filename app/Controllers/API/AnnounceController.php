@@ -2,12 +2,14 @@
 
 namespace app\Controllers\API;
 
+use app\BeatSaber\MultiplayerLobbyState;
 use app\HTTP\Request;
 use app\HTTP\Response;
 use app\HTTP\Responses\BadRequestResponse;
 use app\HTTP\Responses\InternalServerErrorResponse;
 use app\HTTP\Responses\JsonResponse;
 use app\Models\HostedGame;
+use app\Models\LevelRecord;
 
 class AnnounceController
 {
@@ -34,14 +36,14 @@ class AnnounceController
         $game->ownerName = $input['OwnerName'] ?? "";
         $game->playerCount = intval($input['PlayerCount'] ?? 0);
         $game->playerLimit = intval($input['PlayerLimit'] ?? 0);
-        $game->lobbyState = intval($input['LobbyState']);
+        $game->lobbyState = intval($input['LobbyState'] ?? MultiplayerLobbyState::None);
         $game->levelId = $input['LevelId'] ?? null;
         $game->songName = $input['SongName'] ?? null;
         $game->songAuthor = $input['SongAuthor'] ?? null;
-        $game->difficulty = intval($input['Difficulty']);
+        $game->difficulty = isset($input['Difficulty']) ? intval($input['Difficulty']) : null;
         $game->platform = isset($input['Platform']) ? strtolower($input['Platform']) : "";
         $game->masterServerHost = $input['MasterServerHost'] ?? null;
-        $game->masterServerPort = $input['MasterServerPort'] ?? null;
+        $game->masterServerPort = isset($input['MasterServerPort']) ? intval($input['MasterServerPort']) : null;
 
         // -------------------------------------------------------------------------------------------------------------
         // Replace existing game record
@@ -55,6 +57,13 @@ class AnnounceController
 
         if ($gameByOwner && $gameByOwner->id !== $game->id) {
             $game->id = $gameByOwner->id; // replace existing game by taking over its id
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        // Level data sync
+
+        if ($game->levelId && $game->songName) {
+            LevelRecord::syncFromAnnounce($game->levelId, $game->songName, $game->songAuthor);
         }
 
         // -------------------------------------------------------------------------------------------------------------

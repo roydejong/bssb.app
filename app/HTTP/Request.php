@@ -15,7 +15,7 @@ class Request
     /**
      * Request method (e.g. "GET", "POST").
      */
-    public string $method = "";
+    public string $method = "GET";
 
     /**
      * Request hostname.

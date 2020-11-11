@@ -20,7 +20,7 @@
         <table class="table table-bordered table-striped table-hover">
             <thead class="thead-dark">
                 <tr>
-                    <th>Game</th>
+                    <th colspan="2">Game</th>
                     <th>Level</th>
                     <th>Players</th>
                     <th>Type</th>
@@ -29,10 +29,25 @@
             <tbody>
                 {% for game in games %}
                     <tr>
-                        <td>{{ game.gameName }}</td>
-                        <td>{{ game.describeSong() }}</td>
-                        <td>{{ game.playerCount }}/{{ game.playerLimit }}</td>
-                        <td>
+                        <td class="cover-art-cell">
+                            {% if game.coverUrl %}
+                                <img src="{{ game.coverUrl }}" alt="{{ game.describeSong() }}" height="25" class="cover-art"/>
+                            {% else %}
+                                <span class="huh">?</span>
+                            {% endif %}
+                        </td>
+                        <td class="align-middle">
+                            <strong>{{ game.gameName }}</strong>
+                        </td>
+                        <td class="align-middle">
+                            {% if game.levelName %}
+                                {{ game.levelName }}
+                            {% else %}
+                                {{ game.describeSong() }}
+                            {% endif %}
+                        </td>
+                        <td class="align-middle">{{ game.playerCount }}/{{ game.playerLimit }}</td>
+                        <td class="align-middle">
                             {% if game.platform == "steam" %}
                                 <i class="mdi mdi-steam"></i> Steam
                             {% elseif game.platform == "oculus" %}

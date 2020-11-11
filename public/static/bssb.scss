@@ -11,3 +11,50 @@ table small {
   font-size: 13px;
   opacity: .75;
 }
+
+.navbar.bg-dark {
+  background-color: #343A40 !important;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  margin-top: -2px;
+
+  span:first-child {
+    color: #e5a300;
+  }
+  span:last-child {
+    color: #cf0389;
+  }
+}
+
+td.cover-art-cell {
+  padding: 0;
+  position: relative;
+  user-select: none;
+
+  &, > img, > span {
+    background-color: #ddd;
+    height: 48px;
+    width: 48px;
+  }
+  > img, > span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    width: auto;
+  }
+  > span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #666;
+    font-weight: 600;
+    font-size: 16px;
+    opacity: .5;
+  }
+}

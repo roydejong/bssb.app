@@ -5,6 +5,7 @@ namespace app\Controllers;
 use app\Frontend\View;
 use app\HTTP\Request;
 use app\Models\HostedGame;
+use app\Models\Joins\HostedGameLevelRecord;
 
 class HomeController
 {
@@ -13,8 +14,11 @@ class HomeController
         /**
          * @var $games HostedGame[]
          */
-        $games = HostedGame::query()
-            ->orderBy('id DESC')
+        $games = HostedGameLevelRecord::query()
+            ->select("hosted_games.*, lr.beatsaver_id, lr.cover_url, lr.name AS level_name")
+            ->from("hosted_games")
+            ->leftJoin("level_records lr ON (lr.level_id = hosted_games.level_id)")
+            ->orderBy("hosted_games.id DESC")
             ->queryAllModels();
 
         $view = new View('home.twig');
