@@ -1,7 +1,7 @@
 # bssb.app
 🌐 **Website and API application powering the Beat Saber Server Browser mod (https://bssb.app)**
 
-![Build and Deploy](https://github.com/roydejong/bssb.app/workflows/Build%20and%20Deploy/badge.svg)
+[![Build and Deploy](https://github.com/roydejong/bssb.app/workflows/Build%20and%20Deploy/badge.svg)](https://github.com/roydejong/bssb.app/actions?query=workflow%3A%22Build+and+Deploy%22)
 
 ## Overview
 
