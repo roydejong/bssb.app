@@ -73,4 +73,31 @@ class IncomingRequestTest extends TestCase
         $this->assertInstanceOf("app\BeatSaber\ModClientInfo", $result);
         $this->assertSame("ServerBrowser", $result->modName);
     }
+
+    public function testGetIsValidModClientRequest()
+    {
+        $request1 = new IncomingRequest();
+        $request1->method = "GET";
+        $request1->path = "/";
+
+        $this->assertFalse($request1->getIsValidModClientRequest(),
+            "request1 should be invalid: missing X-BSSB and valid User-Agent");
+
+        $request2 = new IncomingRequest();
+        $request2->method = "GET";
+        $request2->path = "/";
+        $request2->headers["user-agent"] = "ServerBrowser/0.1.1.0 (BeatSaber/1.12.2)";
+
+        $this->assertFalse($request2->getIsValidModClientRequest(),
+            "request2 should be invalid: missing X-BSSB");
+
+        $request3 = new IncomingRequest();
+        $request3->method = "GET";
+        $request3->path = "/";
+        $request3->headers["user-agent"] = "ServerBrowser/0.1.1.0 (BeatSaber/1.12.2)";
+        $request3->headers["x-bssb"] = "✔";
+
+        $this->assertTrue($request3->getIsValidModClientRequest(),
+            "request3 should be valid: have valid user agent and X-BSSB");
+    }
 }

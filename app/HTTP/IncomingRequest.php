@@ -9,31 +9,33 @@ use app\BeatSaber\ModClientInfo;
  */
 class IncomingRequest
 {
+    // -----------------------------------------------------------------------------------------------------------------
+    // Data
+
     /**
      * Request method (e.g. "GET", "POST").
      */
-    public string $method;
+    public string $method = "";
+
     /**
      * Request hostname.
      */
-    public string $host;
+    public string $host = "";
+
     /**
      * Request path, without query string.
      */
-    public string $path;
+    public string $path = "";
+
     /**
-     * Query parameters.
+     * Query parameters as associative array, all in original casing.
      */
-    public array $queryParams;
+    public array $queryParams = [];
+
     /**
      * Raw request headers as associative array, all keys lowercase.
      */
-    public array $headers;
-
-    private function __construct()
-    {
-        // Private constructor is here to cock block you, use ::deduce()
-    }
+    public array $headers = [];
 
     // -----------------------------------------------------------------------------------------------------------------
     // JSON
@@ -78,6 +80,21 @@ class IncomingRequest
     public function getModClientInfo(): ModClientInfo
     {
         return ModClientInfo::fromUserAgent($this->headers["user-agent"] ?? "");
+    }
+
+    public function getIsValidModClientRequest(): bool
+    {
+        if (empty($this->headers["x-bssb"])) {
+            return false;
+        }
+
+        $mci = $this->getModClientInfo();
+
+        if ($mci->modName !== "ServerBrowser" || empty($mci->assemblyVersion) || empty($mci->beatSaberVersion)) {
+            return false;
+        }
+
+        return true;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
