@@ -20,4 +20,6 @@ $router->register("/api/v1/unannounce", [new UnAnnounceController(), 'unAnnounce
 $router->register("/api/v1/browse", [new BrowseController(), 'browse']);
 
 // Run!
-$router->dispatch(IncomingRequest::deduce());
+$request = IncomingRequest::deduce();
+$response = $router->dispatch($request);
+$response->send();

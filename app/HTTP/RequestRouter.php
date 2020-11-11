@@ -2,6 +2,8 @@
 
 namespace app\HTTP;
 
+use app\HTTP\Responses\NotFoundResponse;
+
 class RequestRouter
 {
     /**
@@ -103,17 +105,26 @@ class RequestRouter
         return $routesStep["_"] ?? null;
     }
 
-    public function dispatch(IncomingRequest $request)
+    public function dispatch(IncomingRequest $request): Response
     {
+        // Route
         $_variables = [$request];
         $callable = $this->route($request->path, $_variables);
 
-        if ($callable) {
-            return call_user_func_array($callable, $_variables);
-        } else {
-            // 404 Not Found
-            http_response_code(404);
-            return null;
+        if (!$callable) {
+            // No route found, 404
+            return new NotFoundResponse();
         }
+
+        // Execute
+        $result = call_user_func_array($callable, $_variables);
+
+        if ($result instanceof Response) {
+            // The target function returned a response of its own
+            return $result;
+        }
+
+        // The target function returned something that wasn't a response, so we'll present it as one
+        return new Response(200, $result ? strval($result) : null);
     }
 }
