@@ -1,5 +1,9 @@
+# PhpStorm
+/.idea
 
-########################################################################################################################
-## Composer
+# Composer
+/vendor
 
-/vendor/
+# PHPUnit
+/.phpunit.cache
+.phpunit.result.cache
