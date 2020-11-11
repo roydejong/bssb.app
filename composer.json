@@ -14,13 +14,14 @@
     "php": ">=7.4",
     "ext-json": "*"
   },
+  "require-dev": {
+    "ext-xdebug": "*",
+    "phpunit/phpunit": "^9"
+  },
   "autoload": {
     "psr-4": {
       "app\\": "app/",
       "tests\\": "tests/"
     }
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^9"
   }
 }

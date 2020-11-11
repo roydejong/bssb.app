@@ -41,7 +41,7 @@ class Response
      */
     public function send(): void
     {
-        http_response_code(404);
+        http_response_code($this->code);
 
         foreach ($this->headers as $key => $value) {
             header("{$key}: {$value}");
