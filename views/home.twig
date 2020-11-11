@@ -10,48 +10,37 @@
     <link href="static/bssb.css" rel="stylesheet">
 </head>
 <body>
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    {% include "navbar.twig" %}
+    <main role="main" class="container">
+        <div class="starter-template">
+            <h1>Beat Saber Server Browser</h1>
+            <p class="lead">It's a mod. You could <a href="https://github.com/roydejong/BeatSaberServerBrowser/releases/latest">download it</a>, if you wanted to.</p>
+        </div>
+        <div class="alert alert-warning">This is the new site / API and it's still under development so why are you here?</div>
+        <table class="table table-bordered table-striped table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Game</th>
+                    <th>Level</th>
+                    <th>Players</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Roy's game</td>
+                    <td>Some song</td>
+                    <td>4/4</td>
+                    <td><i class="mdi mdi-steam"></i> Steam</td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
 
-    <a class="navbar-brand" href="#">BSSB</a>
+    <link href="/static/vendor/materialdesignicons.min.css" rel="stylesheet">
 
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="https://github.com/roydejong/BeatSaberServerBrowser" target="_blank">GitHub</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="https://github.com/roydejong/BeatSaberServerBrowser/releases/latest" target="_blank">Download</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Discord</a>
-                <div class="dropdown-menu" aria-labelledby="dropdown01">
-                    <a class="dropdown-item" href="https://discord.com/invite/gezGrFG4tz" target="_blank">BeatTogether</a>
-                    <a class="dropdown-item" href="https://discord.gg/beatsabermods" target="_blank">Beat Saber Modding Group</a>
-                </div>
-            </li>
-        </ul>
-    </div>
-
-</nav>
-
-<main role="main" class="container">
-
-    <div class="starter-template">
-        <h1>Beat Saber Server Browser</h1>
-        <p class="lead">It's a mod. You could <a href="https://github.com/roydejong/BeatSaberServerBrowser/releases/latest">download it</a>, if you wanted to.</p>
-    </div>
-
-</main>
-
-<script src="/static/vendor/jquery-3.5.1.slim.min.js"></script>
-<script src="/static/vendor/bootstrap.bundle.min.js"></script>
+    <script src="/static/vendor/jquery-3.5.1.slim.min.js"></script>
+    <script src="/static/vendor/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
