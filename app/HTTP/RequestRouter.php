@@ -105,7 +105,7 @@ class RequestRouter
 
     public function dispatch(IncomingRequest $request)
     {
-        $_variables = [];
+        $_variables = [$request];
         $callable = $this->route($request->path, $_variables);
 
         if ($callable) {
