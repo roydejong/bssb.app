@@ -1,3 +1,9 @@
+# Secrets
+config.php
+
+# Cache
+storage/cache
+
 # PhpStorm
 /.idea
 

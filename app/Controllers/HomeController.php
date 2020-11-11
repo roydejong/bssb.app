@@ -2,12 +2,14 @@
 
 namespace app\Controllers;
 
+use app\Frontend\View;
 use app\HTTP\IncomingRequest;
 
 class HomeController
 {
     public function index(IncomingRequest $request)
     {
-        die("hi {$request->method} {$request->path}");
+        $view = new View('home.twig');
+        return $view->asResponse();
     }
 }

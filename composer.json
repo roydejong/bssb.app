@@ -12,7 +12,8 @@
   "minimum-stability": "stable",
   "require": {
     "php": ">=7.4",
-    "ext-json": "*"
+    "ext-json": "*",
+    "twig/twig": "^3.0"
   },
   "require-dev": {
     "ext-xdebug": "*",
