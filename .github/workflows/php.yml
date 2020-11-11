@@ -42,4 +42,4 @@ jobs:
       run: |
         git remote add production www-data@bssb.app:bssb-deploy.git
         ssh-keyscan -H bssb.app >> ~/.ssh/known_hosts
-        git push production main
+        git push -f production main
