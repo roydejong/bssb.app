@@ -32,3 +32,13 @@ jobs:
     
     - name: PHPUnit
       run: vendor/bin/phpunit
+
+    - name: Deployment SSH configuration
+      uses: webfactory/ssh-agent@v0.4.1
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Deploy to production
+      run: |
+        git remote add production www-data@bssb.app:bssb-deploy.git
+        git push production main
