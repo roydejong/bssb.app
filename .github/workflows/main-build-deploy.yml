@@ -34,4 +34,4 @@ jobs:
       run: vendor/bin/phpunit
       
     - name: Deploy to production
-      run: curl -X POST http://ops.bssb.app/deploy.php?key=${{ secrets.DEPLOY_KEY }}&hash=${{ github.sha }}
+      run: wget --content-on-error -qO- "http://ops.bssb.app/deploy.php?hash=${{ github.sha }}&key=${{ secrets.DEPLOY_KEY }}"
