@@ -25,4 +25,31 @@ class HostedGame extends Model
     public string $platform = ModPlatformId::UNKNOWN;
     public ?string $masterServerHost;
     public ?int $masterServerPort;
+
+    public function getIsOfficial(): bool
+    {
+        return $this->masterServerHost === null
+            || strpos($this->masterServerHost, ".mp.beatsaber.com") !== false;
+    }
+
+    public function describeMasterServer(): string
+    {
+        if ($this->getIsOfficial()) {
+            return "Official";
+        } else if ($this->masterServerHost) {
+            return $this->masterServerHost;
+        } else {
+            return "Unknown";
+        }
+    }
+
+    public function describeSong(): string
+    {
+        $parts = [];
+        if ($this->songAuthor)
+            $parts[] = $this->songAuthor;
+        if ($this->songName)
+            $parts[] = $this->songName;
+        return implode(' - ', $parts);
+    }
 }
