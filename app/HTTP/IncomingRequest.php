@@ -47,11 +47,19 @@ class IncomingRequest
     {
         if ($this->method === "POST") {
             // This request method may have a body
+
             if (strpos($this->headers["content-type"] ?? "", "application/json") === 0) {
                 // Request headers indicate this is a JSON request
                 return true;
             }
+
+            // Special case: old clients (0.1.1.0, 0.1.0.0) don't specify the right header, so we'll be nice
+            $mci = $this->getModClientInfo();
+            if ($mci->assemblyVersion === "0.1.1.0" || $mci->assemblyVersion === "0.1.0.0") {
+                return true;
+            }
         }
+
         return false;
     }
 
@@ -77,9 +85,15 @@ class IncomingRequest
     // -----------------------------------------------------------------------------------------------------------------
     // Mod client info
 
+    private ?ModClientInfo $mci = null;
+
     public function getModClientInfo(): ModClientInfo
     {
-        return ModClientInfo::fromUserAgent($this->headers["user-agent"] ?? "");
+        if (!$this->mci) {
+            $this->mci = ModClientInfo::fromUserAgent($this->headers["user-agent"] ?? "");
+        }
+
+        return $this->mci;
     }
 
     public function getIsValidModClientRequest(): bool

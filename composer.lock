@@ -4,8 +4,53 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "88a10ac7d5b08b629034fdb4f4f6303c",
+    "content-hash": "38d0f4862604fd6e1232af11aa135cc9",
     "packages": [
+        {
+            "name": "instasell/instarecord",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SoftwarePunt/instarecord.git",
+                "reference": "277da2c2aac62f0cf7b551665e05ab9d2915a006"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SoftwarePunt/instarecord/zipball/277da2c2aac62f0cf7b551665e05ab9d2915a006",
+                "reference": "277da2c2aac62f0cf7b551665e05ab9d2915a006",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pdo": "*",
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Instasell\\Instarecord\\": "lib/",
+                    "Instasell\\Instarecord\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "Proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Roy de Jong",
+                    "email": "roy@softwarepunt.nl"
+                }
+            ],
+            "description": "ActiveRecord Database ORM layer for MySQL",
+            "support": {
+                "source": "https://github.com/SoftwarePunt/instarecord/tree/master",
+                "issues": "https://github.com/SoftwarePunt/instarecord/issues"
+            },
+            "time": "2020-10-05T00:32:34+00:00"
+        },
         {
             "name": "symfony/polyfill-ctype",
             "version": "v1.20.0",
@@ -2253,7 +2298,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "instasell/instarecord": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

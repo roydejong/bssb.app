@@ -13,7 +13,8 @@
   "require": {
     "php": ">=7.4",
     "ext-json": "*",
-    "twig/twig": "^3.0"
+    "twig/twig": "^3.0",
+    "instasell/instarecord": "dev-master@dev"
   },
   "require-dev": {
     "ext-xdebug": "*",
@@ -24,5 +25,11 @@
       "app\\": "app/",
       "tests\\": "tests/"
     }
-  }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@github.com:SoftwarePunt/instarecord.git"
+    }
+  ]
 }
