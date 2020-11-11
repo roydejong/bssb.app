@@ -4,7 +4,7 @@ use app\Controllers\API\AnnounceController;
 use app\Controllers\API\BrowseController;
 use app\Controllers\API\UnAnnounceController;
 use app\Controllers\HomeController;
-use app\HTTP\IncomingRequest;
+use app\HTTP\Request;
 use app\HTTP\RequestRouter;
 
 require_once "../bootstrap.php";
@@ -20,6 +20,6 @@ $router->register("/api/v1/unannounce", [new UnAnnounceController(), 'unAnnounce
 $router->register("/api/v1/browse", [new BrowseController(), 'browse']);
 
 // Run!
-$request = IncomingRequest::deduce();
+$request = Request::deduce();
 $response = $router->dispatch($request);
 $response->send();

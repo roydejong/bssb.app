@@ -2,10 +2,10 @@
 
 namespace tests\HTTP;
 
-use app\HTTP\IncomingRequest;
+use app\HTTP\Request;
 use PHPUnit\Framework\TestCase;
 
-class IncomingRequestTest extends TestCase
+class RequestTest extends TestCase
 {
     public function testDeduce()
     {
@@ -13,18 +13,20 @@ class IncomingRequestTest extends TestCase
             'REQUEST_METHOD' => "PATCH",
             'HTTP_HOST' => "test.bssb.app",
             'REQUEST_URI' => "/hello.txt?param=123",
-            'HTTP_USER_AGENT' => "Mozilla/5.0"
+            'HTTP_USER_AGENT' => "Mozilla/5.0",
+            'HTTPS' => 1
         ];
         $_GET = [
             'param' => "123"
         ];
-        $result = IncomingRequest::deduce();
+        $result = Request::deduce();
 
         $this->assertSame("PATCH", $result->method);
         $this->assertSame("test.bssb.app", $result->host);
         $this->assertSame("/hello.txt", $result->path);
         $this->assertSame("123", $result->queryParams['param']);
         $this->assertSame("Mozilla/5.0", $result->headers['user-agent']);
+        $this->assertSame("https", $result->protocol);
         $this->assertNull($result->getJson());
     }
 
@@ -36,7 +38,7 @@ class IncomingRequestTest extends TestCase
             'REQUEST_URI' => "/action",
             'HTTP_CONTENT_TYPE' => "application/json; charset=utf-8"
         ];
-        $result = IncomingRequest::deduce();
+        $result = Request::deduce();
 
         $this->assertTrue($result->getIsJsonRequest());
     }
@@ -54,7 +56,7 @@ class IncomingRequestTest extends TestCase
             'REQUEST_URI' => "/action",
             'HTTP_CONTENT_TYPE' => "application/json; charset=utf-8"
         ];
-        $result = (IncomingRequest::deduce())->getJson();
+        $result = (Request::deduce())->getJson();
 
         $this->assertIsArray($result);
         $this->assertSame("XXXXX", $result['ServerCode']);
@@ -68,7 +70,7 @@ class IncomingRequestTest extends TestCase
             'REQUEST_URI' => "/",
             'HTTP_USER_AGENT' => "ServerBrowser/0.1.1.0 (BeatSaber/1.12.2)"
         ];
-        $result = (IncomingRequest::deduce())->getModClientInfo();
+        $result = (Request::deduce())->getModClientInfo();
 
         $this->assertInstanceOf("app\BeatSaber\ModClientInfo", $result);
         $this->assertSame("ServerBrowser", $result->modName);
@@ -76,14 +78,14 @@ class IncomingRequestTest extends TestCase
 
     public function testGetIsValidModClientRequest()
     {
-        $request1 = new IncomingRequest();
+        $request1 = new Request();
         $request1->method = "GET";
         $request1->path = "/";
 
         $this->assertFalse($request1->getIsValidModClientRequest(),
             "request1 should be invalid: missing X-BSSB and valid User-Agent");
 
-        $request2 = new IncomingRequest();
+        $request2 = new Request();
         $request2->method = "GET";
         $request2->path = "/";
         $request2->headers["user-agent"] = "ServerBrowser/0.1.1.0 (BeatSaber/1.12.2)";
@@ -91,7 +93,7 @@ class IncomingRequestTest extends TestCase
         $this->assertFalse($request2->getIsValidModClientRequest(),
             "request2 should be invalid: missing X-BSSB");
 
-        $request3 = new IncomingRequest();
+        $request3 = new Request();
         $request3->method = "GET";
         $request3->path = "/";
         $request3->headers["user-agent"] = "ServerBrowser/0.1.1.0 (BeatSaber/1.12.2)";

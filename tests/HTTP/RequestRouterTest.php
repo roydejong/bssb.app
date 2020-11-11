@@ -2,7 +2,7 @@
 
 namespace tests\HTTP;
 
-use app\HTTP\IncomingRequest;
+use app\HTTP\Request;
 use app\HTTP\RequestRouter;
 use PHPUnit\Framework\TestCase;
 
@@ -14,8 +14,8 @@ class RequestRouterTest extends TestCase
 
         $routeDidFire = false;
 
-        $router->register('/object/$id/test', function (IncomingRequest $request, string $id) use (&$routeDidFire) {
-            $this->assertInstanceOf("app\HTTP\IncomingRequest", $request);
+        $router->register('/object/$id/test', function (Request $request, string $id) use (&$routeDidFire) {
+            $this->assertInstanceOf("app\HTTP\Request", $request);
             $this->assertSame("123", $id);
 
             $routeDidFire = true;
@@ -23,7 +23,7 @@ class RequestRouterTest extends TestCase
             return "hello";
         });
 
-        $request = new IncomingRequest();
+        $request = new Request();
         $request->method = "GET";
         $request->path = "/object/123/test";
 
@@ -38,7 +38,7 @@ class RequestRouterTest extends TestCase
 
     public function testDispatch_404()
     {
-        $request = new IncomingRequest();
+        $request = new Request();
         $request->method = "GET";
         $request->path = "/invalid-path";
 

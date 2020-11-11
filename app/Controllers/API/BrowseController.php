@@ -2,11 +2,11 @@
 
 namespace app\Controllers\API;
 
-use app\HTTP\IncomingRequest;
+use app\HTTP\Request;
 
 class BrowseController
 {
-    public function browse(IncomingRequest $request)
+    public function browse(Request $request)
     {
         die("hi {$request->method} {$request->path}");
     }

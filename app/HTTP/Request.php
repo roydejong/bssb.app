@@ -7,7 +7,7 @@ use app\BeatSaber\ModClientInfo;
 /**
  * An incoming HTTP request helper.
  */
-class IncomingRequest
+class Request
 {
     // -----------------------------------------------------------------------------------------------------------------
     // Data
@@ -36,6 +36,29 @@ class IncomingRequest
      * Raw request headers as associative array, all keys lowercase.
      */
     public array $headers = [];
+
+    /**
+     * The request protocol ("http" or "https").
+     */
+    public string $protocol = "http";
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // URL helpers
+
+    public function getUri(bool $includeQuery = true): string
+    {
+        $queryString = $this->getQueryString();
+        $uri = "{$this->protocol}://{$this->host}{$this->path}";
+        if ($includeQuery && $queryString) {
+            $uri .= "?{$queryString}";
+        }
+        return $uri;
+    }
+
+    public function getQueryString(): string
+    {
+        return http_build_query($this->queryParams);
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     // JSON
@@ -115,17 +138,18 @@ class IncomingRequest
     // Input
 
     /**
-     * Extracts an IncomingRequest from superglobals.
+     * Extracts an Request from superglobals.
      */
-    public static function deduce(): IncomingRequest
+    public static function deduce(): Request
     {
-        $result = new IncomingRequest();
+        $result = new Request();
 
         // Core request information
         $result->method = $_SERVER['REQUEST_METHOD'];
         $result->host = $_SERVER['HTTP_HOST'];
         $result->path = strtok($_SERVER['REQUEST_URI'], '?'); // strtok to remove query string
         $result->queryParams = $_GET;
+        $result->protocol = !empty($_SERVER['HTTPS']) ? "https" : "http";
 
         // Request headers
         $result->headers = [];
@@ -141,4 +165,46 @@ class IncomingRequest
     }
 
     private const SV_HEADER_PREFIX = 'HTTP_';
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Client
+
+    public function send(): Response
+    {
+        $client = curl_init($this->getUri(true));
+
+        $headers = [];
+        foreach ($this->headers as $key => $value) {
+            $headers[] = "{$key}: {$value}";
+        }
+
+        curl_setopt_array($client, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HEADER => true,
+            CURLOPT_CUSTOMREQUEST => $this->method,
+            CURLOPT_HTTPHEADER => $headers
+        ]);
+
+        try {
+            // Execute request
+            @$response = curl_exec($client);
+
+            // We always prefer returning an HTTP response, even if it's an error, but w/o response data we'll throw.
+            if (!$response) {
+                $errNo = curl_errno($client);
+                $errText = curl_strerror($errNo);
+
+                throw new \Exception("cURL request error ($errNo): {$errText}");
+            }
+
+            // Extract headers and body response
+            $headerSize = curl_getinfo($client, CURLINFO_HEADER_SIZE);
+            $header = substr($response, 0, $headerSize);
+            $body = substr($response, $headerSize);
+
+            return Response::fromCurl($header, $body);
+        } finally {
+            curl_close($client);
+        }
+    }
 }

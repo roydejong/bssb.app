@@ -51,4 +51,35 @@ class Response
             echo $this->body;
         }
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Parser
+
+    public static function fromCurl(string $headers, ?string $body): Response
+    {
+        $response = new Response();
+
+        $headerLines = explode("\r\n", $headers);
+
+        $statusLine = array_shift($headerLines);
+        $statusLineParts = explode(' ', $statusLine, 3);
+
+        if (count($statusLineParts) !== 3) {
+            throw new \InvalidArgumentException("Could not parse invalid HTTP status line: {$statusLine}");
+        }
+
+        $response->code = intval($statusLineParts[1]);
+
+        foreach ($headerLines as $header) {
+            if (empty($header)) {
+                continue;
+            }
+
+            $headerParts = explode(':', $header, 2);
+            $response->headers[$headerParts[0]] = trim($headerParts[1] ?? '');
+        }
+
+        $response->body =$body ?? "";
+        return $response;
+    }
 }

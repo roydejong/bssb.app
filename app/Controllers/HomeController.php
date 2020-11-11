@@ -3,14 +3,19 @@
 namespace app\Controllers;
 
 use app\Frontend\View;
-use app\HTTP\IncomingRequest;
+use app\HTTP\Request;
 use app\Models\HostedGame;
 
 class HomeController
 {
-    public function index(IncomingRequest $request)
+    public function index(Request $request)
     {
-        $games = HostedGame::all();
+        /**
+         * @var $games HostedGame[]
+         */
+        $games = HostedGame::query()
+            ->orderBy('id DESC')
+            ->queryAllModels();
 
         $view = new View('home.twig');
         $view->set('games', $games);

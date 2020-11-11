@@ -2,7 +2,7 @@
 
 namespace app\Controllers\API;
 
-use app\HTTP\IncomingRequest;
+use app\HTTP\Request;
 use app\HTTP\Response;
 use app\HTTP\Responses\BadRequestResponse;
 use app\HTTP\Responses\InternalServerErrorResponse;
@@ -11,7 +11,7 @@ use app\Models\HostedGame;
 
 class AnnounceController
 {
-    public function announce(IncomingRequest $request): Response
+    public function announce(Request $request): Response
     {
         // -------------------------------------------------------------------------------------------------------------
         // Pre-flight checks

@@ -2,11 +2,11 @@
 
 namespace app\Controllers\API;
 
-use app\HTTP\IncomingRequest;
+use app\HTTP\Request;
 
 class UnAnnounceController
 {
-    public function unAnnounce(IncomingRequest $request)
+    public function unAnnounce(Request $request)
     {
         die("hi {$request->method} {$request->path}");
     }

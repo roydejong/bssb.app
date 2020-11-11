@@ -105,7 +105,7 @@ class RequestRouter
         return $routesStep["_"] ?? null;
     }
 
-    public function dispatch(IncomingRequest $request): Response
+    public function dispatch(Request $request): Response
     {
         // Route
         $_variables = [$request];
