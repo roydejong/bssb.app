@@ -1,6 +1,8 @@
 # bssb.app
 🌐 **Website and API application powering the Beat Saber Server Browser mod (https://bssb.app)**
 
+![Build and Deploy](https://github.com/roydejong/bssb.app/workflows/Build%20and%20Deploy/badge.svg)
+
 ## Overview
 
 This is the PHP source code powering the API server that is used by [BeatSaberServerBrowser](https://github.com/roydejong/BeatSaberServerBrowser). It provides the following functionality:
