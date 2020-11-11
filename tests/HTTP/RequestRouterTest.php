@@ -13,9 +13,13 @@ class RequestRouterTest extends TestCase
         $router = new RequestRouter();
 
         $routeDidFire = false;
-        $router->register('/object/$id/test', function ($id) use (&$routeDidFire) {
+
+        $router->register('/object/$id/test', function (IncomingRequest $request, string $id) use (&$routeDidFire) {
+            $this->assertInstanceOf("app\HTTP\IncomingRequest", $request);
             $this->assertSame("123", $id);
+
             $routeDidFire = true;
+
             return "hello";
         });
 
