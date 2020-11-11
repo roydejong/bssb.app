@@ -23,32 +23,29 @@ class RequestRouterTest extends TestCase
             return "hello";
         });
 
-        $_SERVER = [
-            'REQUEST_METHOD' => "GET",
-            'HTTP_HOST' => "test.bssb.app",
-            'REQUEST_URI' => "/object/123/test"
-        ];
+        $request = new IncomingRequest();
+        $request->method = "GET";
+        $request->path = "/object/123/test";
 
-        $request = IncomingRequest::deduce();
         $result = $router->dispatch($request);
 
         $this->assertTrue($routeDidFire);
-        $this->assertSame("hello", $result);
+
+        $this->assertInstanceOf("app\HTTP\Response", $result);
+        $this->assertSame(200, $result->code);
+        $this->assertSame("hello", $result->body);
     }
 
     public function testDispatch_404()
     {
-        $_SERVER = [
-            'REQUEST_METHOD' => "GET",
-            'HTTP_HOST' => "test.bssb.app",
-            'REQUEST_URI' => "/object/123/test"
-        ];
-
-        $request = IncomingRequest::deduce();
+        $request = new IncomingRequest();
+        $request->method = "GET";
+        $request->path = "/invalid-path";
 
         $router = new RequestRouter();
         $result = $router->dispatch($request);
 
-        $this->assertNull($result);
+        $this->assertInstanceOf("app\HTTP\Response", $result);
+        $this->assertSame(404, $result->code);
     }
 }
