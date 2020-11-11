@@ -29,7 +29,10 @@ jobs:
     - name: Install dependencies
       if: steps.composer-cache.outputs.cache-hit != 'true'
       run: composer install --prefer-dist --no-progress --no-suggest
-    
+
+    - name: Copy config file
+      run: cp config.github.php config.php
+
     - name: PHPUnit
       run: vendor/bin/phpunit
       
