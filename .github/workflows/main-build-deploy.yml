@@ -1,4 +1,4 @@
-name: PHP Composer
+name: Build and Deploy
 
 on:
   push:
@@ -32,15 +32,6 @@ jobs:
     
     - name: PHPUnit
       run: vendor/bin/phpunit
-
-    - name: Deployment SSH configuration
-      uses: webfactory/ssh-agent@v0.4.1
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
+      
     - name: Deploy to production
-      run: |
-        git remote add production www-data@bssb.app:bssb-deploy.git
-        ssh-keyscan -H bssb.app >> ~/.ssh/known_hosts
-        git pull production main --ff-only --allow-unrelated-histories
-        git push production main
+      run: curl -X POST http://ops.bssb.app/deploy.php?key=${{ secrets.DEPLOY_KEY }}&hash=${{ github.sha }}
