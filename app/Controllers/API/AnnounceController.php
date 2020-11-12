@@ -30,11 +30,31 @@ class AnnounceController
         // Read input
 
         $input = $request->getJson();
+        $ownerId = $input['OwnerId'] ?? "";
 
-        $game = new HostedGame();
+        if (empty($ownerId)) {
+            // Owner ID is always required
+            return new BadRequestResponse();
+        }
+
+        /**
+         * @var $gameByOwner HostedGame|null
+         */
+        $gameByOwner = HostedGame::query()
+            ->where('owner_id = ?', $ownerId)
+            ->querySingleModel();
+
+        if ($gameByOwner) {
+            // Replace existing
+            $game = $gameByOwner;
+        } else {
+            // Create new
+            $game = new HostedGame();
+        }
+
         $game->serverCode = strtoupper($input['ServerCode'] ?? "");
         $game->gameName = $input['GameName'] ?? "";
-        $game->ownerId = $input['OwnerId'] ?? "";
+        $game->ownerId = $ownerId;
         $game->ownerName = $input['OwnerName'] ?? "";
         $game->playerCount = intval($input['PlayerCount'] ?? 0);
         $game->playerLimit = intval($input['PlayerLimit'] ?? 0);
@@ -57,20 +77,6 @@ class AnnounceController
             } else if ($game->masterServerHost === "steam.production.mp.beatsaber.com") {
                 $game->platform = ModPlatformId::STEAM;
             }
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        // Replace existing game record
-
-        /**
-         * @var $gameByOwner HostedGame|null
-         */
-        $gameByOwner = HostedGame::query()
-            ->where('owner_id = ?', $game->ownerId)
-            ->querySingleModel();
-
-        if ($gameByOwner && $gameByOwner->id !== $game->id) {
-            $game->id = $gameByOwner->id; // replace existing game by taking over its id
         }
 
         // -------------------------------------------------------------------------------------------------------------
