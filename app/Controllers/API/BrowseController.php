@@ -35,7 +35,7 @@ class BrowseController
         $offset = intval($request->queryParams['offset'] ?? 0);
         $limit = self::PAGE_SIZE;
 
-        if ($_GET['limit'] ?? null === "max") {
+        if ($request->queryParams['limit'] ?? null === "max") {
             $limit = 100;
         }
 
@@ -50,9 +50,7 @@ class BrowseController
             ->from("hosted_games")
             ->where("last_update >= ?", $updateCutoff)
             ->leftJoin("level_records lr ON (lr.level_id = hosted_games.level_id)")
-            ->orderBy("hosted_games.id DESC")
-            ->offset($offset)
-            ->limit($limit);
+            ->orderBy("hosted_games.id DESC");
 
         // Search query
         if (!empty($searchQuery)) {
@@ -98,7 +96,10 @@ class BrowseController
         $games = [];
 
         if ($totalCount > 0) {
-            $games = $baseQuery->queryAllModels();
+            $games = $baseQuery
+                ->offset($offset)
+                ->limit($limit)
+                ->queryAllModels();
         }
 
         return new JsonResponse([
