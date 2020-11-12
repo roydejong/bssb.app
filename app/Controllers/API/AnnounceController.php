@@ -80,8 +80,9 @@ class AnnounceController
         }
 
         // -------------------------------------------------------------------------------------------------------------
-        // Save & respond
+        // Write
 
+        // Update timestamps
         $now = new \DateTime('now');
 
         if (empty($game->firstSeen)) {
@@ -90,7 +91,19 @@ class AnnounceController
 
         $game->lastUpdate = $now;
 
-        if ($game->save()) {
+        // Insert or update
+        $saveOk = $game->save();
+
+        // Delete any other games from same owner (conflict prevention)
+        HostedGame::query()
+            ->delete()
+            ->where('owner_id = ? AND id != ?', $game->ownerId, $game->id)
+            ->execute();
+
+        // -------------------------------------------------------------------------------------------------------------
+        // Response
+
+        if ($saveOk) {
             return new JsonResponse([
                 "result" => "ok",
                 "id" => $game->id
