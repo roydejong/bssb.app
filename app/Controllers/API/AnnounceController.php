@@ -38,6 +38,7 @@ class AnnounceController
         $game->ownerName = $input['OwnerName'] ?? "";
         $game->playerCount = intval($input['PlayerCount'] ?? 0);
         $game->playerLimit = intval($input['PlayerLimit'] ?? 0);
+        $game->isModded = intval($input['IsModded'] ?? 0) === 1;
         $game->lobbyState = intval($input['LobbyState'] ?? MultiplayerLobbyState::None);
         $game->levelId = $input['LevelId'] ?? null;
         $game->songName = $input['SongName'] ?? null;
