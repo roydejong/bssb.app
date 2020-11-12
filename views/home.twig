@@ -11,7 +11,7 @@
 </head>
 <body>
     {% include "navbar.twig" %}
-    <main role="main" class="container">
+    <main role="main" class="container-fluid">
         <div class="starter-template">
             <h1>Beat Saber Server Browser</h1>
             <p class="lead">It's a mod. You could <a href="https://github.com/roydejong/BeatSaberServerBrowser/releases/latest">download it</a>, if you wanted to.</p>
@@ -66,6 +66,11 @@
                                 {% endif %}
                             {% else %}
                                 <i class="mdi mdi-connection"></i> Unofficial
+                            {% endif %}
+                            {% if game.isModded %}
+                                Modded
+                            {% else %}
+                                Vanilla
                             {% endif %}
                             <small>({{ game.describeMasterServer() }})</small>
                         </td>
