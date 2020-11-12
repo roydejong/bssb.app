@@ -11,6 +11,9 @@ class HomeController
 {
     public function index(Request $request)
     {
+        $updateCutoff = new \DateTime('now');
+        $updateCutoff->modify('-10 minutes');
+
         /**
          * @var $games HostedGame[]
          */
@@ -19,6 +22,7 @@ class HomeController
             ->from("hosted_games")
             ->leftJoin("level_records lr ON (lr.level_id = hosted_games.level_id)")
             ->orderBy("hosted_games.id DESC")
+            ->where("last_update >= ?", $updateCutoff)
             ->queryAllModels();
 
         $view = new View('home.twig');
