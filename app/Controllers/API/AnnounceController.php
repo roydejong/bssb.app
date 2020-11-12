@@ -2,6 +2,7 @@
 
 namespace app\Controllers\API;
 
+use app\BeatSaber\ModPlatformId;
 use app\BeatSaber\MultiplayerLobbyState;
 use app\HTTP\Request;
 use app\HTTP\Response;
@@ -10,6 +11,7 @@ use app\HTTP\Responses\InternalServerErrorResponse;
 use app\HTTP\Responses\JsonResponse;
 use app\Models\HostedGame;
 use app\Models\LevelRecord;
+use PhpParser\Node\Expr\AssignOp\Mod;
 
 class AnnounceController
 {
@@ -44,6 +46,17 @@ class AnnounceController
         $game->platform = isset($input['Platform']) ? strtolower($input['Platform']) : "";
         $game->masterServerHost = $input['MasterServerHost'] ?? null;
         $game->masterServerPort = isset($input['MasterServerPort']) ? intval($input['MasterServerPort']) : null;
+
+        // -------------------------------------------------------------------------------------------------------------
+        // Validation and processing
+
+        if ($game->masterServerHost) {
+            if ($game->masterServerHost === "oculus.production.mp.beatsaber.com") {
+                $game->platform = ModPlatformId::OCULUS;
+            } else if ($game->masterServerHost === "steam.production.mp.beatsaber.com") {
+                $game->platform = ModPlatformId::STEAM;
+            }
+        }
 
         // -------------------------------------------------------------------------------------------------------------
         // Replace existing game record
