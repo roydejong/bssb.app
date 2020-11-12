@@ -57,7 +57,7 @@ class BrowseController
         // Search query
         if (!empty($searchQuery)) {
             $likeParam = "%{$searchQuery}%";
-            $baseQuery->andWhere('(game_name LIKE ? OR song_name LIKE ? OR song_author LIKE ?)',
+            $baseQuery->andWhere('(game_name LIKE ? OR hosted_games.song_name LIKE ? OR hosted_games.song_author LIKE ?)',
                 $likeParam, $likeParam, $likeParam);
         }
 
