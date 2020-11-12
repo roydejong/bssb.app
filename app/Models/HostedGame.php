@@ -53,6 +53,25 @@ class HostedGame extends Model implements \JsonSerializable
         return implode(' - ', $parts);
     }
 
+    public function describeDifficulty(): string
+    {
+        switch ($this->difficulty) {
+            case null:
+            default:
+                return "None";
+            case 0:
+                return "Easy";
+            case 1:
+                return "Normal";
+            case 2:
+                return "Hard";
+            case 3:
+                return "Expert";
+            case 4:
+                return "Expert+";
+        }
+    }
+
     public function jsonSerialize()
     {
         return $this->getPropertyValues();
