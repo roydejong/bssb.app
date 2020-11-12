@@ -5,7 +5,7 @@ namespace app\Models;
 use app\BeatSaber\ModPlatformId;
 use Instasell\Instarecord\Model;
 
-class HostedGame extends Model
+class HostedGame extends Model implements \JsonSerializable
 {
     public int $id;
     public string $serverCode;
@@ -51,5 +51,10 @@ class HostedGame extends Model
         if ($this->songName)
             $parts[] = $this->songName;
         return implode(' - ', $parts);
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->getPropertyValues();
     }
 }
