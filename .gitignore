@@ -13,3 +13,7 @@ storage/cache
 # PHPUnit
 /.phpunit.cache
 .phpunit.result.cache
+
+# Generated files
+public/static/bssb.css
+public/static/bssb.css.map

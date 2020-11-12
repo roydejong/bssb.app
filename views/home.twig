@@ -58,6 +58,13 @@
                             <small>({{ game.describeMasterServer() }})</small>
                         </td>
                     </tr>
+                {% else %}
+                    <tr>
+                       <td colspan="100" class="no-results-cell">
+                           <i class="mdi mdi-emoticon-sad-outline"></i>
+                           <span>No active games right now</span>
+                       </td>
+                    </tr>
                 {% endfor %}
             </tbody>
         </table>

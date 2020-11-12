@@ -56,3 +56,12 @@ td.cover-art-cell {
     opacity: .5;
   }
 }
+
+td.no-results-cell {
+  text-align: center;
+  vertical-align: middle;
+  padding: 30px 0;
+  font-size: 110%;
+  opacity: .75;
+  font-weight: 500;
+}
