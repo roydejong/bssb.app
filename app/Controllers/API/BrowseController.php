@@ -2,6 +2,7 @@
 
 namespace app\Controllers\API;
 
+use app\BeatSaber\ModPlatformId;
 use app\HTTP\Request;
 use app\HTTP\Response;
 use app\HTTP\Responses\BadRequestResponse;
@@ -47,9 +48,11 @@ class BrowseController
         $baseQuery = HostedGameLevelRecord::query()
             ->select("hosted_games.*, lr.beatsaver_id, lr.cover_url, lr.name AS level_name")
             ->from("hosted_games")
-//            ->where("last_update >= ?", $updateCutoff)
+            ->where("last_update >= ?", $updateCutoff)
             ->leftJoin("level_records lr ON (lr.level_id = hosted_games.level_id)")
-            ->orderBy("hosted_games.id DESC");
+            ->orderBy("hosted_games.id DESC")
+            ->offset($offset)
+            ->limit($limit);
 
         // Search query
         if (!empty($searchQuery)) {
@@ -59,8 +62,24 @@ class BrowseController
         }
 
         // Platform constraint
-        if (!empty($platformConstraint) && $platformConstraint !== "unknown") {
-            // TODO
+        $excludePlatformId = null;
+
+        switch ($platformConstraint) {
+            case ModPlatformId::OCULUS:
+                // Oculus shouldn't see Steam
+                $excludePlatformId = ModPlatformId::STEAM;
+                break;
+            case ModPlatformId::STEAM:
+                // Steam should see Oculus
+                $excludePlatformId = ModPlatformId::OCULUS;
+                break;
+        }
+
+        if ($excludePlatformId) {
+            // Filter games that are on "$excludePlatform", UNLESS they're using non-official servers
+            $officialMasterServerLike = "%.mp.beatsaber.com";
+            $baseQuery->andWhere("(platform != ? OR (master_server_host IS NOT NULL AND master_server_host NOT LIKE ?))",
+                $excludePlatformId, $officialMasterServerLike);
         }
 
         // Vanilla mode (no MpEx games)
