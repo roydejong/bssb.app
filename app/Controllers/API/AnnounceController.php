@@ -70,6 +70,11 @@ class AnnounceController
         // -------------------------------------------------------------------------------------------------------------
         // Validation and processing
 
+        if (empty($game->serverCode) || strlen($game->serverCode) !== 5 || !ctype_alnum($game->serverCode)) {
+            // Server code should always be alphanumeric, 5 characters, e.g. "ABC123"
+            return new BadRequestResponse();
+        }
+
         if ($game->playerLimit <= 0 || $game->playerLimit > 5) {
             $game->playerLimit = 5;
         }
