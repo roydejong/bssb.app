@@ -70,6 +70,16 @@ class AnnounceController
         // -------------------------------------------------------------------------------------------------------------
         // Validation and processing
 
+        if ($game->playerLimit <= 0 || $game->playerLimit > 5) {
+            $game->playerLimit = 5;
+        }
+
+        if ($game->playerCount <= 0) {
+            $game->playerCount = 1;
+        } else if ($game->playerCount > $game->playerLimit) {
+            $game->playerCount = $game->playerLimit;
+        }
+
         if ($game->masterServerHost) {
             if ($game->masterServerHost === "oculus.production.mp.beatsaber.com") {
                 $game->platform = ModPlatformId::OCULUS;
