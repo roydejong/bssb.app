@@ -11,7 +11,6 @@ use app\HTTP\Responses\InternalServerErrorResponse;
 use app\HTTP\Responses\JsonResponse;
 use app\Models\HostedGame;
 use app\Models\LevelRecord;
-use PhpParser\Node\Expr\AssignOp\Mod;
 
 class AnnounceController
 {
@@ -104,7 +103,7 @@ class AnnounceController
         // Delete any other games from same owner (conflict prevention)
         HostedGame::query()
             ->delete()
-            ->where('owner_id = ? AND id != ?', $game->ownerId, $game->id)
+            ->where('owner_id = ? AND id < ?', $game->ownerId, $game->id)
             ->execute();
 
         // -------------------------------------------------------------------------------------------------------------
