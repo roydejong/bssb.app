@@ -31,8 +31,8 @@ class AnnounceController
         $input = $request->getJson();
         $ownerId = $input['OwnerId'] ?? "";
 
-        if (empty($ownerId)) {
-            // Owner ID is always required
+        if (empty($ownerId) || $ownerId === "SERVER_MESSAGE") {
+            // Owner ID is always required, and can't be "SERVER_MESSAGE" as we reserve that for our own use
             return new BadRequestResponse();
         }
 
