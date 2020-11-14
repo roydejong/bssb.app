@@ -35,4 +35,27 @@ class CVersionTest extends TestCase
         $this->assertFalse((new CVersion("1.0.0.0"))->greaterThan(new CVersion("1.0.1.1")));
         $this->assertFalse((new CVersion("1.0.0.0"))->greaterThan(new CVersion("1.1.1.1")));
     }
+
+    public function testGreaterThanOrEquals()
+    {
+        $this->assertTrue((new CVersion("1.0.0.1"))->greaterThanOrEquals(new CVersion("1.0.0.0")));
+        $this->assertTrue((new CVersion("1.0.0.0"))->greaterThanOrEquals(new CVersion("1.0.0.0")));
+
+        $this->assertFalse((new CVersion("0.9.9.9"))->greaterThanOrEquals(new CVersion("1.0.0.0")));
+    }
+
+    public function testLessThan()
+    {
+        $this->assertTrue((new CVersion("0.9.9.9"))->lessThan(new CVersion("1.0.0.0")));
+
+        $this->assertFalse((new CVersion("1.0.0.0"))->lessThan(new CVersion("1.0.0.0")));
+    }
+
+    public function testLessThanOrEquals()
+    {
+        $this->assertTrue((new CVersion("0.9.9.9"))->lessThanOrEquals(new CVersion("1.0.0.0")));
+        $this->assertTrue((new CVersion("1.0.0.0"))->lessThanOrEquals(new CVersion("1.0.0.0")));
+
+        $this->assertFalse((new CVersion("1.0.0.1"))->lessThanOrEquals(new CVersion("1.0.0.0")));
+    }
 }

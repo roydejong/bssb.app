@@ -31,7 +31,7 @@ final class CVersion
         }
     }
 
-    public function equals(CVersion $b)
+    public function equals(CVersion $b): bool
     {
         return intval($this->major) === intval($b->major) &&
             intval($this->minor) === intval($b->minor) &&
@@ -39,7 +39,7 @@ final class CVersion
             intval($this->revision) === intval($b->revision);
     }
 
-    public function greaterThan(CVersion $b)
+    public function greaterThan(CVersion $b): bool
     {
         if ($this->major > $b->major) {
             return true;
@@ -57,6 +57,21 @@ final class CVersion
             }
         }
         return false;
+    }
+
+    public function greaterThanOrEquals(CVersion $b): bool
+    {
+        return $this->equals($b) || $this->greaterThan($b);
+    }
+
+    public function lessThan(CVersion $b): bool
+    {
+        return $b->greaterThan($this);
+    }
+
+    public function lessThanOrEquals(CVersion $b): bool
+    {
+        return $b->equals($this) || $b->greaterThan($this);
     }
 
     public function __toString(): string
