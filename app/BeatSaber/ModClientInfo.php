@@ -2,25 +2,32 @@
 
 namespace app\BeatSaber;
 
+use app\Common\CVersion;
+
 /**
  * Information about a modded client, derived from its user agent string.
  */
 class ModClientInfo
 {
+    const RELEASE_VERSION = "0.1.1.0";
+
     /**
      * The name of the mod.
      * This should always be "ServerBrowser".
      */
     public ?string $modName = null;
+
     /**
      * The full assembly version of the mod.
      * This should be in the format "X.Y.Z.0".
      */
-    public ?string $assemblyVersion = null;
+    public ?CVersion $assemblyVersion = null;
+
     /**
      * The Beat Saber version of the mod.
      */
-    public ?string $beatSaberVersion = null;
+    public ?CVersion $beatSaberVersion = null;
+
     /**
      * The platform identifier of the mod.
      * @see ModPlatformId
@@ -40,11 +47,15 @@ class ModClientInfo
             $modSubParts = explode('/', $modPart);
 
             $result->modName = $modSubParts[0] ?? null;
-            $result->assemblyVersion = $modSubParts[1] ?? null;
+            $assemblyVersion = $modSubParts[1] ?? null;
+
+            if ($assemblyVersion) {
+                $result->assemblyVersion = new CVersion($assemblyVersion);
+            }
         }
 
         if ($beatSaberPart) {
-            $result->beatSaberVersion = strtok(trim($beatSaberPart, '()'), 'BeatSaber/');
+            $result->beatSaberVersion = new CVersion(strtok(trim($beatSaberPart, '()'), 'BeatSaber/'));
         }
 
         if ($platformPart) {

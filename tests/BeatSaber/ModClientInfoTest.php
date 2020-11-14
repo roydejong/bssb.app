@@ -14,8 +14,8 @@ class ModClientInfoTest extends TestCase
         $result = ModClientInfo::fromUserAgent($input);
 
         $this->assertSame("ServerBrowser", $result->modName);
-        $this->assertSame("0.1.1.0", $result->assemblyVersion);
-        $this->assertSame("1.12.2", $result->beatSaberVersion);
+        $this->assertSame("0.1.1.0", (string)$result->assemblyVersion);
+        $this->assertSame("1.12.2", (string)$result->beatSaberVersion);
         $this->assertSame(ModPlatformId::UNKNOWN, $result->platformId);
     }
 
@@ -25,8 +25,8 @@ class ModClientInfoTest extends TestCase
         $result = ModClientInfo::fromUserAgent($input);
 
         $this->assertSame("ServerBrowser", $result->modName);
-        $this->assertSame("0.2.0", $result->assemblyVersion);
-        $this->assertSame("1.12.2", $result->beatSaberVersion);
+        $this->assertSame("0.2.0", (string)$result->assemblyVersion);
+        $this->assertSame("1.12.2", (string)$result->beatSaberVersion);
         $this->assertSame(ModPlatformId::STEAM, $result->platformId);
     }
 
