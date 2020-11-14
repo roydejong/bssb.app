@@ -3,6 +3,7 @@
 namespace app\Controllers\API;
 
 use app\BeatSaber\ModPlatformId;
+use app\Common\CVersion;
 use app\HTTP\Request;
 use app\HTTP\Response;
 use app\HTTP\Responses\BadRequestResponse;
@@ -27,7 +28,7 @@ class BrowseController
 
         $searchQuery = $request->queryParams['query'] ?? null;
         $platformConstraint = $request->queryParams['platform'] ?? null;
-        $isVanilla = intval($request->queryParams['platform'] ?? 0) === 1;
+        $isVanilla = intval($request->queryParams['vanilla'] ?? 0) === 1;
 
         // -------------------------------------------------------------------------------------------------------------
         // Query
@@ -73,11 +74,26 @@ class BrowseController
                 break;
         }
 
-        if ($excludePlatformId) {
+        // Hide custom master servers if we are below mod version 0.2
+        $officialMasterServerLike = "%.mp.beatsaber.com";
+        $supportsCustomMasterServers = $request->getModClientInfo()->assemblyVersion
+            ->greaterThanOrEquals(new CVersion("0.2"));
+
+        if ($supportsCustomMasterServers) {
             // Filter games that are on "$excludePlatform", UNLESS they're using non-official servers
-            $officialMasterServerLike = "%.mp.beatsaber.com";
-            $baseQuery->andWhere("(platform != ? OR (master_server_host IS NOT NULL AND master_server_host NOT LIKE ?))",
-                $excludePlatformId, $officialMasterServerLike);
+            if ($excludePlatformId) {
+                $baseQuery->andWhere("(platform != ? OR (master_server_host IS NOT NULL AND master_server_host NOT LIKE ?))",
+                    $excludePlatformId, $officialMasterServerLike);
+            }
+        } else {
+            // Don't show games on $excludePlatform
+            if ($excludePlatformId) {
+                $baseQuery->andWhere("platform != ?", $excludePlatformId);
+            }
+
+            // Don't show games wih custom master servers
+            $baseQuery->andWhere("(master_server_host IS NULL OR master_server_host LIKE ?)",
+                $officialMasterServerLike);
         }
 
         // Vanilla mode (no MpEx games)
