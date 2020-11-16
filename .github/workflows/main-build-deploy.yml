@@ -50,6 +50,8 @@ jobs:
       run: cp config.github.php config.php
 
     - name: PHPUnit
+      env:
+        DB_PORT: ${{ job.services.mysql.ports[3306] }}
       run: vendor/bin/phpunit
       
     - name: Deploy to production
