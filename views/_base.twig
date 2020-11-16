@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Beat Saber modification that adds a browser for custom multiplayer games.">
+    <title>{% if pageTitle %}{{ pageTitle }} - {% endif %}Beat Saber Server Browser · BSSB</title>
+    <link rel="canonical" href="https://bssb.app">
+    <link href="/static/vendor/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/bssb.css" rel="stylesheet">
+</head>
+<body>
+
+{% include "navbar.twig" %}
+
+{% block main %}{% endblock %}
+
+<link href="/static/vendor/materialdesignicons.min.css" rel="stylesheet">
+
+<script src="/static/vendor/jquery-3.5.1.slim.min.js"></script>
+<script src="/static/vendor/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

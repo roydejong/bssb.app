@@ -68,3 +68,19 @@ td.no-results-cell {
   opacity: .75;
   font-weight: 500;
 }
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Game detail
+
+.game-detail {
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  .server-code {
+    font-size: 1.75rem;
+    font-family: monospace;
+    user-select: all;
+    letter-spacing: 5px;
+  }
+}

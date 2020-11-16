@@ -6,8 +6,8 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#"><i class="mdi mdi-home"></i> Home <span class="sr-only">(current)</span></a>
+                <li class="nav-item {% if tab == "home" %}active{% endif %}">
+                    <a class="nav-link" href="/"><i class="mdi mdi-home"></i> Home {% if tab == "home" %}<span class="sr-only">(current)</span>{% endif %}</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="https://github.com/roydejong/BeatSaberServerBrowser" target="_blank"><i class="mdi mdi-github"></i> GitHub</a>

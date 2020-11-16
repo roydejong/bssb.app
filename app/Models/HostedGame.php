@@ -3,6 +3,8 @@
 namespace app\Models;
 
 use app\BeatSaber\ModPlatformId;
+use app\BSSB;
+use Hashids\Hashids;
 use Instasell\Instarecord\Model;
 
 class HostedGame extends Model implements \JsonSerializable
@@ -25,6 +27,9 @@ class HostedGame extends Model implements \JsonSerializable
     public string $platform = ModPlatformId::UNKNOWN;
     public ?string $masterServerHost;
     public ?int $masterServerPort;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Data helpers
 
     public function getIsOfficial(): bool
     {
@@ -71,6 +76,34 @@ class HostedGame extends Model implements \JsonSerializable
                 return "Expert+";
         }
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // URLs
+
+    private static function getHashids(): Hashids
+    {
+        return BSSB::getHashids("HostedGame");
+    }
+
+    public static function hash2id(string $hash): ?int
+    {
+        $arr = self::getHashids()->decode($hash);
+        return !empty($arr) ? intval($arr[0]) : null;
+    }
+
+    public static function id2hash(int $id): string
+    {
+        return self::getHashids()->encode($id);
+    }
+
+    public function getWebDetailUrl(): string
+    {
+        $hash = self::id2hash($this->id);
+        return "/game/{$hash}";
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Serialize
 
     public function jsonSerialize()
     {

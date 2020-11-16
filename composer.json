@@ -15,7 +15,8 @@
     "ext-json": "*",
     "ext-curl": "*",
     "twig/twig": "^3.0",
-    "instasell/instarecord": "dev-master@dev"
+    "instasell/instarecord": "dev-master@dev",
+    "hashids/hashids": "^4.0"
   },
   "require-dev": {
     "ext-xdebug": "*",

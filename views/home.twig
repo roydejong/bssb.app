@@ -1,119 +1,106 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Beat Saber modification that adds a browser for custom multiplayer games.">
-    <title>Beat Saber Server Browser · BSSB</title>
-    <link rel="canonical" href="https://bssb.app">
-    <link href="static/vendor/bootstrap.min.css" rel="stylesheet">
-    <link href="static/bssb.css" rel="stylesheet">
-</head>
-<body>
-    {% include "navbar.twig" %}
-    <main role="main" class="container-fluid">
-        <div class="starter-template">
+{% extends "_base.twig" %}
 
-            <h1>Beat Saber Server Browser</h1>
-            <p class="lead">A Beat Saber modification that adds a server browser to multiplayer (PC only currently).</p>
+{% set tab = "home" %}
 
-            <div class="card" style="width: 375px;">
-                <img src="/static/stuff/capture.png" class="card-img-top"/>
-                <div class="card-body">
-                    <h5 class="card-title">Download the mod to:</h5>
-                    <ul>
-                        <li>Add your games to the server browser</li>
-                        <li>Browse and join from within the game</li>
-                    </ul>
-                    <a class="btn btn-success" target="_blank" href="https://github.com/roydejong/BeatSaberServerBrowser/releases/latest">
-                        <i class="mdi mdi-download"></i>
-                        <span>Download</span>
-                    </a>
-                    <a class="btn btn-primary" target="_blank" href="https://github.com/roydejong/BeatSaberServerBrowser/blob/master/README.md">
-                        <i class="mdi mdi-book-open-variant"></i>
-                        <span>README</span>
-                    </a>
-                </div>
+{% block main %}
+<main role="main" class="container-fluid">
+    <div class="starter-template">
+
+        <h1>Beat Saber Server Browser</h1>
+        <p class="lead">A Beat Saber modification that adds a server browser to multiplayer (PC only currently).</p>
+
+        <div class="card" style="width: 375px;">
+            <img src="/static/stuff/capture.png" class="card-img-top"/>
+            <div class="card-body">
+                <h5 class="card-title">Download the mod to:</h5>
+                <ul>
+                    <li>Add your games to the server browser</li>
+                    <li>Browse and join from within the game</li>
+                </ul>
+                <a class="btn btn-success" target="_blank" href="https://github.com/roydejong/BeatSaberServerBrowser/releases/latest">
+                    <i class="mdi mdi-download"></i>
+                    <span>Download</span>
+                </a>
+                <a class="btn btn-primary" target="_blank" href="https://github.com/roydejong/BeatSaberServerBrowser/blob/master/README.md">
+                    <i class="mdi mdi-book-open-variant"></i>
+                    <span>README</span>
+                </a>
             </div>
-
-            <table class="table table-bordered table-striped table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th colspan="2">Game</th>
-                        <th>Level</th>
-                        <th>Players</th>
-                        <th>Type</th>
-                        <th width="5">Code</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for game in games %}
-                        <tr>
-                            <td class="cover-art-cell">
-                                {% if game.coverUrl %}
-                                    <img src="{{ game.coverUrl }}" alt="{{ game.describeSong() }}" height="25" class="cover-art"/>
-                                {% else %}
-                                    <span class="huh">?</span>
-                                {% endif %}
-                            </td>
-                            <td class="align-middle">
-                                <strong>{{ game.gameName }}</strong>
-                            </td>
-                            <td class="align-middle">
-                                {% if not game.levelId or game.lobbyState == 0 or game.lobbyState == 1 %}
-                                    <i class="mdi mdi-account-group-outline"></i> In lobby
-                                {% else %}
-                                    {% if game.levelName %}
-                                        {{ game.levelName }}
-                                    {% else %}
-                                        {{ game.describeSong() }}
-                                    {% endif %}
-                                {% endif %}
-                                {% if game.difficulty %}
-                                    ({{ game.describeDifficulty() }})
-                                {% endif %}
-                            </td>
-                            <td class="align-middle">{{ game.playerCount }}/{{ game.playerLimit }}</td>
-                            <td class="align-middle">
-                                {% if game.getIsOfficial() %}
-                                    {% if game.platform == "steam" %}
-                                        <i class="mdi mdi-steam"></i> Steam
-                                    {% elseif game.platform == "oculus" %}
-                                        <i class="mdi mdi-facebook-gaming"></i> Oculus
-                                    {% else %}
-                                        <i class="mdi mdi-head-question"></i> Unknown
-                                    {% endif %}
-                                {% else %}
-                                    <i class="mdi mdi-connection"></i> Unofficial
-                                {% endif %}
-                                {% if game.isModded %}
-                                    Modded
-                                {% else %}
-                                    Vanilla
-                                {% endif %}
-                                <small>({{ game.describeMasterServer() }})</small>
-                            </td>
-                            <td class="align-middle">
-                                <code><strong>{{ game.serverCode }}</strong></code>
-                            </td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                           <td colspan="100" class="no-results-cell">
-                               <i class="mdi mdi-emoticon-sad-outline"></i>
-                               <span>No active games right now</span>
-                           </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
         </div>
-    </main>
 
-    <link href="/static/vendor/materialdesignicons.min.css" rel="stylesheet">
-
-    <script src="/static/vendor/jquery-3.5.1.slim.min.js"></script>
-    <script src="/static/vendor/bootstrap.bundle.min.js"></script>
-
-</body>
-</html>
+        <table class="table table-bordered table-striped table-hover">
+            <thead class="thead-dark">
+            <tr>
+                <th colspan="2">Game</th>
+                <th>Level</th>
+                <th>Players</th>
+                <th>Type</th>
+                <th width="5">Code</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for game in games %}
+                <tr>
+                    <td class="cover-art-cell">
+                        {% if game.coverUrl %}
+                            <img src="{{ game.coverUrl }}" alt="{{ game.describeSong() }}" height="25" class="cover-art"/>
+                        {% else %}
+                            <span class="huh">?</span>
+                        {% endif %}
+                    </td>
+                    <td class="align-middle">
+                        <a href="{{ game.getWebDetailUrl() }}" title="View game details" target="_self">
+                            <strong>{{ game.gameName }}</strong>
+                        </a>
+                    </td>
+                    <td class="align-middle">
+                        {% if not game.levelId or game.lobbyState == 0 or game.lobbyState == 1 %}
+                            <i class="mdi mdi-account-group-outline"></i> In lobby
+                        {% else %}
+                            {% if game.levelName %}
+                                {{ game.levelName }}
+                            {% else %}
+                                {{ game.describeSong() }}
+                            {% endif %}
+                        {% endif %}
+                        {% if game.difficulty %}
+                            ({{ game.describeDifficulty() }})
+                        {% endif %}
+                    </td>
+                    <td class="align-middle">{{ game.playerCount }}/{{ game.playerLimit }}</td>
+                    <td class="align-middle">
+                        {% if game.getIsOfficial() %}
+                            {% if game.platform == "steam" %}
+                                <i class="mdi mdi-steam"></i> Steam
+                            {% elseif game.platform == "oculus" %}
+                                <i class="mdi mdi-facebook-gaming"></i> Oculus
+                            {% else %}
+                                <i class="mdi mdi-head-question"></i> Unknown
+                            {% endif %}
+                        {% else %}
+                            <i class="mdi mdi-connection"></i> Unofficial
+                        {% endif %}
+                        {% if game.isModded %}
+                            Modded
+                        {% else %}
+                            Vanilla
+                        {% endif %}
+                        <small>({{ game.describeMasterServer() }})</small>
+                    </td>
+                    <td class="align-middle">
+                        <code><strong>{{ game.serverCode }}</strong></code>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="100" class="no-results-cell">
+                        <i class="mdi mdi-emoticon-sad-outline"></i>
+                        <span>No active games right now</span>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
+{% endblock %}

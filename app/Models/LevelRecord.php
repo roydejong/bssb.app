@@ -20,10 +20,50 @@ class LevelRecord extends Model
     public ?int $duration;
     public ?string $description;
 
+    // -----------------------------------------------------------------------------------------------------------------
+    // Data helpers
+
     public function getIsCustomLevel(): bool
     {
         return LevelId::isCustomLevel($this->levelId);
     }
+
+    public function describeDuration(): string
+    {
+        if ($this->duration === null || $this->duration <= 0) {
+            return "Unknown";
+        }
+
+        $mins = floor($this->duration / 60);
+        $secs = $this->duration - ($mins * 60);
+
+        $text = "";
+
+        if ($mins > 0) {
+            if ($mins === 1) {
+                $text = "1 minute";
+            } else {
+                $text = "{$mins} minutes";
+            }
+        }
+
+        if ($secs > 0) {
+            if (!empty($text)) {
+                $text .= ", ";
+            }
+
+            if ($secs === 1) {
+                $text .= "1 second";
+            } else {
+                $text .= "{$secs} seconds";
+            }
+        }
+
+        return $text;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Beat saver
 
     public function syncFromBeatSaver(): bool
     {
@@ -55,7 +95,10 @@ class LevelRecord extends Model
         return false;
     }
 
-    public static function syncFromAnnounce(string $levelId, string $songName, ?string $songAuthor): LevelRecord
+    // -----------------------------------------------------------------------------------------------------------------
+    // Sync
+
+    public static function syncFromAnnounce(string $levelId, ?string $songName, ?string $songAuthor): LevelRecord
     {
         $customLevelHash = LevelId::getHashFromLevelId($levelId);
 
@@ -74,8 +117,8 @@ class LevelRecord extends Model
 
         $levelRecord->beatsaverId = null;
         $levelRecord->coverUrl = null;
-        $levelRecord->name = $songName;
-        $levelRecord->songName = $songName;
+        $levelRecord->name = $songName ?? "Unknown";
+        $levelRecord->songName = $songName ?? "Unknown";
         $levelRecord->songAuthor = $songAuthor;
         $levelRecord->levelAuthor = null;
         $levelRecord->duration = null;
