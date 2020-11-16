@@ -7,6 +7,7 @@ use Instasell\Instarecord\Instarecord;
 global $config;
 
 $config['cache_enabled'] = false;
+$config['hashids_salt'] = "🧂";
 
 $dbConfig = Instarecord::config();
 $dbConfig->host = "127.0.0.1";
