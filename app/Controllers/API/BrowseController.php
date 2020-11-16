@@ -36,10 +36,6 @@ class BrowseController
         $offset = intval($request->queryParams['offset'] ?? 0);
         $limit = self::PAGE_SIZE;
 
-        if ($request->queryParams['limit'] ?? null === "max") {
-            $limit = 100;
-        }
-
         // -------------------------------------------------------------------------------------------------------------
         // Query preparation
 
