@@ -14,3 +14,4 @@ $dbConfig->port = 3306;
 $dbConfig->username = "user";
 $dbConfig->password = "secret";
 $dbConfig->database = "test_db";
+$dbConfig->unix_socket = null;
