@@ -4,6 +4,18 @@ on:
   push:
     branches: [ main ]
 
+services:
+  mysql:
+    image: mysql:5.7
+    env:
+      MYSQL_DATABASE: test_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secretroot
+    ports:
+      - 3306
+    options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
 jobs:
   build:
 
@@ -11,6 +23,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+
+    - name: MySQL check / import db_structure.sql
+      run: |
+        mysql --version
+        sudo apt-get install -y mysql-client
+        mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -uuser -psecret test_db < db_structure.sql
 
     - name: Validate composer.json and composer.lock
       run: composer validate
