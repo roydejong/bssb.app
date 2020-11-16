@@ -33,9 +33,9 @@
                             <tr>
                                 <th scope="row">Modded</th>
                                 <td>
-                                    {% if game.is_modded %}
+                                    {% if game.isModded %}
                                         <i class="mdi mdi-check-circle"></i>
-                                        MultiplayerExtensions enabled (custom songs on)
+                                        MultiplayerExtensions enabled
                                     {% else %}
                                         <i class="mdi mdi-lock"></i>
                                         Vanilla (custom songs off)
@@ -74,7 +74,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="row">Announced at</th>
+                                <th scope="row">First seen</th>
                                 <td>{{ game.firstSeen.format('r') }}</td>
                             </tr>
                             <tr>
@@ -101,7 +101,9 @@
                         </h5>
                         <div class="card-body">
                             <div class="media">
-                                <img src="{{ level.coverUrl }}" class="mr-3" alt="{{ level.name }}" width="125">
+                                {% if level.coverUrl %}
+                                    <img src="{{ level.coverUrl }}" class="mr-3" alt="{{ level.name }}" width="125">
+                                {% endif %}
                                 <div class="media-body">
                                     <h5 class="mt-0">{{ level.name }}</h5>
                                     <table width="100%">
