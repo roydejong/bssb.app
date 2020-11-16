@@ -27,8 +27,8 @@
                                 <td>{{ game.ownerName ? game.ownerName : "Unknown" }}</td>
                             </tr>
                             <tr>
-                                <th scope="row">Players</th>
-                                <td>{{ game.playerCount }} of {{ game.playerLimit }}</td>
+                                <th scope="row">Status</th>
+                                <td>{{ game.describeState() }} ({{ game.playerCount }} of {{ game.playerLimit }} players)</td>
                             </tr>
                             <tr>
                                 <th scope="row">Modded</th>

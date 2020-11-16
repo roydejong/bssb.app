@@ -3,6 +3,7 @@
 namespace app\Models;
 
 use app\BeatSaber\ModPlatformId;
+use app\BeatSaber\MultiplayerLobbyState;
 use app\BSSB;
 use Hashids\Hashids;
 use Instasell\Instarecord\Model;
@@ -75,6 +76,11 @@ class HostedGame extends Model implements \JsonSerializable
             case 4:
                 return "Expert+";
         }
+    }
+
+    public function describeState(): string
+    {
+        return MultiplayerLobbyState::describe($this->lobbyState);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
