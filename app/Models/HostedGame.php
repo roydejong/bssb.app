@@ -2,6 +2,7 @@
 
 namespace app\Models;
 
+use app\BeatSaber\LevelDifficulty;
 use app\BeatSaber\ModPlatformId;
 use app\BeatSaber\MultiplayerLobbyState;
 use app\BSSB;
@@ -61,21 +62,7 @@ class HostedGame extends Model implements \JsonSerializable
 
     public function describeDifficulty(): string
     {
-        switch ($this->difficulty) {
-            case null:
-            default:
-                return "None";
-            case 0:
-                return "Easy";
-            case 1:
-                return "Normal";
-            case 2:
-                return "Hard";
-            case 3:
-                return "Expert";
-            case 4:
-                return "Expert+";
-        }
+        return LevelDifficulty::describe($this->difficulty);
     }
 
     public function describeState(): string
