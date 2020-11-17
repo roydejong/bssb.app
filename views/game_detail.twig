@@ -36,6 +36,12 @@
                                 <th scope="row">Status</th>
                                 <td>{{ game.describeState() }} ({{ game.playerCount }} of {{ game.playerLimit }} players)</td>
                             </tr>
+                            {% if game.difficulty and game.levelId %}
+                            <tr>
+                                <th scope="row">{{ game.lobbyState == 3 ? "Current  difficulty" : "Last difficulty" }}</th>
+                                <td><span class="difficulty-txt -d{{ game.difficulty }}">{{ game.describeDifficulty() }}</span></td>
+                            </tr>
+                            {% endif %}
                             <tr>
                                 <th scope="row">Modded</th>
                                 <td>

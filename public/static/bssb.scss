@@ -84,3 +84,24 @@ td.no-results-cell {
     letter-spacing: 5px;
   }
 }
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Game detail
+
+.difficulty-txt {
+  &.-d0 {
+    color: MediumSeaGreen;
+  }
+  &.-d1 {
+    color: #59b0f4;
+  }
+  &.-d2 {
+    color: tomato;
+  }
+  &.-d3 {
+    color: #bf2a42;
+  }
+  &.-d4 {
+    color: #8f48db;
+  }
+}

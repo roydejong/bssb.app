@@ -33,6 +33,7 @@
             <tr>
                 <th colspan="2">Game</th>
                 <th>Level</th>
+                <th>Difficulty</th>
                 <th>Players</th>
                 <th>Type</th>
                 <th width="5">Code</th>
@@ -63,8 +64,12 @@
                                 {{ game.describeSong() }}
                             {% endif %}
                         {% endif %}
-                        {% if game.difficulty %}
-                            ({{ game.describeDifficulty() }})
+                    </td>
+                    <td class="align-middle">
+                        {% if game.difficulty and game.levelId %}
+                            <span class="difficulty-txt -d{{ game.difficulty }}">{{ game.describeDifficulty() }}</span>
+                        {% else %}
+                            -
                         {% endif %}
                     </td>
                     <td class="align-middle">{{ game.playerCount }}/{{ game.playerLimit }}</td>
