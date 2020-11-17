@@ -66,10 +66,10 @@
                         {% endif %}
                     </td>
                     <td class="align-middle">
-                        {% if game.difficulty and game.levelId %}
+                        {% if game.difficulty is not null and game.levelId %}
                             <span class="difficulty-txt -d{{ game.difficulty }}">{{ game.describeDifficulty() }}</span>
                         {% else %}
-                            -
+                            <span class="difficulty-txt -unknown">New game</span>
                         {% endif %}
                     </td>
                     <td class="align-middle">{{ game.playerCount }}/{{ game.playerLimit }}</td>
