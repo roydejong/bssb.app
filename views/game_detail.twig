@@ -18,6 +18,12 @@
 
             <hr />
 
+            {% if not game.masterServerHost %}
+                <div class="alert alert-warning">
+                    This game was added with an older version of the Server Browser mod, cross-play may not work as expected.
+                </div>
+            {% endif %}
+
             <div class="row">
                 <div class="col-7">
                     <table class="table table-bordered">
