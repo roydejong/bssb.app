@@ -4,7 +4,7 @@ namespace tests\Mock;
 
 class MockJsonRequest extends MockModClientRequest
 {
-    protected array $json;
+    public array $json;
 
     public function __construct(array $json)
     {

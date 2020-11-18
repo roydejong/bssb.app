@@ -140,6 +140,8 @@ class AnnounceControllerTest extends TestCase
             "Extra data like level id should not be removed on update, even if NULL in update request");
     }
 
+    public static MockJsonRequest $minimalAnnounceRequest;
+
     /**
      * @depends testFullAnnounce
      */
@@ -151,6 +153,8 @@ class AnnounceControllerTest extends TestCase
         ]);
         $request->method = "POST";
         $request->path = "/api/v1/announce";
+
+        self::$minimalAnnounceRequest = $request;
 
         $response = (new AnnounceController())->announce($request);
         $this->assertSame(200, $response->code);
@@ -174,5 +178,91 @@ class AnnounceControllerTest extends TestCase
         $this->assertSame("unknown", $announce->platform);
         $this->assertNull($announce->masterServerHost);
         $this->assertNull($announce->masterServerPort);
+    }
+
+    /**
+     * @depends testMinimalAnnounce
+     */
+    public function testAnnounceAutomaticallyInfersPlatform()
+    {
+        $fnTestRequestPlatform = function (?string $masterServerHost, ?string $platform): ?string
+        {
+            $request = new MockJsonRequest([
+                'ServerCode' => '12345',
+                'OwnerId' => 'unit_test_testRejectsInvalidServerCodes',
+                'MasterServerHost' => $masterServerHost,
+                'Platform' => $platform
+            ]);
+            $request->method = "POST";
+            $request->path = "/api/v1/announce";
+
+            $response = (new AnnounceController())->announce($request);
+            $this->assertSame(200, $response->code, "Sanity check: announce should return 200 OK");
+
+            $json = json_decode($response->body, true);
+            return HostedGame::fetch($json['id'])->platform;
+        };
+
+        $this->assertSame("unknown", $fnTestRequestPlatform(null, null),
+            "Announce with neither platform nor master server should result in unknown platform");
+        $this->assertSame("steam", $fnTestRequestPlatform(null, "steam"),
+            "Announce with no master server should simply apply platform value");
+        $this->assertSame("oculus", $fnTestRequestPlatform("oculus.production.mp.beatsaber.com", "steam"),
+            "Announce with no specific master server should automatically set platform value, regardless of platform in request (oculus)");
+        $this->assertSame("steam", $fnTestRequestPlatform("steam.production.mp.beatsaber.com", null),
+            "Announce with no specific master server should automatically set platform value, regardless of platform in request (steam)");
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Test validations / rejections
+
+    /**
+     * @depends testMinimalAnnounce
+     */
+    public function testAnnounceRejectsNonModRequests()
+    {
+        $request = clone self::$minimalAnnounceRequest;
+        unset($request->headers["x-bssb"]);
+        unset($request->headers["user-agent"]);
+        $this->assertFalse($request->getIsValidModClientRequest(),
+            "Sanity check: test request should no longer be considered a valid mod client request");
+
+        $response = (new AnnounceController())->announce($request);
+        $this->assertSame(400, $response->code);
+    }
+
+    public function testRejectsInvalidServerCodes()
+    {
+        $fnCreateRequest = function (string $serverCode): MockJsonRequest
+        {
+            $request = new MockJsonRequest([
+                'ServerCode' => $serverCode,
+                'OwnerId' => 'unit_test_testRejectsInvalidServerCodes'
+            ]);
+            $request->method = "POST";
+            $request->path = "/api/v1/announce";
+            return $request;
+        };
+
+        $this->assertSame(200, ((new AnnounceController())->announce($fnCreateRequest("12345")))->code,
+            "5 digit server code should be accepted");
+        $this->assertSame(400, ((new AnnounceController())->announce($fnCreateRequest("1234")))->code,
+            "4 digit server code should be rejected");
+        $this->assertSame(400, ((new AnnounceController())->announce($fnCreateRequest("123456")))->code,
+            "6 digit server code should be rejected");
+        $this->assertSame(400, ((new AnnounceController())->announce($fnCreateRequest("áéáóç")))->code,
+            "non-alphanumeric server code should be rejected");
+    }
+
+    /**
+     * @depends testMinimalAnnounce
+     */
+    public function testRejectsServerMessageOwnerId()
+    {
+        $request = clone self::$minimalAnnounceRequest;
+        $request->json['OwnerId'] = "SERVER_MESSAGE";
+
+        $this->assertSame(400, ((new AnnounceController())->announce($request))->code,
+            "SERVER_MESSAGE as OwnerId should be rejected");
     }
 }
