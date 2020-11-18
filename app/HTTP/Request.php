@@ -43,6 +43,8 @@ class Request
      */
     public string $protocol = "http";
 
+    public function __construct() { }
+
     // -----------------------------------------------------------------------------------------------------------------
     // URL helpers
 
