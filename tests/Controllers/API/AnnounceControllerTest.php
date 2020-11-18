@@ -139,4 +139,40 @@ class AnnounceControllerTest extends TestCase
         $this->assertSame(self::$fullAnnounceTestResult->levelId, $updatedResult->levelId,
             "Extra data like level id should not be removed on update, even if NULL in update request");
     }
+
+    /**
+     * @depends testFullAnnounce
+     */
+    public function testMinimalAnnounce()
+    {
+        $request = new MockJsonRequest([
+            'ServerCode' => '12345',
+            'OwnerId' => 'unit_test_testMinimalAnnounce'
+        ]);
+        $request->method = "POST";
+        $request->path = "/api/v1/announce";
+
+        $response = (new AnnounceController())->announce($request);
+        $this->assertSame(200, $response->code);
+
+        $responseJson = json_decode($response->body, true);
+        $this->assertSame("ok", $responseJson['result']);
+
+        $announceId = $responseJson['id'];
+        $announce = HostedGame::fetch($announceId);
+
+        $this->assertSame("Untitled Beat Game", $announce->gameName);
+        $this->assertSame("Unknown", $announce->ownerName);
+        $this->assertSame(1, $announce->playerCount);
+        $this->assertSame(5, $announce->playerLimit);
+        $this->assertFalse($announce->isModded);
+        $this->assertSame(MultiplayerLobbyState::None, $announce->lobbyState);
+        $this->assertNull($announce->levelId);
+        $this->assertNull($announce->songName);
+        $this->assertNull($announce->songAuthor);
+        $this->assertNull($announce->difficulty);
+        $this->assertSame("unknown", $announce->platform);
+        $this->assertNull($announce->masterServerHost);
+        $this->assertNull($announce->masterServerPort);
+    }
 }

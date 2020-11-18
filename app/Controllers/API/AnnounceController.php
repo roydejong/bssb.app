@@ -52,9 +52,9 @@ class AnnounceController
         }
 
         $game->serverCode = strtoupper($input['ServerCode'] ?? "");
-        $game->gameName = $input['GameName'] ?? "";
+        $game->gameName = $input['GameName'] ?? "Untitled Beat Game";
         $game->ownerId = $ownerId;
-        $game->ownerName = $input['OwnerName'] ?? "";
+        $game->ownerName = $input['OwnerName'] ?? "Unknown";
         $game->playerCount = intval($input['PlayerCount'] ?? 0);
         $game->playerLimit = intval($input['PlayerLimit'] ?? 0);
         $game->isModded = intval($input['IsModded'] ?? 0) === 1;
@@ -67,7 +67,7 @@ class AnnounceController
             $game->difficulty = isset($input['Difficulty']) ? intval($input['Difficulty']) : null;
         }
 
-        $game->platform = isset($input['Platform']) ? strtolower($input['Platform']) : "";
+        $game->platform = isset($input['Platform']) ? strtolower($input['Platform']) : ModPlatformId::UNKNOWN;
         $game->masterServerHost = $input['MasterServerHost'] ?? null;
         $game->masterServerPort = isset($input['MasterServerPort']) ? intval($input['MasterServerPort']) : null;
 
