@@ -32,9 +32,8 @@ class AnnounceControllerTest extends TestCase
     // -----------------------------------------------------------------------------------------------------------------
     // Tests actual
 
-    /**
-     * @runInSeparateProcess
-     */
+    private static ?HostedGame $fullAnnounceTestResult;
+
     public function testFullAnnounce()
     {
         // -------------------------------------------------------------------------------------------------------------
@@ -93,5 +92,51 @@ class AnnounceControllerTest extends TestCase
         $this->assertSame("steam", $announce->platform);
         $this->assertSame("steam.production.mp.beatsaber.com", $announce->masterServerHost);
         $this->assertSame(2328, $announce->masterServerPort);
+
+        self::$fullAnnounceTestResult = $announce;
+    }
+
+    /**
+     * @depends testFullAnnounce
+     */
+    public function testReplaceFullAnnounce()
+    {
+        // -------------------------------------------------------------------------------------------------------------
+        // Create request
+
+        $request = new MockJsonRequest([
+            'ServerCode' => 'ABC12',
+            'GameName' => 'My Game But Newer',
+            'OwnerId' => 'unit_test_testFullAnnounce',
+            'OwnerName' => 'My Name',
+            'PlayerCount' => 2,
+            'PlayerLimit' => 5,
+            'IsModded' => true,
+            'LobbyState' => MultiplayerLobbyState::LobbySetup,
+            'Difficulty' => LevelDifficulty::Easy,
+            'Platform' => ModPlatformId::STEAM,
+            'MasterServerHost' => MasterServer::OFFICIAL_HOSTNAME_STEAM,
+            'MasterServerPort' => 2328,
+            'LevelId' => null
+        ]);
+        $request->method = "POST";
+        $request->path = "/api/v1/announce";
+
+        // -------------------------------------------------------------------------------------------------------------
+        // Test updated object
+
+        $response = (new AnnounceController())->announce($request);
+        $responseJson = json_decode($response->body, true);
+
+        $this->assertSame("ok", $responseJson['result']);
+        $this->assertSame(self::$fullAnnounceTestResult->id, $responseJson['id'],
+            "The previously created announce should be replaced/updated, keeping its original id.");
+
+        $updatedResult = HostedGame::fetch(self::$fullAnnounceTestResult->id);
+
+        $this->assertSame("My Game But Newer", $updatedResult->gameName,
+            "Game data should update when replacing the announce");
+        $this->assertSame(self::$fullAnnounceTestResult->levelId, $updatedResult->levelId,
+            "Extra data like level id should not be removed on update, even if NULL in update request");
     }
 }

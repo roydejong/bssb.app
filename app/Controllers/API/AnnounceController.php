@@ -59,10 +59,14 @@ class AnnounceController
         $game->playerLimit = intval($input['PlayerLimit'] ?? 0);
         $game->isModded = intval($input['IsModded'] ?? 0) === 1;
         $game->lobbyState = intval($input['LobbyState'] ?? MultiplayerLobbyState::None);
-        $game->levelId = $input['LevelId'] ?? null;
-        $game->songName = $input['SongName'] ?? null;
-        $game->songAuthor = $input['SongAuthor'] ?? null;
-        $game->difficulty = isset($input['Difficulty']) ? intval($input['Difficulty']) : null;
+
+        if (!empty($input['LevelId'])) {
+            $game->levelId = $input['LevelId'];
+            $game->songName = $input['SongName'] ?? null;
+            $game->songAuthor = $input['SongAuthor'] ?? null;
+            $game->difficulty = isset($input['Difficulty']) ? intval($input['Difficulty']) : null;
+        }
+
         $game->platform = isset($input['Platform']) ? strtolower($input['Platform']) : "";
         $game->masterServerHost = $input['MasterServerHost'] ?? null;
         $game->masterServerPort = isset($input['MasterServerPort']) ? intval($input['MasterServerPort']) : null;
