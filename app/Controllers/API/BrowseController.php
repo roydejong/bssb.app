@@ -8,6 +8,7 @@ use app\HTTP\Request;
 use app\HTTP\Response;
 use app\HTTP\Responses\BadRequestResponse;
 use app\HTTP\Responses\JsonResponse;
+use app\Models\HostedGame;
 use app\Models\Joins\HostedGameLevelRecord;
 
 class BrowseController
@@ -39,13 +40,10 @@ class BrowseController
         // -------------------------------------------------------------------------------------------------------------
         // Query preparation
 
-        $updateCutoff = new \DateTime('now');
-        $updateCutoff->modify('-10 minutes');
-
         $baseQuery = HostedGameLevelRecord::query()
             ->select("hosted_games.*, lr.beatsaver_id, lr.cover_url, lr.name AS level_name")
             ->from("hosted_games")
-            ->where("last_update >= ?", $updateCutoff)
+            ->where("last_update >= ?", HostedGame::getStaleGameCutoff())
             ->leftJoin("level_records lr ON (lr.level_id = hosted_games.level_id)")
             ->orderBy("hosted_games.id DESC");
 

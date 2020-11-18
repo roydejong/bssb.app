@@ -24,6 +24,14 @@ class BrowseControllerTest extends TestCase
         self::createSampleGame(3, "BoringUnknown", false, null, ModPlatformId::UNKNOWN, 1);
         self::createSampleGame(4, "ModdedSteam", true, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1);
         self::createSampleGame(5, "ModdedSteamCrossplayX", true, "beat.with.me", ModPlatformId::STEAM, 1);
+
+        $oldSteam = self::createSampleGame(6, "OldSteam", false,
+            MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1);
+        $oldSteam->lastUpdate = (clone $oldSteam->lastUpdate)->modify('-10 minutes');
+        $oldSteam->firstSeen = $oldSteam->lastUpdate;
+        $oldSteam->save();
+
+        self::assertTrue($oldSteam->getIsStale(), "Setup sanity check: OldSteam game should be stale");
     }
 
     public static function tearDownAfterClass(): void
@@ -41,7 +49,7 @@ class BrowseControllerTest extends TestCase
 
     private static array $sampleGames;
 
-    private static function createSampleGame(int $number, string $name, bool $isModded, ?string $masterServer, ?string $platform, ?int $playerCount)
+    private static function createSampleGame(int $number, string $name, bool $isModded, ?string $masterServer, ?string $platform, ?int $playerCount): HostedGame
     {
         $hg = new HostedGame();
         $hg->serverCode = "TEST{$number}";
@@ -71,6 +79,7 @@ class BrowseControllerTest extends TestCase
         }
 
         $hg->save();
+        return $hg;
     }
 
     private static function createBrowseRequest(array $queryParams = [])
@@ -148,6 +157,8 @@ class BrowseControllerTest extends TestCase
             "Browse without params: should see games on all platforms, even modded");
         $this->assertContainsGameWithName("ModdedSteamCrossplayX", $lobbies,
             "Browse without params: should see games on all platforms, even modded cross-play");
+        $this->assertNotContainsGameWithName("OldSteam", $lobbies,
+            "Browse: should never see old games");
     }
 
     public function testBrowseSearch()

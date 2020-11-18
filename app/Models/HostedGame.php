@@ -11,6 +11,9 @@ use Instasell\Instarecord\Model;
 
 class HostedGame extends Model implements \JsonSerializable
 {
+    // -----------------------------------------------------------------------------------------------------------------
+    // Columns
+
     public int $id;
     public string $serverCode;
     public string $gameName;
@@ -29,6 +32,28 @@ class HostedGame extends Model implements \JsonSerializable
     public string $platform = ModPlatformId::UNKNOWN;
     public ?string $masterServerHost;
     public ?int $masterServerPort;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Lifecycle
+
+    /**
+     * The amount of minutes before a game is considered "stale".
+     *  → Stale games should not be shown on the site, should not be visible on the API, and should be archived.
+     */
+    public const STALE_GAME_AFTER_MINUTES = 5;
+
+    public function getIsStale(): bool
+    {
+        return $this->lastUpdate < self::getStaleGameCutoff();
+    }
+
+    public static function getStaleGameCutoff(): \DateTime
+    {
+        $cutoffMinutes = self::STALE_GAME_AFTER_MINUTES;
+
+        return (new \DateTime('now'))
+            ->modify("-{$cutoffMinutes} minutes");
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     // Data helpers
