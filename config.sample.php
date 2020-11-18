@@ -5,6 +5,11 @@ use Instasell\Instarecord\Instarecord;
 global $config;
 
 /**
+ * Sentry error logging
+ */
+Sentry\init(['dsn' => 'SET_ME' ]);
+
+/**
  * cache_enabled, boolean
  *  → If enabled: Enable compilation and response caching behavior (for production).
  */
