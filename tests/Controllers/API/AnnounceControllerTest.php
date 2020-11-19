@@ -189,7 +189,7 @@ class AnnounceControllerTest extends TestCase
         {
             $request = new MockJsonRequest([
                 'ServerCode' => '12345',
-                'OwnerId' => 'unit_test_testRejectsInvalidServerCodes',
+                'OwnerId' => 'unit_test_testAnnounceAutomaticallyInfersPlatform',
                 'MasterServerHost' => $masterServerHost,
                 'Platform' => $platform
             ]);
@@ -211,6 +211,31 @@ class AnnounceControllerTest extends TestCase
             "Announce with no specific master server should automatically set platform value, regardless of platform in request (oculus)");
         $this->assertSame("steam", $fnTestRequestPlatform("steam.production.mp.beatsaber.com", null),
             "Announce with no specific master server should automatically set platform value, regardless of platform in request (steam)");
+    }
+
+    /**
+     * @depends testMinimalAnnounce
+     */
+    public function testAnnounceAutomaticallyInfersModded()
+    {
+        $request = new MockJsonRequest([
+            'ServerCode' => '12345',
+            'LevelId' => 'custom_level_CF5E32D6B7F30095F7198DA5894139C92336CAD7',
+            'SongName' => 'Song',
+            'SongAuthor' => 'Artist',
+            'IsModded' => false,
+            'OwnerId' => 'unit_test_testAnnounceAutomaticallyInfersModded'
+        ]);
+        $request->method = "POST";
+        $request->path = "/api/v1/announce";
+
+        $response = (new AnnounceController())->announce($request);
+        $this->assertSame(200, $response->code, "Sanity check: announce should return 200 OK");
+
+        $json = json_decode($response->body, true);
+
+        $game = HostedGame::fetch($json['id']);
+        $this->assertTrue($game->isModded, "`custom_level_` prefix should force `IsModded` to true");
     }
 
     // -----------------------------------------------------------------------------------------------------------------

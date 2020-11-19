@@ -4,6 +4,7 @@ namespace app\Controllers\API;
 
 use app\BeatSaber\ModPlatformId;
 use app\BeatSaber\MultiplayerLobbyState;
+use app\Common\CString;
 use app\HTTP\Request;
 use app\HTTP\Response;
 use app\HTTP\Responses\BadRequestResponse;
@@ -95,6 +96,12 @@ class AnnounceController
             } else if ($game->masterServerHost === "steam.production.mp.beatsaber.com") {
                 $game->platform = ModPlatformId::STEAM;
             }
+        }
+
+        if ($game->levelId && CString::startsWith($game->levelId, "custom_level_")) {
+            // Custom song: this game should be detected as modded
+            // (For some reason the "modded" flag doesn't always get set, possibly due to MpEx changes)
+            $game->isModded = true;
         }
 
         // -------------------------------------------------------------------------------------------------------------
