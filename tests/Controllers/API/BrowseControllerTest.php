@@ -4,6 +4,7 @@ namespace Controllers\API;
 
 use app\BeatSaber\MasterServer;
 use app\BeatSaber\ModPlatformId;
+use app\BeatSaber\MultiplayerLobbyState;
 use app\Common\CString;
 use app\Controllers\API\BrowseController;
 use app\HTTP\Request;
@@ -19,19 +20,20 @@ class BrowseControllerTest extends TestCase
     {
         self::tearDownAfterClass(); // reset
 
-        self::createSampleGame(1, "BoringSteam", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1);
-        self::createSampleGame(2, "BoringOculus", false, MasterServer::OFFICIAL_HOSTNAME_OCULUS, ModPlatformId::OCULUS, 1);
-        self::createSampleGame(3, "BoringUnknown", false, null, ModPlatformId::UNKNOWN, 1);
-        self::createSampleGame(4, "ModdedSteam", true, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1);
-        self::createSampleGame(5, "ModdedSteamCrossplayX", true, "beat.with.me", ModPlatformId::STEAM, 1);
+        self::createSampleGame(1, "BoringSteam", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, false);
+        self::createSampleGame(2, "BoringOculus", false, MasterServer::OFFICIAL_HOSTNAME_OCULUS, ModPlatformId::OCULUS, 1, false);
+        self::createSampleGame(3, "BoringUnknown", false, null, ModPlatformId::UNKNOWN, 1, false);
+        self::createSampleGame(4, "ModdedSteam", true, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, false);
+        self::createSampleGame(5, "ModdedSteamCrossplayX", true, "beat.with.me", ModPlatformId::STEAM, 1, false);
 
-        $oldSteam = self::createSampleGame(6, "OldSteam", false,
-            MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1);
+        $oldSteam = self::createSampleGame(6, "OldSteam", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, false);
         $oldSteam->lastUpdate = (clone $oldSteam->lastUpdate)->modify('-10 minutes');
         $oldSteam->firstSeen = $oldSteam->lastUpdate;
+        self::assertTrue($oldSteam->getIsStale(), "Setup sanity check: OldSteam game should be stale");
         $oldSteam->save();
 
-        self::assertTrue($oldSteam->getIsStale(), "Setup sanity check: OldSteam game should be stale");
+        self::createSampleGame(7, "BoringSteamFull", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 5, false);
+        self::createSampleGame(8, "BoringSteamInProgress", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, true);
     }
 
     public static function tearDownAfterClass(): void
@@ -48,8 +50,9 @@ class BrowseControllerTest extends TestCase
     // Helper code
 
     private static array $sampleGames;
+    private static int $createdSampleGameCount = 0;
 
-    private static function createSampleGame(int $number, string $name, bool $isModded, ?string $masterServer, ?string $platform, ?int $playerCount): HostedGame
+    private static function createSampleGame(int $number, string $name, bool $isModded, ?string $masterServer, ?string $platform, ?int $playerCount, bool $inProgress = false): HostedGame
     {
         $hg = new HostedGame();
         $hg->serverCode = "TEST{$number}";
@@ -78,12 +81,24 @@ class BrowseControllerTest extends TestCase
             $hg->platform = $platform;
         }
 
+        if ($inProgress) {
+            $hg->lobbyState = MultiplayerLobbyState::GameRunning;
+            $hg->levelId = "custom_level_CF5E32D6B7F30095F7198DA5894139C92336CAD7";
+            $hg->songName = "Song";
+            $hg->songAuthor = "Author";
+        }
+
         $hg->save();
+        self::$createdSampleGameCount++;
         return $hg;
     }
 
-    private static function createBrowseRequest(array $queryParams = [])
+    private static function createBrowseRequest(array $queryParams = []): Request
     {
+        if (!isset($queryParams['limit'])) {
+            $queryParams['limit'] = PHP_INT_MAX;
+        }
+
         $request = new Request();
         $request->protocol = "https";
         $request->host = "test.wssl.app";
@@ -93,6 +108,21 @@ class BrowseControllerTest extends TestCase
         $request->headers["x-bssb"] = "1";
         $request->queryParams = $queryParams;
         return $request;
+    }
+
+    private static function executeBrowseRequestAndGetGames(Request $browseRequest): array
+    {
+        $response = (new BrowseController())->browse($browseRequest);
+
+        self::assertInstanceOf("app\HTTP\Responses\JsonResponse", $response,
+            "Sanity check failed: did not get a valid JSON response from browse()");
+
+        $jsonResult = json_decode($response->body, true);
+
+        self::assertArrayHasKey("Lobbies", $jsonResult,
+            "Sanity check failed: did not get a Lobbies list in JSON response from browse()");
+
+        return $jsonResult['Lobbies'];
     }
 
     private function assertContainsGameWithName(string $gameName, array $Lobbies, ?string $message = null)
@@ -139,13 +169,11 @@ class BrowseControllerTest extends TestCase
 
     public function testBrowseSimple()
     {
-        $response = (new BrowseController())
-            ->browse(self::createBrowseRequest());
-
-        $this->assertInstanceOf("app\HTTP\Responses\JsonResponse", $response);
-
-        $jsonResult = json_decode($response->body, true);
-        $lobbies = $jsonResult['Lobbies'];
+        $lobbies = self::executeBrowseRequestAndGetGames(
+            self::createBrowseRequest([
+                "limit" => PHP_INT_MAX
+            ])
+        );
 
         $this->assertContainsGameWithName("BoringSteam", $lobbies,
             "Browse without params: should see games on all platforms");
@@ -159,19 +187,59 @@ class BrowseControllerTest extends TestCase
             "Browse without params: should see games on all platforms, even modded cross-play");
         $this->assertNotContainsGameWithName("OldSteam", $lobbies,
             "Browse: should never see old games");
+        $this->assertContainsGameWithName("BoringSteamFull", $lobbies,
+            "Browse: should see full games by default");
+    }
+
+    public function testBrowsePagination()
+    {
+        $pageOne = self::executeBrowseRequestAndGetGames(
+            self::createBrowseRequest([
+                "offset" => 0,
+                "limit" => ""
+            ])
+        );
+
+        $this->assertSame(BrowseController::PAGE_SIZE, count($pageOne),
+            "When limit is not explicitly specified, it should default to PAGE_SIZE");
+
+        $pageTwo = self::executeBrowseRequestAndGetGames(
+            self::createBrowseRequest([
+                "offset" => BrowseController::PAGE_SIZE,
+                "limit" => 999
+            ])
+        );
+
+        $this->assertNotSame($pageOne, $pageTwo);
+        $this->assertSame(self::$createdSampleGameCount, (count($pageOne) + count($pageTwo)),
+            "Pages one and two should make up all the sample games together");
+
+        $pageCustomLimitL = self::executeBrowseRequestAndGetGames(
+            self::createBrowseRequest([
+                "offset" => 0,
+                "limit" => 3
+            ])
+        );
+        $this->assertSame(3, count($pageCustomLimitL),
+            "Custom page limits should work correctly (low)");
+
+        $pageCustomLimitH = self::executeBrowseRequestAndGetGames(
+            self::createBrowseRequest([
+                "offset" => 0,
+                "limit" => 999
+            ])
+        );
+        $this->assertSame(self::$createdSampleGameCount, count($pageCustomLimitH),
+            "Custom page limits should work correctly (high)");
     }
 
     public function testBrowseSearch()
     {
-        $response = (new BrowseController())
-            ->browse(self::createBrowseRequest([
+        $lobbies = self::executeBrowseRequestAndGetGames(
+            self::createBrowseRequest([
                 "query" => "x"
-            ]));
-
-        $this->assertInstanceOf("app\HTTP\Responses\JsonResponse", $response);
-
-        $jsonResult = json_decode($response->body, true);
-        $lobbies = $jsonResult['Lobbies'];
+            ])
+        );
 
         $this->assertNotContainsGameWithName("BoringSteam", $lobbies);
         $this->assertNotContainsGameWithName("BoringOculus", $lobbies);
@@ -185,15 +253,11 @@ class BrowseControllerTest extends TestCase
      */
     public function testBrowseVanillaHidesModdedGames()
     {
-        $response = (new BrowseController())
-            ->browse(self::createBrowseRequest([
+        $lobbies = self::executeBrowseRequestAndGetGames(
+            self::createBrowseRequest([
                 "vanilla" => "1"
-            ]));
-
-        $this->assertInstanceOf("app\HTTP\Responses\JsonResponse", $response);
-
-        $jsonResult = json_decode($response->body, true);
-        $lobbies = $jsonResult['Lobbies'];
+            ])
+        );
 
         $this->assertContainsGameWithName("BoringSteam", $lobbies,
             "Browse with vanilla: should see boring games on all platforms");
@@ -212,15 +276,11 @@ class BrowseControllerTest extends TestCase
      */
     public function testBrowseSteamPlatformFiltering()
     {
-        $response = (new BrowseController())
-            ->browse(self::createBrowseRequest([
+        $lobbies = self::executeBrowseRequestAndGetGames(
+            self::createBrowseRequest([
                 "platform" => "steam"
-            ]));
-
-        $this->assertInstanceOf("app\HTTP\Responses\JsonResponse", $response);
-
-        $jsonResult = json_decode($response->body, true);
-        $lobbies = $jsonResult['Lobbies'];
+            ])
+        );
 
         $this->assertContainsGameWithName("BoringSteam", $lobbies);
         $this->assertNotContainsGameWithName("BoringOculus", $lobbies);
@@ -235,15 +295,11 @@ class BrowseControllerTest extends TestCase
      */
     public function testBrowseOculusPlatformFiltering()
     {
-        $response = (new BrowseController())
-            ->browse(self::createBrowseRequest([
+        $lobbies = self::executeBrowseRequestAndGetGames(
+            self::createBrowseRequest([
                 "platform" => "oculus"
-            ]));
-
-        $this->assertInstanceOf("app\HTTP\Responses\JsonResponse", $response);
-
-        $jsonResult = json_decode($response->body, true);
-        $lobbies = $jsonResult['Lobbies'];
+            ])
+        );
 
         $this->assertNotContainsGameWithName("BoringSteam", $lobbies);
         $this->assertContainsGameWithName("BoringOculus", $lobbies);
@@ -261,13 +317,7 @@ class BrowseControllerTest extends TestCase
     {
         $request = self::createBrowseRequest();
         $request->headers["user-agent"] = "ServerBrowser/0.1.1.0 (BeatSaber/1.12.2)";
-
-        $response = (new BrowseController())->browse($request);
-
-        $this->assertInstanceOf("app\HTTP\Responses\JsonResponse", $response);
-
-        $jsonResult = json_decode($response->body, true);
-        $lobbies = $jsonResult['Lobbies'];
+        $lobbies = self::executeBrowseRequestAndGetGames($request);
 
         $this->assertContainsGameWithName("BoringSteam", $lobbies);
         $this->assertContainsGameWithName("BoringOculus", $lobbies);
@@ -275,5 +325,55 @@ class BrowseControllerTest extends TestCase
         $this->assertContainsGameWithName("ModdedSteam", $lobbies);
         $this->assertNotContainsGameWithName("ModdedSteamCrossplayX", $lobbies,
             "When using mod version <0.2, cross play servers should be hidden");
+    }
+
+    /**
+     * @depends testBrowseSimple
+     */
+    public function testBrowseFilterFull()
+    {
+        $lobbies = self::executeBrowseRequestAndGetGames(
+            self::createBrowseRequest([
+                "filterFull" => true
+            ])
+        );
+
+        $this->assertContainsGameWithName("BoringSteam", $lobbies);
+        $this->assertContainsGameWithName("BoringSteamInProgress", $lobbies);
+        $this->assertNotContainsGameWithName("BoringSteamFull", $lobbies);
+    }
+
+    /**
+     * @depends testBrowseSimple
+     */
+    public function testBrowseFilterInProgress()
+    {
+        $lobbies = self::executeBrowseRequestAndGetGames(
+            self::createBrowseRequest([
+                "filterInProgress" => true
+            ])
+        );
+
+        $this->assertContainsGameWithName("BoringSteam", $lobbies);
+        $this->assertContainsGameWithName("BoringSteamFull", $lobbies);
+        $this->assertNotContainsGameWithName("BoringSteamInProgress", $lobbies);
+    }
+
+    /**
+     * @depends testBrowseSimple
+     */
+    public function testFilterModded()
+    {
+        $lobbies = self::executeBrowseRequestAndGetGames(
+            self::createBrowseRequest([
+                "filterModded" => true
+            ])
+        );
+
+        $this->assertContainsGameWithName("BoringSteam", $lobbies);
+        $this->assertContainsGameWithName("BoringSteamFull", $lobbies);
+        $this->assertContainsGameWithName("BoringSteamInProgress", $lobbies);
+        $this->assertNotContainsGameWithName("ModdedSteam", $lobbies);
+        $this->assertNotContainsGameWithName("ModdedSteamCrossplayX", $lobbies);
     }
 }

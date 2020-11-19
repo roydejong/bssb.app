@@ -3,6 +3,7 @@
 namespace app\Controllers\API;
 
 use app\BeatSaber\ModPlatformId;
+use app\BeatSaber\MultiplayerLobbyState;
 use app\Common\CVersion;
 use app\HTTP\Request;
 use app\HTTP\Response;
@@ -13,7 +14,8 @@ use app\Models\Joins\HostedGameLevelRecord;
 
 class BrowseController
 {
-    private const PAGE_SIZE = 6;
+    public const PAGE_SIZE = 6;
+    public const PAGE_SIZE_MAX = 12;
 
     public function browse(Request $request): Response
     {
@@ -31,11 +33,23 @@ class BrowseController
         $platformConstraint = $request->queryParams['platform'] ?? null;
         $isVanilla = intval($request->queryParams['vanilla'] ?? 0) === 1;
 
+        $filterFull = intval($request->queryParams['filterFull'] ?? 0) === 1;
+        $filterInProgress = intval($request->queryParams['filterInProgress'] ?? 0) === 1;
+        $filterModded = $isVanilla || intval($request->queryParams['filterModded'] ?? 0) === 1;;
+
         // -------------------------------------------------------------------------------------------------------------
         // Query
 
         $offset = intval($request->queryParams['offset'] ?? 0);
-        $limit = self::PAGE_SIZE;
+        $limit = intval($request->queryParams['limit'] ?? 0);
+
+        if ($limit <= 0) {
+            $limit = self::PAGE_SIZE;
+        }
+
+        if ($limit > self::PAGE_SIZE_MAX) {
+            $limit = self::PAGE_SIZE_MAX;
+        }
 
         // -------------------------------------------------------------------------------------------------------------
         // Query preparation
@@ -90,8 +104,20 @@ class BrowseController
                 $officialMasterServerLike);
         }
 
-        // Vanilla mode (no MpEx games)
-        if ($isVanilla) {
+        // Filter: hide full games
+        if ($filterFull) {
+            $baseQuery->andWhere('player_count < player_limit');
+        }
+
+        // Filter: hide games in progress
+        if ($filterInProgress) {
+            $baseQuery->andWhere('lobby_state NOT IN (?)', [
+                MultiplayerLobbyState::GameRunning, MultiplayerLobbyState::GameStarting
+            ]);
+        }
+
+        // Filter: Vanilla mode; hide all modded, MpEx games
+        if ($filterModded) {
             $baseQuery->andWhere('is_modded = 0');
         }
 
