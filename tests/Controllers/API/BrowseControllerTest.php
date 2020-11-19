@@ -232,7 +232,7 @@ class BrowseControllerTest extends TestCase
                 "limit" => 999
             ])
         );
-        $this->assertGreaterThanOrEqual(self::$createdSampleGameCount, count($pageCustomLimitH),
+        $this->assertGreaterThanOrEqual($expectedTotalItems, count($pageCustomLimitH),
             "Custom page limits should work correctly (high)");
     }
 
