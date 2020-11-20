@@ -32,6 +32,7 @@ class HostedGame extends Model implements \JsonSerializable
     public string $platform = ModPlatformId::UNKNOWN;
     public ?string $masterServerHost;
     public ?int $masterServerPort;
+    public ?\DateTime $endedAt;
 
     // -----------------------------------------------------------------------------------------------------------------
     // Lifecycle

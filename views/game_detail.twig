@@ -18,6 +18,18 @@
 
             <hr />
 
+            {% if game.endedAt is not null %}
+                <div class="alert alert-danger">
+                    This game has ended and can no longer be joined.
+                </div>
+            {% endif %}
+
+            {% if game.getIsStale() %}
+                <div class="alert alert-danger">
+                    We stopped receiving data for this game, it's probably dead.
+                </div>
+            {% endif %}
+
             {% if not game.masterServerHost %}
                 <div class="alert alert-warning">
                     This game was added with an older version of the Server Browser mod, cross-play may not work as expected.
@@ -93,14 +105,22 @@
                                 <th scope="row">Last update</th>
                                 <td>{{ game.lastUpdate.format('r') }}</td>
                             </tr>
+                            {% if game.endedAt is not null %}
+                            <tr>
+                                <th scope="row">Ended at</th>
+                                <td>{{ game.endedAt.format('r') }}</td>
+                            </tr>
+                            {% endif %}
                         </tbody>
                     </table>
                 </div>
                 <div class="col-5">
-                    <div class="card">
-                        <h5 class="card-header">Server code</h5>
-                        <div class="card-body server-code">{{ game.serverCode }}</div>
-                    </div>
+                    {% if not game.getIsStale() and not game.ended_at %}
+                        <div class="card">
+                            <h5 class="card-header">Server code</h5>
+                            <div class="card-body server-code">{{ game.serverCode }}</div>
+                        </div>
+                    {% endif %}
                     <br />
                     {% if level %}
                     <div class="card">

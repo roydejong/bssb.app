@@ -126,10 +126,13 @@ class AnnounceController
         // Insert or update
         $saveOk = $game->save();
 
-        // Delete any other games from same owner (conflict prevention)
+        // Mark any older games from same owner as "ended"
         HostedGame::query()
-            ->delete()
-            ->where('owner_id = ? AND id < ?', $game->ownerId, $game->id)
+            ->update()
+            ->set("ended_at = ?", $now)
+            ->where('ended_at IS NULL')
+            ->andWhere('owner_id = ?', $ownerId)
+            ->andWhere('id < ?', $game->id)
             ->execute();
 
         // -------------------------------------------------------------------------------------------------------------

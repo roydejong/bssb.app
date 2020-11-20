@@ -34,6 +34,10 @@ class BrowseControllerTest extends TestCase
 
         self::createSampleGame(7, "BoringSteamFull", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 5, false);
         self::createSampleGame(8, "BoringSteamInProgress", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, true);
+
+        $endedSteam = self::createSampleGame(9, "EndedSteam", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, false);
+        $endedSteam->endedAt = new \DateTime('now');
+        $endedSteam->save();
     }
 
     public static function tearDownAfterClass(): void
@@ -189,6 +193,8 @@ class BrowseControllerTest extends TestCase
             "Browse: should never see old games");
         $this->assertContainsGameWithName("BoringSteamFull", $lobbies,
             "Browse: should see full games by default");
+        $this->assertNotContainsGameWithName("EndedSteam", $lobbies,
+            "Browse: should see not see ended games at all");
     }
 
     public function testBrowsePagination()
@@ -212,7 +218,7 @@ class BrowseControllerTest extends TestCase
 
         $this->assertNotSame($pageOne, $pageTwo);
 
-        $expectedTotalItems = self::$createdSampleGameCount - 1; // NB: -1 for OldSteam
+        $expectedTotalItems = self::$createdSampleGameCount - 2; // NB: -1 for OldSteam, -1 for EndedSteam
 
         $this->assertGreaterThanOrEqual($expectedTotalItems, count($pageOne) + count($pageTwo),
             "Pages one and two should make up the sample game count together");

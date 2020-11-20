@@ -58,6 +58,7 @@ class BrowseController
             ->select("hosted_games.*, lr.beatsaver_id, lr.cover_url, lr.name AS level_name")
             ->from("hosted_games")
             ->where("last_update >= ?", HostedGame::getStaleGameCutoff())
+            ->andWhere("ended_at IS NULL")
             ->leftJoin("level_records lr ON (lr.level_id = hosted_games.level_id)")
             ->orderBy("hosted_games.id DESC");
 

@@ -20,6 +20,7 @@ class HomeController
             ->leftJoin("level_records lr ON (lr.level_id = hosted_games.level_id)")
             ->orderBy("hosted_games.id DESC")
             ->where("last_update >= ?", HostedGame::getStaleGameCutoff())
+            ->andWhere("ended_at IS NULL")
             ->queryAllModels();
 
         $view = new View('home.twig');
