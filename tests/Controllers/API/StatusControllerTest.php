@@ -30,7 +30,6 @@ class StatusControllerTest extends TestCase
      */
     public function testGetStatusDbError()
     {
-        // TODO: The failed connection stalls for >= 500ms so there must be a better way to do this
         $dbConfig = Instarecord::config();
         $dbConfig->unix_socket = "/invalid/";
         $dbConfig->host = "/invalid/";

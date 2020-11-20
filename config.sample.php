@@ -7,7 +7,9 @@ global $config;
 /**
  * Sentry error logging
  */
-Sentry\init(['dsn' => 'SET_ME' ]);
+if (!defined('IS_TEST_RUN')) {
+    Sentry\init(['dsn' => 'SET_ME']);
+}
 
 /**
  * cache_enabled, boolean

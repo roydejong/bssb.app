@@ -2,6 +2,8 @@
 
 use Instasell\Instarecord\Instarecord;
 
+define('IS_TEST_RUN', true);
+
 require_once __DIR__ . "/bootstrap.php";
 
 $dbConfig = Instarecord::config();
