@@ -1,0 +1,70 @@
+{% extends "_base.twig" %}
+
+{% set pageTitle = 'Privacy Policy' %}
+
+{% block main %}
+    <main role="main" class="container-fluid">
+        <div class="content-page">
+
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Server Browser</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Statistics</li>
+                </ol>
+            </nav>
+
+            <div class="privacy-page">
+
+                <h1>Privacy Policy</h1>
+                <p class="lead">Last updated: 2020-11-20</p>
+                <hr />
+
+                <h2>Summary</h2>
+                <p class="lead">We only collect information that you submit to us, and that information may be publicly displayed and transmitted.</p>
+
+                <h2>Information we collect</h2>
+                <p><strong>If you install the <a href="https://github.com/roydejong/BeatSaberServerBrowser" target="_blank">game modification</a>, the following information may be collected and sent to our servers:</strong></p>
+                <ul>
+                    <li>Version information about the modification, the game, and the platform you are playing on</li>
+                    <li>Basic profile information from the third party game service you are using (e.g. Steam, Oculus), like username and unique ID</li>
+                    <li>Game data, such as which level you are playing and who you are playing with</li>
+                    <li>Connection metadata, such as which server you play on and how others can connect to it</li>
+                </ul>
+                <p><strong>If you visit the <a href="https://bssb.app" target="_blank">bssb.app</a> website or use the game modification to access its services:</strong></p>
+                <ul>
+                    <li>Basic log information: your IP address, user agent, and which requests are sent to our server</li>
+                </ul>
+
+                <h2>How we use your information</h2>
+                <p>We use your information to provide the Server Browser service, which includes the following:</p>
+                <ul>
+                    <li>
+                        To provide you and other users with the Server Browser service
+                    </li>
+                    <li>
+                        To perform basic analysis of how you use our service
+                    </li>
+                    <li>
+                        To publicly display game information and statistics
+                    </li>
+                </ul>
+                <p>We are committed to protecting sensitive information like your IP address, but most information you submit to us may be displayed publicly to provide the service.</p>
+
+                <h2>Data retention</h2>
+                <p>All collected data may be retained on our server for up to one month, or as long as is needed for the purposes set out in this policy.</p>
+
+                <h2>Data transfer and disclosure</h2>
+                <ul>
+                    <li>Game, profile and connection information is publicly displayed and disclosed, and as such, may be transferred to other regions</li>
+                    <li>Sensitive information like your IP address is only used for analytical and operational purposes and won't be shared with any third-parties</li>
+                </ul>
+
+                <h2>Contact us</h2>
+                <p>Contact us with any questions or requests at:</p>
+                <strong><a href="mailto:privacy@bssb.app">privacy@bssb.app</a></strong>
+
+            </div>
+
+        </div>
+    </main>
+{% endblock %}

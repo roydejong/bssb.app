@@ -11,7 +11,7 @@ use app\Models\LevelRecord;
 
 class GameDetailController
 {
-    public function get_game_detail(Request $request, string $hashId)
+    public function getGameDetail(Request $request, string $hashId)
     {
         $id = HostedGame::hash2id($hashId);
 
