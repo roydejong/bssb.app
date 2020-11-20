@@ -46,7 +46,7 @@
                                     <td>{{ game.ownerName ? game.ownerName : "Unknown" }}</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">Status</th>
+                                    <th scope="row">{{ game.getIsStale() or game.endedAt is not null ? 'Last status' : 'Current status' }}</th>
                                     <td>{{ game.describeState() }} ({{ game.playerCount }} of {{ game.playerLimit }} players)</td>
                                 </tr>
                                 {% if game.difficulty is not null and game.levelId %}
