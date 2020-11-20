@@ -116,7 +116,7 @@
                         </table>
                     </div>
                     <div class="col-5">
-                        {% if not game.getIsStale() and not game.ended_at %}
+                        {% if not game.getIsStale() and game.ended_at is null %}
                             <div class="card">
                                 <h5 class="card-header">Server code</h5>
                                 <div class="card-body server-code">{{ game.serverCode }}</div>
