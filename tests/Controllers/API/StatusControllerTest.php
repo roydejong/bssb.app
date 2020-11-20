@@ -1,0 +1,50 @@
+<?php
+
+namespace Controllers\API;
+
+use app\Controllers\API\StatusController;
+use app\HTTP\Request;
+use Instasell\Instarecord\Instarecord;
+use PHPUnit\Framework\TestCase;
+
+class StatusControllerTest extends TestCase
+{
+    public function testGetStatusOk()
+    {
+        $controller = new StatusController();
+
+        $request = new Request();
+        $request->method = "GET";
+        $request->path = "/api/v1/status";
+
+        $response = $controller->getStatus($request);
+
+        $this->assertSame(200, $response->code);
+        $this->assertInstanceOf("app\HTTP\Responses\JsonResponse", $response);
+        $this->assertStringContainsString('"status":"ok"', $response->body);
+    }
+
+    /**
+     * @depends testGetStatusOk
+     * @runInSeparateProcess
+     */
+    public function testGetStatusDbError()
+    {
+        // TODO: The failed connection stalls for >= 500ms so there must be a better way to do this
+        $dbConfig = Instarecord::config();
+        $dbConfig->unix_socket = "/invalid/";
+        $dbConfig->host = "/invalid/";
+
+        $controller = new StatusController();
+
+        $request = new Request();
+        $request->method = "GET";
+        $request->path = "/api/v1/status";
+
+        $response = $controller->getStatus($request);
+
+        $this->assertSame(200, $response->code);
+        $this->assertInstanceOf("app\HTTP\Responses\JsonResponse", $response);
+        $this->assertStringContainsString('"status":"db_error"', $response->body);
+    }
+}

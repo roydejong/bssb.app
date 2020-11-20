@@ -2,6 +2,7 @@
 
 use app\Controllers\API\AnnounceController;
 use app\Controllers\API\BrowseController;
+use app\Controllers\API\StatusController;
 use app\Controllers\API\UnAnnounceController;
 use app\Controllers\GameDetailController;
 use app\Controllers\HomeController;
@@ -20,6 +21,7 @@ $router->register('/game/$hashId', [new GameDetailController(), 'get_game_detail
 $router->register('/api/v1/announce', [new AnnounceController(), 'announce']);
 $router->register('/api/v1/unannounce', [new UnAnnounceController(), 'unAnnounce']);
 $router->register('/api/v1/browse', [new BrowseController(), 'browse']);
+$router->register('/api/v1/status', [new StatusController(), 'status']);
 
 // Run!
 $request = Request::deduce();
