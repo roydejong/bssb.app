@@ -25,7 +25,7 @@
                     </div>
                 {% endif %}
 
-                {% if game.getIsStale() %}
+                {% if game.getIsStale() and game.endedAt is null %}
                     <div class="alert alert-danger">
                         We stopped receiving data for this game, it's probably dead.
                     </div>
