@@ -21,7 +21,7 @@ $router->register('/game/$hashId', [new GameDetailController(), 'get_game_detail
 $router->register('/api/v1/announce', [new AnnounceController(), 'announce']);
 $router->register('/api/v1/unannounce', [new UnAnnounceController(), 'unAnnounce']);
 $router->register('/api/v1/browse', [new BrowseController(), 'browse']);
-$router->register('/api/v1/status', [new StatusController(), 'status']);
+$router->register('/api/v1/status', [new StatusController(), 'getStatus']);
 
 // Run!
 $request = Request::deduce();
