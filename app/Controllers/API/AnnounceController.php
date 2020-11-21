@@ -122,18 +122,21 @@ class AnnounceController
         }
 
         $game->lastUpdate = $now;
+        $game->endedAt = null;
 
         // Insert or update
         $saveOk = $game->save();
 
-        // Mark any older games from same owner as "ended"
-        HostedGame::query()
-            ->update()
-            ->set("ended_at = ?", $now)
-            ->where('ended_at IS NULL')
-            ->andWhere('owner_id = ?', $ownerId)
-            ->andWhere('id < ?', $game->id)
-            ->execute();
+        if ($saveOk) {
+            // Mark any older games from same owner as "ended"
+            HostedGame::query()
+                ->update()
+                ->set("ended_at = ?", $now)
+                ->where('ended_at IS NULL')
+                ->andWhere('owner_id = ?', $ownerId)
+                ->andWhere('id < ?', $game->id)
+                ->execute();
+        }
 
         // -------------------------------------------------------------------------------------------------------------
         // Response
