@@ -53,7 +53,15 @@
                         {% if game.coverUrl %}
                             <img src="{{ game.coverUrl }}" alt="{{ game.describeSong() }}" height="25" class="cover-art"/>
                         {% else %}
-                            <span class="huh">?</span>
+                            {% if game.levelId %}
+                                <span class="huh">
+                                    <i class="mdi mdi-music"></i>
+                                </span>
+                            {% else %}
+                                <span class="huh">
+                                    <i class="mdi mdi-new-box"></i>
+                                </span>
+                            {% endif %}
                         {% endif %}
                     </td>
                     <td class="align-middle">

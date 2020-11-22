@@ -45,6 +45,7 @@ td.cover-art-cell {
   padding: 0;
   position: relative;
   user-select: none;
+  overflow: hidden;
 
   &, > img, > span {
     background-color: #ddd;
@@ -67,6 +68,11 @@ td.cover-art-cell {
     font-weight: 600;
     font-size: 16px;
     opacity: .5;
+  }
+  > img {
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
   }
 }
 
