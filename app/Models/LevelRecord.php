@@ -63,6 +63,34 @@ class LevelRecord extends Model
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    // OST/DLC cover art helper
+
+    public function syncNativeCover(): bool
+    {
+        if ($this->getIsCustomLevel()) {
+            return false;
+        }
+
+        if (!$this->levelId || strpos($this->levelId, '.') !== false) {
+            // Need valid level ID / as a precaution filter out dots to prevent any nasty traversal stuff
+            \Sentry\captureMessage("syncNativeCover() rejected invalid level with id: {$this->levelId}");
+            return false;
+        }
+
+        $expectedPath = "/static/bsassets/{$this->levelId}.png";
+        $expectedDiskPath = DIR_BASE . "/public" . $expectedPath;
+
+        if (!file_exists($expectedDiskPath)) {
+            // Not found, suspicious
+            \Sentry\captureMessage("syncNativeCover() failed for level with id: {$this->levelId}");
+            return false;
+        }
+
+        $this->coverUrl = "https://bssb.app{$expectedPath}";
+        return $this->save();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     // Beat saver
 
     public function syncFromBeatSaver(): bool
@@ -101,6 +129,7 @@ class LevelRecord extends Model
     public static function syncFromAnnounce(string $levelId, ?string $songName, ?string $songAuthor): LevelRecord
     {
         $customLevelHash = LevelId::getHashFromLevelId($levelId);
+        $isCustomLevel = !empty($customLevelHash);
 
         $levelRecord = new LevelRecord();
         $levelRecord->levelId = $levelId;
@@ -108,9 +137,14 @@ class LevelRecord extends Model
 
         if ($existingRecord = $levelRecord->fetchExisting()) {
             // We already have a record for this song (by id/hash), an announce won't tell us anything new
-            if ($customLevelHash && !$existingRecord->beatsaverId) {
-                // ...but it might be worth trying beat saver again as we don't have correct data.
-                $existingRecord->syncFromBeatSaver();
+            if ($isCustomLevel) {
+                if (!$existingRecord->beatsaverId) {
+                    // ...but it might be worth trying beat saver again as we don't have correct data.
+                    $existingRecord->syncFromBeatSaver();
+                }
+            } else {
+                // This is an OST / DLC song, figure out if we can get a native cover
+                $existingRecord->syncNativeCover();
             }
             return $existingRecord;
         }
