@@ -9,6 +9,7 @@ use app\Common\CString;
 use app\Controllers\API\BrowseController;
 use app\HTTP\Request;
 use app\Models\HostedGame;
+use app\Models\SystemConfig;
 use PHPUnit\Framework\TestCase;
 
 class BrowseControllerTest extends TestCase
@@ -384,5 +385,22 @@ class BrowseControllerTest extends TestCase
         $this->assertContainsGameWithName("BoringSteamInProgress", $lobbies);
         $this->assertNotContainsGameWithName("ModdedSteam", $lobbies);
         $this->assertNotContainsGameWithName("ModdedSteamCrossplayX", $lobbies);
+    }
+
+    /**
+     * @depends testBrowseSimple
+     */
+    public function testServerMessage()
+    {
+        $sysConfig = SystemConfig::fetchInstance();
+        $sysConfig->serverMessage = "Test message!";
+
+        $request = self::createBrowseRequest();
+
+        $response = (new BrowseController())->browse($request);
+        $responseJson = json_decode($response->body, true);
+
+        $this->assertArrayHasKey("Message", $responseJson);
+        $this->assertSame("Test message!", $responseJson["Message"]);
     }
 }

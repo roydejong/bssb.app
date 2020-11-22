@@ -11,6 +11,7 @@ use app\HTTP\Responses\BadRequestResponse;
 use app\HTTP\Responses\JsonResponse;
 use app\Models\HostedGame;
 use app\Models\Joins\HostedGameLevelRecord;
+use app\Models\SystemConfig;
 
 class BrowseController
 {
@@ -139,11 +140,14 @@ class BrowseController
                 ->queryAllModels();
         }
 
+        $config = SystemConfig::fetchInstance();
+
         return new JsonResponse([
             "Count" => $totalCount,
             "Offset" => $offset,
             "Limit" => $limit,
-            "Lobbies" => $games
+            "Lobbies" => $games,
+            "Message" => $config->serverMessage
         ]);
     }
 }
