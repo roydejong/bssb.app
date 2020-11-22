@@ -61,7 +61,7 @@ class BrowseController
             ->where("last_update >= ?", HostedGame::getStaleGameCutoff())
             ->andWhere("ended_at IS NULL")
             ->leftJoin("level_records lr ON (lr.level_id = hosted_games.level_id)")
-            ->orderBy("hosted_games.id DESC");
+            ->orderBy("player_limit DESC, hosted_games.id DESC");
 
         // Search query
         if (!empty($searchQuery)) {
