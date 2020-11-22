@@ -28,7 +28,7 @@ class SystemConfig extends Model
     public static function fetchInstance(): SystemConfig
     {
         if (!self::$instance) {
-            self::$instance = SystemConfig::query()->querySingleRow();
+            self::$instance = SystemConfig::query()->querySingleModel();
 
             if (self::$instance === null) {
                 self::$instance = new SystemConfig();
