@@ -21,12 +21,27 @@ class ViewRenderer
         ]);
     }
 
+    private function processContext(?array $userContext): array
+    {
+        if ($userContext === null) {
+            $userContext = [];
+        }
+
+        // Add git version (for cache busting)
+        $gitRefPath = DIR_BASE . '/.git/refs/heads/main';
+        $userContext['version_hash'] = trim(file_get_contents($gitRefPath));
+        $userContext['version_hash_short'] = substr($userContext['version_hash'],0,7);
+        $userContext['version_date'] = filemtime($gitRefPath);
+
+        return $userContext;
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     // Render
 
     public function render(string $viewFileName, ?array $context): string
     {
-        return $this->twig->render($viewFileName, $context ?? []);
+        return $this->twig->render($viewFileName, $this->processContext($context));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
