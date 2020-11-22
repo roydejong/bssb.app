@@ -28,6 +28,13 @@
             </div>
         </div>
 
+        {% if serverMessage is defined and serverMessage|length > 0 %}
+            <div class="alert alert-danger alert-dismissible">
+                <h6><i class="mdi mdi-alert"></i> Live notice</h6>
+                <span>{{ serverMessage }}</span>
+            </div>
+        {% endif %}
+
         <table class="table table-bordered table-striped table-hover">
             <thead class="thead-dark">
             <tr>

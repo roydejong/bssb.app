@@ -6,6 +6,7 @@ use app\Frontend\View;
 use app\HTTP\Request;
 use app\Models\HostedGame;
 use app\Models\Joins\HostedGameLevelRecord;
+use app\Models\SystemConfig;
 
 class HomeController
 {
@@ -23,8 +24,11 @@ class HomeController
             ->andWhere("ended_at IS NULL")
             ->queryAllModels();
 
+        $sysConfig = SystemConfig::fetchInstance();
+
         $view = new View('home.twig');
         $view->set('games', $games);
+        $view->set('serverMessage', $sysConfig->serverMessage);
         return $view->asResponse();
     }
 }
