@@ -29,6 +29,11 @@ table small {
   background-color: #343A40 !important;
 }
 
+.navbar .custom-switch {
+  color: #fff;
+  user-select: none;
+}
+
 .navbar-brand {
   font-weight: 700;
   margin-top: -2px;
@@ -143,6 +148,57 @@ footer {
     }
     &:last-child {
       margin-bottom: 0;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Dark mode
+
+body[data-theme="dark"] {
+  background-color: #222222;
+  color: #eee;
+
+  a {
+    color: #72a8ff;
+  }
+
+  .navbar.bg-dark {
+    background-color: #111315 !important;
+  }
+
+  .card {
+    border-color: #333;
+    background: #111315;
+  }
+
+  .alert.alert-danger {
+    border-color: #333;
+    background-color: #111315;
+    color: #f6b93b;
+  }
+
+  table.table {
+    thead.thead-dark {
+      th {
+        background: #111315;
+        border-color: #333;
+      }
+    }
+    tbody {
+      td {
+        border-color: #333;
+        color: #eee;
+        background: #1e1e1f;
+      }
+    }
+  }
+
+  footer {
+    border-color: #333;
+
+    .footer-actual {
+      color: #777;
     }
   }
 }
