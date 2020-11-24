@@ -281,3 +281,66 @@ body[data-theme="dark"] {
     }
   }
 }
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Responsive tweaks
+
+@media all and (max-width: 1000px) {
+  .navbar .container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .main-page {
+    padding: 0;
+
+    h1 {
+      font-size: 22px;
+    }
+    p.lead {
+      font-size: 18px;
+    }
+    .card {
+      display: none;
+    }
+    .alert {
+      padding: 10px 15px;
+
+      h6 {
+        margin-bottom: 2px;
+      }
+    }
+
+    table {
+      th:first-child, td:first-child {
+        // Hide art column
+        display: none;
+      }
+      th, td {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .content-page {
+    padding: 0;
+  }
+
+  footer, .footer-actual {
+    text-align: center;
+  }
+}
+
+@media all and (max-width: 600px) {
+  .main-page {
+    table {
+      th:nth-child(3), td:nth-child(3) {
+        // Hide level column
+        display: none;
+      }
+      th:nth-child(4), td:nth-child(4) {
+        // Hide difficulty column
+        display: none;
+      }
+    }
+  }
+}

@@ -38,7 +38,7 @@
                 {% endif %}
 
                 <div class="row">
-                    <div class="col-7">
+                    <div class="col-sm">
                         <table class="table table-bordered">
                             <tbody>
                                 <tr>
@@ -115,7 +115,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="col-5">
+                    <div class="col-sm">
                         {% if not game.getIsStale() and game.ended_at is null %}
                             <div class="card">
                                 <h5 class="card-header">Server code</h5>
@@ -165,12 +165,14 @@
                                                         <td>{{ level.describeDuration() }}</td>
                                                     </tr>
                                                 {% endif %}
+                                                {% if level.beatsaverId %}
+                                                    <tr>
+                                                        <td colspan="2"><a href="https://beatsaver.com/beatmap/{{ level.beatsaverId }}" class="btn btn-primary" title="View on BeatSaver" target="_blank" style="margin-top: 10px;">BeatSaver</a></td>
+                                                    </tr>
+                                                {% endif %}
                                             </tbody>
                                         </table>
                                     </div>
-                                    {% if level.beatsaverId %}
-                                        <a href="https://beatsaver.com/beatmap/{{ level.beatsaverId }}" class="btn btn-primary" title="View on BeatSaver" target="_blank">BeatSaver</a>
-                                    {% endif %}
                                 </div>
                             </div>
                         </div>
