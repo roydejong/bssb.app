@@ -153,52 +153,119 @@ footer {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
+// Extra Stuff
+
+.oculus-icon {
+  height: 21px;
+  width: 16px;
+  margin-right: -1px;
+  margin-left: -1px;
+}
+body[data-theme="dark"] .oculus-icon {
+  .st0{fill:#fff;}
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
 // Dark mode
 
 body[data-theme="dark"] {
-  background-color: #222222;
+  background: #36393F;
   color: #eee;
 
-  a {
-    color: #72a8ff;
-  }
-
-  .navbar.bg-dark {
-    background-color: #111315 !important;
+  .navbar-dark {
+    background-color: #202225 !important;
   }
 
   .card {
-    border-color: #333;
-    background: #111315;
+    background-color: #303030;
+    border-color: #375a7f !important;
+    color: #eee;
+  }
+  .card-header {
+    background-color: #444;
   }
 
-  .alert.alert-danger {
-    border-color: #333;
-    background-color: #111315;
-    color: #f6b93b;
+  .alert {
+    background-color: #375a7f;
+    color: #eee;
+    border-color:  rgba(0, 0, 0, .35);
   }
 
-  table.table {
-    thead.thead-dark {
-      th {
-        background: #111315;
-        border-color: #333;
+  .breadcrumb {
+    background-color: #444;
+
+    a {
+      color: #fff;
+    }
+  }
+  .breadcrumb-item.active {
+    color: #888;
+  }
+
+  hr {
+    border-color: #333 !important;
+    background: #333 !important;
+  }
+
+  table {
+    thead {
+      tr {
+        th {
+          background-color: #1D1D1D !important;
+          border-color: #444444 !important;
+        }
       }
     }
     tbody {
-      td {
-        border-color: #333;
-        color: #eee;
-        background: #1e1e1f;
+      tr {
+        th {
+          background-color: #1D1D1D !important;
+          border-color: #444444 !important;
+          color: #fff;
+        }
+        td {
+          background: #222222;
+          border-color: #444444 !important;
+          color: #fff;
+
+          code {
+            color: #f39c12 !important;
+            font-size: 15px;
+            margin-top: -1px;
+          }
+        }
       }
     }
   }
 
-  footer {
-    border-color: #333;
+  a {
+    color: #3498DB;
+  }
+  button, .btn {
+    color: #fff;
+  }
+  .btn-primary {
+    color: #fff;
+    background-color: #375a7f;
+    border-color: #375a7f;
+  }
+  .btn-success {
+    color: #fff;
+    background-color: #008966;
+    border-color: #007c5d;
+  }
 
-    .footer-actual {
-      color: #777;
+  footer {
+    border-color: #444;
+
+    &, .footer-actual {
+      color: rgb(142, 146, 151);
+    }
+  }
+
+  .media-body table {
+    td, th {
+      background: transparent !important;
     }
   }
 }
