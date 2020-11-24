@@ -27,11 +27,11 @@ class ViewRenderer
             $userContext = [];
         }
 
-        // Add git version (for cache busting)
-        $gitRefPath = DIR_BASE . '/.git/refs/heads/main';
-        $userContext['version_hash'] = trim(file_get_contents($gitRefPath));
+        // Add version (for cache busting)
+        $versionFilePath = DIR_BASE . "/.version";
+        $userContext['version_hash'] = trim(@file_get_contents($versionFilePath));
         $userContext['version_hash_short'] = substr($userContext['version_hash'],0,7);
-        $userContext['version_date'] = filemtime($gitRefPath);
+        $userContext['version_date'] = @filemtime($versionFilePath);
 
         return $userContext;
     }

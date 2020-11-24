@@ -1,6 +1,9 @@
 # Secrets
 config.php
 
+# Version
+.version
+
 # Cache
 storage/cache
 
