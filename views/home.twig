@@ -35,7 +35,7 @@
             </div>
         {% endif %}
 
-        <table class="table table-bordered table-striped table-hover">
+        <table class="table table-bordered table-striped">
             <thead class="thead-dark">
             <tr>
                 <th colspan="2">Game</th>
@@ -93,7 +93,7 @@
                             {% if game.platform == "steam" %}
                                 <i class="mdi mdi-steam"></i> Steam
                             {% elseif game.platform == "oculus" %}
-                                <i class="mdi mdi-facebook-gaming"></i> Oculus
+                                {% include "oculus_icon.twig"%} Oculus
                             {% else %}
                                 <i class="mdi mdi-head-question"></i> Unknown
                             {% endif %}
