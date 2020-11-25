@@ -2,6 +2,7 @@
 
 namespace app\Controllers\API;
 
+use app\BeatSaber\LevelId;
 use app\BeatSaber\ModPlatformId;
 use app\BeatSaber\MultiplayerLobbyState;
 use app\Common\CString;
@@ -62,7 +63,7 @@ class AnnounceController
         $game->lobbyState = intval($input['LobbyState'] ?? MultiplayerLobbyState::None);
 
         if (!empty($input['LevelId'])) {
-            $game->levelId = $input['LevelId'];
+            $game->levelId = LevelId::cleanLevelHash($input['LevelId']);
             $game->songName = $input['SongName'] ?? null;
             $game->songAuthor = $input['SongAuthor'] ?? null;
             $game->difficulty = isset($input['Difficulty']) ? intval($input['Difficulty']) : null;

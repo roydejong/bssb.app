@@ -11,16 +11,30 @@ class LevelId
     {
         if (self::isCustomLevel($levelId)) {
             $parts = explode(self::CUSTOM_LEVEL_PREFIX, $levelId, 2);
-            $hash = $parts[1] ?? null;
+            $remainder = $parts[1] ?? null;
 
-            if ($hash && strlen($hash) === self::HASH_LENGTH && ctype_alnum($hash)) {
-                // This looks like it could be a valid SHA-1 hash
-                return $parts[1];
+            if ($remainder && strlen($remainder) >= self::HASH_LENGTH) {
+                $hash = substr($remainder, 0, self::HASH_LENGTH);
+
+                if (ctype_alnum($hash)) {
+                    // This looks like it could be a valid SHA-1 hash
+                    return $hash;
+                }
             }
         }
 
         // Level ID does not seem to contain a valid hash
         return null;
+    }
+
+    public static function cleanLevelHash(string $levelId): string
+    {
+        if (self::isCustomLevel($levelId)) {
+            $hash = self::getHashFromLevelId($levelId);
+            return self::CUSTOM_LEVEL_PREFIX . $hash;
+        }
+
+        return $levelId;
     }
 
     /**
@@ -29,6 +43,6 @@ class LevelId
     public static function isCustomLevel(string $levelId): bool
     {
         return strpos($levelId, self::CUSTOM_LEVEL_PREFIX) === 0 &&
-            strlen($levelId) === (strlen(self::CUSTOM_LEVEL_PREFIX) + self::HASH_LENGTH);
+            strlen($levelId) >= (strlen(self::CUSTOM_LEVEL_PREFIX) + self::HASH_LENGTH);
     }
 }
