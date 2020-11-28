@@ -296,21 +296,33 @@ class AnnounceControllerTest extends TestCase
      */
     public function testAnnounceCleansLevelId()
     {
-        $request = new MockJsonRequest([
-            'ServerCode' => '12345',
-            'LevelId' => 'custom_level_58EB1C803030D10EE71E91D4FE6C966B09AC341C_71e5 (Moudoku ga Osou - Tootie)',
-            'SongName' => 'Moudoku ga Osou',
-            'SongAuthor' => 'Tootie',
-            'IsModded' => true,
-            'OwnerId' => 'unit_test_testAnnounceCleansLevelId'
-        ]);
-        $request->method = "POST";
-        $request->path = "/api/v1/announce";
+        $request = clone self::$minimalAnnounceRequest;
+        $request->json['LevelId'] = 'custom_level_58EB1C803030D10EE71E91D4FE6C966B09AC341C_71e5 (Moudoku ga Osou - Tootie)';
+        $request->json['SongName'] = 'Moudoku ga Osou';
+        $request->json['SongAuthor'] = 'Tootie';
+        $request->json['OwnerId'] = 'unit_test_testAnnounceCleansLevelId';
+        $request->json['IsModded'] = true;
 
         $response = (new AnnounceController())->announce($request);
         $json = json_decode($response->body, true);
 
         $game = HostedGame::fetch($json['id']);
         $this->assertSame("custom_level_58EB1C803030D10EE71E91D4FE6C966B09AC341C", $game->levelId);
+    }
+
+    /**
+     * @depends testMinimalAnnounce
+     */
+    public function testAnnounceHandlesEmptyNames()
+    {
+        $request = clone self::$minimalAnnounceRequest;
+        $request->json['GameName'] = "  ";
+
+        $response = (new AnnounceController())->announce($request);
+        $json = json_decode($response->body, true);
+        $game = HostedGame::fetch($json['id']);
+
+        $this->assertSame("Untitled Beat Game", $game->gameName,
+            "Empty game names should be prevented");
     }
 }

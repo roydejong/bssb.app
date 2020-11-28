@@ -54,13 +54,17 @@ class AnnounceController
         }
 
         $game->serverCode = strtoupper($input['ServerCode'] ?? "");
-        $game->gameName = $input['GameName'] ?? "Untitled Beat Game";
+        $game->gameName = trim($input['GameName'] ?? "");
         $game->ownerId = $ownerId;
         $game->ownerName = $input['OwnerName'] ?? "Unknown";
         $game->playerCount = intval($input['PlayerCount'] ?? 0);
         $game->playerLimit = intval($input['PlayerLimit'] ?? 0);
         $game->isModded = intval($input['IsModded'] ?? 0) === 1;
         $game->lobbyState = intval($input['LobbyState'] ?? MultiplayerLobbyState::None);
+
+        if (empty($game->gameName)) {
+            $game->gameName = "Untitled Beat Game";
+        }
 
         if (!empty($input['LevelId'])) {
             $game->levelId = LevelId::cleanLevelHash($input['LevelId']);
