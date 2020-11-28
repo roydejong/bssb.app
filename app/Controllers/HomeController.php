@@ -19,7 +19,7 @@ class HomeController
             ->select("hosted_games.*, lr.beatsaver_id, lr.cover_url, lr.name AS level_name")
             ->from("hosted_games")
             ->leftJoin("level_records lr ON (lr.level_id = hosted_games.level_id)")
-            ->orderBy("player_limit DESC, player_count ASC, hosted_games.id DESC")
+            ->orderBy("player_count >= player_limit ASC, player_limit DESC, hosted_games.id DESC")
             ->where("last_update >= ?", HostedGame::getStaleGameCutoff())
             ->andWhere("ended_at IS NULL")
             ->queryAllModels();
