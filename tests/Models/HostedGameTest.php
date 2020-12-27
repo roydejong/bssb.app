@@ -44,4 +44,15 @@ class HostedGameTest extends TestCase
         $game->masterServerHost = "anything.mp.beatsaber.com";
         $this->assertTrue($game->getIsOfficial(), "Games on any *.mp server should be official");
     }
+
+    public function testGetIsUninteresting()
+    {
+        $game = new HostedGame();
+        $game->gameName = "testing, dont join";
+        $this->assertTrue($game->getIsUninteresting(), "Some specific game names are uninteresting");
+
+        $game = new HostedGame();
+        $game->gameName = "any game name really";
+        $this->assertFalse($game->getIsUninteresting());
+    }
 }

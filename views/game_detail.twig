@@ -19,7 +19,11 @@
 
                 <hr />
 
-                {% if game.endedAt is not null %}
+                {% if game.getIsUninteresting() %}
+                    <div class="alert alert-danger">
+                        🤖 Game was removed (marked as ended) by the automodbot for being lame
+                    </div>
+                {% elseif game.endedAt is not null %}
                     <div class="alert alert-danger">
                         This game has ended and can no longer be joined.
                     </div>

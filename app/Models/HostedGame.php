@@ -97,6 +97,14 @@ class HostedGame extends Model implements \JsonSerializable
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    // Moderation
+
+    public function getIsUninteresting(): bool
+    {
+        return $this->gameName === "testing, dont join";
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     // URLs
 
     private static function getHashids(): Hashids

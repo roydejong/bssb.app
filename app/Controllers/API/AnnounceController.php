@@ -129,6 +129,11 @@ class AnnounceController
         $game->lastUpdate = $now;
         $game->endedAt = null;
 
+        // Discard boring games
+        if ($game->getIsUninteresting()) {
+            $game->endedAt = new \DateTime('now');
+        }
+
         // Insert or update
         $saveOk = $game->save();
 

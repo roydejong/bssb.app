@@ -92,6 +92,7 @@ class AnnounceControllerTest extends TestCase
         $this->assertSame("steam", $announce->platform);
         $this->assertSame("steam.production.mp.beatsaber.com", $announce->masterServerHost);
         $this->assertSame(2328, $announce->masterServerPort);
+        $this->assertNull($announce->endedAt);
 
         self::$fullAnnounceTestResult = $announce;
     }
@@ -138,6 +139,7 @@ class AnnounceControllerTest extends TestCase
             "Game data should update when replacing the announce");
         $this->assertSame(self::$fullAnnounceTestResult->levelId, $updatedResult->levelId,
             "Extra data like level id should not be removed on update, even if NULL in update request");
+        $this->assertNull($updatedResult->endedAt);
     }
 
     public static MockJsonRequest $minimalAnnounceRequest;
@@ -178,6 +180,7 @@ class AnnounceControllerTest extends TestCase
         $this->assertSame("unknown", $announce->platform);
         $this->assertNull($announce->masterServerHost);
         $this->assertNull($announce->masterServerPort);
+        $this->assertNull($announce->endedAt);
     }
 
     /**
@@ -324,5 +327,20 @@ class AnnounceControllerTest extends TestCase
 
         $this->assertSame("Untitled Beat Game", $game->gameName,
             "Empty game names should be prevented");
+    }
+
+    /**
+     * @depends testMinimalAnnounce
+     */
+    public function testAnnounceDiscardsUninteresting()
+    {
+        $request = clone self::$minimalAnnounceRequest;
+        $request->json['GameName'] = "testing, dont join";
+
+        $response = (new AnnounceController())->announce($request);
+        $json = json_decode($response->body, true);
+        $game = HostedGame::fetch($json['id']);
+
+        $this->assertNotNull($game->endedAt, "Uninteresting game names should be marked as ended immediately");
     }
 }
