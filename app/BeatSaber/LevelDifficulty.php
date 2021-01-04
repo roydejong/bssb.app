@@ -12,13 +12,23 @@ class LevelDifficulty
 
     public static function describe(?int $difficulty): string
     {
+        if ($difficulty === null) {
+            return "Unknown";
+        }
+
         switch ($difficulty) {
-            default: return "Unknown";
-            case self::Easy: return "Easy";
-            case self::Normal: return "Normal";
-            case self::Hard: return "Hard";
-            case self::Expert: return "Expert";
-            case self::ExpertPlus: return "Expert+";
+            default:
+                return "Unknown";
+            case self::Easy:
+                return "Easy";
+            case self::Normal:
+                return "Normal";
+            case self::Hard:
+                return "Hard";
+            case self::Expert:
+                return "Expert";
+            case self::ExpertPlus:
+                return "Expert+";
         }
     }
 }
