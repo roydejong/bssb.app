@@ -24,8 +24,12 @@ Bottom line: I want to be able to run this on a $5 droplet and still get good pe
 ## Setting up
 
 ### Requirements
-- PHP 7.4+ with `ext-json`
+- PHP 8.0+ with extensions:
+   - `ext-curl`
+   - `ext-mysql`
+   - `ext-mbstring`
 - [Composer](https://getcomposer.org/)
+- MySQL server
 
 ### Installation
 
@@ -41,9 +45,7 @@ Bottom line: I want to be able to run this on a $5 droplet and still get good pe
 ## Notes / FAQs
 
 ### Live deployment
-🚧 **Under construction, this is not actually live yet** 🚧
-
-Succesful builds on this repository will be automatically deployed to the live site at https://bssb.app.
+Succesful builds on this repository's `main` branch will be automatically deployed to the live site at https://bssb.app.
 
 ### Why is the API server needed?
 There is no offical way to ask the Beat Saber servers for a list of ongoing games. There *may* be an undocumented way of doing this, but even so, we would be missing out on valuable metadata.
