@@ -33,9 +33,16 @@ class StatsController
             ->select("SUM(stat_play_count) AS count")
             ->querySingleValue());
 
-        $topLevels = LevelRecord::query()
+        $topLevelsCustom = LevelRecord::query()
             ->limit(10)
             ->orderBy('stat_play_count DESC')
+            ->where('hash IS NOT NULL')
+            ->queryAllModels();
+
+        $topLevelsOfficial = LevelRecord::query()
+            ->limit(10)
+            ->orderBy('stat_play_count DESC')
+            ->where('hash IS NULL')
             ->queryAllModels();
 
         $view = new View('stats.twig');
@@ -43,7 +50,8 @@ class StatsController
             'uniqueHostCount' => $uniqueHostCount,
             'uniqueLevelCount' => $uniqueLevelCount,
             'totalPlayStat' => $totalPlayStat,
-            'topLevels' => $topLevels
+            'topLevelsCustom' => $topLevelsCustom,
+            'topLevelsOfficial' => $topLevelsOfficial
         ]);
 
         $response = $view->asResponse();
