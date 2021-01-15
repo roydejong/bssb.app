@@ -18,7 +18,7 @@ class ResponseCacheTest extends TestCase
 
     public static function tearDownAfterClass(): void
     {
-        $expectedPath = DIR_BASE . "/storage/cache/responses/test_file.res";
+        $expectedPath = DIR_BASE . "/storage/response_cache/test_file.res";
 
         if (file_exists($expectedPath)) {
             @unlink($expectedPath);
@@ -31,7 +31,7 @@ class ResponseCacheTest extends TestCase
     public function testGetFilePath()
     {
         $rc = new ResponseCache("test_file", 999);
-        $this->assertSame(DIR_BASE . "/storage/cache/responses/test_file.res", $rc->getFilePath());
+        $this->assertSame(DIR_BASE . "/storage/response_cache/test_file.res", $rc->getFilePath());
     }
 
     public function testGetIsAvailable_BeforeWrite()

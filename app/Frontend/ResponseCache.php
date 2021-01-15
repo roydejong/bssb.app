@@ -17,7 +17,7 @@ class ResponseCache
 
     private static function getBaseDir(): string
     {
-        return DIR_CACHE . "/responses";
+        return DIR_STORAGE . "/response_cache";
     }
 
     public function getFilePath()
