@@ -43,7 +43,7 @@ CREATE TABLE `hosted_games` (
   `master_server_port` int unsigned DEFAULT NULL,
   `ended_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2291 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4137 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,11 +65,12 @@ CREATE TABLE `level_records` (
   `level_author` varchar(255) DEFAULT NULL,
   `duration` int DEFAULT NULL,
   `description` text,
+  `stat_play_count` int unsigned DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `level_id_UNIQUE` (`level_id`),
   UNIQUE KEY `beatsaver_id_UNIQUE` (`beatsaver_id`),
   UNIQUE KEY `hash_UNIQUE` (`hash`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=125 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -84,7 +85,7 @@ CREATE TABLE `system_config` (
   `server_message` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -96,4 +97,4 @@ CREATE TABLE `system_config` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-11-22 17:15:45
+-- Dump completed on 2021-01-15 13:54:02
