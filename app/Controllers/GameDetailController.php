@@ -2,6 +2,7 @@
 
 namespace app\Controllers;
 
+use app\Frontend\ResponseCache;
 use app\Frontend\View;
 use app\HTTP\Request;
 use app\HTTP\Responses\BadRequestResponse;
@@ -11,6 +12,9 @@ use app\Models\LevelRecord;
 
 class GameDetailController
 {
+    const CACHE_KEY_PREFIX = "game_detail_page_";
+    const CACHE_TTL = 60;
+
     public function getGameDetail(Request $request, string $hashId)
     {
         $id = HostedGame::hash2id($hashId);
@@ -18,6 +22,13 @@ class GameDetailController
         if (!$id) {
             // Not a valid hash id
             return new BadRequestResponse();
+        }
+
+        $resCacheKey = self::CACHE_KEY_PREFIX . $id;
+        $resCache = new ResponseCache($resCacheKey, self::CACHE_TTL);
+
+        if ($resCache->getIsAvailable()) {
+            return $resCache->readAsResponse();
         }
 
         $game = HostedGame::fetch($id);
@@ -38,6 +49,9 @@ class GameDetailController
         $view = new View('game_detail.twig');
         $view->set('game', $game);
         $view->set('level', $level);
-        return $view->asResponse();
+
+        $response = $view->asResponse();
+        $resCache->writeResponse($response);
+        return $response;
     }
 }
