@@ -2,6 +2,7 @@
 
 namespace app\Controllers;
 
+use app\Frontend\ResponseCache;
 use app\Frontend\View;
 use app\HTTP\Request;
 use app\Models\HostedGame;
@@ -10,8 +11,17 @@ use app\Models\SystemConfig;
 
 class HomeController
 {
+    const CACHE_KEY = "home_page";
+    const CACHE_TTL = 60;
+
     public function index(Request $request)
     {
+        $resCache = new ResponseCache(self::CACHE_KEY, self::CACHE_TTL);
+
+        if ($resCache->getIsAvailable()) {
+            return $resCache->readAsResponse();
+        }
+
         /**
          * @var $games HostedGame[]
          */
@@ -29,6 +39,9 @@ class HomeController
         $view = new View('home.twig');
         $view->set('games', $games);
         $view->set('serverMessage', $sysConfig->serverMessage);
-        return $view->asResponse();
+
+        $response = $view->asResponse();
+        $resCache->writeResponse($response);
+        return $response;
     }
 }
