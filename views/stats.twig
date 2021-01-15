@@ -5,62 +5,61 @@
 
 {% block main %}
     <main role="main" class="container-fluid">
+        <div class="content-page">
 
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">Server Browser</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Stats</li>
-            </ol>
-        </nav>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Server Browser</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Stats</li>
+                </ol>
+            </nav>
 
-        <div class="stats-page">
+            <div class="stats-page">
 
-            <h1>Statistics</h1>
-            <p class="lead">Just for fun!</p>
-            <hr />
+                <h1>Statistics</h1>
+                <p class="lead">Just for fun!</p>
+                <hr />
 
-            <div class="metrics">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="card" title="Tally of unique player hosts we've seen, since the mod launched.">
-                            <div class="card-body">
-                                <h6 class="card-subtitle mb-2 text-muted">
-                                    <i class="mdi mdi-account-star"></i>
-                                    Unique hosts seen, all-time
-                                </h6>
-                                <span class="stat-value">{{ stats.uniqueHostCount }}</span>
+                <div class="metrics">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card" title="Tally of unique player hosts we've seen, since the mod launched.">
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-2 text-muted">
+                                        <i class="mdi mdi-account-star"></i>
+                                        Unique hosts seen, all-time
+                                    </h6>
+                                    <span class="stat-value">{{ stats.uniqueHostCount }}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card" title="Tally of unique levels we've seen in lobbies, since the mod launched.">
-                            <div class="card-body">
-                                <h6 class="card-subtitle mb-2 text-muted">
-                                    <i class="mdi mdi-music"></i>
-                                    Unique levels seen, all-time
-                                </h6>
-                                <span class="stat-value">{{ stats.uniqueLevelCount }}</span>
+                        <div class="col-md-4">
+                            <div class="card" title="Tally of unique levels we've seen in lobbies, since the mod launched.">
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-2 text-muted">
+                                        <i class="mdi mdi-music"></i>
+                                        Unique levels seen, all-time
+                                    </h6>
+                                    <span class="stat-value">{{ stats.uniqueLevelCount }}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card" title="">
-                            <div class="card-body">
-                                <h6 class="card-subtitle mb-2 text-muted">
-                                    <i class="mdi mdi-play"></i>
-                                    Total games played, since 2021-01-15
-                                </h6>
-                                <span class="stat-value">{{ stats.totalPlayStat }}</span>
+                        <div class="col-md-4">
+                            <div class="card" title="">
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-2 text-muted">
+                                        <i class="mdi mdi-play"></i>
+                                        Total games played, since 2021-01-15
+                                    </h6>
+                                    <span class="stat-value">{{ stats.totalPlayStat }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
 
-            <h2>Top 10 levels</h2>
-            <p>(Since 2021-01-15)</p>
-
         </div>
-
     </main>
 {% endblock %}
