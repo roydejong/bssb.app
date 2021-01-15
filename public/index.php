@@ -7,6 +7,7 @@ use app\Controllers\API\UnAnnounceController;
 use app\Controllers\GameDetailController;
 use app\Controllers\HomeController;
 use app\Controllers\PrivacyController;
+use app\Controllers\StatsController;
 use app\HTTP\Request;
 use app\HTTP\RequestRouter;
 
@@ -16,6 +17,7 @@ $router = new RequestRouter();
 
 // Site routes
 $router->register('/', [new HomeController(), 'index']);
+$router->register('/stats', [new StatsController(), 'getStats']);
 $router->register('/game/$hashId', [new GameDetailController(), 'getGameDetail']);
 $router->register('/privacy', [new PrivacyController(), 'getPrivacy']);
 

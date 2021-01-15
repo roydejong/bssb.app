@@ -344,3 +344,17 @@ body[data-theme="dark"] {
     }
   }
 }
+
+.stats-page {
+  h1 {
+    font-size: 2rem;
+  }
+
+  .card .stat-value {
+    display: flex;
+    margin: 0 0 0 0;
+    font-size: 1.6rem;
+    font-weight: 600;
+    line-height: 1.0;
+  }
+}

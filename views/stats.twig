@@ -1,0 +1,52 @@
+{% extends "_base.twig" %}
+
+{% set pageTitle = 'Statistics' %}
+{% set tab = "stats" %}
+
+{% block main %}
+    <main role="main" class="container-fluid">
+
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Server Browser</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Stats</li>
+            </ol>
+        </nav>
+
+        <div class="stats-page">
+
+            <h1>Statistics</h1>
+            <p class="lead">Just for fun!</p>
+            <hr />
+
+            <div class="metrics">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card" title="Tally of unique player hosts we've seen, since the mod launched.">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">
+                                    <i class="mdi mdi-account-star"></i>
+                                    Unique hosts
+                                </h6>
+                                <span class="stat-value">{{ stats.uniqueHostCount }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card" title="Tally of unique levels we've seen in lobbies, since the mod launched.">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">
+                                    <i class="mdi mdi-music"></i>
+                                    Unique levels
+                                </h6>
+                                <span class="stat-value">{{ stats.uniqueLevelCount }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+{% endblock %}
