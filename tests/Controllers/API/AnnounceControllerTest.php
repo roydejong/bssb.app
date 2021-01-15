@@ -8,6 +8,7 @@ use app\BeatSaber\ModPlatformId;
 use app\BeatSaber\MultiplayerLobbyState;
 use app\Controllers\API\AnnounceController;
 use app\Models\HostedGame;
+use app\Models\LevelRecord;
 use PHPUnit\Framework\TestCase;
 use tests\Mock\MockJsonRequest;
 
@@ -36,6 +37,19 @@ class AnnounceControllerTest extends TestCase
 
     public function testFullAnnounce()
     {
+        $TEST_LEVEL_ID = "custom_level_6D4021498979AB7C07D430C488C24DE45EEDADB4";
+
+        /**
+         * @var $levelRecord LevelRecord|null
+         */
+        $levelRecord = LevelRecord::query()
+            ->where('level_id = ?', $TEST_LEVEL_ID)
+            ->querySingleModel();
+        $prevLevelPlayCount = 0;
+        if ($levelRecord) {
+            $prevLevelPlayCount =  $levelRecord->statPlayCount;
+        }
+
         // -------------------------------------------------------------------------------------------------------------
         // Create request
 
@@ -48,7 +62,7 @@ class AnnounceControllerTest extends TestCase
             'PlayerLimit' => 5,
             'IsModded' => true,
             'LobbyState' => MultiplayerLobbyState::GameRunning,
-            'LevelId' => "custom_level_6D4021498979AB7C07D430C488C24DE45EEDADB4",
+            'LevelId' => $TEST_LEVEL_ID,
             'SongName' => '"It\'s a me, Mario!" - Super Mario 64',
             'SongAuthor' => "GilvaSunner",
             'Difficulty' => LevelDifficulty::Easy,
@@ -95,6 +109,15 @@ class AnnounceControllerTest extends TestCase
         $this->assertNull($announce->endedAt);
 
         self::$fullAnnounceTestResult = $announce;
+
+        // Test level record updates
+        $levelRecord = LevelRecord::query()
+            ->where('level_id = ?', $TEST_LEVEL_ID)
+            ->querySingleModel();
+
+        $this->assertNotNull($levelRecord, 'Level record should be updated or created');
+        $this->assertGreaterThan($prevLevelPlayCount, $levelRecord->statPlayCount,
+            'statPlayCount should be incremented on announce, when transitioning to GameRunning lobby state');
     }
 
     /**

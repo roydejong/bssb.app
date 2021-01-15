@@ -45,9 +45,12 @@ class AnnounceController
             ->where('owner_id = ?', $ownerId)
             ->querySingleModel();
 
+        $lastLobbyState = null;
+
         if ($gameByOwner) {
             // Replace existing
             $game = $gameByOwner;
+            $lastLobbyState = $game->lobbyState;
         } else {
             // Create new
             $game = new HostedGame();
@@ -113,7 +116,17 @@ class AnnounceController
         // Level data sync
 
         if ($game->levelId && $game->songName) {
-            LevelRecord::syncFromAnnounce($game->levelId, $game->songName, $game->songAuthor);
+            // Update base data
+            $levelRecord = LevelRecord::syncFromAnnounce($game->levelId, $game->songName, $game->songAuthor);
+
+            // Update play count stat if we transitioned from lobby to the level
+            $gameWasInLobby = ($lastLobbyState === null || $lastLobbyState === MultiplayerLobbyState::LobbySetup);
+            $gameIsRunningOrStarting = ($game->lobbyState === MultiplayerLobbyState::GameRunning
+                || $game->lobbyState === MultiplayerLobbyState::GameStarting);
+
+            if ($gameWasInLobby && $gameIsRunningOrStarting) {
+                $levelRecord->incrementPlayStat();
+            }
         }
 
         // -------------------------------------------------------------------------------------------------------------

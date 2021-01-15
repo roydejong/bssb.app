@@ -29,10 +29,15 @@ class StatsController
             ->select("COUNT(DISTINCT(id)) AS count")
             ->querySingleValue());
 
+        $totalPlayStat = intval(LevelRecord::query()
+            ->select("SUM(stat_play_count) AS count")
+            ->querySingleValue());
+
         $view = new View('stats.twig');
         $view->set('stats', [
             'uniqueHostCount' => $uniqueHostCount,
-            'uniqueLevelCount' => $uniqueLevelCount
+            'uniqueLevelCount' => $uniqueLevelCount,
+            'totalPlayStat' => $totalPlayStat
         ]);
 
         $response = $view->asResponse();

@@ -19,6 +19,7 @@ class LevelRecord extends Model
     public ?string $levelAuthor;
     public ?int $duration;
     public ?string $description;
+    public int $statPlayCount;
 
     // -----------------------------------------------------------------------------------------------------------------
     // Data helpers
@@ -165,5 +166,17 @@ class LevelRecord extends Model
         }
 
         return $levelRecord;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Stats
+
+    public function incrementPlayStat(): bool
+    {
+        return LevelRecord::query()
+            ->update()
+            ->set('stat_play_count = stat_play_count + 1')
+            ->where('id = ?', $this->id)
+            ->execute() > 0;
     }
 }
