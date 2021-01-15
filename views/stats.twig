@@ -58,6 +58,61 @@
                     </div>
                 </div>
 
+                <hr />
+
+                <section>
+                    <h4>Top 10 levels</h4>
+                    <p class="lite">Since 2021-01-15</p>
+                    <table class="table table-bordered table-striped">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Author</th>
+                            <th>Plays</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for level in stats.topLevels %}
+                            <tr>
+                                <td class="cover-art-cell">
+                                    {% if level.coverUrl %}
+                                        <img src="{{ level.coverUrl }}" alt="{{ level.describeSong() }}" height="25" class="cover-art"/>
+                                    {% else %}
+                                        <span class="huh">
+                                            <i class="mdi mdi-music"></i>
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <strong>
+                                        {% if level.beatsaverId %}
+                                            <a href="https://beatsaver.com/beatmap/{{ level.beatsaverId }}" target="_blank" title="View on BeatSaver">
+                                                {{ level.name }}
+                                            </a>
+                                        {% else %}
+                                            {{ level.name }}
+                                        {% endif %}
+                                    </strong>
+                                </td>
+                                <td>
+                                    {% if level.levelAuthor %}
+                                        {{ level.levelAuthor }}
+                                    {% elseif level.songAuthor %}
+                                        {{ level.songAuthor }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{ level.statPlayCount }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </section>
+
             </div>
 
         </div>
