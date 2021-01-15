@@ -18,6 +18,12 @@ if (!defined('IS_TEST_RUN')) {
 $config['cache_enabled'] = true;
 
 /**
+ * response_cache_enabled, boolean
+ *  → If enabled: Enable response caching behavior.
+ */
+$config['response_cache_enabled'] = true;
+
+/**
  * hashids_salt, string
  *  → The salt used to calculate hashids.
  */

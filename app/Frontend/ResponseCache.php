@@ -27,6 +27,12 @@ class ResponseCache
 
     public function getIsAvailable(): bool
     {
+        global $config;
+        if (!$config['response_cache_enabled']) {
+            // Response cache is disabled, force unavailable status
+            return false;
+        }
+
         $filePath = $this->getFilePath();
 
         if (!file_exists($filePath) || filesize($filePath) === 0) {

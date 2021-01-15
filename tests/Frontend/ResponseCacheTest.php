@@ -13,10 +13,21 @@ class ResponseCacheTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        self::tearDownAfterClass();
+        self::removeTestFile();
+
+        global $config;
+        $config['response_cache_enabled'] = true;
     }
 
     public static function tearDownAfterClass(): void
+    {
+        self::removeTestFile();
+
+        global $config;
+        $config['response_cache_enabled'] = false;
+    }
+
+    private static function removeTestFile(): void
     {
         $expectedPath = DIR_BASE . "/storage/response_cache/test_file.res";
 
