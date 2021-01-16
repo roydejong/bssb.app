@@ -21,7 +21,7 @@ class StatsController
     const CACHE_TTL_TOP_LEVELS = 120;
 
     // -----------------------------------------------------------------------------------------------------------------
-    // Consts
+    // Shared functions
 
     private function queryTopLevels(bool $customs = true, int $offset = 0, int $pageSize = 10): array
     {
@@ -39,6 +39,9 @@ class StatsController
 
         return $query->queryAllModels();
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Stats main page
 
     public function getStats(Request $request)
     {
@@ -77,6 +80,9 @@ class StatsController
         $resCache->writeResponse($response);
         return $response;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Top 100 levels sub pages
 
     public function getTopLevelsSubPage(Request $request, string $urlSection)
     {
