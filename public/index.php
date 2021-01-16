@@ -18,6 +18,7 @@ $router = new RequestRouter();
 // Site routes
 $router->register('/', [new HomeController(), 'index']);
 $router->register('/stats', [new StatsController(), 'getStats']);
+$router->register('/stats/top/$urlSection', [new StatsController(), 'getTopLevelsSubPage']);
 $router->register('/game/$hashId', [new GameDetailController(), 'getGameDetail']);
 $router->register('/privacy', [new PrivacyController(), 'getPrivacy']);
 

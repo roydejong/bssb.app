@@ -1,0 +1,34 @@
+{% extends "_base.twig" %}
+
+{% set tab = "stats" %}
+
+{% block main %}
+    <main role="main" class="container-fluid">
+        <div class="content-page">
+
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Server Browser</a></li>
+                    <li class="breadcrumb-item"><a href="/stats">Stats</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ pageTitle }}</li>
+                </ol>
+            </nav>
+
+            <div class="stats-page">
+
+                <h1>
+                    <i class="mdi mdi-trophy"></i>
+                    <span>{{ pageTitle }}</span>
+                </h1>
+                <p class="lead">Based on play count seen by the server browser, since 2021-01-15</p>
+                <hr />
+
+                <section>
+                    {% include "tables/top_levels_table.twig" %}
+                </section>
+
+            </div>
+
+        </div>
+    </main>
+{% endblock %}

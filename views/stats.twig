@@ -61,17 +61,31 @@
                 <hr />
 
                 <section>
-                    <h4>Top 10 custom levels</h4>
-                    <p class="lite">Since 2021-01-15</p>
+                    <h4>
+                        <i class="mdi mdi-trophy"></i>
+                        <span>Top 10 custom levels</span>
+                    </h4>
+                    <p class="lite">Based on play count seen by the server browser, since 2021-01-15</p>
                     {% include "tables/top_levels_table.twig" with {levels: stats.topLevelsCustom} %}
+                    <a href="/stats/top/custom-levels" class="btn btn-primary" target="_self" title="Top 100 Custom Levels">
+                        <i class="mdi mdi-view-list"></i>
+                        <span>View Top 100 &raquo;</span>
+                    </a>
                 </section>
 
                 <hr />
 
                 <section>
-                    <h4>Top 10 official levels</h4>
-                    <p class="lite">Since 2021-01-15</p>
+                    <h4>
+                        <i class="mdi mdi-trophy"></i>
+                        <span>Top 10 official levels</span>
+                    </h4>
+                    <p class="lite">Based on play count seen by the server browser, since 2021-01-15</p>
                     {% include "tables/top_levels_table.twig" with {levels: stats.topLevelsOfficial} %}
+                    <a href="/stats/top/official-levels" class="btn btn-primary" target="_self" title="Top 100 Official Levels">
+                        <i class="mdi mdi-view-list"></i>
+                        <span>View Top 100 &raquo;</span>
+                    </a>
                 </section>
 
             </div>
