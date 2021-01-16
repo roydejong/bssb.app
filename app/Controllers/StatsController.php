@@ -28,7 +28,7 @@ class StatsController
         $query = LevelRecord::query()
             ->where('stat_play_count > 0')
             ->offset($offset)
-            ->limit(10)
+            ->limit($pageSize)
             ->orderBy('stat_play_count DESC');
 
         if ($customs) {
