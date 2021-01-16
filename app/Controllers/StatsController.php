@@ -46,6 +46,7 @@ class StatsController
             ->queryAllModels();
 
         $view = new View('stats.twig');
+        $view->set('pageUrl', '/stats');
         $view->set('stats', [
             'uniqueHostCount' => $uniqueHostCount,
             'uniqueLevelCount' => $uniqueLevelCount,
