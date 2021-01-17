@@ -41,6 +41,9 @@ class GameDetailController
         $level = null;
 
         if ($game->levelId) {
+            /**
+             * @var $level LevelRecord
+             */
             $level = LevelRecord::query()
                 ->where('level_id = ?', $game->levelId)
                 ->querySingleModel();
@@ -50,9 +53,40 @@ class GameDetailController
         $view->set('pageUrl', $game->getWebDetailUrl());
         $view->set('game', $game);
         $view->set('level', $level);
+        $view->set('ldJson', $this->generateLdJson($game, $level));
 
         $response = $view->asResponse();
         $resCache->writeResponse($response);
         return $response;
+    }
+
+    private function generateLdJson(HostedGame $game, ?LevelRecord $level): array
+    {
+        $serverStatus = "Online";
+        if ($game->getIsStale() || $game->endedAt) {
+            $serverStatus = "OfflinePermanently";
+        } else if ($game->playerCount >= $game->playerLimit) {
+            $serverStatus = "OnlineFull";
+        }
+
+        return [
+            '@context' => 'http://schema.org/',
+            '@type' => 'GameServer',
+            'game' => [
+                '@type' => 'VideoGame',
+                'name' => 'Beat Saber Multiplayer',
+                'playMode' => 'MultiPlayer',
+                'gamePlatform' => ucfirst($game->platform),
+                'numberOfPlayers' => $game->playerLimit,
+                'applicationCategory' => 'Game, Multimedia',
+                'applicationSubCategory' => 'VR Game',
+                'operatingSystem' => 'Windows, Oculus Quest'
+            ],
+            'playersOnline' => $game->playerCount,
+            'serverStatus' => $serverStatus,
+            'name' => $game->gameName,
+            'identifier' => $game->serverCode,
+            'image' => $level?->coverUrl ?? null
+        ];
     }
 }
