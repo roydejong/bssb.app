@@ -2,6 +2,11 @@ body {
   padding-top: 5rem;
 }
 
+.break-word {
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
+
 .main-page {
   padding: 0 1.5rem;
 
@@ -55,7 +60,11 @@ td.cover-art-cell {
   &, > img, > span {
     background-color: #ddd;
     height: 48px;
+    min-height: 48px;
+    max-height: 48px;
     width: 48px;
+    min-width: 48px;
+    max-width: 48px;
   }
   > img, > span {
     position: absolute;
