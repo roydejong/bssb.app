@@ -29,6 +29,16 @@ class LevelRecord extends Model
         return LevelId::isCustomLevel($this->levelId);
     }
 
+    public function describeSong(): string
+    {
+        $parts = [];
+        if ($this->songAuthor)
+            $parts[] = $this->songAuthor;
+        if ($this->songName)
+            $parts[] = $this->songName;
+        return implode(' - ', $parts);
+    }
+
     public function describeDuration(): string
     {
         if ($this->duration === null || $this->duration <= 0) {
