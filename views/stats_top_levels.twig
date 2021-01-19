@@ -23,6 +23,13 @@
                 <p class="lead">Based on play count seen by the server browser, since 2021-01-15</p>
                 <hr />
 
+                {% if urlSection == "custom-levels" %}
+                    <a class="btn btn-success" href="/stats/top/{{ urlSection }}/playlist" target="_self">
+                        <i class="mdi mdi-download"></i>
+                        <span>Download as Playlist (bplist)</span>
+                    </a>
+                {% endif %}
+
                 <section>
                     {% include "tables/top_levels_table.twig" %}
                 </section>
