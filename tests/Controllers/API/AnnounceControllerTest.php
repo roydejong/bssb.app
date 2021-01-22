@@ -264,6 +264,52 @@ class AnnounceControllerTest extends TestCase
         $this->assertTrue($game->isModded, "`custom_level_` prefix should force `IsModded` to true");
     }
 
+    /**
+     * @depends testMinimalAnnounce
+     */
+    public function testLobbyLimitVanilla()
+    {
+        $request = new MockJsonRequest([
+            'ServerCode' => '12345',
+            'IsModded' => false,
+            'OwnerId' => 'unit_test_testLobbyLimitVanilla',
+            'PlayerLimit' => 999
+        ]);
+        $request->method = "POST";
+        $request->path = "/api/v1/announce";
+
+        $response = (new AnnounceController())->announce($request);
+        $this->assertSame(200, $response->code, "Sanity check: announce should return 200 OK");
+
+        $json = json_decode($response->body, true);
+
+        $game = HostedGame::fetch($json['id']);
+        $this->assertSame(5, $game->playerLimit, "Vanilla lobbies should be capped at 5 players");
+    }
+
+    /**
+     * @depends testMinimalAnnounce
+     */
+    public function testLobbyLimitModded()
+    {
+        $request = new MockJsonRequest([
+            'ServerCode' => '12345',
+            'IsModded' => true,
+            'OwnerId' => 'unit_test_testLobbyLimitModded',
+            'PlayerLimit' => 999
+        ]);
+        $request->method = "POST";
+        $request->path = "/api/v1/announce";
+
+        $response = (new AnnounceController())->announce($request);
+        $this->assertSame(200, $response->code, "Sanity check: announce should return 200 OK");
+
+        $json = json_decode($response->body, true);
+
+        $game = HostedGame::fetch($json['id']);
+        $this->assertSame(10, $game->playerLimit, "Modded lobbies should be capped at 10 players");
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     // Test validations / rejections
 

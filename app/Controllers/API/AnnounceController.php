@@ -83,13 +83,20 @@ class AnnounceController
         // -------------------------------------------------------------------------------------------------------------
         // Validation and processing
 
+        if ($game->levelId && CString::startsWith($game->levelId, "custom_level_")) {
+            // Custom song: this game should be detected as modded
+            // (For some reason the "modded" flag doesn't always get set, possibly due to MpEx changes)
+            $game->isModded = true;
+        }
+
         if (empty($game->serverCode) || strlen($game->serverCode) !== 5 || !ctype_alnum($game->serverCode)) {
             // Server code should always be alphanumeric, 5 characters, e.g. "ABC123"
             return new BadRequestResponse();
         }
 
-        if ($game->playerLimit <= 0 || $game->playerLimit > 5) {
-            $game->playerLimit = 5;
+        $maxPlayerLimit = $game->isModded ? HostedGame::MAX_PLAYER_LIMIT_MODDED : HostedGame::MAX_PLAYER_LIMIT_VANILLA;
+        if ($game->playerLimit <= 0 || $game->playerLimit > $maxPlayerLimit) {
+            $game->playerLimit = $maxPlayerLimit;
         }
 
         if ($game->playerCount <= 0) {
@@ -104,12 +111,6 @@ class AnnounceController
             } else if ($game->masterServerHost === "steam.production.mp.beatsaber.com") {
                 $game->platform = ModPlatformId::STEAM;
             }
-        }
-
-        if ($game->levelId && CString::startsWith($game->levelId, "custom_level_")) {
-            // Custom song: this game should be detected as modded
-            // (For some reason the "modded" flag doesn't always get set, possibly due to MpEx changes)
-            $game->isModded = true;
         }
 
         // -------------------------------------------------------------------------------------------------------------

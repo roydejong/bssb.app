@@ -12,6 +12,12 @@ use Instasell\Instarecord\Model;
 class HostedGame extends Model implements \JsonSerializable
 {
     // -----------------------------------------------------------------------------------------------------------------
+    // Consts
+
+    const MAX_PLAYER_LIMIT_VANILLA = 5;
+    const MAX_PLAYER_LIMIT_MODDED = 10;
+
+    // -----------------------------------------------------------------------------------------------------------------
     // Columns
 
     public int $id;
