@@ -403,4 +403,17 @@ class BrowseControllerTest extends TestCase
         $this->assertArrayHasKey("Message", $responseJson);
         $this->assertSame("Test message!", $responseJson["Message"]);
     }
+
+    public function testBrowseApiHidesOwnerIds()
+    {
+        $lobbies = self::executeBrowseRequestAndGetGames(
+            self::createBrowseRequest([
+                "filterModded" => true
+            ])
+        );
+        $aLobby = $lobbies[0];
+
+        $this->assertArrayHasKey("ownerName", $aLobby);
+        $this->assertArrayNotHasKey("ownerId", $aLobby);
+    }
 }

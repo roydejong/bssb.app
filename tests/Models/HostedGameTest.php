@@ -55,4 +55,16 @@ class HostedGameTest extends TestCase
         $game->gameName = "any game name really";
         $this->assertFalse($game->getIsUninteresting());
     }
+
+    public function testSerializeConcealsOwnerId()
+    {
+        $game = new HostedGame();
+        $game->ownerName = "test";
+        $game->ownerId = "test";
+
+        $sz = $game->jsonSerialize();
+
+        $this->assertArrayHasKey("ownerName", $sz);
+        $this->assertArrayNotHasKey("ownerId", $sz);
+    }
 }

@@ -157,6 +157,8 @@ class HostedGame extends Model implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        return $this->getPropertyValues();
+        $sz = $this->getPropertyValues();
+        unset($sz['ownerId']);
+        return $sz;
     }
 }
