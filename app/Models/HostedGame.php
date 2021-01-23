@@ -41,6 +41,23 @@ class HostedGame extends Model implements \JsonSerializable
     public ?\DateTime $endedAt;
 
     // -----------------------------------------------------------------------------------------------------------------
+    // Relationships
+
+    /**
+     * @return HostedGamePlayer[]
+     */
+    public function fetchPlayers(): array
+    {
+        if ($this->id) {
+            return HostedGamePlayer::query()
+                ->where('hosted_game_id = ?', $this->id)
+                ->orderBy('sort_index ASC')
+                ->queryAllModels();
+        }
+        return [];
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     // Lifecycle
 
     /**

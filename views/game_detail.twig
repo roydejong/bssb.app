@@ -183,6 +183,36 @@
                         {% endif %}
                     </div>
                 </div>
+
+                <div class="card">
+                    <h5 class="card-header">
+                        Player list
+                    </h5>
+                    <table class="card-table table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Player</th>
+                                <th>Latency</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for player in players %}
+                            <tr>
+                                <td>{{ player.sortIndex }}</td>
+                                <td>
+                                    <span>{{ player.userName }}</span>
+                                    {% if player.isHost %}
+                                        <span class="badge bg-primary">Host</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ player.latency }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
 
         </div>

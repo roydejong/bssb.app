@@ -100,19 +100,7 @@ td.no-results-cell {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-// Game detail
-
-.game-detail {
-  .server-code {
-    font-size: 1.75rem;
-    font-family: monospace;
-    user-select: all;
-    letter-spacing: 5px;
-  }
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-// Game detail
+// Common components
 
 .difficulty-txt {
   &.-d0 {
@@ -132,6 +120,61 @@ td.no-results-cell {
   }
   &.-unknown {
     opacity: .666;
+  }
+}
+
+.card-table {
+  margin: 0 !important;
+  border: none !important;
+
+  tr {
+    th {
+      border-top: none;
+    }
+    th:first-child, td:first-child {
+      border-left: none;
+    }
+    th:last-child, td:last-child {
+      border-right: none;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Game detail
+
+.game-detail {
+  .server-code {
+    font-size: 1.75rem;
+    font-family: monospace;
+    user-select: all;
+    letter-spacing: 5px;
+  }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Stats page
+
+.stats-page {
+  h1 {
+    font-size: 2rem;
+  }
+
+  .card .stat-value {
+    display: flex;
+    margin: 0 0 0 0;
+    font-size: 1.6rem;
+    font-weight: 600;
+    line-height: 1.0;
+  }
+
+  section {
+    margin-top: 1.5rem;
+
+    .lite {
+      font-size: 1rem;
+      color: #666;
+    }
   }
 }
 
@@ -162,20 +205,11 @@ footer {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-// Extra Stuff
-
-.oculus-icon {
-  height: 21px;
-  width: 16px;
-  margin-right: -1px;
-  margin-left: -1px;
-}
-body[data-theme="dark"] .oculus-icon {
-  .st0{fill:#fff;}
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
 // Dark mode
+
+.badge {
+  color: #fff;
+}
 
 body[data-theme="dark"] {
   background: #36393F;
@@ -222,6 +256,7 @@ body[data-theme="dark"] {
         th {
           background-color: #1D1D1D !important;
           border-color: #444444 !important;
+          color: #fff;
         }
       }
     }
@@ -291,6 +326,16 @@ body[data-theme="dark"] {
   }
 }
 
+.oculus-icon {
+  height: 21px;
+  width: 16px;
+  margin-right: -1px;
+  margin-left: -1px;
+}
+body[data-theme="dark"] .oculus-icon {
+  .st0{fill:#fff;}
+}
+
 // ---------------------------------------------------------------------------------------------------------------------
 // Responsive tweaks
 
@@ -350,29 +395,6 @@ body[data-theme="dark"] {
         // Hide difficulty column
         display: none;
       }
-    }
-  }
-}
-
-.stats-page {
-  h1 {
-    font-size: 2rem;
-  }
-
-  .card .stat-value {
-    display: flex;
-    margin: 0 0 0 0;
-    font-size: 1.6rem;
-    font-weight: 600;
-    line-height: 1.0;
-  }
-
-  section {
-    margin-top: 1.5rem;
-
-    .lite {
-      font-size: 1rem;
-      color: #666;
     }
   }
 }

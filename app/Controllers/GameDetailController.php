@@ -13,7 +13,7 @@ use app\Models\LevelRecord;
 class GameDetailController
 {
     const CACHE_KEY_PREFIX = "game_detail_page_";
-    const CACHE_TTL = 60;
+    const CACHE_TTL = 10;
 
     public function getGameDetail(Request $request, string $hashId)
     {
@@ -52,6 +52,7 @@ class GameDetailController
         $view = new View('game_detail.twig');
         $view->set('pageUrl', $game->getWebDetailUrl());
         $view->set('game', $game);
+        $view->set('players', $game->fetchPlayers());
         $view->set('level', $level);
         $view->set('ldJson', $this->generateLdJson($game, $level));
 

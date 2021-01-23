@@ -12,6 +12,7 @@ use app\HTTP\Responses\BadRequestResponse;
 use app\HTTP\Responses\InternalServerErrorResponse;
 use app\HTTP\Responses\JsonResponse;
 use app\Models\HostedGame;
+use app\Models\HostedGamePlayer;
 use app\Models\LevelRecord;
 
 class AnnounceController
@@ -46,6 +47,7 @@ class AnnounceController
             ->querySingleModel();
 
         $lastLobbyState = null;
+        $isNewGame = false;
 
         if ($gameByOwner) {
             // Replace existing
@@ -54,6 +56,7 @@ class AnnounceController
         } else {
             // Create new
             $game = new HostedGame();
+            $isNewGame = true;
         }
 
         $game->serverCode = strtoupper($input['ServerCode'] ?? "");
@@ -160,6 +163,64 @@ class AnnounceController
                 ->andWhere('owner_id = ?', $ownerId)
                 ->andWhere('id != ? AND id < ?', $game->id, $game->id)
                 ->execute();
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        // Sync player list
+
+        if ($saveOk) {
+            $playerList = $input['Players'] ?? null;
+
+            if ($playerList && is_array($playerList)) {
+                $playerIndexesKnown = [];
+
+                // Add or update players
+                foreach ($playerList as $playerItem) {
+                    $sortIndex = intval($playerItem['SortIndex'] ?? -1);
+                    $userId = $playerItem['UserId'] ?? null;
+                    $userName = $playerItem['UserName'] ?? null;
+                    $isHost = intval($playerItem['IsHost'] ?? 0) === 1;
+                    $latency = floatval($playerItem['Latency'] ?? 0);
+
+                    if ($sortIndex < 0 || !$userId || !$userName) {
+                        // Invalid entry, missing minimum data
+                        continue;
+                    }
+
+                    $playerRecord = new HostedGamePlayer();
+                    $playerRecord->hostedGameId = $game->id;
+                    $playerRecord->sortIndex = $sortIndex;
+
+                    if (!$isNewGame && $existingPlayerRecord = $playerRecord->fetchExisting()) {
+                        // Replace existing player on this index
+                        $playerRecord = $existingPlayerRecord;
+                    }
+
+                    $playerRecord->userId = $userId;
+                    $playerRecord->userName = $userName;
+                    $playerRecord->isHost = $isHost;
+                    $playerRecord->latency = $latency;
+                    $playerRecord->save();
+
+                    $playerIndexesKnown[] = $sortIndex;
+                }
+
+                if (!$isNewGame) {
+                    // Remove players that may have disconnected
+                    if (empty($playerIndexesKnown)) {
+                        HostedGamePlayer::query()
+                            ->delete()
+                            ->where('hosted_game_id = ?', $game->id)
+                            ->execute();
+                    } else {
+                        HostedGamePlayer::query()
+                            ->delete()
+                            ->where('hosted_game_id = ?', $game->id)
+                            ->andWhere('sort_index NOT IN (?)', $playerIndexesKnown)
+                            ->execute();
+                    }
+                }
+            }
         }
 
         // -------------------------------------------------------------------------------------------------------------

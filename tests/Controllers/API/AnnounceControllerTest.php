@@ -204,6 +204,7 @@ class AnnounceControllerTest extends TestCase
         $this->assertNull($announce->masterServerHost);
         $this->assertNull($announce->masterServerPort);
         $this->assertNull($announce->endedAt);
+        $this->assertEmpty($announce->fetchPlayers());
     }
 
     /**
@@ -264,6 +265,9 @@ class AnnounceControllerTest extends TestCase
         $this->assertTrue($game->isModded, "`custom_level_` prefix should force `IsModded` to true");
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+    // Test validations / rejections
+
     /**
      * @depends testMinimalAnnounce
      */
@@ -309,9 +313,6 @@ class AnnounceControllerTest extends TestCase
         $game = HostedGame::fetch($json['id']);
         $this->assertSame(10, $game->playerLimit, "Modded lobbies should be capped at 10 players");
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    // Test validations / rejections
 
     /**
      * @depends testMinimalAnnounce
@@ -411,5 +412,117 @@ class AnnounceControllerTest extends TestCase
         $game = HostedGame::fetch($json['id']);
 
         $this->assertNotNull($game->endedAt, "Uninteresting game names should be marked as ended immediately");
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Player list sync
+
+    /**
+     * @depends testMinimalAnnounce
+     */
+    public function testPlayerListSync()
+    {
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        // Part 1: Starting a new game with a single host player
+
+        $request = clone self::$minimalAnnounceRequest;
+        $request->json['Players'] = [];
+        $request->json['Players'][] = [
+            'SortIndex' => 0,
+            'UserId' => 'testPlayerListSync_0',
+            'UserName' => 'Bob',
+            'IsHost' => true,
+            'Latency' => 0.1234
+        ];
+
+        $response = (new AnnounceController())->announce($request);
+        $json = json_decode($response->body, true);
+        $game = HostedGame::fetch($json['id']);
+
+        $players = $game->fetchPlayers();
+
+        $this->assertIsArray($players, 'fetchPlayers() should return an array');
+        $this->assertCount(1, $players,
+            'fetchPlayers() should contain one player after initial announce');
+
+        $hostPlayer = $players[0];
+
+        $this->assertSame(0, $hostPlayer->sortIndex);
+        $this->assertSame('testPlayerListSync_0', $hostPlayer->userId);
+        $this->assertSame('Bob', $hostPlayer->userName);
+        $this->assertSame(true, $hostPlayer->isHost);
+        $this->assertSame(0.1234, $hostPlayer->latency);
+
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        // Part 2: Adding in new players in the next announce
+
+        $request->json['Players'][] = [
+            'SortIndex' => 1,
+            'UserId' => 'testPlayerListSync_1',
+            'UserName' => 'Bobby',
+            'IsHost' => false,
+            'Latency' => 0.1234
+        ];
+        $request->json['Players'][] = [
+            'SortIndex' => 2,
+            'UserId' => 'testPlayerListSync_2',
+            'UserName' => 'Bobster',
+            'IsHost' => false,
+            'Latency' => 0.1234
+        ];
+        $request->json['Players'][] = [
+            'SortIndex' => 3,
+            'UserId' => 'testPlayerListSync_3',
+            'UserName' => 'Bob-bee',
+            'IsHost' => false,
+            'Latency' => 0.1234
+        ];
+        $request->json['Players'][] = [
+            'SortIndex' => 4,
+            'UserId' => 'testPlayerListSync_4',
+            'UserName' => 'Booba',
+            'IsHost' => false,
+            'Latency' => 0.1234
+        ];
+        (new AnnounceController())->announce($request);
+
+        $players = $game->fetchPlayers();
+
+        $this->assertCount(5, $players,
+            'fetchPlayers() should contain five players after second announce');
+        $this->assertSame('Bob', $players[0]->userName);
+        $this->assertSame('Bobby', $players[1]->userName);
+        $this->assertSame('Bobster', $players[2]->userName);
+        $this->assertSame('Bob-bee', $players[3]->userName);
+        $this->assertSame('Booba', $players[4]->userName);
+
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        // Part 3: Updating and removing players
+
+        $request->json['Players'] = [
+            [
+                'SortIndex' => 0,
+                'UserId' => 'testPlayerListSync_0',
+                'UserName' => 'Bob',
+                'IsHost' => true,
+                'Latency' => 0.1234
+            ],
+            [
+                'SortIndex' => 1,
+                'UserId' => 'testPlayerListSync_5',
+                'UserName' => 'Sally',
+                'IsHost' => false,
+                'Latency' => 1234.5678
+            ]
+        ];
+
+        (new AnnounceController())->announce($request);
+
+        $players = $game->fetchPlayers();
+
+        $this->assertCount(2, $players,
+            'fetchPlayers() should contain two players after third announce');
+        $this->assertSame('Bob', $players[0]->userName);
+        $this->assertSame('Sally', $players[1]->userName);
     }
 }
