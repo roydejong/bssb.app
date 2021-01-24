@@ -120,97 +120,104 @@
                         </table>
                     </div>
                     <div class="col-sm">
+
                         {% if not game.getIsStale() and game.ended_at is null %}
                             <div class="card">
                                 <h5 class="card-header">Server code</h5>
                                 <div class="card-body server-code">{{ game.serverCode }}</div>
                             </div>
+                            <br />
                         {% endif %}
-                        <br />
+
                         {% if level %}
-                        <div class="card">
-                            <h5 class="card-header">
-                                {% if game.lobbyState == 3 %}
-                                    Current level
-                                {% else %}
-                                    Last level
-                                {% endif %}
-                            </h5>
-                            <div class="card-body">
-                                <div class="media">
-                                    {% if level.coverUrl %}
-                                        <img src="{{ level.coverUrl }}" class="mr-3" alt="{{ level.name }}" width="125">
+                            <div class="card">
+                                <h5 class="card-header">
+                                    {% if game.lobbyState == 3 %}
+                                        Current level
+                                    {% else %}
+                                        Last level
                                     {% endif %}
-                                    <div class="media-body">
-                                        <h5 class="mt-0">{{ level.name }}</h5>
-                                        <table width="100%">
-                                            <tbody>
-                                                {% if level.songName %}
-                                                    <tr>
-                                                        <th scope="row">Song name</th>
-                                                        <td>{{ level.songName }}</td>
-                                                    </tr>
-                                                {% endif %}
-                                                {% if level.songAuthor %}
-                                                    <tr>
-                                                        <th scope="row">Song author</th>
-                                                        <td>{{ level.songAuthor }}</td>
-                                                    </tr>
-                                                {% endif %}
-                                                {% if level.levelAuthor %}
-                                                    <tr>
-                                                        <th scope="row">Level author</th>
-                                                        <td>{{ level.levelAuthor }}</td>
-                                                    </tr>
-                                                {% endif %}
-                                                {% if level.duration %}
-                                                    <tr>
-                                                        <th scope="row">Duration</th>
-                                                        <td>{{ level.describeDuration() }}</td>
-                                                    </tr>
-                                                {% endif %}
-                                                {% if level.beatsaverId %}
-                                                    <tr>
-                                                        <td colspan="2"><a href="https://beatsaver.com/beatmap/{{ level.beatsaverId }}" class="btn btn-primary" title="View on BeatSaver" target="_blank" style="margin-top: 10px;">BeatSaver</a></td>
-                                                    </tr>
-                                                {% endif %}
-                                            </tbody>
-                                        </table>
+                                </h5>
+                                <div class="card-body">
+                                    <div class="media">
+                                        {% if level.coverUrl %}
+                                            <img src="{{ level.coverUrl }}" class="mr-3" alt="{{ level.name }}" width="125">
+                                        {% endif %}
+                                        <div class="media-body">
+                                            <h5 class="mt-0">{{ level.name }}</h5>
+                                            <table width="100%">
+                                                <tbody>
+                                                    {% if level.songName %}
+                                                        <tr>
+                                                            <th scope="row">Song name</th>
+                                                            <td>{{ level.songName }}</td>
+                                                        </tr>
+                                                    {% endif %}
+                                                    {% if level.songAuthor %}
+                                                        <tr>
+                                                            <th scope="row">Song author</th>
+                                                            <td>{{ level.songAuthor }}</td>
+                                                        </tr>
+                                                    {% endif %}
+                                                    {% if level.levelAuthor %}
+                                                        <tr>
+                                                            <th scope="row">Level author</th>
+                                                            <td>{{ level.levelAuthor }}</td>
+                                                        </tr>
+                                                    {% endif %}
+                                                    {% if level.duration %}
+                                                        <tr>
+                                                            <th scope="row">Duration</th>
+                                                            <td>{{ level.describeDuration() }}</td>
+                                                        </tr>
+                                                    {% endif %}
+                                                    {% if level.beatsaverId %}
+                                                        <tr>
+                                                            <td colspan="2"><a href="https://beatsaver.com/beatmap/{{ level.beatsaverId }}" class="btn btn-primary" title="View on BeatSaver" target="_blank" style="margin-top: 10px;">BeatSaver</a></td>
+                                                        </tr>
+                                                    {% endif %}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                            <br />
                         {% endif %}
-                    </div>
-                </div>
 
-                <div class="card">
-                    <h5 class="card-header">
-                        Player list
-                    </h5>
-                    <table class="card-table table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Player</th>
-                                <th>Latency</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {% for player in players %}
-                            <tr>
-                                <td>{{ player.sortIndex }}</td>
-                                <td>
-                                    <span>{{ player.userName }}</span>
-                                    {% if player.isHost %}
-                                        <span class="badge bg-primary">Host</span>
-                                    {% endif %}
-                                </td>
-                                <td>{{ player.latency }}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                        {% if players is defined and players|length > 0 %}
+                            <div class="card">
+                                <h5 class="card-header">
+                                    Player list
+                                </h5>
+                                <table class="card-table table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Player</th>
+                                        <th>Latency</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for player in players %}
+                                        <tr>
+                                            <td>{{ player.sortIndex }}</td>
+                                            <td>
+                                                <span>{{ player.userName }}</span>
+                                                {% if player.isHost %}
+                                                    <span class="badge bg-primary">Host</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ player.latency }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <br />
+                        {% endif %}
+
+                    </div>
                 </div>
 
             </div>
