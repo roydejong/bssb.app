@@ -16,4 +16,12 @@ class HostedGamePlayer extends Model
     public string $userName;
     public bool $isHost;
     public float $latency;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Data helpers
+
+    public function describeLatency(): string
+    {
+        return ($this->latency * 1000) . "ms";
+    }
 }
