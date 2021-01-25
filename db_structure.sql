@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `bssb` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `bssb`;
 -- MySQL dump 10.13  Distrib 8.0.17, for Win64 (x86_64)
 --
 -- Host: wsl.local    Database: bssb
@@ -35,7 +37,7 @@ CREATE TABLE `hosted_game_players` (
   UNIQUE KEY `hgp_game_and_sort_index` (`hosted_game_id`,`sort_index`),
   KEY `hgp_game_id_idx` (`hosted_game_id`),
   CONSTRAINT `hgp_game_id` FOREIGN KEY (`hosted_game_id`) REFERENCES `hosted_games` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,8 +67,9 @@ CREATE TABLE `hosted_games` (
   `master_server_host` varchar(255) DEFAULT NULL,
   `master_server_port` int unsigned DEFAULT NULL,
   `ended_at` datetime DEFAULT NULL,
+  `mp_ex_version` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25419 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25876 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -93,7 +96,7 @@ CREATE TABLE `level_records` (
   UNIQUE KEY `level_id_UNIQUE` (`level_id`),
   UNIQUE KEY `beatsaver_id_UNIQUE` (`beatsaver_id`),
   UNIQUE KEY `hash_UNIQUE` (`hash`)
-) ENGINE=InnoDB AUTO_INCREMENT=21569 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21619 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -120,4 +123,4 @@ CREATE TABLE `system_config` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-01-23 17:33:23
+-- Dump completed on 2021-01-25  1:58:28
