@@ -18,6 +18,12 @@ class CVersionTest extends TestCase
         $this->assertSame("0", (string)(new CVersion("")));
     }
 
+    public function testToStringWithLimit()
+    {
+        $this->assertSame("1.2.3.4", (new CVersion("1.2.3.4.5"))->toString());
+        $this->assertSame("1.2.3", (new CVersion("1.2.3.4.5"))->toString(3));
+    }
+
     public function testEquals()
     {
         $this->assertTrue((new CVersion("1.2.3.4"))->equals(new CVersion("1.2.3.4")));

@@ -74,14 +74,14 @@ final class CVersion
         return $b->equals($this) || $b->greaterThan($this);
     }
 
-    public function __toString(): string
+    public function toString(int $maxDepth = PHP_INT_MAX): string
     {
         $parts = [$this->major, $this->minor, $this->build ?? null, $this->revision ?? null];
         $partCount = count($parts);
 
         $versionStr = "";
 
-        for ($i = 0; $i < $partCount; $i++) {
+        for ($i = 0; ($i < $partCount && $i < $maxDepth); $i++) {
             $part = $parts[$i];
 
             if ($part === null) {
@@ -96,5 +96,10 @@ final class CVersion
         }
 
         return $versionStr;
+    }
+
+    public function __toString(): string
+    {
+        return $this->toString(PHP_INT_MAX);
     }
 }

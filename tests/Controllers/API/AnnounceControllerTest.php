@@ -68,7 +68,8 @@ class AnnounceControllerTest extends TestCase
             'Difficulty' => LevelDifficulty::Easy,
             'Platform' => ModPlatformId::STEAM,
             'MasterServerHost' => MasterServer::OFFICIAL_HOSTNAME_STEAM,
-            'MasterServerPort' => 2328
+            'MasterServerPort' => 2328,
+            'MpExVersion' => '1.2.3.4.5'
         ]);
         $request->method = "POST";
         $request->path = "/api/v1/announce";
@@ -107,6 +108,8 @@ class AnnounceControllerTest extends TestCase
         $this->assertSame("steam.production.mp.beatsaber.com", $announce->masterServerHost);
         $this->assertSame(2328, $announce->masterServerPort);
         $this->assertNull($announce->endedAt);
+        $this->assertSame('1.2.3', $announce->mpExVersion,
+            'MpEx version should be parsed and, if needed, normalized to Major.Minor.Patch');
 
         self::$fullAnnounceTestResult = $announce;
 
@@ -205,6 +208,7 @@ class AnnounceControllerTest extends TestCase
         $this->assertNull($announce->masterServerPort);
         $this->assertNull($announce->endedAt);
         $this->assertEmpty($announce->fetchPlayers());
+        $this->assertNull($announce->mpExVersion);
     }
 
     /**
@@ -263,6 +267,30 @@ class AnnounceControllerTest extends TestCase
 
         $game = HostedGame::fetch($json['id']);
         $this->assertTrue($game->isModded, "`custom_level_` prefix should force `IsModded` to true");
+    }
+
+    /**
+     * @depends testMinimalAnnounce
+     */
+    public function testMpExVersionInfersModded()
+    {
+        $request = new MockJsonRequest([
+            'ServerCode' => '12345',
+            'IsModded' => false,
+            'OwnerId' => 'unit_test_testMpExVersionInfersModded',
+            'MpExVersion' => "1.2.3"
+        ]);
+        $request->method = "POST";
+        $request->path = "/api/v1/announce";
+
+        $response = (new AnnounceController())->announce($request);
+        $this->assertSame(200, $response->code, "Sanity check: announce should return 200 OK");
+
+        $json = json_decode($response->body, true);
+        $game = HostedGame::fetch($json['id']);
+
+        $this->assertSame("1.2.3", $game->mpExVersion, "MpExVersion should be read and written");
+        $this->assertSame(true, $game->isModded, "MpExVersion should automatically set modded flag");
     }
 
     // -----------------------------------------------------------------------------------------------------------------

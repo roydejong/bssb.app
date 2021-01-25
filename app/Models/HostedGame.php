@@ -39,6 +39,7 @@ class HostedGame extends Model implements \JsonSerializable
     public ?string $masterServerHost;
     public ?int $masterServerPort;
     public ?\DateTime $endedAt;
+    public ?string $mpExVersion;
 
     // -----------------------------------------------------------------------------------------------------------------
     // Relationships

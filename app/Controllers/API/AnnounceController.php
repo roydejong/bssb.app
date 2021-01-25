@@ -6,6 +6,7 @@ use app\BeatSaber\LevelId;
 use app\BeatSaber\ModPlatformId;
 use app\BeatSaber\MultiplayerLobbyState;
 use app\Common\CString;
+use app\Common\CVersion;
 use app\HTTP\Request;
 use app\HTTP\Response;
 use app\HTTP\Responses\BadRequestResponse;
@@ -83,13 +84,21 @@ class AnnounceController
         $game->masterServerHost = $input['MasterServerHost'] ?? null;
         $game->masterServerPort = isset($input['MasterServerPort']) ? intval($input['MasterServerPort']) : null;
 
+        $mpExVersion = isset($input['MpExVersion']) ? new CVersion($input['MpExVersion']) : null;
+        $game->mpExVersion = $mpExVersion ? $mpExVersion->toString(3) : null;
+
         // -------------------------------------------------------------------------------------------------------------
         // Validation and processing
 
-        if ($game->levelId && CString::startsWith($game->levelId, "custom_level_")) {
-            // Custom song: this game should be detected as modded
-            // (For some reason the "modded" flag doesn't always get set, possibly due to MpEx changes)
-            $game->isModded = true;
+        if (!$game->isModded) {
+            // For some reason the "modded" flag doesn't always get set, so apply failsafes
+            if ($game->mpExVersion != null) {
+                // MpEx version provided, must be modded
+                $game->isModded = true;
+            } else if ($game->levelId && CString::startsWith($game->levelId, "custom_level_")) {
+                // Custom song given, must be modded
+                $game->isModded = true;
+            }
         }
 
         if (empty($game->serverCode) || strlen($game->serverCode) !== 5 || !ctype_alnum($game->serverCode)) {
