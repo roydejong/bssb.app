@@ -38,7 +38,7 @@ class HomeController
 
         $view = new View('home.twig');
         $view->set('games', $games);
-        $view->set('serverMessage', $sysConfig->serverMessage);
+        $view->set('serverMessage', $sysConfig->getCleanServerMessage());
 
         $response = $view->asResponse();
         $resCache->writeResponse($response);

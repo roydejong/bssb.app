@@ -39,4 +39,12 @@ class SystemConfig extends Model
 
         return self::$instance;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Data helpers
+
+    public function getCleanServerMessage(): ?string
+    {
+        return $this->serverMessage ? strip_tags($this->serverMessage) : null;
+    }
 }
