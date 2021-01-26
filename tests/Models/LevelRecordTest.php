@@ -27,6 +27,21 @@ class LevelRecordTest extends TestCase
             @$testLevel->delete();
         }
     }
+    public function testSyncOneMoreTimeCover()
+    {
+        $omtLevel = new LevelRecord();
+        $omtLevel->levelId = "custom_level_3C01DA2A69BA6EB3C2EFD50EEB7C431F09C44C3B";
+
+        if ($omtExistingRecord = $omtLevel->fetchExisting()) {
+            $omtLevel = $omtExistingRecord;
+            $omtLevel->coverUrl = null;
+        }
+
+        $this->assertNull($omtLevel->coverUrl, "Sanity check: coverUrl should initially be NULL for this test");
+
+        $this->assertTrue($omtLevel->syncFromBeatSaver());
+        $this->assertSame("https://bssb.app/static/bsassets/OneMoreTime.png", $omtLevel->coverUrl);
+    }
 
     public function testIncrementPlayCount()
     {

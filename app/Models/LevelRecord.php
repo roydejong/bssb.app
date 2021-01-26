@@ -88,12 +88,17 @@ class LevelRecord extends Model
             return false;
         }
 
-        $expectedPath = "/static/bsassets/{$this->levelId}.png";
+        return $this->setNativeCover($this->levelId);
+    }
+
+    private function setNativeCover(string $levelIdOrAssetName): bool
+    {
+        $expectedPath = "/static/bsassets/{$levelIdOrAssetName}.png";
         $expectedDiskPath = DIR_BASE . "/public" . $expectedPath;
 
         if (!file_exists($expectedDiskPath)) {
             // Not found, suspicious
-            \Sentry\captureMessage("syncNativeCover() failed for level with id: {$this->levelId}");
+            \Sentry\captureMessage("setNativeCover() failed, no art found - for id: {$this->levelId}");
             return false;
         }
 
@@ -108,6 +113,17 @@ class LevelRecord extends Model
     {
         if (!$this->getIsCustomLevel()) {
             return false;
+        }
+
+        if ($this->levelId === "custom_level_3C01DA2A69BA6EB3C2EFD50EEB7C431F09C44C3B") {
+            // "Berlin Child - One More Time" ships with mods, but this version is not on BeatSaver
+            $this->name = "One More Time";
+            $this->songName = "One More Time";
+            $this->songAuthor = "Berlin Child";
+            $this->levelAuthor = "Freeek";
+            $this->duration = 179;
+            $this->setNativeCover("OneMoreTime");
+            return $this->save();
         }
 
         $mapData = BeatSaver::fetchMapDataByHash($this->hash);
@@ -150,7 +166,7 @@ class LevelRecord extends Model
             // We already have a record for this song (by id/hash), an announce won't tell us anything new
             if ($isCustomLevel) {
                 if (!$existingRecord->beatsaverId) {
-                    // ...but it might be worth trying beat saver again as we don't have correct data.
+                    // Try asking beat saver API, we don't have API data yet
                     $existingRecord->syncFromBeatSaver();
                 }
             } else {
