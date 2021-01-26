@@ -15,7 +15,7 @@ class HostedGame extends Model implements \JsonSerializable
     // Consts
 
     const MAX_PLAYER_LIMIT_VANILLA = 5;
-    const MAX_PLAYER_LIMIT_MODDED = 10;
+    const MAX_PLAYER_LIMIT_MODDED = 20;
 
     // -----------------------------------------------------------------------------------------------------------------
     // Columns
@@ -118,6 +118,15 @@ class HostedGame extends Model implements \JsonSerializable
     public function describeState(): string
     {
         return MultiplayerLobbyState::describe($this->lobbyState);
+    }
+
+    public function getMaxPlayerLimit(): int
+    {
+        if (!$this->getIsOfficial() && $this->isModded) {
+            // Higher player limit is only possible for modded games on unofficial servers
+            return self::MAX_PLAYER_LIMIT_MODDED;
+        }
+        return self::MAX_PLAYER_LIMIT_VANILLA;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

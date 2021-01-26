@@ -106,7 +106,7 @@ class AnnounceController
             return new BadRequestResponse();
         }
 
-        $maxPlayerLimit = $game->isModded ? HostedGame::MAX_PLAYER_LIMIT_MODDED : HostedGame::MAX_PLAYER_LIMIT_VANILLA;
+        $maxPlayerLimit = $game->getMaxPlayerLimit();
         if ($game->playerLimit <= 0 || $game->playerLimit > $maxPlayerLimit) {
             $game->playerLimit = $maxPlayerLimit;
         }
