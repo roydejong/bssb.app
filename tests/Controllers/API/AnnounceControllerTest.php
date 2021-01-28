@@ -340,7 +340,7 @@ class AnnounceControllerTest extends TestCase
         $json = json_decode($response->body, true);
 
         $game = HostedGame::fetch($json['id']);
-        $this->assertSame(20, $game->playerLimit, "Modded lobbies should be capped at 20 players");
+        $this->assertSame(100, $game->playerLimit, "Modded lobbies should be capped at 20 players");
     }
 
     /**

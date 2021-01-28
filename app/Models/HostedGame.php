@@ -15,7 +15,7 @@ class HostedGame extends Model implements \JsonSerializable
     // Consts
 
     const MAX_PLAYER_LIMIT_VANILLA = 5;
-    const MAX_PLAYER_LIMIT_MODDED = 20;
+    const MAX_PLAYER_LIMIT_MODDED = 100;
 
     // -----------------------------------------------------------------------------------------------------------------
     // Columns
