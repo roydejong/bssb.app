@@ -150,6 +150,16 @@ td.no-results-cell {
     user-select: all;
     letter-spacing: 5px;
   }
+
+  tr.disconnected-player {
+    td {
+      color: #e74c3c;
+      opacity: .75;
+    }
+    td:first-child {
+      text-decoration: line-through;
+    }
+  }
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

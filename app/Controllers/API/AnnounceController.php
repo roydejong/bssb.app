@@ -153,7 +153,13 @@ class AnnounceController
         }
 
         $game->lastUpdate = $now;
-        $game->endedAt = null;
+
+        // Resurrect the game if needed (remove endedAt flag)
+        $isResurrectedGame = false;
+        if ($game->endedAt) {
+            $game->endedAt = null;
+            $isResurrectedGame = true;
+        }
 
         // Discard boring games
         if ($game->getIsUninteresting()) {
@@ -209,21 +215,27 @@ class AnnounceController
                     $playerRecord->userName = $userName;
                     $playerRecord->isHost = $isHost;
                     $playerRecord->latency = $latency;
+                    $playerRecord->isConnected = true;
                     $playerRecord->save();
 
                     $playerIndexesKnown[] = $sortIndex;
                 }
 
-                if (!$isNewGame) {
-                    // Remove players that may have disconnected
-                    if (empty($playerIndexesKnown)) {
+                if ($isNewGame) {
+                    // New game, player list was just freshly created
+                } else if ($isResurrectedGame) {
+                    // Resurrected game, player list may contain stale items - clean all except host
+                    HostedGamePlayer::query()
+                        ->delete()
+                        ->where('hosted_game_id = ?', $game->id)
+                        ->andWhere('is_host = 0')
+                        ->execute();
+                } else {
+                    // This is an update: mark players that may have disconnected
+                    if (!empty($playerIndexesKnown)) {
                         HostedGamePlayer::query()
-                            ->delete()
-                            ->where('hosted_game_id = ?', $game->id)
-                            ->execute();
-                    } else {
-                        HostedGamePlayer::query()
-                            ->delete()
+                            ->update()
+                            ->set('is_connected = 0')
                             ->where('hosted_game_id = ?', $game->id)
                             ->andWhere('sort_index NOT IN (?)', $playerIndexesKnown)
                             ->execute();

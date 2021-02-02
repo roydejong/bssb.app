@@ -146,7 +146,7 @@
                                     </thead>
                                     <tbody>
                                     {% for player in players %}
-                                        <tr>
+                                        <tr class="{{ player.isConnected ? "connected-player" : "disconnected-player" }}">
                                             <td>{{ player.sortIndex }}</td>
                                             <td>
                                                 <span>{{ player.userName }}</span>
@@ -154,7 +154,17 @@
                                                     <span class="badge bg-primary">Host</span>
                                                 {% endif %}
                                             </td>
-                                            <td>{{ player.describeLatency() }}</td>
+                                            <td>
+                                                {% if player.isHost %}
+                                                    <span>Local</span>
+                                                {% elseif not player.isConnected %}
+                                                    <span>Disconnected</span>
+                                                {% elseif not player.latency %}
+                                                    <span>Just joined</span>
+                                                {% else %}
+                                                    {{ player.describeLatency() }}
+                                                {% endif %}
+                                            </td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
