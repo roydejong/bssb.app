@@ -103,6 +103,9 @@
                         {% endif %}
                         {% if game.isModded %}
                             Modded
+                            {% if game.mpExVersion %}
+                                <span title="MultiplayerExtensions version">{{ game.mpExVersion }}</span>
+                            {% endif %}
                         {% else %}
                             Vanilla
                         {% endif %}
