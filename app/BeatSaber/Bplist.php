@@ -16,6 +16,7 @@ class Bplist
     private string $title = "Untitled Playlist";
     private string $author = "bssb.app";
     private string $description = "";
+    private ?string $syncUrl = null;
 
     public function setTitle(string $title): void
     {
@@ -45,6 +46,16 @@ class Bplist
     public function getDescription(): string
     {
         return $this->description;
+    }
+
+    public function setSyncUrl(?string $syncUrl): void
+    {
+        $this->syncUrl = $syncUrl;
+    }
+
+    public function getSyncUrl(): ?string
+    {
+        return $this->syncUrl;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -112,6 +123,7 @@ class Bplist
             'playlistTitle' => $this->title,
             'playlistAuthor' => $this->author,
             'playlistDescription' => $this->description,
+            'syncURL' => $this->syncUrl,
             'image' => $this->imageDataRaw,
             'songs' => $this->songs
         ];

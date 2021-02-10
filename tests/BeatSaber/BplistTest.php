@@ -112,6 +112,7 @@ class BplistTest extends TestCase
         $bpl->setAuthor("testToJson");
         $bpl->setDescription("Hello world!");
         $bpl->setImageFromLocalFile(DIR_BASE . '/public/static/bsassets/MicDrop.png');
+        $bpl->setSyncUrl("https://site.web/file.bplist");
         $bpl->addSong(hash: "1234567890000000000000000000000000000000", songName: "A song", key: "abcd");
         $bpl->addSong(hash: "1234567890000000000FEEFA00000000000BEEBA", songName: "Another song");
 

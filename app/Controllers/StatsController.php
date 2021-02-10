@@ -151,6 +151,7 @@ class StatsController
             $bplist->setAuthor("bssb.app");
             $bplist->setDescription("Top 100 Custom Levels based on play count seen by the server browser (generated {$nowDateTimeText})");
             $bplist->setImageFromLocalFile(DIR_BASE . "/public/static/bsassets/BSSBTop100CustomLevels256.png");
+            $bplist->setSyncUrl("https://bssb.app/stats/top/custom-levels/playlist");
 
             $topLevels = $this->queryTopLevels(true, 0, 100);
             foreach ($topLevels as $levelRecord) {
