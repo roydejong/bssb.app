@@ -6,6 +6,7 @@ use app\BeatSaber\LevelDifficulty;
 use app\BeatSaber\MasterServer;
 use app\BeatSaber\ModPlatformId;
 use app\BeatSaber\MultiplayerLobbyState;
+use app\Common\CVersion;
 use app\Controllers\API\AnnounceController;
 use app\Models\HostedGame;
 use app\Models\LevelRecord;
@@ -73,6 +74,7 @@ class AnnounceControllerTest extends TestCase
         ]);
         $request->method = "POST";
         $request->path = "/api/v1/announce";
+        $request->headers["user-agent"] = "ServerBrowser/4.2.0 (BeatSaber/6.9.42) (steam)";
 
         // -------------------------------------------------------------------------------------------------------------
         // Test basic response
@@ -110,6 +112,8 @@ class AnnounceControllerTest extends TestCase
         $this->assertNull($announce->endedAt);
         $this->assertSame('1.2.3', $announce->mpExVersion,
             'MpEx version should be parsed and, if needed, normalized to Major.Minor.Patch');
+        $this->assertEquals(new CVersion("4.2.0"), $announce->modVersion);
+        $this->assertEquals(new CVersion("6.9.42"), $announce->gameVersion);
 
         self::$fullAnnounceTestResult = $announce;
 

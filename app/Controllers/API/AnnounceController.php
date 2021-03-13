@@ -29,6 +29,8 @@ class AnnounceController
             return new BadRequestResponse();
         }
 
+        $modClientInfo = $request->getModClientInfo();
+
         // -------------------------------------------------------------------------------------------------------------
         // Read input
 
@@ -86,6 +88,9 @@ class AnnounceController
 
         $mpExVersion = isset($input['MpExVersion']) ? new CVersion($input['MpExVersion']) : null;
         $game->mpExVersion = $mpExVersion ? $mpExVersion->toString(3) : null;
+
+        $game->modVersion = $modClientInfo->assemblyVersion;
+        $game->gameVersion = $modClientInfo->beatSaberVersion;
 
         // -------------------------------------------------------------------------------------------------------------
         // Validation and processing

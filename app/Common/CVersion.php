@@ -2,14 +2,21 @@
 
 namespace app\Common;
 
-final class CVersion
+use Instasell\Instarecord\Serialization\IDatabaseSerializable;
+
+final class CVersion implements IDatabaseSerializable
 {
     public ?int $major = null;
     public ?int $minor = null;
     public ?int $build = null;
     public ?int $revision = null;
 
-    public function __construct(string $value)
+    public function __construct(?string $value = null)
+    {
+        $this->setValue($value);
+    }
+
+    public function setValue(?string $value): void
     {
         $parts = explode('.', $value);
         $partCount = count($parts);
@@ -98,8 +105,21 @@ final class CVersion
         return $versionStr;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+    // Serialization
+
     public function __toString(): string
     {
         return $this->toString(PHP_INT_MAX);
+    }
+
+    public function dbSerialize(): string
+    {
+        return $this->__toString();
+    }
+
+    public function dbUnserialize(string $storedValue): void
+    {
+        $this->setValue($storedValue);
     }
 }

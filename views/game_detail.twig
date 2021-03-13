@@ -66,6 +66,12 @@
                                         <td><span class="difficulty-txt -d{{ game.difficulty }}">{{ game.describeDifficulty() }}</span></td>
                                     </tr>
                                     {% endif %}
+                                    {% if game.gameVersion %}
+                                        <tr>
+                                            <th scope="row">Game version</th>
+                                            <td>Beat Saber {{ game.gameVersion }}</td>
+                                        </tr>
+                                    {% endif %}
                                     <tr>
                                         <th scope="row">Modded</th>
                                         <td>
@@ -82,7 +88,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th scope="row">Server</th>
+                                        <th scope="row">Master server</th>
                                         <td>
                                             {% if game.getIsOfficial() %}
                                                 {% if game.platform == "steam" %}
@@ -101,17 +107,26 @@
                                             {% endif %}
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <th scope="row">Cross-play</th>
-                                        <td>
-                                            {% if game.getIsOfficial() %}
-                                                No (official server)
-                                            {% else %}
-                                                <i class="mdi mdi-check-circle"></i>
-                                                Yes (unofficial server)
-                                            {% endif %}
-                                        </td>
-                                    </tr>
+                                    {% if not game.getIsOfficial() %}
+                                        <tr>
+                                            <th scope="row">Host platform</th>
+                                            <td>
+                                                {% if game.platform == "steam" %}
+                                                    <i class="mdi mdi-steam"></i> Steam
+                                                {% elseif game.platform == "oculus" %}
+                                                    {% include "oculus_icon.twig"%} Oculus
+                                                {% else %}
+                                                    <i class="mdi mdi-head-question"></i> Unknown
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                    {% if game.modVersion %}
+                                        <tr>
+                                            <th scope="row">Browser version</th>
+                                            <td>Server Browser {{ game.modVersion }}</td>
+                                        </tr>
+                                    {% endif %}
                                     <tr>
                                         <th scope="row">First seen</th>
                                         <td>{{ game.firstSeen.format('r') }}</td>

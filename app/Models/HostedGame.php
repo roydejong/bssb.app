@@ -6,6 +6,7 @@ use app\BeatSaber\LevelDifficulty;
 use app\BeatSaber\ModPlatformId;
 use app\BeatSaber\MultiplayerLobbyState;
 use app\BSSB;
+use app\Common\CVersion;
 use Hashids\Hashids;
 use Instasell\Instarecord\Model;
 
@@ -40,6 +41,8 @@ class HostedGame extends Model implements \JsonSerializable
     public ?int $masterServerPort;
     public ?\DateTime $endedAt;
     public ?string $mpExVersion;
+    public ?CVersion $modVersion;
+    public ?CVersion $gameVersion;
 
     // -----------------------------------------------------------------------------------------------------------------
     // Relationships
