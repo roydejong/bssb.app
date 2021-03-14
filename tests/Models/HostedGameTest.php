@@ -67,4 +67,17 @@ class HostedGameTest extends TestCase
         $this->assertArrayHasKey("ownerName", $sz);
         $this->assertArrayNotHasKey("ownerId", $sz);
     }
+
+    public function testIsPirate()
+    {
+        $game = new HostedGame();
+        $game->ownerName = "test";
+        $game->ownerId = "test";
+        $this->assertFalse($game->getIsPirate());
+
+        $game = new HostedGame();
+        $game->ownerName = "CODEX";
+        $game->ownerId = "mqsC892YHEEG91QeFPnNN1";
+        $this->assertTrue($game->getIsPirate());
+    }
 }

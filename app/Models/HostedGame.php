@@ -132,6 +132,11 @@ class HostedGame extends Model implements \JsonSerializable
         return self::MAX_PLAYER_LIMIT_VANILLA;
     }
 
+    public function getIsPirate(): bool
+    {
+        return str_starts_with($this->ownerId, "mqsC892YHEEG91QeFPnNN1");
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     // Moderation
 

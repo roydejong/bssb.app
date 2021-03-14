@@ -19,6 +19,14 @@
 
                 <hr />
 
+                {% if game.getIsPirate() %}
+                    <div class="alert alert-warning">
+                        <strong>🏴‍☠️ <span>Ahoy there. This here 'ost be a gentleman o' fortune!</span></strong><br />
+                        <span>Pirates share the same host ID, so game data may not be reliable.</span><br />
+                        <span>You should <a href="https://store.steampowered.com/app/620980/Beat_Saber/" target="_blank">buy the game</a> if you enjoy it!</span>
+                    </div>
+                {% endif %}
+
                 {% if game.getIsUninteresting() %}
                     <div class="alert alert-danger">
                         🤖 Game was removed (marked as ended) by the automodbot for being lame
@@ -99,7 +107,7 @@
                                                     <i class="mdi mdi-head-question"></i> Unknown
                                                 {% endif %}
                                             {% else %}
-                                                <i class="mdi mdi-connection"></i> Unofficial
+                                                <i class="mdi mdi-connection"></i> Unofficial cross-play
                                             {% endif %}
 
                                             {% if game.masterServerHost %}
