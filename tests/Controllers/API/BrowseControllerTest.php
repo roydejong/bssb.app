@@ -6,6 +6,7 @@ use app\BeatSaber\MasterServer;
 use app\BeatSaber\ModPlatformId;
 use app\BeatSaber\MultiplayerLobbyState;
 use app\Common\CString;
+use app\Common\CVersion;
 use app\Controllers\API\BrowseController;
 use app\HTTP\Request;
 use app\Models\HostedGame;
@@ -39,6 +40,8 @@ class BrowseControllerTest extends TestCase
         $endedSteam = self::createSampleGame(9, "EndedSteam", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, false);
         $endedSteam->endedAt = new \DateTime('now');
         $endedSteam->save();
+
+        self::createSampleGame(0, "BadGameVersion", customGameVersion: new CVersion("1.2.3"));
     }
 
     public static function tearDownAfterClass(): void
@@ -57,7 +60,7 @@ class BrowseControllerTest extends TestCase
     private static array $sampleGames;
     private static int $createdSampleGameCount = 0;
 
-    private static function createSampleGame(int $number, string $name, bool $isModded, ?string $masterServer, ?string $platform, ?int $playerCount, bool $inProgress = false): HostedGame
+    private static function createSampleGame(int $number, string $name, bool $isModded = false, ?string $masterServer = null, ?string $platform = null, ?int $playerCount = null, bool $inProgress = false, ?CVersion $customGameVersion = null): HostedGame
     {
         $hg = new HostedGame();
         $hg->serverCode = "TEST{$number}";
@@ -93,7 +96,11 @@ class BrowseControllerTest extends TestCase
             $hg->songAuthor = "Author";
         }
 
+        $hg->gameVersion = $customGameVersion ? $customGameVersion : new CVersion("1.12.2");
+        $hg->modVersion = new CVersion("0.2.0");
+
         $hg->save();
+
         self::$createdSampleGameCount++;
         return $hg;
     }
@@ -219,7 +226,8 @@ class BrowseControllerTest extends TestCase
 
         $this->assertNotSame($pageOne, $pageTwo);
 
-        $expectedTotalItems = self::$createdSampleGameCount - 2; // NB: -1 for OldSteam, -1 for EndedSteam
+        // NB: -1 for OldSteam, -1 for EndedSteam, -1 for BadGameVersion
+        $expectedTotalItems = self::$createdSampleGameCount - 3;
 
         $this->assertGreaterThanOrEqual($expectedTotalItems, count($pageOne) + count($pageTwo),
             "Pages one and two should make up the sample game count together");
@@ -255,6 +263,7 @@ class BrowseControllerTest extends TestCase
         $this->assertNotContainsGameWithName("BoringOculus", $lobbies);
         $this->assertNotContainsGameWithName("BoringUnknown", $lobbies);
         $this->assertNotContainsGameWithName("ModdedSteam", $lobbies);
+        $this->assertNotContainsGameWithName("BadGameVersion", $lobbies);
         $this->assertContainsGameWithName("ModdedSteamCrossplayX", $lobbies);
     }
 
@@ -415,5 +424,16 @@ class BrowseControllerTest extends TestCase
 
         $this->assertArrayHasKey("ownerName", $aLobby);
         $this->assertArrayNotHasKey("ownerId", $aLobby);
+    }
+
+    public function testBrowseVersionFiltering()
+    {
+        $request = self::createBrowseRequest();
+        $request->headers["user-agent"] = "ServerBrowser/0.2.0 (BeatSaber/1.2.3) (steam)";
+
+        $lobbies = self::executeBrowseRequestAndGetGames($request);
+
+        $this->assertCount(1, $lobbies, "We should only get one result for this game version");
+        $this->assertContainsGameWithName("BadGameVersion", $lobbies, "We should only get the single matching game for this version");
     }
 }

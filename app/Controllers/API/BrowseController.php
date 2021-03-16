@@ -23,6 +23,8 @@ class BrowseController
         // -------------------------------------------------------------------------------------------------------------
         // Pre-flight checks
 
+        $mci = $request->getModClientInfo();
+
         if (!$request->getIsValidModClientRequest()) {
             return new BadRequestResponse();
         }
@@ -62,6 +64,11 @@ class BrowseController
             ->andWhere("ended_at IS NULL")
             ->leftJoin("level_records lr ON (lr.level_id = hosted_games.level_id)")
             ->orderBy("player_count >= player_limit ASC, player_count > 1 ASC, player_limit DESC, hosted_games.id DESC");
+
+        if ($mci->beatSaberVersion) {
+            // Only show results from same game version
+            $baseQuery->andWhere('game_version = ?', $mci->beatSaberVersion);
+        }
 
         // Search query
         if (!empty($searchQuery)) {
