@@ -1,0 +1,90 @@
+<table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+    <tr>
+        <th></th>
+        <th>Game</th>
+        <th>Level</th>
+        <th>Difficulty</th>
+        <th>Players</th>
+        <th>Type</th>
+        <th width="5">Code</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for game in games %}
+        <tr>
+            <td class="cover-art-cell">
+                {% if game.coverUrl %}
+                    <img src="{{ game.coverUrl }}" alt="{{ game.describeSong() }}" height="25" class="cover-art"/>
+                {% else %}
+                    {% if game.levelId %}
+                        <span class="huh">
+                                    <i class="mdi mdi-music"></i>
+                                </span>
+                    {% else %}
+                        <span class="huh">
+                                    <i class="mdi mdi-new-box"></i>
+                                </span>
+                    {% endif %}
+                {% endif %}
+            </td>
+            <td class="align-middle">
+                <a href="{{ game.getWebDetailUrl() }}" title="View game details" target="_self">
+                    <strong>{{ game.gameName }}</strong>
+                </a>
+            </td>
+            <td class="align-middle">
+                {% if not game.levelId or game.lobbyState == 0 or game.lobbyState == 1 %}
+                    <i class="mdi mdi-account-group-outline"></i> In lobby
+                {% else %}
+                    {% if game.levelName %}
+                        {{ game.levelName }}
+                    {% else %}
+                        {{ game.describeSong() }}
+                    {% endif %}
+                {% endif %}
+            </td>
+            <td class="align-middle">
+                {% if game.difficulty is not null and game.levelId %}
+                    <span class="difficulty-txt -d{{ game.difficulty }}">{{ game.describeDifficulty() }}</span>
+                {% else %}
+                    <span class="difficulty-txt -unknown">New game</span>
+                {% endif %}
+            </td>
+            <td class="align-middle">{{ game.playerCount }}/{{ game.playerLimit }}</td>
+            <td class="align-middle">
+                {% if game.getIsOfficial() %}
+                    {% if game.platform == "steam" %}
+                        <i class="mdi mdi-steam"></i> Steam
+                    {% elseif game.platform == "oculus" %}
+                        {% include "oculus_icon.twig"%} Oculus
+                    {% else %}
+                        <i class="mdi mdi-head-question"></i> Unknown
+                    {% endif %}
+                {% else %}
+                    <i class="mdi mdi-connection"></i> Unofficial
+                {% endif %}
+                {% if game.isModded %}
+                    Modded
+                    {% if game.mpExVersion %}
+                        <span title="MultiplayerExtensions version">{{ game.mpExVersion }}</span>
+                    {% endif %}
+                {% else %}
+                    Vanilla
+                {% endif %}
+                <small>({{ game.describeMasterServer() }})</small>
+            </td>
+            <td class="align-middle">
+                <code><strong>{{ game.serverCode }}</strong></code>
+            </td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="100" class="no-results-cell">
+                <i class="mdi mdi-emoticon-sad-outline"></i>
+                <span>No active games right now</span>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
