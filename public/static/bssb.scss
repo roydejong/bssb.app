@@ -378,6 +378,8 @@ body[data-theme="dark"] .oculus-icon {
       // Make table 100% of page width no margins
       width: 100vw;
       margin-left: -15px;
+      border-left: 0;
+      border-right: 0;
 
       th:first-child, td:first-child {
         // Hide art column
@@ -401,11 +403,16 @@ body[data-theme="dark"] .oculus-icon {
 @media all and (max-width: 600px) {
   .main-page {
     table {
-      th:nth-child(3), td:nth-child(3) {
+      // Make table horizontally scrollable
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+
+      th:nth-child(4), td:nth-child(4) {
         // Hide level column
         display: none;
       }
-      th:nth-child(4), td:nth-child(4) {
+      th:nth-child(5), td:nth-child(5) {
         // Hide difficulty column
         display: none;
       }

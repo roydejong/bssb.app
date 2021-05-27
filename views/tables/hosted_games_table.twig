@@ -2,13 +2,13 @@
     <thead class="thead-dark">
     <tr>
         <th></th>
+        <th width="5">Code</th>
         <th>Name</th>
         <th>Level</th>
         <th>Difficulty</th>
         <th>Players</th>
         <th>Game</th>
         <th>Type</th>
-        <th width="5">Code</th>
     </tr>
     </thead>
     <tbody>
@@ -28,6 +28,9 @@
                                 </span>
                     {% endif %}
                 {% endif %}
+            </td>
+            <td class="align-middle">
+                <code><strong>{{ game.serverCode }}</strong></code>
             </td>
             <td class="align-middle">
                 <a href="{{ game.getWebDetailUrl() }}" title="View game details" target="_self">
@@ -75,9 +78,6 @@
                     Vanilla
                 {% endif %}
                 <small>({{ game.describeMasterServer() }})</small>
-            </td>
-            <td class="align-middle">
-                <code><strong>{{ game.serverCode }}</strong></code>
             </td>
         </tr>
     {% else %}
