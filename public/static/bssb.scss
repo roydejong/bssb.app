@@ -375,6 +375,10 @@ body[data-theme="dark"] .oculus-icon {
     }
 
     table {
+      // Make table 100% of page width no margins
+      width: 100vw;
+      margin-left: -15px;
+
       th:first-child, td:first-child {
         // Hide art column
         display: none;
