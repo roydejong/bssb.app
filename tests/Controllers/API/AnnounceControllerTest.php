@@ -463,13 +463,13 @@ class AnnounceControllerTest extends TestCase
     public function testAnnounceDiscardsUninteresting()
     {
         $request = clone self::$minimalAnnounceRequest;
-        $request->json['GameName'] = "testing, dont join";
+        $request->json['MasterServerHost'] = "localhost";
 
         $response = (new AnnounceController())->announce($request);
         $json = json_decode($response->body, true);
         $game = HostedGame::fetch($json['id']);
 
-        $this->assertNotNull($game->endedAt, "Uninteresting game names should be marked as ended immediately");
+        $this->assertNotNull($game->endedAt, "Uninteresting games should be marked as ended immediately");
     }
 
     // -----------------------------------------------------------------------------------------------------------------

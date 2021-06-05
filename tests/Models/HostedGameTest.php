@@ -48,11 +48,11 @@ class HostedGameTest extends TestCase
     public function testGetIsUninteresting()
     {
         $game = new HostedGame();
-        $game->gameName = "testing, dont join";
-        $this->assertTrue($game->getIsUninteresting(), "Some specific game names are uninteresting");
-
-        $game = new HostedGame();
-        $game->gameName = "any game name really";
+        $game->masterServerHost = "localhost";
+        $this->assertTrue($game->getIsUninteresting(), "Some specific host names are uninteresting");
+        $game->masterServerHost = "127.0.0.1";
+        $this->assertTrue($game->getIsUninteresting(), "Some specific host names are uninteresting");
+        $game->masterServerHost = "any.other.host.really";
         $this->assertFalse($game->getIsUninteresting());
     }
 

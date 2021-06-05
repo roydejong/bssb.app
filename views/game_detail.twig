@@ -29,7 +29,7 @@
 
                 {% if game.getIsUninteresting() %}
                     <div class="alert alert-danger">
-                        🤖 Game was removed (marked as ended) by the automodbot for being lame
+                        🤖 Game was hidden automatically (game is not relevant)
                     </div>
                 {% elseif game.endedAt is not null %}
                     <div class="alert alert-danger">

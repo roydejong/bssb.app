@@ -142,7 +142,10 @@ class HostedGame extends Model implements \JsonSerializable
 
     public function getIsUninteresting(): bool
     {
-        return $this->gameName === "testing, dont join";
+        if ($this->masterServerHost === "127.0.0.1" || $this->masterServerHost === "localhost") {
+            return true;
+        }
+        return false;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
