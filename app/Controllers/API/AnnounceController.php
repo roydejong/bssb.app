@@ -23,7 +23,10 @@ class AnnounceController
         // -------------------------------------------------------------------------------------------------------------
         // Pre-flight checks
 
-        if (!$request->getIsValidModClientRequest()
+        $isClientRequest = $request->getIsValidModClientRequest();
+        $isDediRequest = $request->getIsValidBeatDediRequest();
+
+        if ((!$isClientRequest && !$isDediRequest)
             || !$request->getIsJsonRequest()
             || $request->method !== "POST") {
             return new BadRequestResponse();
@@ -92,6 +95,9 @@ class AnnounceController
         $game->modVersion = $modClientInfo->assemblyVersion;
         $game->gameVersion = $modClientInfo->beatSaberVersion;
 
+        $game->serverType = $input['ServerType'] ?? null;
+        $game->hostSecret = $input['HostSecret'] ?? null;
+
         // -------------------------------------------------------------------------------------------------------------
         // Validation and processing
 
@@ -106,7 +112,7 @@ class AnnounceController
             }
         }
 
-        if (empty($game->serverCode) || strlen($game->serverCode) !== 5 || !ctype_alnum($game->serverCode)) {
+        if (!$game->getIsQuickplay() && (empty($game->serverCode) || strlen($game->serverCode) !== 5|| !ctype_alnum($game->serverCode))) {
             // Server code should always be alphanumeric, 5 characters, e.g. "ABC123"
             return new BadRequestResponse();
         }
@@ -130,6 +136,16 @@ class AnnounceController
             }
         }
 
+        if ($game->getIsBeatDedi() && !$isDediRequest) {
+            // Trying to announce a BeatDedi game, but does not appear to originate from BeatDedi
+            return new BadRequestResponse();
+        }
+
+        if ($game->getIsQuickplay() && empty($game->hostSecret)) {
+            // Trying to announce a Quickplay game, but no host secret provided
+            return new BadRequestResponse();
+        }
+
         // -------------------------------------------------------------------------------------------------------------
         // Level data sync
 
@@ -145,6 +161,15 @@ class AnnounceController
             if ($gameWasInLobby && $gameIsRunningOrStarting) {
                 $levelRecord->incrementPlayStat();
             }
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        // Game name overrides
+
+        if ($game->serverType === HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY)
+        {
+            $gameHash = strtoupper(substr($game->hostSecret, 0, 6));
+            $game->gameName = "Official Quick Play ({$gameHash})";
         }
 
         // -------------------------------------------------------------------------------------------------------------

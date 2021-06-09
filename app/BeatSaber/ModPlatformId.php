@@ -19,4 +19,8 @@ class ModPlatformId
      * Oculus PC build of the game.
      */
     public const OCULUS = "oculus";
+    /**
+     * Dedicated server.
+     */
+    public const DEDI = "dedi";
 }

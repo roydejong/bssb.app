@@ -116,6 +116,12 @@ class Request
         return $this->mci;
     }
 
+    public function getIsValidClientRequest(): bool
+    {
+        return $this->getIsValidModClientRequest()
+            || $this->getIsValidBeatDediRequest();
+    }
+
     public function getIsValidModClientRequest(): bool
     {
         if (empty($this->headers["x-bssb"])) {
@@ -124,7 +130,22 @@ class Request
 
         $mci = $this->getModClientInfo();
 
-        if ($mci->modName !== "ServerBrowser" || empty($mci->assemblyVersion) || empty($mci->beatSaberVersion)) {
+        if ($mci->modName !== ModClientInfo::MOD_SERVER_BROWSER_PC || empty($mci->assemblyVersion) || empty($mci->beatSaberVersion)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function getIsValidBeatDediRequest(): bool
+    {
+        if (empty($this->headers["x-bssb"])) {
+            return false;
+        }
+
+        $mci = $this->getModClientInfo();
+
+        if ($mci->modName !== ModClientInfo::MOD_BEATDEDI || empty($mci->assemblyVersion) || empty($mci->beatSaberVersion)) {
             return false;
         }
 

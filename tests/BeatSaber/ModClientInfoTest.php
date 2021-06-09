@@ -30,6 +30,17 @@ class ModClientInfoTest extends TestCase
         $this->assertSame(ModPlatformId::STEAM, $result->platformId);
     }
 
+    public function testFromUserAgentBeatDedi()
+    {
+        $input = "BeatDedi/1.0.0 (BeatSaber/1.16.1) (dedi)";
+        $result = ModClientInfo::fromUserAgent($input);
+
+        $this->assertSame("BeatDedi", $result->modName);
+        $this->assertSame("1.0.0", (string)$result->assemblyVersion);
+        $this->assertSame("1.16.1", (string)$result->beatSaberVersion);
+        $this->assertSame(ModPlatformId::DEDI, $result->platformId);
+    }
+
     public function testFromUserAgent_invalid_blank()
     {
         $input = "";

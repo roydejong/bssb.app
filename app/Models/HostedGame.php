@@ -18,6 +18,11 @@ class HostedGame extends Model implements \JsonSerializable
     const MAX_PLAYER_LIMIT_VANILLA = 5;
     const MAX_PLAYER_LIMIT_MODDED = 100;
 
+    public const SERVER_TYPE_PLAYER_HOST = "player_host";
+    public const SERVER_TYPE_BEATDEDI_CUSTOM = "beatdedi_custom";
+    public const SERVER_TYPE_BEATDEDI_QUICKPLAY = "beatdedi_quickplay";
+    public const SERVER_TYPE_VANILLA_QUICKPLAY = "vanilla_quickplay";
+
     // -----------------------------------------------------------------------------------------------------------------
     // Columns
 
@@ -43,6 +48,8 @@ class HostedGame extends Model implements \JsonSerializable
     public ?string $mpExVersion;
     public ?CVersion $modVersion;
     public ?CVersion $gameVersion;
+    public ?string $serverType;
+    public ?string $hostSecret;
 
     // -----------------------------------------------------------------------------------------------------------------
     // Relationships
@@ -123,6 +130,22 @@ class HostedGame extends Model implements \JsonSerializable
         return MultiplayerLobbyState::describe($this->lobbyState);
     }
 
+    public function describeServerType(): string
+    {
+        switch ($this->serverType) {
+            default:
+            case null:
+            case self::SERVER_TYPE_PLAYER_HOST:
+                return "Player hosted";
+            case self::SERVER_TYPE_VANILLA_QUICKPLAY:
+                return "Official Quickplay";
+            case self::SERVER_TYPE_BEATDEDI_QUICKPLAY:
+                return "BeatDedi Quickplay";
+            case self::SERVER_TYPE_BEATDEDI_CUSTOM:
+                return "BeatDedi Custom";
+        }
+    }
+
     public function getMaxPlayerLimit(): int
     {
         if (!$this->getIsOfficial() && $this->isModded) {
@@ -135,6 +158,23 @@ class HostedGame extends Model implements \JsonSerializable
     public function getIsPirate(): bool
     {
         return str_starts_with($this->ownerId, "mqsC892YHEEG91QeFPnNN1");
+    }
+
+    public function getIsPlayerHost(): bool
+    {
+        return empty($this->serverType) || $this->serverType === self::SERVER_TYPE_PLAYER_HOST;
+    }
+
+    public function getIsBeatDedi(): bool
+    {
+        return $this->serverType === self::SERVER_TYPE_BEATDEDI_CUSTOM ||
+            $this->serverType === self::SERVER_TYPE_BEATDEDI_QUICKPLAY;
+    }
+
+    public function getIsQuickplay(): bool
+    {
+        return $this->serverType === self::SERVER_TYPE_BEATDEDI_QUICKPLAY ||
+            $this->serverType === self::SERVER_TYPE_VANILLA_QUICKPLAY;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

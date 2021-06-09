@@ -70,7 +70,9 @@ class AnnounceControllerTest extends TestCase
             'Platform' => ModPlatformId::STEAM,
             'MasterServerHost' => MasterServer::OFFICIAL_HOSTNAME_STEAM,
             'MasterServerPort' => 2328,
-            'MpExVersion' => '1.2.3.4.5'
+            'MpExVersion' => '1.2.3.4.5',
+            'ServerType' => HostedGame::SERVER_TYPE_PLAYER_HOST,
+            'HostSecret' => 'abc1234'
         ]);
         $request->method = "POST";
         $request->path = "/api/v1/announce";
@@ -114,6 +116,8 @@ class AnnounceControllerTest extends TestCase
             'MpEx version should be parsed and, if needed, normalized to Major.Minor.Patch');
         $this->assertEquals(new CVersion("4.2.0"), $announce->modVersion);
         $this->assertEquals(new CVersion("6.9.42"), $announce->gameVersion);
+        $this->assertSame(HostedGame::SERVER_TYPE_PLAYER_HOST, $announce->serverType);
+        $this->assertSame("abc1234", $announce->hostSecret);
 
         self::$fullAnnounceTestResult = $announce;
 
@@ -471,6 +475,44 @@ class AnnounceControllerTest extends TestCase
 
         $this->assertNotNull($game->endedAt, "Uninteresting games should be marked as ended immediately");
     }
+
+    /**
+     * @depends testMinimalAnnounce
+     */
+    public function testRejectsBeatDediGames()
+    {
+        $request = clone self::$minimalAnnounceRequest;
+        $request->json['ServerType'] = HostedGame::SERVER_TYPE_BEATDEDI_CUSTOM;
+        $request->json['Secret'] = 'bla';
+
+        $this->assertSame(400, ((new AnnounceController())->announce($request))->code,
+            "SERVER_TYPE_BEATDEDI_CUSTOM should be rejected for mod client requests");
+
+        $request->json['ServerType'] = HostedGame::SERVER_TYPE_BEATDEDI_QUICKPLAY;
+
+        $this->assertSame(400, ((new AnnounceController())->announce($request))->code,
+            "SERVER_TYPE_BEATDEDI_QUICKPLAY should be rejected for mod client requests");
+    }
+
+    /**
+     * @depends testMinimalAnnounce
+     */
+    public function testRejectsQuickplayGamesWithoutHostSecret()
+    {
+        $request = clone self::$minimalAnnounceRequest;
+        $request->json['ServerType'] = HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY;
+        unset($request->json['HostSecret']);
+
+        $this->assertSame(400, ((new AnnounceController())->announce($request))->code,
+            "SERVER_TYPE_VANILLA_QUICKPLAY should be rejected if no host secret is set");
+
+        $request->json['HostSecret'] = 'bla1234';
+
+        $this->assertSame(200, ((new AnnounceController())->announce($request))->code,
+            "SERVER_TYPE_VANILLA_QUICKPLAY should be succeed if host secret is set");
+    }
+
+
 
     // -----------------------------------------------------------------------------------------------------------------
     // Player list sync

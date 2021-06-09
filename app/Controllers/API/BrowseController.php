@@ -93,7 +93,7 @@ class BrowseController
 
         // Hide custom master servers if we are below mod version 0.2
         $officialMasterServerLike = "%.mp.beatsaber.com";
-        $supportsCustomMasterServers = $request->getModClientInfo()->assemblyVersion
+        $supportsCustomMasterServers = $mci->assemblyVersion
             ->greaterThanOrEquals(new CVersion("0.2"));
 
         if ($supportsCustomMasterServers) {

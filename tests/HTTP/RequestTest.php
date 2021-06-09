@@ -84,6 +84,7 @@ class RequestTest extends TestCase
 
         $this->assertFalse($request1->getIsValidModClientRequest(),
             "request1 should be invalid: missing X-BSSB and valid User-Agent");
+        $this->assertFalse($request1->getIsValidClientRequest());
 
         $request2 = new Request();
         $request2->method = "GET";
@@ -92,6 +93,7 @@ class RequestTest extends TestCase
 
         $this->assertFalse($request2->getIsValidModClientRequest(),
             "request2 should be invalid: missing X-BSSB");
+        $this->assertFalse($request2->getIsValidClientRequest());
 
         $request3 = new Request();
         $request3->method = "GET";
@@ -101,5 +103,36 @@ class RequestTest extends TestCase
 
         $this->assertTrue($request3->getIsValidModClientRequest(),
             "request3 should be valid: have valid user agent and X-BSSB");
+        $this->assertTrue($request3->getIsValidClientRequest());
+    }
+
+    public function testGetIsValidBeatDediRequest()
+    {
+        $request1 = new Request();
+        $request1->method = "GET";
+        $request1->path = "/";
+
+        $this->assertFalse($request1->getIsValidBeatDediRequest(),
+            "request1 should be invalid: missing X-BSSB and valid User-Agent");
+        $this->assertFalse($request1->getIsValidClientRequest());
+
+        $request2 = new Request();
+        $request2->method = "GET";
+        $request2->path = "/";
+        $request2->headers["user-agent"] = "BeatDedi/0.1.0.0 (BeatSaber/1.16.1) (dedi)";
+
+        $this->assertFalse($request2->getIsValidBeatDediRequest(),
+            "request2 should be invalid: missing X-BSSB");
+        $this->assertFalse($request2->getIsValidClientRequest());
+
+        $request3 = new Request();
+        $request3->method = "GET";
+        $request3->path = "/";
+        $request3->headers["user-agent"] = "BeatDedi/0.1.0.0 (BeatSaber/1.16.1) (dedi)";
+        $request3->headers["x-bssb"] = "✔";
+
+        $this->assertTrue($request3->getIsValidBeatDediRequest(),
+            "request3 should be valid: have valid user agent and X-BSSB");
+        $this->assertTrue($request3->getIsValidClientRequest());
     }
 }

@@ -15,7 +15,7 @@ class UnAnnounceController
         // -------------------------------------------------------------------------------------------------------------
         // Pre-flight checks
 
-        if (!$request->getIsValidModClientRequest() || $request->method !== "POST") {
+        if (!$request->getIsValidClientRequest() || $request->method !== "POST") {
             return new BadRequestResponse();
         }
 

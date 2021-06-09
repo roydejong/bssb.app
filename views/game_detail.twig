@@ -58,7 +58,7 @@
                             </h5>
                             <table class="card-table table table-bordered">
                                 <tbody>
-                                    {% if players is not defined or players|length == 0 %}
+                                    {% if (players is not defined or players|length == 0) and not game.getIsQuickplay() %}
                                     <tr>
                                         <th scope="row">Host player</th>
                                         <td>{{ game.ownerName ? game.ownerName : "Unknown" }}</td>
@@ -74,6 +74,10 @@
                                         <td><span class="difficulty-txt -d{{ game.difficulty }}">{{ game.describeDifficulty() }}</span></td>
                                     </tr>
                                     {% endif %}
+                                    <tr>
+                                        <th scope="row">Server type</th>
+                                        <td>{{ game.describeServerType() }}</td>
+                                    </tr>
                                     {% if game.gameVersion %}
                                         <tr>
                                             <th scope="row">Game version</th>
@@ -199,10 +203,21 @@
                     </div>
                     <div class="col-sm">
 
-                        {% if not game.getIsStale() and game.ended_at is null %}
+                        {% if not game.getIsStale() and game.ended_at is null and game.serverCode %}
                             <div class="card">
                                 <h5 class="card-header">Server code</h5>
                                 <div class="card-body server-code">{{ game.serverCode }}</div>
+                            </div>
+                            <br />
+                        {% endif %}
+
+                        {% if game.getIsQuickplay() %}
+                            <div class="card">
+                                <h5 class="card-header">Quick play lobby</h5>
+                                <div class="card-body">
+                                    <p><strong>Use the ingame Server Browser to connect.</strong></p>
+                                    <p>You cannot connect to Quick Play lobbies using a Server Code.</p>
+                                </div>
                             </div>
                             <br />
                         {% endif %}
