@@ -54,9 +54,12 @@ class AnnounceController
         $game = null;
         $lastLobbyState = null;
         $isNewGame = false;
+        $isQuickplay = false;
 
         if ($serverType === HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY)  {
             // Quickplay mode: identify games by their secrets
+            $isQuickplay = true;
+
             $gameBySecret = HostedGame::query()
                 ->where('server_type = ?', $serverType)
                 ->andWhere('host_secret = ?', $hostSecret)
@@ -107,6 +110,8 @@ class AnnounceController
             $game->levelId = LevelId::cleanLevelHash($input['LevelId']);
             $game->songName = $input['SongName'] ?? null;
             $game->songAuthor = $input['SongAuthor'] ?? null;
+        }
+        if (!empty($input['LevelId']) || $isQuickplay) {
             $game->difficulty = isset($input['Difficulty']) ? intval($input['Difficulty']) : null;
         }
 
@@ -137,7 +142,7 @@ class AnnounceController
             }
         }
 
-        if (!$game->getIsQuickplay() && (empty($game->serverCode) || strlen($game->serverCode) !== 5|| !ctype_alnum($game->serverCode))) {
+        if (!$isQuickplay && (empty($game->serverCode) || strlen($game->serverCode) !== 5|| !ctype_alnum($game->serverCode))) {
             // Server code should always be alphanumeric, 5 characters, e.g. "ABC123"
             return new BadRequestResponse();
         }
@@ -166,7 +171,7 @@ class AnnounceController
             return new BadRequestResponse();
         }
 
-        if ($game->getIsQuickplay() && empty($game->hostSecret)) {
+        if ($isQuickplay && empty($game->hostSecret)) {
             // Trying to announce a Quickplay game, but no host secret provided
             return new BadRequestResponse();
         }
