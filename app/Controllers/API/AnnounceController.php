@@ -38,7 +38,10 @@ class AnnounceController
         // Read input
 
         $input = $request->getJson();
+
         $ownerId = $input['OwnerId'] ?? "";
+        $serverType = $input['ServerType'] ?? null;
+        $hostSecret = $input['HostSecret'] ?? null;;
 
         if (empty($ownerId) || $ownerId === "SERVER_MESSAGE") {
             // Owner ID is always required, and can't be "SERVER_MESSAGE" as we reserve that for our own use
@@ -46,20 +49,42 @@ class AnnounceController
         }
 
         /**
-         * @var $gameByOwner HostedGame|null
+         * @var $game HostedGame|null
          */
-        $gameByOwner = HostedGame::query()
-            ->where('owner_id = ?', $ownerId)
-            ->querySingleModel();
-
+        $game = null;
         $lastLobbyState = null;
         $isNewGame = false;
 
-        if ($gameByOwner) {
-            // Replace existing
-            $game = $gameByOwner;
-            $lastLobbyState = $game->lobbyState;
+        if ($serverType === HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY)  {
+            // Quickplay mode: identify games by their secrets
+            $gameBySecret = HostedGame::query()
+                ->where('server_type = ?', $serverType)
+                ->andWhere('host_secret = ?', $hostSecret)
+                ->querySingleModel();
+
+            if ($gameBySecret) {
+                // Replace existing
+                $game = $gameBySecret;
+                $lastLobbyState = $game->lobbyState;
+            }
         } else {
+            // Normal mode: identify games by their owners
+            /**
+             * @var $gameByOwner HostedGame|null
+             */
+            $gameByOwner = HostedGame::query()
+                ->where('owner_id = ?', $ownerId)
+                ->querySingleModel();
+
+            if ($gameByOwner) {
+                // Replace existing
+                $game = $gameByOwner;
+                $lastLobbyState = $game->lobbyState;
+            }
+        }
+
+        if (!$game)
+        {
             // Create new
             $game = new HostedGame();
             $isNewGame = true;
@@ -95,8 +120,8 @@ class AnnounceController
         $game->modVersion = $modClientInfo->assemblyVersion;
         $game->gameVersion = $modClientInfo->beatSaberVersion;
 
-        $game->serverType = $input['ServerType'] ?? null;
-        $game->hostSecret = $input['HostSecret'] ?? null;
+        $game->serverType = $serverType;
+        $game->hostSecret = $hostSecret;
 
         // -------------------------------------------------------------------------------------------------------------
         // Validation and processing
