@@ -136,7 +136,7 @@ class AnnounceController
             if ($game->mpExVersion != null) {
                 // MpEx version provided, must be modded
                 $game->isModded = true;
-            } else if ($game->levelId && CString::startsWith($game->levelId, "custom_level_")) {
+            } else if (!$isQuickplay && $game->levelId && CString::startsWith($game->levelId, "custom_level_")) {
                 // Custom song given, must be modded
                 $game->isModded = true;
             }
