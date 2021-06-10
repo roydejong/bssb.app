@@ -7,6 +7,7 @@ use app\BeatSaber\ModPlatformId;
 use app\BeatSaber\MultiplayerLobbyState;
 use app\BSSB;
 use app\Common\CVersion;
+use app\Utils\PirateDetect;
 use Hashids\Hashids;
 use Instasell\Instarecord\Model;
 
@@ -157,7 +158,7 @@ class HostedGame extends Model implements \JsonSerializable
 
     public function getIsPirate(): bool
     {
-        return str_starts_with($this->ownerId, "mqsC892YHEEG91QeFPnNN1");
+        return PirateDetect::detect($this->ownerId, $this->ownerName);
     }
 
     public function getIsPlayerHost(): bool

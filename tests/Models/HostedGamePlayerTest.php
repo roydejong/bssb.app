@@ -22,4 +22,22 @@ class HostedGamePlayerTest extends TestCase
             (new HostedGamePlayer(["latency" => 0]))->describeLatency()
         );
     }
+
+    public function testIsPirate()
+    {
+        $player = new HostedGamePlayer();
+        $player->userName = "test";
+        $player->userId = "test";
+        $this->assertFalse($player->getIsPirate());
+
+        $player = new HostedGamePlayer();
+        $player->userName = "CODEX";
+        $player->userId = "mqsC892YHEEG91QeFPnNN1";
+        $this->assertTrue($player->getIsPirate());
+
+        $player = new HostedGamePlayer();
+        $player->userName = "ALI213";
+        $player->userId = "o+DPXUXcX7WwkWcHWYzub/";
+        $this->assertTrue($player->getIsPirate());
+    }
 }

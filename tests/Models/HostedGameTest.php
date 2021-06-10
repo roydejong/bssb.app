@@ -79,5 +79,10 @@ class HostedGameTest extends TestCase
         $game->ownerName = "CODEX";
         $game->ownerId = "mqsC892YHEEG91QeFPnNN1";
         $this->assertTrue($game->getIsPirate());
+
+        $game = new HostedGame();
+        $game->ownerName = "ALI213";
+        $game->ownerId = "o+DPXUXcX7WwkWcHWYzub/";
+        $this->assertTrue($game->getIsPirate());
     }
 }

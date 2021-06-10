@@ -2,6 +2,7 @@
 
 namespace app\Models;
 
+use app\Utils\PirateDetect;
 use Instasell\Instarecord\Model;
 
 class HostedGamePlayer extends Model
@@ -24,5 +25,10 @@ class HostedGamePlayer extends Model
     public function describeLatency(): string
     {
         return ($this->latency * 1000) . "ms";
+    }
+
+    public function getIsPirate(): bool
+    {
+        return PirateDetect::detect($this->userId, $this->userName);
     }
 }
