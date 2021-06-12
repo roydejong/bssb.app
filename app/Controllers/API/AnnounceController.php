@@ -196,9 +196,8 @@ class AnnounceController
         // -------------------------------------------------------------------------------------------------------------
         // Game name overrides
 
-        if ($game->serverType === HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY)
-        {
-            $gameHash = strtoupper(substr($game->hostSecret, 0, 6));
+        if ($game->serverType === HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY) {
+            $gameHash = strtoupper(substr($game->hostSecret, 0, 3));
             $game->gameName = "Official Quick Play ({$gameHash})";
         }
 

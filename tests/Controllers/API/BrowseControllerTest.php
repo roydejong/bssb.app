@@ -22,7 +22,7 @@ class BrowseControllerTest extends TestCase
     {
         self::tearDownAfterClass(); // reset
 
-        self::createSampleGame(1, "BoringSteam", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, false);
+        self::createSampleGame(1, "BoringSteam", false,MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, false);
         self::createSampleGame(2, "BoringOculus", false, MasterServer::OFFICIAL_HOSTNAME_OCULUS, ModPlatformId::OCULUS, 1, false);
         self::createSampleGame(3, "BoringUnknown", false, null, ModPlatformId::UNKNOWN, 1, false);
         self::createSampleGame(4, "ModdedSteam", true, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, false);
@@ -42,6 +42,8 @@ class BrowseControllerTest extends TestCase
         $endedSteam->save();
 
         self::createSampleGame(0, "BadGameVersion", customGameVersion: new CVersion("1.2.3"));
+
+        self::createSampleGame(null, "VanillaQuickPlay", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 3, false, hostSecret: "abc123", serverType: HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY);
     }
 
     public static function tearDownAfterClass(): void
@@ -60,10 +62,17 @@ class BrowseControllerTest extends TestCase
     private static array $sampleGames;
     private static int $createdSampleGameCount = 0;
 
-    private static function createSampleGame(int $number, string $name, bool $isModded = false, ?string $masterServer = null, ?string $platform = null, ?int $playerCount = null, bool $inProgress = false, ?CVersion $customGameVersion = null): HostedGame
+    private static function createSampleGame(?int $number, string $name, bool $isModded = false,
+                                             ?string $masterServer = null, ?string $platform = null,
+                                             ?int $playerCount = null, bool $inProgress = false,
+                                             ?CVersion $customGameVersion = null, ?string $hostSecret = null,
+                                             ?string $serverType = null): HostedGame
     {
         $hg = new HostedGame();
-        $hg->serverCode = "TEST{$number}";
+
+        if ($number !== null)
+            $hg->serverCode = "TEST{$number}";
+
         $hg->playerLimit = 5;
         $hg->playerCount = $playerCount !== null ? $playerCount : 5;
         $hg->ownerId = "unit_test_{$number}";
@@ -99,6 +108,9 @@ class BrowseControllerTest extends TestCase
         $hg->gameVersion = $customGameVersion ? $customGameVersion : new CVersion("1.12.2");
         $hg->modVersion = new CVersion("0.2.0");
 
+        $hg->serverType = $serverType;
+        $hg->hostSecret = $hostSecret;
+
         $hg->save();
 
         self::$createdSampleGameCount++;
@@ -116,7 +128,7 @@ class BrowseControllerTest extends TestCase
         $request->host = "test.wssl.app";
         $request->path = "/api/v1/browse";
         $request->method = "GET";
-        $request->headers["user-agent"] = "ServerBrowser/0.2.0 (BeatSaber/1.12.2) (steam)";
+        $request->headers["user-agent"] = "ServerBrowser/0.7.0 (BeatSaber/1.12.2) (steam)";
         $request->headers["x-bssb"] = "1";
         $request->queryParams = $queryParams;
         return $request;
@@ -413,6 +425,9 @@ class BrowseControllerTest extends TestCase
         $this->assertSame("Test message!", $responseJson["Message"]);
     }
 
+    /**
+     * @depends testBrowseSimple
+     */
     public function testBrowseApiHidesOwnerIds()
     {
         $lobbies = self::executeBrowseRequestAndGetGames(
@@ -426,6 +441,9 @@ class BrowseControllerTest extends TestCase
         $this->assertArrayNotHasKey("ownerId", $aLobby);
     }
 
+    /**
+     * @depends testBrowseSimple
+     */
     public function testBrowseVersionFiltering()
     {
         $request = self::createBrowseRequest();
@@ -435,5 +453,23 @@ class BrowseControllerTest extends TestCase
 
         $this->assertCount(1, $lobbies, "We should only get one result for this game version");
         $this->assertContainsGameWithName("BadGameVersion", $lobbies, "We should only get the single matching game for this version");
+    }
+
+    /**
+     * @depends testBrowseSimple
+     */
+    public function testOldVersionFiltersQuickPlay()
+    {
+        $request = self::createBrowseRequest(['platform' => 'steam']);
+        $request->headers["user-agent"] = "ServerBrowser/0.6.0 (BeatSaber/1.12.2) (steam)";
+        $lobbies = self::executeBrowseRequestAndGetGames($request);
+        $this->assertNotContainsGameWithName("VanillaQuickPlay", $lobbies,
+            "ServerBrowser 0.6.0 should NOT return Quick Play games");
+
+        $request = self::createBrowseRequest(['platform' => 'steam']);
+        $request->headers["user-agent"] = "ServerBrowser/0.7.0 (BeatSaber/1.12.2) (steam)";
+        $lobbies = self::executeBrowseRequestAndGetGames($request);
+        $this->assertContainsGameWithName("VanillaQuickPlay", $lobbies,
+            "ServerBrowser 0.7.0 SHOULD return Quick Play games");
     }
 }
