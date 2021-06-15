@@ -230,7 +230,7 @@
                         {% endif %}
 
                         {% if level %}
-                            <div class="card">
+                            <div class="card -level">
                                 <h5 class="card-header">
                                     {% if game.lobbyState == 3 %}
                                         Current level
@@ -239,6 +239,7 @@
                                     {% endif %}
                                 </h5>
                                 <div class="card-body">
+                                    {% if level.coverUrl %}<div class="bg" style="background-image:url('{{ level.coverUrl }}');"></div>{% endif %}
                                     <div class="media">
                                         {% if level.coverUrl %}
                                             <img src="{{ level.coverUrl }}" class="mr-3" alt="{{ level.name }}" width="125">

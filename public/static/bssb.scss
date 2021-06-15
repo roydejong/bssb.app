@@ -229,6 +229,38 @@ h5 > .quickplay-icon {
   }
 }
 
+body[data-theme="dark"] .card.-level {
+  .card-body {
+    overflow: hidden;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, .5);
+
+    &, > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    img {
+      box-shadow: 0 0 3px 3px rgba(0, 0, 0, .25);
+    }
+
+    .bg {
+      display: block;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 0;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+      opacity: .5;
+      filter: blur(8px);
+      -webkit-filter: blur(8px);
+    }
+  }
+}
+
 // ---------------------------------------------------------------------------------------------------------------------
 // Footer
 
