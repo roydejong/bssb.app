@@ -2,6 +2,10 @@ body {
   padding-top: 5rem;
 }
 
+small.muted {
+  opacity: .555;
+}
+
 .break-word {
   overflow-wrap: break-word;
   word-break: break-all;
@@ -99,14 +103,36 @@ td.no-results-cell {
   font-weight: 500;
 }
 
-.quickplay-badge {
-  font-size: 12px;
-  border-radius: 4px;
-  padding: 2px 3px;
-  border: 1px solid rgba(0, 0, 0, .1);
-  background: rgba(0, 0, 0, .01);
-  color: #cf0389;
-  text-shadow: 1px 1px rgba(0, 0, 0, .1);
+.quickplay-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  font-weight: bold;
+  font-size: 20px;
+  width: 100%;
+  min-width: 42px;
+  cursor: help;
+
+  i {
+    display: inline-flex;
+    line-height: 10px;
+    margin-top: 1px;
+
+    &:first-child {
+      color: #e5a300;
+    }
+    &:last-child {
+      color: #cf0389;
+    }
+  }
+}
+h5 > .quickplay-icon {
+  display: inline-flex;
+  min-width: 0;
+  width: auto;
+  margin-right: 5px;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

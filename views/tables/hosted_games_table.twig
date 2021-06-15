@@ -31,7 +31,7 @@
             </td>
             <td class="align-middle">
                 {% if game.getIsQuickplay() %}
-                    <span class="quickplay-badge">QuickPlay</span>
+                    {% include "bits/quickplay_icon.twig" %}
                 {% else %}
                     <code><strong>{{ game.serverCode }}</strong></code>
                 {% endif %}

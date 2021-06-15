@@ -207,21 +207,24 @@
                     </div>
                     <div class="col-sm">
 
-                        {% if not game.getIsStale() and game.ended_at is null and game.serverCode %}
+                        {% if game.getIsQuickplay() %}
                             <div class="card">
-                                <h5 class="card-header">Server code</h5>
-                                <div class="card-body server-code">{{ game.serverCode }}</div>
+                                <h5 class="card-header">
+                                    {% include "bits/quickplay_icon.twig" %}
+                                    <span>Quick Play server</span>
+                                </h5>
+                                <div class="card-body">
+                                    <p><strong>Use the ingame Server Browser to connect.</strong></p>
+                                    You cannot connect to Quick Play lobbies using a Server Code! <small class="muted">(although they do have one for some reason)</small>
+                                </div>
                             </div>
                             <br />
                         {% endif %}
 
-                        {% if game.getIsQuickplay() %}
+                        {% if not game.getIsStale() and game.ended_at is null and game.serverCode %}
                             <div class="card">
-                                <h5 class="card-header">Quick play lobby</h5>
-                                <div class="card-body">
-                                    <p><strong>Use the ingame Server Browser to connect.</strong></p>
-                                    <p>You cannot connect to Quick Play lobbies using a Server Code.</p>
-                                </div>
+                                <h5 class="card-header">Server code</h5>
+                                <div class="card-body server-code">{{ game.serverCode }}</div>
                             </div>
                             <br />
                         {% endif %}
