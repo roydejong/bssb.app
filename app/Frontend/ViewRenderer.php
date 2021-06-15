@@ -2,8 +2,10 @@
 
 namespace app\Frontend;
 
+use app\Utils\TimeAgo;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+use Twig\TwigFilter;
 
 class ViewRenderer
 {
@@ -19,6 +21,25 @@ class ViewRenderer
         $this->twig = new Environment(new FilesystemLoader(DIR_VIEWS), [
             'cache' => $config['cache_enabled'] ? DIR_CACHE : false
         ]);
+
+        $this->twig->addFilter(new TwigFilter('timeago', function ($input): string {
+            try {
+                $dt = new \DateTime($input);
+                return TimeAgo::format($dt);
+            } catch (\Exception) {
+                return "unknown";
+            }
+        }));
+
+        $this->twig->addFilter(new TwigFilter('timeago_html', function ($input): string {
+            try {
+                $dt = new \DateTime($input);
+                $timeAgo = TimeAgo::format($dt);
+                return "<abbr title='{$input}'>{$timeAgo}</abbr>";
+            } catch (\Exception) {
+                return "unknown";
+            }
+        }));
     }
 
     private function processContext(?array $userContext): array

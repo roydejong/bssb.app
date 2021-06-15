@@ -142,16 +142,16 @@
                                     {% endif %}
                                     <tr>
                                         <th scope="row">First seen</th>
-                                        <td>{{ game.firstSeen.format('r') }}</td>
+                                        <td>{{ game.firstSeen.format('r')|timeago_html|raw }}</td>
                                     </tr>
                                     <tr>
                                         <th scope="row">Last update</th>
-                                        <td>{{ game.lastUpdate.format('r') }}</td>
+                                        <td>{{ game.lastUpdate.format('r')|timeago_html|raw }}</td>
                                     </tr>
                                     {% if game.endedAt is not null %}
                                     <tr>
                                         <th scope="row">Ended at</th>
-                                        <td>{{ game.endedAt.format('r') }}</td>
+                                        <td>{{ game.endedAt.format('r')|timeago_html|raw }}</td>
                                     </tr>
                                     {% endif %}
                                 </tbody>

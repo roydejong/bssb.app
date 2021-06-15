@@ -5,6 +5,11 @@ body {
 small.muted {
   opacity: .555;
 }
+abbr[data-original-title], abbr[title] {
+  text-decoration: none;
+  border: none;
+  border-bottom: 1px dotted rgba(0, 0, 0, .5);
+}
 
 .break-word {
   overflow-wrap: break-word;
@@ -260,6 +265,10 @@ footer {
 body[data-theme="dark"] {
   background: #36393F;
   color: #eee;
+
+  abbr[data-original-title], abbr[title] {
+    border-bottom: 1px dotted rgba(255, 255, 255, .5);
+  }
 
   .navbar-dark {
     background-color: #202225 !important;
