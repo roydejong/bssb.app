@@ -512,7 +512,23 @@ class AnnounceControllerTest extends TestCase
             "SERVER_TYPE_VANILLA_QUICKPLAY should be succeed if host secret is set");
     }
 
+    /**
+     * @depends testMinimalAnnounce
+     */
+    public function testSetsQuickPlayName()
+    {
+        $request = clone self::$minimalAnnounceRequest;
+        $request->json['ServerType'] = HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY;
+        $request->json['HostSecret'] = 'bla1234';
+        $request->json['Difficulty'] = LevelDifficulty::Hard;
+        $request->json['GameName'] = '💩';
 
+        $response = (new AnnounceController())->announce($request);
+        $json = json_decode($response->body, true);
+        $game = HostedGame::fetch($json['id']);
+
+        $this->assertSame("Official Quick Play - Hard", $game->gameName);
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     // Player list sync

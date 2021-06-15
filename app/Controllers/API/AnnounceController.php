@@ -2,6 +2,7 @@
 
 namespace app\Controllers\API;
 
+use app\BeatSaber\LevelDifficulty;
 use app\BeatSaber\LevelId;
 use app\BeatSaber\ModPlatformId;
 use app\BeatSaber\MultiplayerLobbyState;
@@ -197,8 +198,8 @@ class AnnounceController
         // Game name overrides
 
         if ($game->serverType === HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY) {
-            $gameHash = strtoupper(substr($game->hostSecret, 0, 3));
-            $game->gameName = "Official Quick Play ({$gameHash})";
+            $difficultyName = LevelDifficulty::describe($game->difficulty);
+            $game->gameName = "Official Quick Play - {$difficultyName}";
         }
 
         // -------------------------------------------------------------------------------------------------------------
