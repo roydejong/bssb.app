@@ -76,19 +76,28 @@ class LevelRecord extends Model
     // -----------------------------------------------------------------------------------------------------------------
     // OST/DLC cover art helper
 
-    public function syncNativeCover(): bool
+    public function syncCoverArt(): bool
     {
         if ($this->getIsCustomLevel()) {
-            return false;
+            // Custom level assets - download to local if possible
+            if (str_starts_with($this->coverUrl, "https://beatsaver.com/cdn/")) {
+                if ($localCoverUrl = BeatSaver::downloadCoverArt($this->coverUrl)) {
+                    $this->coverUrl = "https://bssb.app{$localCoverUrl}";
+                    return $this->save();
+                } else {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            // Base game assets - must be provided manually
+            if (!$this->levelId || strpos($this->levelId, '.') !== false) {
+                // Need valid level ID / as a precaution filter out dots to prevent any nasty traversal stuff
+                \Sentry\captureMessage("syncNativeCover() rejected invalid level with id: {$this->levelId}");
+                return false;
+            }
+            return $this->setNativeCover($this->levelId);
         }
-
-        if (!$this->levelId || strpos($this->levelId, '.') !== false) {
-            // Need valid level ID / as a precaution filter out dots to prevent any nasty traversal stuff
-            \Sentry\captureMessage("syncNativeCover() rejected invalid level with id: {$this->levelId}");
-            return false;
-        }
-
-        return $this->setNativeCover($this->levelId);
     }
 
     private function setNativeCover(string $levelIdOrAssetName): bool
@@ -169,10 +178,9 @@ class LevelRecord extends Model
                     // Try asking beat saver API, we don't have API data yet
                     $existingRecord->syncFromBeatSaver();
                 }
-            } else {
-                // This is an OST / DLC song, figure out if we can get a native cover
-                $existingRecord->syncNativeCover();
             }
+            // Try to sync/update cover art as needed
+            $existingRecord->syncCoverArt();
             return $existingRecord;
         }
 

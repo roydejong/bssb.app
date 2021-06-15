@@ -20,7 +20,7 @@ class LevelRecordTest extends TestCase
         $testLevel->hash = "testSyncNativeCover";
 
         try {
-            $testLevel->syncNativeCover();
+            $testLevel->syncCoverArt();
 
             $this->assertSame("https://bssb.app/static/bsassets/Ugh.png", $testLevel->coverUrl);
         } finally {

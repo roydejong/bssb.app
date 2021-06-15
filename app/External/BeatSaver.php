@@ -30,4 +30,35 @@ class BeatSaver
 
         return null;
     }
+
+    public static function downloadCoverArt(string $cdnUrl): ?string
+    {
+        if (!str_starts_with($cdnUrl, "https://beatsaver.com/cdn/")) {
+            return null;
+        }
+
+        $context = stream_context_create([
+            "http" => [
+                "method" => "GET",
+                "header" => "User-Agent: BeatSaberServerBrowser API (https://bssb.app)\r\n"
+            ]
+        ]);
+
+        $rawCoverData = file_get_contents($cdnUrl, false, $context);
+
+        if (!$rawCoverData) {
+            return null;
+        }
+
+        $baseName = basename($cdnUrl);
+
+        $relativePath = "/static/saver/{$baseName}";
+        $storagePath = DIR_PUBLIC . $relativePath;
+
+        if (@file_put_contents($storagePath, $rawCoverData)) {
+            return $relativePath;
+        }
+
+        return null;
+    }
 }
