@@ -29,7 +29,7 @@
                                         <i class="mdi mdi-account-star"></i>
                                         Unique hosts seen
                                     </h6>
-                                    <span class="stat-value">{{ stats.uniqueHostCount }}</span>
+                                    <span class="stat-value">{{ stats.uniqueHostCount|number_format(0, ',') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -40,7 +40,7 @@
                                         <i class="mdi mdi-account-star"></i>
                                         Unique players seen
                                     </h6>
-                                    <span class="stat-value">{{ stats.uniquePlayerCount }}</span>
+                                    <span class="stat-value">{{ stats.uniquePlayerCount|number_format(0, ',') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -51,7 +51,7 @@
                                         <i class="mdi mdi-music"></i>
                                         Unique levels seen
                                     </h6>
-                                    <span class="stat-value">{{ stats.uniqueLevelCount }}</span>
+                                    <span class="stat-value">{{ stats.uniqueLevelCount|number_format(0, ',') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -62,7 +62,7 @@
                                         <i class="mdi mdi-play"></i>
                                         Total games played
                                     </h6>
-                                    <span class="stat-value">{{ stats.totalPlayStat }}</span>
+                                    <span class="stat-value">{{ stats.totalPlayStat|number_format(0, ',') }}</span>
                                 </div>
                             </div>
                         </div>

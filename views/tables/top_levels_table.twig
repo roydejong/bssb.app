@@ -45,9 +45,7 @@
                     -
                 {% endif %}
             </td>
-            <td>
-                {{ level.statPlayCount }}
-            </td>
+            <td>{{ level.statPlayCount|number_format(0, ',') }}</td>
         </tr>
     {% endfor %}
     </tbody>
