@@ -17,41 +17,38 @@
             <div class="stats-page">
 
                 <h1>Statistics</h1>
-                <p class="lead">Just for fun - statistics on games hosted on the server browser (since 2021-01-15).</p>
+                <p class="lead">Just for fun - statistics on games hosted on the server browser.</p>
                 <hr />
 
                 <div class="metrics">
                     <div class="row">
                         <div class="col-md-3">
-                            <div class="card" title="Tally of unique player hosts we've seen, since the mod launched.">
+                            <div class="card">
                                 <div class="card-body">
                                     <h6 class="card-subtitle mb-2 text-muted">
                                         <i class="mdi mdi-account-star"></i>
                                         Unique hosts seen
                                     </h6>
+                                    <div class="help" data-toggle="tooltip" data-placement="bottom" data-html="true"
+                                         title="Tally of unique player hosts we've seen, since the mod launched in Nov 2020.">
+                                        <i class="mdi mdi-help-circle"></i>
+                                    </div>
                                     <span class="stat-value">{{ stats.uniqueHostCount|number_format(0, ',') }}</span>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <div class="card" title="Tally of unique player IDs we've seen, since .">
+                            <div class="card">
                                 <div class="card-body">
                                     <h6 class="card-subtitle mb-2 text-muted">
                                         <i class="mdi mdi-account-star"></i>
                                         Unique players seen
                                     </h6>
+                                    <div class="help" data-toggle="tooltip" data-placement="bottom" data-html="true"
+                                         title="Tally of unique player we've seen in shared games, since the player list launched in Jan-Feb 2021.">
+                                        <i class="mdi mdi-help-circle"></i>
+                                    </div>
                                     <span class="stat-value">{{ stats.uniquePlayerCount|number_format(0, ',') }}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card" title="Tally of unique levels we've seen in lobbies, since the mod launched.">
-                                <div class="card-body">
-                                    <h6 class="card-subtitle mb-2 text-muted">
-                                        <i class="mdi mdi-music"></i>
-                                        Unique levels seen
-                                    </h6>
-                                    <span class="stat-value">{{ stats.uniqueLevelCount|number_format(0, ',') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -59,9 +56,28 @@
                             <div class="card" title="">
                                 <div class="card-body">
                                     <h6 class="card-subtitle mb-2 text-muted">
+                                        <i class="mdi mdi-music"></i>
+                                        Unique levels seen
+                                    </h6>
+                                    <div class="help" data-toggle="tooltip" data-placement="bottom" data-html="true"
+                                         title="Tally of unique levels we've seen in lobbies, including custom and official ones, since the mod launched in Nov 2020.">
+                                        <i class="mdi mdi-help-circle"></i>
+                                    </div>
+                                    <span class="stat-value">{{ stats.uniqueLevelCount|number_format(0, ',') }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-2 text-muted">
                                         <i class="mdi mdi-play"></i>
                                         Total games played
                                     </h6>
+                                    <div class="help" data-toggle="tooltip" data-placement="bottom" data-html="true"
+                                         title="Total amount of times a level was played in shared games, since 2021-01-15.">
+                                        <i class="mdi mdi-help-circle"></i>
+                                    </div>
                                     <span class="stat-value">{{ stats.totalPlayStat|number_format(0, ',') }}</span>
                                 </div>
                             </div>

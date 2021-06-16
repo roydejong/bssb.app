@@ -218,6 +218,13 @@ h5 > .quickplay-icon {
     font-weight: 600;
     line-height: 1.0;
   }
+  .card .help {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    cursor: help;
+    color: #e5a300;
+  }
 
   section {
     margin-top: 1.5rem;
