@@ -17,39 +17,50 @@
             <div class="stats-page">
 
                 <h1>Statistics</h1>
-                <p class="lead">Just for fun!</p>
+                <p class="lead">Just for fun - statistics on games hosted on the server browser (since 2021-01-15).</p>
                 <hr />
 
                 <div class="metrics">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="card" title="Tally of unique player hosts we've seen, since the mod launched.">
                                 <div class="card-body">
                                     <h6 class="card-subtitle mb-2 text-muted">
                                         <i class="mdi mdi-account-star"></i>
-                                        Unique hosts seen, all-time
+                                        Unique hosts seen
                                     </h6>
                                     <span class="stat-value">{{ stats.uniqueHostCount }}</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
+                            <div class="card" title="Tally of unique player IDs we've seen, since .">
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-2 text-muted">
+                                        <i class="mdi mdi-account-star"></i>
+                                        Unique players seen
+                                    </h6>
+                                    <span class="stat-value">{{ stats.uniqueHostCount }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
                             <div class="card" title="Tally of unique levels we've seen in lobbies, since the mod launched.">
                                 <div class="card-body">
                                     <h6 class="card-subtitle mb-2 text-muted">
                                         <i class="mdi mdi-music"></i>
-                                        Unique levels seen, all-time
+                                        Unique levels seen
                                     </h6>
                                     <span class="stat-value">{{ stats.uniqueLevelCount }}</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="card" title="">
                                 <div class="card-body">
                                     <h6 class="card-subtitle mb-2 text-muted">
                                         <i class="mdi mdi-play"></i>
-                                        Total games played, since 2021-01-15
+                                        Total games played
                                     </h6>
                                     <span class="stat-value">{{ stats.totalPlayStat }}</span>
                                 </div>
@@ -65,7 +76,7 @@
                         <i class="mdi mdi-trophy"></i>
                         <span>Top 10 custom levels</span>
                     </h4>
-                    <p class="lite">Based on play count seen by the server browser, since 2021-01-15</p>
+                    <p class="lite">Based on total play count seen by the server browser.</p>
                     {% include "tables/top_levels_table.twig" with {levels: stats.topLevelsCustom} %}
                     <a href="/stats/top/custom-levels" class="btn btn-primary" target="_self" title="Top 100 Custom Levels">
                         <i class="mdi mdi-view-list"></i>
@@ -80,7 +91,7 @@
                         <i class="mdi mdi-trophy"></i>
                         <span>Top 10 official levels</span>
                     </h4>
-                    <p class="lite">Based on play count seen by the server browser, since 2021-01-15</p>
+                    <p class="lite">Based on total play count seen by the server browser.</p>
                     {% include "tables/top_levels_table.twig" with {levels: stats.topLevelsOfficial} %}
                     <a href="/stats/top/official-levels" class="btn btn-primary" target="_self" title="Top 100 Official Levels">
                         <i class="mdi mdi-view-list"></i>
