@@ -49,6 +49,7 @@ class StatsController
 
         $uniqueHostCount = intval(HostedGame::query()
             ->select("COUNT(DISTINCT(owner_id)) AS count")
+            ->where('server_type IS NULL OR server_type = ?', HostedGame::SERVER_TYPE_PLAYER_HOST)
             ->querySingleValue());
 
         $uniqueLevelCount = intval(LevelRecord::query()
