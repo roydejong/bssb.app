@@ -4,7 +4,7 @@ namespace app\Models;
 
 use app\BeatSaber\LevelId;
 use app\External\BeatSaver;
-use Instasell\Instarecord\Model;
+use SoftwarePunt\Instarecord\Model;
 
 class LevelRecord extends Model
 {

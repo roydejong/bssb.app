@@ -3,7 +3,7 @@
 namespace app\Models;
 
 use app\Utils\PirateDetect;
-use Instasell\Instarecord\Model;
+use SoftwarePunt\Instarecord\Model;
 
 class HostedGamePlayer extends Model
 {

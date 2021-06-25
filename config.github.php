@@ -2,7 +2,7 @@
 
 // Config file for GitHub actions
 
-use Instasell\Instarecord\Instarecord;
+use SoftwarePunt\Instarecord\Instarecord;
 
 global $config;
 

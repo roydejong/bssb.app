@@ -2,7 +2,7 @@
 
 namespace app\Models;
 
-use Instasell\Instarecord\Model;
+use SoftwarePunt\Instarecord\Model;
 
 class SystemConfig extends Model
 {

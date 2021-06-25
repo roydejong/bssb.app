@@ -5,7 +5,7 @@ namespace app\Controllers\API;
 use app\HTTP\Request;
 use app\HTTP\Response;
 use app\HTTP\Responses\JsonResponse;
-use Instasell\Instarecord\Instarecord;
+use SoftwarePunt\Instarecord\Instarecord;
 
 class StatusController
 {

@@ -2,7 +2,7 @@
 
 namespace app\Common;
 
-use Instasell\Instarecord\Serialization\IDatabaseSerializable;
+use SoftwarePunt\Instarecord\Serialization\IDatabaseSerializable;
 
 final class CVersion implements IDatabaseSerializable
 {

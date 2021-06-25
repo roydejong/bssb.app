@@ -9,7 +9,7 @@ use app\BSSB;
 use app\Common\CVersion;
 use app\Utils\PirateDetect;
 use Hashids\Hashids;
-use Instasell\Instarecord\Model;
+use SoftwarePunt\Instarecord\Model;
 
 class HostedGame extends Model implements \JsonSerializable
 {

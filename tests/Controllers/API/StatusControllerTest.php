@@ -4,8 +4,8 @@ namespace Controllers\API;
 
 use app\Controllers\API\StatusController;
 use app\HTTP\Request;
-use Instasell\Instarecord\Instarecord;
 use PHPUnit\Framework\TestCase;
+use SoftwarePunt\Instarecord\Instarecord;
 
 class StatusControllerTest extends TestCase
 {
