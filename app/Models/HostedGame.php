@@ -60,7 +60,7 @@ class HostedGame extends Model implements \JsonSerializable
      */
     public function fetchPlayers(): array
     {
-        if ($this->id) {
+        if ($this->id > 0) {
             return HostedGamePlayer::query()
                 ->where('hosted_game_id = ?', $this->id)
                 ->orderBy('sort_index ASC')
