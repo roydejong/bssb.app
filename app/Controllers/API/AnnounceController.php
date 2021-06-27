@@ -257,7 +257,7 @@ class AnnounceController
                     $isHost = intval($playerItem['IsHost'] ?? 0) === 1;
                     $latency = floatval($playerItem['Latency'] ?? 0);
 
-                    if ($sortIndex < -1 || !$userId || !$userName) {
+                    if ($sortIndex < -1 || !$userId || ($sortIndex >= 0 && !$userName)) {
                         // Invalid entry, missing minimum data
                         continue;
                     }
