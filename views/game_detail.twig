@@ -179,10 +179,22 @@
                                             <td>
                                                 <span>{{ player.userName }}</span>
                                                 {% if player.isHost %}
-                                                    <span class="badge bg-primary">Host</span>
+                                                    <span class="badge bg-primary" data-toggle="tooltip"
+                                                          data-placement="bottom"
+                                                          title="This player is hosting the game server">
+                                                        👑 Host</span>
                                                 {% endif %}
                                                 {% if player.getIsPirate() %}
-                                                    <span class="badge bg-dark">☠ Pirate</span>
+                                                    <span class="badge bg-dark" data-toggle="tooltip"
+                                                          data-placement="bottom"
+                                                          title="It looks like this player is a dirty stinking pirate">
+                                                        ☠ Pirate</span>
+                                                {% endif %}
+                                                {% if player.sortIndex < 0 %}
+                                                    <span class="badge bg-secondary" data-toggle="tooltip"
+                                                          data-placement="bottom"
+                                                          title="This player slot is not visible in the lobby">
+                                                        👻 Ghost</span>
                                                 {% endif %}
                                             </td>
                                             <td>
