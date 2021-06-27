@@ -9,7 +9,6 @@ use app\HTTP\Request;
 use app\HTTP\Response;
 use app\HTTP\Responses\NotFoundResponse;
 use app\Models\HostedGame;
-use app\Models\HostedGamePlayer;
 use app\Models\LevelRecord;
 
 class StatsController
@@ -53,10 +52,6 @@ class StatsController
             ->where('server_type IS NULL OR server_type = ?', HostedGame::SERVER_TYPE_PLAYER_HOST)
             ->querySingleValue());
 
-        $uniquePlayerCount = intval(HostedGamePlayer::query()
-            ->select("COUNT(DISTINCT(user_id)) AS count")
-            ->querySingleValue());
-
         $uniqueLevelCount = intval(LevelRecord::query()
             ->select("COUNT(DISTINCT(id)) AS count")
             ->querySingleValue());
@@ -72,7 +67,6 @@ class StatsController
         $view->set('pageUrl', '/stats');
         $view->set('stats', [
             'uniqueHostCount' => $uniqueHostCount,
-            'uniquePlayerCount' => $uniquePlayerCount,
             'uniqueLevelCount' => $uniqueLevelCount,
             'totalPlayStat' => $totalPlayStat,
             'topLevelsCustom' => $topLevelsCustom,

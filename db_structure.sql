@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `hosted_game_players`;
 CREATE TABLE `hosted_game_players` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `hosted_game_id` int unsigned NOT NULL,
-  `sort_index` int unsigned NOT NULL,
+  `sort_index` int NOT NULL,
   `user_id` varchar(255) NOT NULL,
   `user_name` varchar(255) NOT NULL,
   `is_host` tinyint NOT NULL DEFAULT '0',

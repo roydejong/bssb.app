@@ -544,10 +544,17 @@ class AnnounceControllerTest extends TestCase
         $request = clone self::$minimalAnnounceRequest;
         $request->json['Players'] = [];
         $request->json['Players'][] = [
+            'SortIndex' => -1,
+            'UserId' => 'theServerHostWithoutAName',
+            'UserName' => '',
+            'IsHost' => true,
+            'Latency' => 0.1234
+        ];
+        $request->json['Players'][] = [
             'SortIndex' => 0,
             'UserId' => 'testPlayerListSync_0',
             'UserName' => 'Bob',
-            'IsHost' => true,
+            'IsHost' => false,
             'Latency' => 0.1234
         ];
 
@@ -558,20 +565,35 @@ class AnnounceControllerTest extends TestCase
         $players = $game->fetchPlayers();
 
         $this->assertIsArray($players, 'fetchPlayers() should return an array');
-        $this->assertCount(1, $players,
-            'fetchPlayers() should contain one player after initial announce');
+        $this->assertCount(2, $players,
+            'fetchPlayers() should contain 2 players after initial announce');
 
         $hostPlayer = $players[0];
 
-        $this->assertSame(0, $hostPlayer->sortIndex);
-        $this->assertSame('testPlayerListSync_0', $hostPlayer->userId);
-        $this->assertSame('Bob', $hostPlayer->userName);
+        $this->assertSame(-1, $hostPlayer->sortIndex);
+        $this->assertSame('theServerHostWithoutAName', $hostPlayer->userId);
+        $this->assertSame('Dedicated Server', $hostPlayer->userName);
         $this->assertSame(true, $hostPlayer->isHost);
         $this->assertSame(0.1234, $hostPlayer->latency);
+
+        $firstPlayer = $players[1];
+
+        $this->assertSame(0, $firstPlayer->sortIndex);
+        $this->assertSame('testPlayerListSync_0', $firstPlayer->userId);
+        $this->assertSame('Bob', $firstPlayer->userName);
+        $this->assertSame(false, $firstPlayer->isHost);
+        $this->assertSame(0.1234, $firstPlayer->latency);
 
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         // Part 2: Adding in new players in the next announce
 
+        $request->json['Players'][] = [
+            'SortIndex' => 0,
+            'UserId' => 'testPlayerListSync_0',
+            'UserName' => 'B0b with a zero',
+            'IsHost' => false,
+            'Latency' => 0.1234
+        ];
         $request->json['Players'][] = [
             'SortIndex' => 1,
             'UserId' => 'testPlayerListSync_1',
@@ -604,13 +626,14 @@ class AnnounceControllerTest extends TestCase
 
         $players = $game->fetchPlayers();
 
-        $this->assertCount(5, $players,
-            'fetchPlayers() should contain five players after second announce');
-        $this->assertSame('Bob', $players[0]->userName);
-        $this->assertSame('Bobby', $players[1]->userName);
-        $this->assertSame('Bobster', $players[2]->userName);
-        $this->assertSame('Bob-bee', $players[3]->userName);
-        $this->assertSame('Booba', $players[4]->userName);
+        $this->assertCount(6, $players,
+            'fetchPlayers() should contain 6 players after second announce');
+        $this->assertSame('Dedicated Server', $players[0]->userName);
+        $this->assertSame('B0b with a zero', $players[1]->userName);
+        $this->assertSame('Bobby', $players[2]->userName);
+        $this->assertSame('Bobster', $players[3]->userName);
+        $this->assertSame('Bob-bee', $players[4]->userName);
+        $this->assertSame('Booba', $players[5]->userName);
 
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         // Part 3: Updating and removing players
@@ -651,7 +674,7 @@ class AnnounceControllerTest extends TestCase
 
         $this->assertSame(2, $connectedCount,
             'fetchPlayers() should contain two connected players after third announce');
-        $this->assertSame(3, $disconnectedCount,
+        $this->assertSame(4, $disconnectedCount,
             'fetchPlayers() should contain three disconnected players after third announce');
         $this->assertSame(['Bob', 'Sally'], $connectedNames);
 

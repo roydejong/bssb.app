@@ -257,7 +257,17 @@ class AnnounceController
                     $isHost = intval($playerItem['IsHost'] ?? 0) === 1;
                     $latency = floatval($playerItem['Latency'] ?? 0);
 
-                    if ($sortIndex < -1 || !$userId || ($sortIndex >= 0 && !$userName)) {
+                    if ($sortIndex === -1) {
+                        // -1 slot is used for dedicated servers only
+                        if (!$isHost) {
+                            continue;
+                        }
+                        if (!$userName) {
+                            $userName = "Dedicated Server";
+                        }
+                    }
+
+                    if ($sortIndex < -1 || !$userId || !$userName) {
                         // Invalid entry, missing minimum data
                         continue;
                     }
@@ -266,9 +276,15 @@ class AnnounceController
                     $playerRecord->hostedGameId = $game->id;
                     $playerRecord->sortIndex = $sortIndex;
 
-                    if (!$isNewGame && $existingPlayerRecord = $playerRecord->fetchExisting()) {
-                        // Replace existing player on this index
-                        $playerRecord = $existingPlayerRecord;
+                    if (!$isNewGame) {
+                        // Replace existing player on this index, if it exists
+                        $existingPlayerRecord = HostedGamePlayer::query()
+                            ->where('hosted_game_id = ?', $game->id)
+                            ->andWhere('sort_index = ?', $sortIndex)
+                            ->querySingleModel();
+                        if ($existingPlayerRecord) {
+                            $playerRecord = $existingPlayerRecord;
+                        }
                     }
 
                     $playerRecord->userId = $userId;
@@ -288,7 +304,7 @@ class AnnounceController
                     HostedGamePlayer::query()
                         ->delete()
                         ->where('hosted_game_id = ?', $game->id)
-                        ->andWhere('is_host = 0')
+                        ->andWhere('(is_host = 0 OR sort_index = -1)')
                         ->execute();
                 } else {
                     // This is an update: mark players that may have disconnected
