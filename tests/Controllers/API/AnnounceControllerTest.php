@@ -542,6 +542,8 @@ class AnnounceControllerTest extends TestCase
         // Part 1: Starting a new game with a single host player
 
         $request = clone self::$minimalAnnounceRequest;
+        $request->json["OwnerId"] = "unit_test_testPlayerListSync";
+
         $request->json['Players'] = [];
         $request->json['Players'][] = [
             'SortIndex' => -1,
