@@ -251,13 +251,13 @@ class AnnounceController
 
                 // Add or update players
                 foreach ($playerList as $playerItem) {
-                    $sortIndex = intval($playerItem['SortIndex'] ?? -1);
+                    $sortIndex = intval($playerItem['SortIndex'] ?? -999);
                     $userId = $playerItem['UserId'] ?? null;
                     $userName = $playerItem['UserName'] ?? null;
                     $isHost = intval($playerItem['IsHost'] ?? 0) === 1;
                     $latency = floatval($playerItem['Latency'] ?? 0);
 
-                    if ($sortIndex < 0 || !$userId || !$userName) {
+                    if ($sortIndex < -1 || !$userId || !$userName) {
                         // Invalid entry, missing minimum data
                         continue;
                     }
