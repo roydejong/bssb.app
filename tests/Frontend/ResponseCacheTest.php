@@ -15,16 +15,16 @@ class ResponseCacheTest extends TestCase
     {
         self::removeTestFile();
 
-        global $config;
-        $config['response_cache_enabled'] = true;
+        global $bssbConfig;
+        $bssbConfig['response_cache_enabled'] = true;
     }
 
     public static function tearDownAfterClass(): void
     {
         self::removeTestFile();
 
-        global $config;
-        $config['response_cache_enabled'] = false;
+        global $bssbConfig;
+        $bssbConfig['response_cache_enabled'] = false;
     }
 
     private static function removeTestFile(): void

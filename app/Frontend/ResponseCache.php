@@ -27,8 +27,8 @@ class ResponseCache
 
     public function getIsAvailable(): bool
     {
-        global $config;
-        if (!$config['response_cache_enabled']) {
+        global $bssbConfig;
+        if (!$bssbConfig['response_cache_enabled']) {
             // Response cache is disabled, force unavailable status
             return false;
         }

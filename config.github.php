@@ -4,11 +4,11 @@
 
 use SoftwarePunt\Instarecord\Instarecord;
 
-global $config;
+global $bssbConfig;
 
-$config['cache_enabled'] = false;
-$config['response_cache_enabled'] = false;
-$config['hashids_salt'] = "🧂";
+$bssbConfig['cache_enabled'] = false;
+$bssbConfig['response_cache_enabled'] = false;
+$bssbConfig['hashids_salt'] = "🧂";
 
 $dbConfig = Instarecord::config();
 $dbConfig->host = "127.0.0.1";

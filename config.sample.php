@@ -2,7 +2,7 @@
 
 use SoftwarePunt\Instarecord\Instarecord;
 
-global $config;
+global $bssbConfig;
 
 /**
  * Sentry error logging
@@ -15,19 +15,19 @@ if (!defined('IS_TEST_RUN')) {
  * cache_enabled, boolean
  *  → If enabled: Enable compilation and response caching behavior (for production).
  */
-$config['cache_enabled'] = true;
+$bssbConfig['cache_enabled'] = true;
 
 /**
  * response_cache_enabled, boolean
  *  → If enabled: Enable response caching behavior.
  */
-$config['response_cache_enabled'] = true;
+$bssbConfig['response_cache_enabled'] = true;
 
 /**
  * hashids_salt, string
  *  → The salt used to calculate hashids.
  */
-$config['hashids_salt'] = "🧂";
+$bssbConfig['hashids_salt'] = "🧂";
 
 /**
  * Instarecord configuration

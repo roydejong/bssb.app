@@ -155,14 +155,14 @@ class BrowseController
                 ->queryAllModels();
         }
 
-        $config = SystemConfig::fetchInstance();
+        $sysConfig = SystemConfig::fetchInstance();
 
         return new JsonResponse([
             "Count" => $totalCount,
             "Offset" => $offset,
             "Limit" => $limit,
             "Lobbies" => $games,
-            "Message" => $config->serverMessage
+            "Message" => $sysConfig->serverMessage
         ]);
     }
 }

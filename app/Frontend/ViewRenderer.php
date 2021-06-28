@@ -16,10 +16,10 @@ class ViewRenderer
 
     private function __construct()
     {
-        global $config;
+        global $bssbConfig;
 
         $this->twig = new Environment(new FilesystemLoader(DIR_VIEWS), [
-            'cache' => $config['cache_enabled'] ? DIR_CACHE : false
+            'cache' => $bssbConfig['cache_enabled'] ? DIR_CACHE : false
         ]);
 
         $this->twig->addFilter(new TwigFilter('timeago', function ($input): string {

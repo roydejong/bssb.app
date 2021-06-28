@@ -24,7 +24,7 @@ This is the PHP source code powering the API server that is used by [BeatSaberSe
 
 ### Installation
 
-1. Clone the repository and run `composer install --no-dev`.
+1. Clone the repository and run `composer install --no-dev` (suggested path: `/var/www/bssb.app`).
 2. Configure your web server to direct all requests to `public/index.php`, nginx sample:
 
     ```nginx
@@ -34,6 +34,11 @@ This is the PHP source code powering the API server that is used by [BeatSaberSe
     ```
 3. Create a database, using the provided `db_structure.sql`.
 4. Create a `config.php` in the application root directory, using the provided `config.sample.php`.
+5. Enable cron jobs, by adding the following line to the `crontab`:
+
+    ```
+    * * * * * cd /var/www/bssb.app && vendor/bin/crunz schedule:run
+    ```
 
 ## Development
 
