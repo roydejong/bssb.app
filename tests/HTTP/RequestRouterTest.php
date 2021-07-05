@@ -26,6 +26,7 @@ class RequestRouterTest extends TestCase
         $request = new Request();
         $request->method = "GET";
         $request->path = "/object/123/test";
+        $request->host = "host.web";
 
         $result = $router->dispatch($request);
 
@@ -41,11 +42,26 @@ class RequestRouterTest extends TestCase
         $request = new Request();
         $request->method = "GET";
         $request->path = "/invalid-path";
+        $request->host = "host.web";
 
         $router = new RequestRouter();
         $result = $router->dispatch($request);
 
         $this->assertInstanceOf("app\HTTP\Response", $result);
         $this->assertSame(404, $result->code);
+    }
+
+    public function testDispatch_missingHostHeader()
+    {
+        $request = new Request();
+        $request->method = "GET";
+        $request->path = "/invalid-path";
+        $request->host = null;
+
+        $router = new RequestRouter();
+        $result = $router->dispatch($request);
+
+        $this->assertInstanceOf("app\HTTP\Response", $result);
+        $this->assertSame(400, $result->code);
     }
 }

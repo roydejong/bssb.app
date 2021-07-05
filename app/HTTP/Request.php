@@ -21,7 +21,7 @@ class Request
     /**
      * Request hostname.
      */
-    public string $host = "";
+    public ?string $host = null;
 
     /**
      * Request path, without query string.
@@ -164,7 +164,7 @@ class Request
 
         // Core request information
         $result->method = $_SERVER['REQUEST_METHOD'];
-        $result->host = $_SERVER['HTTP_HOST'];
+        $result->host = $_SERVER['HTTP_HOST'] ?? null;
         $result->path = strtok($_SERVER['REQUEST_URI'], '?'); // strtok to remove query string
         $result->queryParams = $_GET;
         $result->protocol = !empty($_SERVER['HTTPS']) ? "https" : "http";
@@ -172,7 +172,7 @@ class Request
         // Request headers
         $result->headers = [];
         foreach ($_SERVER as $key => $value) {
-            if (strpos($key, self::SV_HEADER_PREFIX) === 0) {
+            if (str_starts_with($key, self::SV_HEADER_PREFIX)) {
                 $headerName = strtolower(substr($key, strlen(self::SV_HEADER_PREFIX)));
                 $headerName = str_replace('_', '-', $headerName);
                 $result->headers[$headerName] = $value;

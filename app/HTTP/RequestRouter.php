@@ -107,6 +107,11 @@ class RequestRouter
 
     public function dispatch(Request $request): Response
     {
+        // Validate
+        if (!$this->validateRequest($request)) {
+            return new Response(400, 'Bad request');
+        }
+
         // Route
         $_variables = [$request];
         $callable = $this->route($request->path, $_variables);
@@ -126,5 +131,15 @@ class RequestRouter
 
         // The target function returned something that wasn't a response, so we'll present it as one
         return new Response(200, $result ? strval($result) : null);
+    }
+
+    private function validateRequest(Request $request): bool
+    {
+        if (empty($request->host)) {
+            // Sometimes we get invalid requests without a "Host" header, drop them
+            return false;
+        }
+
+        return true;
     }
 }
