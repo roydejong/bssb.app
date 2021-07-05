@@ -3,6 +3,7 @@
 namespace app\External;
 
 use app\HTTP\Request;
+use function Sentry\captureException;
 
 class BeatSaver
 {
@@ -44,7 +45,19 @@ class BeatSaver
             ]
         ]);
 
-        $rawCoverData = file_get_contents($cdnUrl, false, $context);
+        $rawCoverData = null;
+
+        try {
+            $rawCoverData = @file_get_contents($cdnUrl, false, $context);
+        } catch (\Exception $ex) {
+            if (str_contains($ex->getMessage(), "404 Not Found")) {
+                // Cover art doesn't exist on BeatSaver CDN, or temporary error, this just happens sometimes it seems
+                return null;
+            } else {
+                // Unexpected problem
+                captureException($ex);
+            }
+        }
 
         if (!$rawCoverData) {
             return null;
