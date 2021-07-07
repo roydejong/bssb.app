@@ -129,7 +129,11 @@
                                                 {% elseif game.platform == "oculus" %}
                                                     {% include "oculus_icon.twig"%} Oculus
                                                 {% else %}
-                                                    <i class="mdi mdi-head-question"></i> Unknown
+                                                    {% if game.getIsBeatDedi() %}
+                                                        <i class="mdi mdi-server"></i> Dedicated Server
+                                                    {% else %}
+                                                        <i class="mdi mdi-head-question"></i> Unknown
+                                                    {% endif %}
                                                 {% endif %}
                                             </td>
                                         </tr>
@@ -137,7 +141,11 @@
                                     {% if game.modVersion %}
                                         <tr>
                                             <th scope="row">Browser version</th>
-                                            <td>Server Browser {{ game.modVersion }}</td>
+                                            {% if game.getIsBeatDedi() %}
+                                                <td>BeatDedi {{ game.modVersion }}</td>
+                                            {% else %}
+                                                <td>Server Browser {{ game.modVersion }}</td>
+                                            {% endif %}
                                         </tr>
                                     {% endif %}
                                     <tr>
