@@ -190,6 +190,12 @@
                                                           title="It looks like this player is a dirty stinking pirate">
                                                         ☠ Pirate</span>
                                                 {% endif %}
+                                                {% if player.getIsBot() %}
+                                                    <span class="badge bg-success" data-toggle="tooltip"
+                                                          data-placement="bottom"
+                                                          title="This is a robot, not a real player">
+                                                        🤖 Bot</span>
+                                                {% endif %}
                                                 {% if player.sortIndex < 0 %}
                                                     <span class="badge bg-secondary" data-toggle="tooltip"
                                                           data-placement="bottom"

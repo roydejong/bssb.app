@@ -26,18 +26,41 @@ class HostedGamePlayerTest extends TestCase
     public function testIsPirate()
     {
         $player = new HostedGamePlayer();
-        $player->userName = "test";
         $player->userId = "test";
+        $player->userName = "test";
         $this->assertFalse($player->getIsPirate());
 
         $player = new HostedGamePlayer();
-        $player->userName = "CODEX";
         $player->userId = "mqsC892YHEEG91QeFPnNN1";
+        $player->userName = "CODEX";
         $this->assertTrue($player->getIsPirate());
 
         $player = new HostedGamePlayer();
-        $player->userName = "ALI213";
         $player->userId = "o+DPXUXcX7WwkWcHWYzub/";
+        $player->userName = "ALI213";
         $this->assertTrue($player->getIsPirate());
+    }
+
+    public function testIsBot()
+    {
+        $player = new HostedGamePlayer();
+        $player->userId = "mqsC892YHEEG91QeFPnNN1";
+        $player->userName = "CODEX";
+        $this->assertFalse($player->getIsBot());
+
+        $player = new HostedGamePlayer();
+        $player->userId = "BeatDedi/abcdef";
+        $player->userName = "BeatDedi";
+        $this->assertTrue($player->getIsBot());
+
+        $player = new HostedGamePlayer();
+        $player->userId = "DEVBOT/2";
+        $player->userName = "DEVBOT/2";
+        $this->assertTrue($player->getIsBot());
+
+        $player = new HostedGamePlayer();
+        $player->userId = "BottyMcBot/RM4KPY295PX";
+        $player->userName = "BottyMcBotFace";
+        $this->assertTrue($player->getIsBot());
     }
 }

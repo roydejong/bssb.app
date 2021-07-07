@@ -3,6 +3,7 @@
 namespace app\Models;
 
 use app\Utils\PirateDetect;
+use app\Utils\PlayerBotDetect;
 use SoftwarePunt\Instarecord\Model;
 
 class HostedGamePlayer extends Model
@@ -30,5 +31,10 @@ class HostedGamePlayer extends Model
     public function getIsPirate(): bool
     {
         return PirateDetect::detect($this->userId, $this->userName);
+    }
+
+    public function getIsBot(): bool
+    {
+        return PlayerBotDetect::detect($this->userId, $this->userName);
     }
 }
