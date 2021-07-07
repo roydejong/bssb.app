@@ -224,6 +224,7 @@ class AnnounceController
         // Discard boring games
         if ($game->getIsUninteresting()) {
             $game->endedAt = new \DateTime('now');
+            $isResurrectedGame = false;
         }
 
         // Insert or update
