@@ -153,8 +153,9 @@ class AnnounceController
             $game->playerLimit = $maxPlayerLimit;
         }
 
-        if ($game->playerCount <= 0) {
-            $game->playerCount = 1;
+        $minPlayerCount = $game->getMinPlayerCount();
+        if ($game->playerCount < $minPlayerCount) {
+            $game->playerCount = $minPlayerCount;
         } else if ($game->playerCount > $game->playerLimit) {
             $game->playerCount = $game->playerLimit;
         }

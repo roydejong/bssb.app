@@ -147,6 +147,16 @@ class HostedGame extends Model implements \JsonSerializable
         }
     }
 
+    public function getMinPlayerCount(): int
+    {
+        if ($this->getIsBeatDedi()) {
+            // BeatDedi may report a zero player count
+            return 0;
+        }
+
+        return 1;
+    }
+
     public function getMaxPlayerLimit(): int
     {
         if (!$this->getIsOfficial() && $this->isModded) {
