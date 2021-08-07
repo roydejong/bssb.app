@@ -1,7 +1,5 @@
 <?php
 
-namespace Frontend;
-
 use app\Frontend\ResponseCache;
 use app\HTTP\Response;
 use PHPUnit\Framework\TestCase;

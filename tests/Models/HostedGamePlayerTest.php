@@ -1,7 +1,5 @@
 <?php
 
-namespace Models;
-
 use app\Models\HostedGamePlayer;
 use PHPUnit\Framework\TestCase;
 

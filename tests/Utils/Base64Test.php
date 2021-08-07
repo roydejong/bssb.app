@@ -1,7 +1,5 @@
 <?php
 
-namespace Utils;
-
 use app\Utils\Base64;
 use PHPUnit\Framework\TestCase;
 

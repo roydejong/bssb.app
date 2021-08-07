@@ -1,7 +1,5 @@
 <?php
 
-namespace tests\HTTP;
-
 use app\HTTP\Request;
 use PHPUnit\Framework\TestCase;
 

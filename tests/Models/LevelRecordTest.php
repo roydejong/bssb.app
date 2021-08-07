@@ -1,7 +1,5 @@
 <?php
 
-namespace Models;
-
 use app\Models\LevelRecord;
 use PHPUnit\Framework\TestCase;
 

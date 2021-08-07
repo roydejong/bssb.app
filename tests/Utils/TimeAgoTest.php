@@ -1,7 +1,5 @@
 <?php
 
-namespace Utils;
-
 use app\Utils\TimeAgo;
 use PHPUnit\Framework\TestCase;
 

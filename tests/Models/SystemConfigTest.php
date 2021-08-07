@@ -1,7 +1,5 @@
 <?php
 
-namespace Models;
-
 use app\Models\SystemConfig;
 use PHPUnit\Framework\TestCase;
 

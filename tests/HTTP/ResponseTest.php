@@ -1,7 +1,5 @@
 <?php
 
-namespace tests\HTTP;
-
 use app\HTTP\Response;
 use configx\astro\Web\HttpResponse;
 use PHPUnit\Framework\TestCase;

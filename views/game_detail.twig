@@ -59,113 +59,112 @@
                             </h5>
                             <table class="card-table table table-bordered">
                                 <tbody>
-                                    {% if (players is not defined or players|length == 0) and not game.getIsQuickplay() %}
+                                {% if (players is not defined or players|length == 0) and not game.getIsQuickplay() %}
                                     <tr>
                                         <th scope="row">Host player</th>
                                         <td>{{ game.ownerName ? game.ownerName : "Unknown" }}</td>
                                     </tr>
-                                    {% endif %}
-                                    <tr>
-                                        <th scope="row">{{ game.getIsStale() or game.endedAt is not null ? 'Last status' : 'Current status' }}</th>
-                                        <td>{{ game.describeState() }} ({{ game.playerCount }} of {{ game.playerLimit }} players)</td>
-                                    </tr>
-                                    {% if game.difficulty is not null %}
+                                {% endif %}
+                                <tr>
+                                    <th scope="row">{{ game.getIsStale() or game.endedAt is not null ? 'Last status' : 'Current status' }}</th>
+                                    <td>{{ game.describeState() }} ({{ game.playerCount }} of {{ game.playerLimit }} players)</td>
+                                </tr>
+                                {% if game.difficulty is not null %}
                                     <tr>
                                         <th scope="row">{{ game.lobbyState == 3 ? "Current  difficulty" : "Last difficulty" }}</th>
                                         <td><span class="difficulty-txt -d{{ game.difficulty }}">{{ game.describeDifficulty() }}</span></td>
                                     </tr>
-                                    {% endif %}
+                                {% endif %}
+                                <tr>
+                                    <th scope="row">Server type</th>
+                                    <td>{{ game.describeServerType() }}</td>
+                                </tr>
+                                {% if game.gameVersion %}
                                     <tr>
-                                        <th scope="row">Server type</th>
-                                        <td>{{ game.describeServerType() }}</td>
+                                        <th scope="row">Game version</th>
+                                        <td>Beat Saber {{ game.gameVersion }}</td>
                                     </tr>
-                                    {% if game.gameVersion %}
-                                        <tr>
-                                            <th scope="row">Game version</th>
-                                            <td>Beat Saber {{ game.gameVersion }}</td>
-                                        </tr>
-                                    {% endif %}
-                                    <tr>
-                                        <th scope="row">Modded</th>
-                                        <td>
-                                            {% if game.mpExVersion %}
-                                                <i class="mdi mdi-check-circle"></i>
-                                                MultiplayerExtensions v{{ game.mpExVersion }}
-                                            {% elseif game.isModded %}
-                                                <i class="mdi mdi-check-circle"></i>
-                                                Game is modded
-                                            {% else %}
-                                                <i class="mdi mdi-lock"></i>
-                                                Vanilla (custom songs off)
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                        <tr>
-                                            <th scope="row">Master server</th>
-                                            <td>
-                                                {% if not game.masterServerHost and game.endpoint %}
-                                                    Direct connection (<code>{{ game.endpoint }}</code>)
-                                                {% else %}
-                                                    {% if game.getIsOfficial() %}
-                                                        {% if game.platform == "steam" %}
-                                                            <i class="mdi mdi-steam"></i> Steam
-                                                        {% elseif game.platform == "oculus" %}
-                                                            {% include "oculus_icon.twig"%} Oculus
-                                                        {% else %}
-                                                            <i class="mdi mdi-head-question"></i> Unknown
-                                                        {% endif %}
-                                                    {% else %}
-                                                        <i class="mdi mdi-connection"></i> Unofficial cross-play
-                                                    {% endif %}
-                                                    {% if game.masterServerHost %}
-                                                        (<code>{{ game.masterServerHost }}:{{ game.masterServerPort ? game.masterServerPort : 2328 }}</code>)
-                                                    {% endif %}
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                    {% endif %}
-                                    {% if not game.getIsOfficial() %}
-                                        <tr>
-                                            <th scope="row">Host platform</th>
-                                            <td>
+                                {% endif %}
+                                <tr>
+                                    <th scope="row">Modded</th>
+                                    <td>
+                                        {% if game.mpExVersion %}
+                                            <i class="mdi mdi-check-circle"></i>
+                                            MultiplayerExtensions v{{ game.mpExVersion }}
+                                        {% elseif game.isModded %}
+                                            <i class="mdi mdi-check-circle"></i>
+                                            Game is modded
+                                        {% else %}
+                                            <i class="mdi mdi-lock"></i>
+                                            Vanilla (custom songs off)
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Master server</th>
+                                    <td>
+                                        {% if not game.masterServerHost and game.endpoint %}
+                                            Direct connection (<code>{{ game.endpoint }}</code>)
+                                        {% else %}
+                                            {% if game.getIsOfficial() %}
                                                 {% if game.platform == "steam" %}
                                                     <i class="mdi mdi-steam"></i> Steam
                                                 {% elseif game.platform == "oculus" %}
                                                     {% include "oculus_icon.twig"%} Oculus
                                                 {% else %}
-                                                    {% if game.getIsBeatDedi() %}
-                                                        <i class="mdi mdi-server"></i> Dedicated Server
-                                                    {% else %}
-                                                        <i class="mdi mdi-head-question"></i> Unknown
-                                                    {% endif %}
+                                                    <i class="mdi mdi-head-question"></i> Unknown
                                                 {% endif %}
-                                            </td>
-                                        </tr>
-                                    {% endif %}
-                                    {% if game.modVersion %}
-                                        <tr>
-                                            <th scope="row">Browser version</th>
-                                            {% if game.getIsBeatDedi() %}
-                                                <td>BeatDedi {{ game.modVersion }}</td>
                                             {% else %}
-                                                <td>Server Browser {{ game.modVersion }}</td>
+                                                <i class="mdi mdi-connection"></i> Unofficial cross-play
                                             {% endif %}
-                                        </tr>
-                                    {% endif %}
+                                            {% if game.masterServerHost %}
+                                                (<code>{{ game.masterServerHost }}:{{ game.masterServerPort ? game.masterServerPort : 2328 }}</code>)
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% if not game.getIsOfficial() %}
                                     <tr>
-                                        <th scope="row">First seen</th>
-                                        <td>{{ game.firstSeen.format('r')|timeago_html|raw }}</td>
+                                        <th scope="row">Host platform</th>
+                                        <td>
+                                            {% if game.platform == "steam" %}
+                                                <i class="mdi mdi-steam"></i> Steam
+                                            {% elseif game.platform == "oculus" %}
+                                                {% include "oculus_icon.twig"%} Oculus
+                                            {% else %}
+                                                {% if game.getIsBeatDedi() %}
+                                                    <i class="mdi mdi-server"></i> Dedicated Server
+                                                {% else %}
+                                                    <i class="mdi mdi-head-question"></i> Unknown
+                                                {% endif %}
+                                            {% endif %}
+                                        </td>
                                     </tr>
+                                {% endif %}
+                                {% if game.modVersion %}
                                     <tr>
-                                        <th scope="row">Last update</th>
-                                        <td>{{ game.lastUpdate.format('r')|timeago_html|raw }}</td>
+                                        <th scope="row">Browser version</th>
+                                        {% if game.getIsBeatDedi() %}
+                                            <td>BeatDedi {{ game.modVersion }}</td>
+                                        {% else %}
+                                            <td>Server Browser {{ game.modVersion }}</td>
+                                        {% endif %}
                                     </tr>
-                                    {% if game.endedAt is not null %}
+                                {% endif %}
+                                <tr>
+                                    <th scope="row">First seen</th>
+                                    <td>{{ game.firstSeen.format('r')|timeago_html|raw }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Last update</th>
+                                    <td>{{ game.lastUpdate.format('r')|timeago_html|raw }}</td>
+                                </tr>
+                                {% if game.endedAt is not null %}
                                     <tr>
                                         <th scope="row">Ended at</th>
                                         <td>{{ game.endedAt.format('r')|timeago_html|raw }}</td>
                                     </tr>
-                                    {% endif %}
+                                {% endif %}
                                 </tbody>
                             </table>
                         </div>
@@ -278,35 +277,35 @@
                                             <h5 class="mt-0">{{ level.name }}</h5>
                                             <table width="100%">
                                                 <tbody>
-                                                    {% if level.songName %}
-                                                        <tr>
-                                                            <th scope="row">Song name</th>
-                                                            <td>{{ level.songName }}</td>
-                                                        </tr>
-                                                    {% endif %}
-                                                    {% if level.songAuthor %}
-                                                        <tr>
-                                                            <th scope="row">Song author</th>
-                                                            <td>{{ level.songAuthor }}</td>
-                                                        </tr>
-                                                    {% endif %}
-                                                    {% if level.levelAuthor %}
-                                                        <tr>
-                                                            <th scope="row">Level author</th>
-                                                            <td>{{ level.levelAuthor }}</td>
-                                                        </tr>
-                                                    {% endif %}
-                                                    {% if level.duration %}
-                                                        <tr>
-                                                            <th scope="row">Duration</th>
-                                                            <td>{{ level.describeDuration() }}</td>
-                                                        </tr>
-                                                    {% endif %}
-                                                    {% if level.beatsaverId %}
-                                                        <tr>
-                                                            <td colspan="2"><a href="https://beatsaver.com/beatmap/{{ level.beatsaverId }}" class="btn btn-primary" title="View on BeatSaver" target="_blank" style="margin-top: 10px;">BeatSaver</a></td>
-                                                        </tr>
-                                                    {% endif %}
+                                                {% if level.songName %}
+                                                    <tr>
+                                                        <th scope="row">Song name</th>
+                                                        <td>{{ level.songName }}</td>
+                                                    </tr>
+                                                {% endif %}
+                                                {% if level.songAuthor %}
+                                                    <tr>
+                                                        <th scope="row">Song author</th>
+                                                        <td>{{ level.songAuthor }}</td>
+                                                    </tr>
+                                                {% endif %}
+                                                {% if level.levelAuthor %}
+                                                    <tr>
+                                                        <th scope="row">Level author</th>
+                                                        <td>{{ level.levelAuthor }}</td>
+                                                    </tr>
+                                                {% endif %}
+                                                {% if level.duration %}
+                                                    <tr>
+                                                        <th scope="row">Duration</th>
+                                                        <td>{{ level.describeDuration() }}</td>
+                                                    </tr>
+                                                {% endif %}
+                                                {% if level.beatsaverId %}
+                                                    <tr>
+                                                        <td colspan="2"><a href="https://beatsaver.com/beatmap/{{ level.beatsaverId }}" class="btn btn-primary" title="View on BeatSaver" target="_blank" style="margin-top: 10px;">BeatSaver</a></td>
+                                                    </tr>
+                                                {% endif %}
                                                 </tbody>
                                             </table>
                                         </div>

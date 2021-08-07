@@ -57,7 +57,7 @@ class GameDetailController
         $view->set('ldJson', $this->generateLdJson($game, $level));
 
         $response = $view->asResponse();
-        $resCache->writeResponse($response);
+        @$resCache->writeResponse($response);
         return $response;
     }
 

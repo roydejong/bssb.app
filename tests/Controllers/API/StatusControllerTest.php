@@ -1,7 +1,5 @@
 <?php
 
-namespace Controllers\API;
-
 use app\Controllers\API\StatusController;
 use app\HTTP\Request;
 use PHPUnit\Framework\TestCase;

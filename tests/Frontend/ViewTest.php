@@ -1,7 +1,5 @@
 <?php
 
-namespace Frontend;
-
 use app\Frontend\View;
 use PHPUnit\Framework\TestCase;
 

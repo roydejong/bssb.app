@@ -1,7 +1,5 @@
 <?php
 
-namespace Controllers\API;
-
 use app\BeatSaber\MasterServer;
 use app\BeatSaber\ModPlatformId;
 use app\BeatSaber\MultiplayerLobbyState;
