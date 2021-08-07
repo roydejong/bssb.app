@@ -8,6 +8,7 @@ use app\BeatSaber\ModPlatformId;
 use app\BeatSaber\MultiplayerLobbyState;
 use app\Common\CString;
 use app\Common\CVersion;
+use app\Common\IPEndPoint;
 use app\HTTP\Request;
 use app\HTTP\Response;
 use app\HTTP\Responses\BadRequestResponse;
@@ -42,7 +43,8 @@ class AnnounceController
 
         $ownerId = $input['OwnerId'] ?? "";
         $serverType = $input['ServerType'] ?? null;
-        $hostSecret = $input['HostSecret'] ?? null;;
+        $hostSecret = $input['HostSecret'] ?? null;
+        $endpoint = IPEndPoint::tryParse($input['Endpoint'] ?? null);
 
         if (empty($ownerId) || $ownerId === "SERVER_MESSAGE") {
             // Owner ID is always required, and can't be "SERVER_MESSAGE" as we reserve that for our own use
@@ -128,6 +130,7 @@ class AnnounceController
 
         $game->serverType = $serverType;
         $game->hostSecret = $hostSecret;
+        $game->endpoint = $endpoint;
 
         // -------------------------------------------------------------------------------------------------------------
         // Validation and processing

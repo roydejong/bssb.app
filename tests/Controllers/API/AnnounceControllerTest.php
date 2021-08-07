@@ -7,6 +7,7 @@ use app\BeatSaber\MasterServer;
 use app\BeatSaber\ModPlatformId;
 use app\BeatSaber\MultiplayerLobbyState;
 use app\Common\CVersion;
+use app\Common\IPEndPoint;
 use app\Controllers\API\AnnounceController;
 use app\Models\HostedGame;
 use app\Models\LevelRecord;
@@ -72,7 +73,8 @@ class AnnounceControllerTest extends TestCase
             'MasterServerPort' => 2328,
             'MpExVersion' => '1.2.3.4.5',
             'ServerType' => HostedGame::SERVER_TYPE_PLAYER_HOST,
-            'HostSecret' => 'abc1234'
+            'HostSecret' => 'abc1234',
+            'Endpoint' => '127.0.0.1:2312'
         ]);
         $request->method = "POST";
         $request->path = "/api/v1/announce";
@@ -118,6 +120,7 @@ class AnnounceControllerTest extends TestCase
         $this->assertEquals(new CVersion("6.9.42"), $announce->gameVersion);
         $this->assertSame(HostedGame::SERVER_TYPE_PLAYER_HOST, $announce->serverType);
         $this->assertSame("abc1234", $announce->hostSecret);
+        $this->assertEquals(new IPEndPoint("127.0.0.1", 2312), $announce->endpoint);
 
         self::$fullAnnounceTestResult = $announce;
 
@@ -217,6 +220,8 @@ class AnnounceControllerTest extends TestCase
         $this->assertNull($announce->endedAt);
         $this->assertEmpty($announce->fetchPlayers());
         $this->assertNull($announce->mpExVersion);
+        $this->assertNull($announce->hostSecret);
+        $this->assertNull($announce->endpoint);
     }
 
     /**

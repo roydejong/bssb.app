@@ -7,6 +7,7 @@ use app\BeatSaber\ModPlatformId;
 use app\BeatSaber\MultiplayerLobbyState;
 use app\BSSB;
 use app\Common\CVersion;
+use app\Common\IPEndPoint;
 use app\Utils\PirateDetect;
 use Hashids\Hashids;
 use SoftwarePunt\Instarecord\Model;
@@ -51,6 +52,7 @@ class HostedGame extends Model implements \JsonSerializable
     public ?CVersion $gameVersion;
     public ?string $serverType;
     public ?string $hostSecret;
+    public ?IPEndPoint $endpoint;
 
     // -----------------------------------------------------------------------------------------------------------------
     // Relationships
