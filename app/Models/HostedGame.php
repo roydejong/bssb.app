@@ -104,6 +104,9 @@ class HostedGame extends Model implements \JsonSerializable
 
     public function describeMasterServer(): string
     {
+        if (empty($this->masterServerHost) && !empty($this->endpoint))
+            return "Direct Connection";
+
         if ($this->getIsOfficial()) {
             return "Official";
         } else if ($this->masterServerHost) {

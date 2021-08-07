@@ -41,4 +41,9 @@ class IPEndPoint implements IDatabaseSerializable
 
         return null;
     }
+
+    public function __toString(): string
+    {
+        return self::dbSerialize();
+    }
 }
