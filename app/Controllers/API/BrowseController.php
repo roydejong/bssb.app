@@ -38,7 +38,8 @@ class BrowseController
 
         $filterFull = intval($request->queryParams['filterFull'] ?? 0) === 1;
         $filterInProgress = intval($request->queryParams['filterInProgress'] ?? 0) === 1;
-        $filterModded = $isVanilla || intval($request->queryParams['filterModded'] ?? 0) === 1;;
+        $filterModded = $isVanilla || intval($request->queryParams['filterModded'] ?? 0) === 1;
+        $filterServerType = $request->queryParams['filterServerType'] ?? null;
 
         // -------------------------------------------------------------------------------------------------------------
         // Query
@@ -136,6 +137,11 @@ class BrowseController
         if (!$supportsQuickPlayGames) {
             $baseQuery->andWhere('server_type IS NULL OR server_type NOT IN (?)',
                 [HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY, HostedGame::SERVER_TYPE_BEATDEDI_QUICKPLAY]);
+        }
+
+        // Server type filter (0.7.0+)
+        if ($filterServerType) {
+            $baseQuery->andWhere('server_type = ?', $filterServerType);
         }
 
         // -------------------------------------------------------------------------------------------------------------

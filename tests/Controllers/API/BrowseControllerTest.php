@@ -5,6 +5,7 @@ use app\BeatSaber\ModPlatformId;
 use app\BeatSaber\MultiplayerLobbyState;
 use app\Common\CString;
 use app\Common\CVersion;
+use app\Common\IPEndPoint;
 use app\Controllers\API\BrowseController;
 use app\HTTP\Request;
 use app\Models\HostedGame;
@@ -41,7 +42,7 @@ class BrowseControllerTest extends TestCase
 
         self::createSampleGame(0, "BadGameVersion", customGameVersion: new CVersion("1.2.3"));
 
-        self::createSampleGame(null, "VanillaQuickPlay", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 3, false, hostSecret: "abc123", serverType: HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY);
+        self::createSampleGame(null, "VanillaQuickPlay", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 3, false, hostSecret: "abc123", serverType: HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY, endpoint: new IPEndPoint("1.2.3.4", "1234"));
     }
 
     public static function tearDownAfterClass(): void
@@ -64,7 +65,7 @@ class BrowseControllerTest extends TestCase
                                              ?string $masterServer = null, ?string $platform = null,
                                              ?int $playerCount = null, bool $inProgress = false,
                                              ?CVersion $customGameVersion = null, ?string $hostSecret = null,
-                                             ?string $serverType = null): HostedGame
+                                             ?string $serverType = null, ?IPEndPoint $endpoint = null): HostedGame
     {
         $hg = new HostedGame();
 
@@ -108,6 +109,7 @@ class BrowseControllerTest extends TestCase
 
         $hg->serverType = $serverType;
         $hg->hostSecret = $hostSecret;
+        $hg->endpoint = $endpoint;
 
         $hg->save();
 
@@ -469,5 +471,17 @@ class BrowseControllerTest extends TestCase
         $lobbies = self::executeBrowseRequestAndGetGames($request);
         $this->assertContainsGameWithName("VanillaQuickPlay", $lobbies,
             "ServerBrowser 0.7.0 SHOULD return Quick Play games");
+    }
+
+    public function testExplicitServerTypeFilter()
+    {
+        $request = self::createBrowseRequest([
+            'platform' => 'steam',
+            'filterServerType' => HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY
+        ]);
+        $request->headers["user-agent"] = "ServerBrowser/0.7.0 (BeatSaber/1.12.2) (steam)";
+        $lobbies = self::executeBrowseRequestAndGetGames($request);
+
+        $this->assertContainsGameWithName("VanillaQuickPlay", $lobbies);
     }
 }
