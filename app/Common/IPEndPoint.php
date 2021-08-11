@@ -4,7 +4,7 @@ namespace app\Common;
 
 use SoftwarePunt\Instarecord\Serialization\IDatabaseSerializable;
 
-class IPEndPoint implements IDatabaseSerializable
+class IPEndPoint implements IDatabaseSerializable, \JsonSerializable
 {
     public ?string $host;
     public ?int $port;
@@ -40,6 +40,11 @@ class IPEndPoint implements IDatabaseSerializable
             return $endpoint;
 
         return null;
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->dbSerialize();
     }
 
     public function __toString(): string

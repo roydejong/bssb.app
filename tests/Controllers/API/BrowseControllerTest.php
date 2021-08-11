@@ -484,4 +484,20 @@ class BrowseControllerTest extends TestCase
 
         $this->assertContainsGameWithName("VanillaQuickPlay", $lobbies);
     }
+
+    /**
+     * @depends testExplicitServerTypeFilter
+     */
+    public function testEndpointSerialization()
+    {
+        $request = self::createBrowseRequest([
+            'platform' => 'steam',
+            'filterServerType' => HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY
+        ]);
+        $request->headers["user-agent"] = "ServerBrowser/0.7.0 (BeatSaber/1.12.2) (steam)";
+        $lobbies = self::executeBrowseRequestAndGetGames($request);
+
+        $vanillaQuickPlay = reset($lobbies);
+        $this->assertSame("1.2.3.4:1234", $vanillaQuickPlay['endpoint']);
+    }
 }
