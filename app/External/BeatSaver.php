@@ -11,8 +11,8 @@ class BeatSaver
     {
         $request = new Request();
         $request->protocol = "https";
-        $request->host = "beatsaver.com";
-        $request->path = "/api/maps/by-hash/{$hash}";
+        $request->host = "api.beatsaver.com";
+        $request->path = "/maps/hash/{$hash}";
         $request->headers['User-Agent'] = "BeatSaberServerBrowser API (https://bssb.app)";
 
         try {
@@ -34,7 +34,7 @@ class BeatSaver
 
     public static function downloadCoverArt(string $cdnUrl): ?string
     {
-        if (!str_starts_with($cdnUrl, "https://beatsaver.com/cdn/")) {
+        if (!str_starts_with($cdnUrl, "https://cdn.beatsaver.com/")) {
             return null;
         }
 

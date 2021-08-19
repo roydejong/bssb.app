@@ -80,7 +80,7 @@ class LevelRecord extends Model
     {
         if ($this->getIsCustomLevel()) {
             // Custom level assets - download to local if possible
-            if (str_starts_with($this->coverUrl, "https://beatsaver.com/cdn/")) {
+            if (str_starts_with($this->coverUrl, "https://cdn.beatsaver.com/")) {
                 if ($localCoverUrl = BeatSaver::downloadCoverArt($this->coverUrl)) {
                     $this->coverUrl = "https://bssb.app{$localCoverUrl}";
                     return $this->save();
@@ -129,7 +129,7 @@ class LevelRecord extends Model
             $this->name = "One More Time";
             $this->songName = "One More Time";
             $this->songAuthor = "Berlin Child";
-            $this->levelAuthor = "Freeek";
+            $this->levelAuthor = "freeek";
             $this->duration = 179;
             $this->setNativeCover("OneMoreTime");
             return $this->save();
@@ -138,19 +138,26 @@ class LevelRecord extends Model
         $mapData = BeatSaver::fetchMapDataByHash($this->hash);
 
         if ($mapData) {
-            $this->beatsaverId = $mapData['key'];
+            $this->beatsaverId = $mapData['id'];
             $this->name = $mapData['name'];
             $this->description = $mapData['description'] ?? null;
-
-            if (isset($mapData['coverURL'])) {
-                $this->coverUrl = "https://beatsaver.com{$mapData['coverURL']}";
-            }
 
             if (isset($mapData['metadata'])) {
                 $this->songName = $mapData['metadata']['songName'];
                 $this->songAuthor = $mapData['metadata']['songAuthorName'] ?? null;
                 $this->levelAuthor = $mapData['metadata']['levelAuthorName'] ?? null;
                 $this->duration = intval($mapData['metadata']['duration'] ?? 0);
+            }
+
+            if (isset($mapData['versions']) && is_array($mapData['versions'])) {
+                foreach ($mapData['versions'] as $version) {
+                    if (strtoupper($version['hash']) === strtoupper($this->hash)) {
+                        // Found map version with matching hash, set cover url
+                        if (!empty($version['coverURL'])) {
+                            $this->coverUrl = $version['coverURL'];
+                        }
+                    }
+                }
             }
 
             return $this->save();
@@ -174,8 +181,9 @@ class LevelRecord extends Model
         if ($existingRecord = $levelRecord->fetchExisting()) {
             // We already have a record for this song (by id/hash), an announce won't tell us anything new
             if ($isCustomLevel) {
-                if (!$existingRecord->beatsaverId) {
-                    // Try asking beat saver API, we don't have API data yet
+                if (!$existingRecord->beatsaverId || !$existingRecord->coverUrl
+                    || str_contains($existingRecord->coverUrl, "https://beatsaver.com/cdn/")) {
+                    // Try asking Beat Saver API; we haven't synced yet, or we have missing or outdated cover art
                     $existingRecord->syncFromBeatSaver();
                 }
             }
