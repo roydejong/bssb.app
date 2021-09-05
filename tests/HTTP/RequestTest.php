@@ -74,6 +74,20 @@ class RequestTest extends TestCase
         $this->assertSame("ServerBrowser", $result->modName);
     }
 
+    public function testGetModClientInfoQuest()
+    {
+        $_SERVER = [
+            'REQUEST_METHOD' => "GET",
+            'HTTP_HOST' => "test.bssb.app",
+            'REQUEST_URI' => "/",
+            'HTTP_USER_AGENT' => "ServerBrowserQuest/1.0.0.0 (BeatSaber/1.17.0)"
+        ];
+        $result = (Request::deduce())->getModClientInfo();
+
+        $this->assertInstanceOf("app\BeatSaber\ModClientInfo", $result);
+        $this->assertSame("ServerBrowserQuest", $result->modName);
+    }
+
     public function testGetIsValidModClientRequest()
     {
         $request1 = new Request();
@@ -102,6 +116,16 @@ class RequestTest extends TestCase
         $this->assertTrue($request3->getIsValidModClientRequest(),
             "request3 should be valid: have valid user agent and X-BSSB");
         $this->assertTrue($request3->getIsValidClientRequest());
+
+        $request4 = new Request();
+        $request4->method = "GET";
+        $request4->path = "/";
+        $request4->headers["user-agent"] = "ServerBrowserQuest/0.1.1.0 (BeatSaber/1.12.2)";
+        $request4->headers["x-bssb"] = "✔";
+
+        $this->assertTrue($request4->getIsValidModClientRequest(),
+            "request4 should be valid: have valid quest user agent and X-BSSB");
+        $this->assertTrue($request4->getIsValidClientRequest());
     }
 
     public function testGetIsValidBeatDediRequest()

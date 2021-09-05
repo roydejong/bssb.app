@@ -130,7 +130,14 @@ class Request
 
         $mci = $this->getModClientInfo();
 
-        if ($mci->modName !== ModClientInfo::MOD_SERVER_BROWSER_PC || empty($mci->assemblyVersion) || empty($mci->beatSaberVersion)) {
+        if ($mci->modName !== ModClientInfo::MOD_SERVER_BROWSER_PC &&
+            $mci->modName !== ModClientInfo::MOD_SERVER_BROWSER_QUEST)
+        {
+            // Invalid product name
+            return false;
+        }
+
+        if (empty($mci->assemblyVersion) || empty($mci->beatSaberVersion)) {
             return false;
         }
 

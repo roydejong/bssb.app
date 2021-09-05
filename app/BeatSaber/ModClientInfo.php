@@ -10,11 +10,12 @@ use app\Common\CVersion;
 class ModClientInfo
 {
     const MOD_SERVER_BROWSER_PC = "ServerBrowser";
+    const MOD_SERVER_BROWSER_QUEST = "ServerBrowserQuest";
     const MOD_BEATDEDI = "BeatDedi";
 
     /**
      * The name of the mod.
-     * This should always be "ServerBrowser" or "BeatDedi".
+     * This should always be "ServerBrowser", "ServerBrowserQuest", or "BeatDedi".
      *
      * @see "MOD_*" constants
      */
