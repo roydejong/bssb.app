@@ -178,6 +178,21 @@ class HostedGame extends Model implements \JsonSerializable
         }
     }
 
+    public function getIsInLobby(): bool
+    {
+        $stateNormal = $this->getAdjustedState();
+
+        return $stateNormal === MultiplayerLobbyState::None ||
+            $stateNormal === MultiplayerLobbyState::LobbySetup ||
+            $stateNormal === MultiplayerLobbyState::LobbyCountdown ||
+            $stateNormal === MultiplayerLobbyState::Error;
+    }
+
+    public function getIsPlayingLevel(): bool
+    {
+        return !empty($this->levelId) && !$this->getIsInLobby();
+    }
+
     public function getMinPlayerCount(): int
     {
         if ($this->getIsBeatDedi()) {

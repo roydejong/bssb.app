@@ -42,7 +42,7 @@
                 </a>
             </td>
             <td class="align-middle">
-                {% if not game.levelId or game.lobbyState == 0 or game.lobbyState == 1 %}
+                {% if not game.getIsPlayingLevel() %}
                     <i class="mdi mdi-account-group-outline"></i> In lobby
                 {% else %}
                     {% if game.levelName %}
