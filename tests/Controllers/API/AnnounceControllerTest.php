@@ -103,7 +103,7 @@ class AnnounceControllerTest extends TestCase
         $this->assertSame(3, $announce->playerCount);
         $this->assertSame(5, $announce->playerLimit);
         $this->assertSame(true, $announce->isModded);
-        $this->assertSame(3, $announce->lobbyState);
+        $this->assertSame(4, $announce->lobbyState);
         $this->assertSame("custom_level_6D4021498979AB7C07D430C488C24DE45EEDADB4", $announce->levelId);
         $this->assertSame('"It\'s a me, Mario!" - Super Mario 64', $announce->songName);
         $this->assertSame("GilvaSunner", $announce->songAuthor);        $this->assertTrue($announce->isModded);

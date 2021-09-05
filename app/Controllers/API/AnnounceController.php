@@ -55,7 +55,7 @@ class AnnounceController
          * @var $game HostedGame|null
          */
         $game = null;
-        $lastLobbyState = null;
+        $lastLobbyStateNormalized = null;
         $isNewGame = false;
         $isQuickplay = false;
 
@@ -63,6 +63,9 @@ class AnnounceController
             // Quickplay mode: identify games by their secrets
             $isQuickplay = true;
 
+            /**
+             * @var $gameBySecret HostedGame|null
+             */
             $gameBySecret = HostedGame::query()
                 ->where('server_type = ?', $serverType)
                 ->andWhere('host_secret = ?', $hostSecret)
@@ -71,7 +74,7 @@ class AnnounceController
             if ($gameBySecret) {
                 // Replace existing
                 $game = $gameBySecret;
-                $lastLobbyState = $game->lobbyState;
+                $lastLobbyStateNormalized = $game->getAdjustedState();
             }
         } else {
             // Normal mode: identify games by their owners
@@ -85,7 +88,7 @@ class AnnounceController
             if ($gameByOwner) {
                 // Replace existing
                 $game = $gameByOwner;
-                $lastLobbyState = $game->lobbyState;
+                $lastLobbyStateNormalized = $game->getAdjustedState();
             }
         }
 
@@ -189,9 +192,14 @@ class AnnounceController
             $levelRecord = LevelRecord::syncFromAnnounce($game->levelId, $game->songName, $game->songAuthor);
 
             // Update play count stat if we transitioned from lobby to the level
-            $gameWasInLobby = ($lastLobbyState === null || $lastLobbyState === MultiplayerLobbyState::LobbySetup);
-            $gameIsRunningOrStarting = ($game->lobbyState === MultiplayerLobbyState::GameRunning
-                || $game->lobbyState === MultiplayerLobbyState::GameStarting);
+            $gameWasInLobby = ($lastLobbyStateNormalized === null
+                || $lastLobbyStateNormalized === MultiplayerLobbyState::LobbySetup
+                || $lastLobbyStateNormalized === MultiplayerLobbyState::LobbyCountdown);
+
+            $newLobbyStateNormalized = $game->getAdjustedState();
+
+            $gameIsRunningOrStarting = ($newLobbyStateNormalized === MultiplayerLobbyState::GameRunning
+                || $newLobbyStateNormalized === MultiplayerLobbyState::GameStarting);
 
             if ($gameWasInLobby && $gameIsRunningOrStarting) {
                 $levelRecord->incrementPlayStat();

@@ -1,5 +1,7 @@
 <?php
 
+use app\BeatSaber\MultiplayerLobbyState;
+use app\Common\CVersion;
 use app\Models\HostedGame;
 use PHPUnit\Framework\TestCase;
 
@@ -82,5 +84,37 @@ class HostedGameTest extends TestCase
         $game->ownerName = "ALI213";
         $game->ownerId = "o+DPXUXcX7WwkWcHWYzub/";
         $this->assertTrue($game->getIsPirate());
+    }
+
+    public function testGetAdjustedState_AdjustsUpwards()
+    {
+        $game = new HostedGame();
+        $game->gameVersion = new CVersion("1.16.2");
+        $game->lobbyState = 4; // Error on <= 1.16.2, GameRunning on >= 1.16.3
+
+        $this->assertSame(MultiplayerLobbyState::Error, $game->getAdjustedState(),
+            "getAdjustedState() should translate 1.16.2 states upwards for neutral observer");
+
+        $this->assertSame(MultiplayerLobbyState::Error, $game->getAdjustedState(new CVersion("1.16.3")),
+            "getAdjustedState() should translate 1.16.2 states upwards for 1.16.3 observer");
+
+        $this->assertSame(4, $game->getAdjustedState(new CVersion("1.16.2")),
+            "getAdjustedState() should NOT translate 1.16.2 states for 1.16.2 observers");
+    }
+
+    public function testGetAdjustedState_AdjustsDownwards()
+    {
+        $game = new HostedGame();
+        $game->gameVersion = new CVersion("1.16.3");
+        $game->lobbyState = 4; // Error on <= 1.16.2, GameRunning on >= 1.16.3
+
+        $this->assertSame(MultiplayerLobbyState::GameRunning, $game->getAdjustedState(),
+            "getAdjustedState() should NOT translate 1.16.3 states for neutral observer");
+
+        $this->assertSame(MultiplayerLobbyState::GameRunning, $game->getAdjustedState(new CVersion("1.16.3")),
+            "getAdjustedState() should NOT translate 1.16.3 states for 1.16.3 observer");
+
+        $this->assertSame(3, $game->getAdjustedState(new CVersion("1.16.2")),
+            "getAdjustedState() should translate 1.16.3 states downwards for 1.16.2 observer");
     }
 }

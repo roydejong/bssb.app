@@ -121,9 +121,8 @@ class BrowseController
 
         // Filter: hide games in progress
         if ($filterInProgress) {
-            $baseQuery->andWhere('lobby_state NOT IN (?)', [
-                MultiplayerLobbyState::GameRunning, MultiplayerLobbyState::GameStarting
-            ]);
+            // NB: This mostly works for <= 1.16.2 clients too as "LobbyCountdown" is "GameStarting" for them
+            $baseQuery->andWhere('lobby_state <= ?', MultiplayerLobbyState::LobbyCountdown);
         }
 
         // Filter: Vanilla mode; hide all modded, MpEx games

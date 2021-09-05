@@ -131,9 +131,35 @@ class HostedGame extends Model implements \JsonSerializable
         return LevelDifficulty::describe($this->difficulty);
     }
 
+    public function getAdjustedState(?CVersion $observerGameVersion = null): int
+    {
+        $state = $this->lobbyState;
+
+        $thresholdVersion = new CVersion("1.16.3");
+
+        $senderIsOutdated = !$this->gameVersion || $this->gameVersion->lessThan($thresholdVersion);
+        $observerIsOutdated = $observerGameVersion && $observerGameVersion->lessThan($thresholdVersion);
+
+        if ($senderIsOutdated && !$observerIsOutdated) {
+            // Game created on 1.16.2 or lower, the "LobbyCountdown" state does not yet exist
+            // The observer is on 1.16.3 or newer, so adjust the state up
+            if ($state >= MultiplayerLobbyState::LobbyCountdown) {
+                $state++;
+            }
+        } else if (!$senderIsOutdated && $observerIsOutdated) {
+            // Observer is on 1.16.2 or older, and does not yet know the "LobbyCountdown" state
+            // Game was created on 1.16.3 or newer, so adjust the state down
+            if ($state >= MultiplayerLobbyState::LobbyCountdown) {
+                $state--;
+            }
+        }
+
+        return $state;
+    }
+
     public function describeState(): string
     {
-        return MultiplayerLobbyState::describe($this->lobbyState);
+        return MultiplayerLobbyState::describe($this->getAdjustedState());
     }
 
     public function describeServerType(): string
