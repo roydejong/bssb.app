@@ -108,6 +108,13 @@ td.no-results-cell {
   font-weight: 500;
 }
 
+td.-stale * {
+  opacity: .666;
+}
+td.-success {
+  color: #3cb371 !important;
+}
+
 .quickplay-icon {
   display: flex;
   align-items: center;

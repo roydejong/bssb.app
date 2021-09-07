@@ -1,5 +1,6 @@
 <?php
 
+use app\Controllers\DedicatedServersController;
 use app\Controllers\HomeController;
 use app\Controllers\StatsController;
 use app\HTTP\Request;
@@ -19,6 +20,10 @@ $task = $schedule->run(function () {
     $statsController->getStats(new Request());
     $statsController->getTopLevelsSubPage(new Request(), "custom-levels");
     $statsController->getTopLevelsSubPage(new Request(), "official-levels");
+
+    // Dedicated Server list
+    $dedicatedServersController = new DedicatedServersController();
+    $dedicatedServersController->getServerList(new Request());
 });
 
 $task
