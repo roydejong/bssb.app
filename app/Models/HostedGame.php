@@ -24,6 +24,7 @@ class HostedGame extends Model implements \JsonSerializable
     public const SERVER_TYPE_BEATDEDI_CUSTOM = "beatdedi_custom";
     public const SERVER_TYPE_BEATDEDI_QUICKPLAY = "beatdedi_quickplay";
     public const SERVER_TYPE_VANILLA_QUICKPLAY = "vanilla_quickplay";
+    public const SERVER_TYPE_VANILLA_DEDICATED = "vanilla_dedicated";
 
     // -----------------------------------------------------------------------------------------------------------------
     // Columns
@@ -256,18 +257,14 @@ class HostedGame extends Model implements \JsonSerializable
 
     public function describeServerType(): string
     {
-        switch ($this->serverType) {
-            default:
-            case null:
-            case self::SERVER_TYPE_PLAYER_HOST:
-                return "Player hosted";
-            case self::SERVER_TYPE_VANILLA_QUICKPLAY:
-                return "Official Quickplay";
-            case self::SERVER_TYPE_BEATDEDI_QUICKPLAY:
-                return "BeatDedi Quickplay";
-            case self::SERVER_TYPE_BEATDEDI_CUSTOM:
-                return "BeatDedi Custom";
-        }
+        return match ($this->serverType) {
+            null, self::SERVER_TYPE_PLAYER_HOST => "Player hosted (Old P2P)",
+            self::SERVER_TYPE_VANILLA_QUICKPLAY => "Official Quickplay",
+            self::SERVER_TYPE_VANILLA_DEDICATED => "Official Dedicated (Player managed)",
+            self::SERVER_TYPE_BEATDEDI_QUICKPLAY => "BeatDedi Quickplay",
+            self::SERVER_TYPE_BEATDEDI_CUSTOM => "BeatDedi Custom",
+            default => "Unknown"
+        };
     }
 
     public function getIsInLobby(): bool
@@ -307,11 +304,6 @@ class HostedGame extends Model implements \JsonSerializable
     public function getIsPirate(): bool
     {
         return PirateDetect::detect($this->ownerId, $this->ownerName);
-    }
-
-    public function getIsPlayerHost(): bool
-    {
-        return empty($this->serverType) || $this->serverType === self::SERVER_TYPE_PLAYER_HOST;
     }
 
     public function getIsBeatDedi(): bool
