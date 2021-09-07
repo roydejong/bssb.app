@@ -28,30 +28,122 @@ class HostedGame extends Model implements \JsonSerializable
     // -----------------------------------------------------------------------------------------------------------------
     // Columns
 
+    /**
+     * Internal database ID.
+     * Should not be publicly disclosed, use Hash IDs instead.
+     */
     public int $id;
+    /**
+     * The server code that can be used to join the game. Is unique per master server.
+     * Can only be used for managed games (servers created by players, not Quick Play), but is always set.
+     */
     public string $serverCode;
+    /**
+     * The name of the lobby, as set by the host or party leader.
+     */
     public string $gameName;
+    /**
+     * The User ID of the host player / server.
+     * This seems to be randomized for dedicated servers.
+     */
     public string $ownerId;
+    /**
+     * The username of the host player / server.
+     * This is empty for dedicated servers.
+     */
     public string $ownerName;
+    /**
+     * Current amount of players.
+     */
     public int $playerCount;
+    /**
+     * Maximum amount of players.
+     * Limited to 5 for official games, may be higher on modded games.
+     */
     public int $playerLimit;
+    /**
+     * Indicates if this is a modded lobby with custom song support.
+     */
     public bool $isModded;
+    /**
+     * First time this ownerId was seen.
+     */
     public \DateTime $firstSeen;
+    /**
+     * Last time an announcement was received for this lobby.
+     */
     public \DateTime $lastUpdate;
+    /**
+     * Lobby state enum value.
+     * @see MultiplayerLobbyState
+     *
+     * Value should be interpreted different based on the game version used.
+     * @see getAdjustedState()
+     */
     public int $lobbyState;
+    /**
+     * Current/last song, level id.
+     */
     public ?string $levelId;
+    /**
+     * Current/last song, song name.
+     */
     public ?string $songName;
+    /**
+     * Current/last song, author name.
+     */
     public ?string $songAuthor;
+    /**
+     * Difficulty of the current or most recent song, or the locked difficulty of the lobby (for Quick Play).
+     */
     public ?int $difficulty;
+    /**
+     * Platform identifier indicating cross-play compatibility.
+     */
     public string $platform = ModPlatformId::UNKNOWN;
+    /**
+     * Host name for the Master Server this game is hosted on.
+     */
     public ?string $masterServerHost;
+    /**
+     * Port number for the Master Server this game is hosted on.
+     */
     public ?int $masterServerPort;
+    /**
+     * Indicates when the announcement was cancelled, or NULL if it was not explicitly cancelled.
+     */
     public ?\DateTime $endedAt;
+    /**
+     * The version of the MultiplayerExtensions mod the announcer has.
+     * Used to verify compatibility; only clients with the exact same version should join.
+     */
     public ?string $mpExVersion;
+    /**
+     * The name of the mod or software used to send the announcement.
+     * Examples: "ServerBrowser", "ServerBrowserQuest", "BeatDedi"
+     */
+    public string $modName = "ServerBrowser";
+    /**
+     * The version of the mod or software used to send the announcement.
+     * Relative to $modName.
+     */
     public ?CVersion $modVersion;
+    /**
+     * The announcer's game version, extracted from the User Agent header.
+     */
     public ?CVersion $gameVersion;
+    /**
+     * Indicates what kind of server this is, affects how the connection is established.
+     * @see HostedGame::SERVER_TYPE_*
+     */
     public ?string $serverType;
+    /**
+     * The host's secret. Used to connect to specific dedicated server instances.
+     */
     public ?string $hostSecret;
+    /**
+     * The actual server endpoint the client connected to. Used for direct connections.
+     */
     public ?IPEndPoint $endpoint;
 
     // -----------------------------------------------------------------------------------------------------------------

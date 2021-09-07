@@ -1,8 +1,8 @@
 -- MySQL dump 10.13  Distrib 8.0.17, for Win64 (x86_64)
 --
--- Host: wsl.local    Database: bssb
+-- Host: wsl.local    Database: bssb_test
 -- ------------------------------------------------------
--- Server version	8.0.23-14
+-- Server version	8.0.25-15
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -36,7 +36,7 @@ CREATE TABLE `hosted_game_players` (
   UNIQUE KEY `hgp_game_and_sort_index` (`hosted_game_id`,`sort_index`),
   KEY `hgp_game_id_idx` (`hosted_game_id`),
   CONSTRAINT `hgp_game_id` FOREIGN KEY (`hosted_game_id`) REFERENCES `hosted_games` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1115 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=234470 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,13 +67,15 @@ CREATE TABLE `hosted_games` (
   `master_server_port` int unsigned DEFAULT NULL,
   `ended_at` datetime DEFAULT NULL,
   `mp_ex_version` varchar(45) DEFAULT NULL,
+  `mod_name` varchar(45) NOT NULL DEFAULT 'ServerBrowser',
   `mod_version` varchar(16) DEFAULT NULL,
   `game_version` varchar(16) DEFAULT NULL,
   `server_type` varchar(32) DEFAULT 'player_host',
   `host_secret` varchar(32) DEFAULT NULL,
   `endpoint` varchar(255) DEFAULT NULL,
+  `manager_id` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=30870 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=63598 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -100,7 +102,7 @@ CREATE TABLE `level_records` (
   UNIQUE KEY `level_id_UNIQUE` (`level_id`),
   UNIQUE KEY `beatsaver_id_UNIQUE` (`beatsaver_id`),
   UNIQUE KEY `hash_UNIQUE` (`hash`)
-) ENGINE=InnoDB AUTO_INCREMENT=22037 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=43032 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -127,4 +129,4 @@ CREATE TABLE `system_config` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-08-07 19:33:21
+-- Dump completed on 2021-09-07 19:04:39

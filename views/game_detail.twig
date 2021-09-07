@@ -144,11 +144,7 @@
                                 {% if game.modVersion %}
                                     <tr>
                                         <th scope="row">Browser version</th>
-                                        {% if game.getIsBeatDedi() %}
-                                            <td>BeatDedi {{ game.modVersion }}</td>
-                                        {% else %}
-                                            <td>Server Browser {{ game.modVersion }}</td>
-                                        {% endif %}
+                                        <td>{{ game.modName }} {{ game.modVersion }}</td>
                                     </tr>
                                 {% endif %}
                                 <tr>

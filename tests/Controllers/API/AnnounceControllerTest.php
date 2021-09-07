@@ -114,6 +114,7 @@ class AnnounceControllerTest extends TestCase
         $this->assertNull($announce->endedAt);
         $this->assertSame('1.2.3', $announce->mpExVersion,
             'MpEx version should be parsed and, if needed, normalized to Major.Minor.Patch');
+        $this->assertEquals("ServerBrowser", $announce->modName);
         $this->assertEquals(new CVersion("4.2.0"), $announce->modVersion);
         $this->assertEquals(new CVersion("6.9.42"), $announce->gameVersion);
         $this->assertSame(HostedGame::SERVER_TYPE_PLAYER_HOST, $announce->serverType);
