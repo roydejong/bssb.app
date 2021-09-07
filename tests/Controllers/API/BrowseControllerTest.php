@@ -21,11 +21,11 @@ class BrowseControllerTest extends TestCase
     {
         self::tearDownAfterClass(); // reset
 
-        self::createSampleGame(1, "BoringSteam", false,MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, false);
-        self::createSampleGame(2, "BoringOculus", false, MasterServer::OFFICIAL_HOSTNAME_OCULUS, ModPlatformId::OCULUS, 1, false);
-        self::createSampleGame(3, "BoringUnknown", false, null, ModPlatformId::UNKNOWN, 1, false);
-        self::createSampleGame(4, "ModdedSteam", true, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, false);
-        self::createSampleGame(5, "ModdedSteamCrossplayX", true, "beat.with.me", ModPlatformId::STEAM, 1, false);
+        self::createSampleGame(1, "BoringSteam", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, false, serverType: HostedGame::SERVER_TYPE_VANILLA_DEDICATED);
+        self::createSampleGame(2, "BoringOculus", false, MasterServer::OFFICIAL_HOSTNAME_OCULUS, ModPlatformId::OCULUS, 1, false, serverType: HostedGame::SERVER_TYPE_VANILLA_DEDICATED);
+        self::createSampleGame(3, "BoringUnknown", false, null, ModPlatformId::UNKNOWN, 1, false, serverType: HostedGame::SERVER_TYPE_VANILLA_DEDICATED);
+        self::createSampleGame(4, "ModdedSteam", true, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, false, serverType: HostedGame::SERVER_TYPE_PLAYER_HOST);
+        self::createSampleGame(5, "ModdedSteamCrossplayX", true, "beat.with.me", ModPlatformId::STEAM, 1, false, serverType: HostedGame::SERVER_TYPE_PLAYER_HOST);
 
         $oldSteam = self::createSampleGame(6, "OldSteam", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, false);
         $oldSteam->lastUpdate = (clone $oldSteam->lastUpdate)->modify('-10 minutes');
@@ -61,11 +61,11 @@ class BrowseControllerTest extends TestCase
     private static array $sampleGames;
     private static int $createdSampleGameCount = 0;
 
-    private static function createSampleGame(?int $number, string $name, bool $isModded = false,
-                                             ?string $masterServer = null, ?string $platform = null,
-                                             ?int $playerCount = null, bool $inProgress = false,
+    private static function createSampleGame(?int      $number, string $name, bool $isModded = false,
+                                             ?string   $masterServer = null, ?string $platform = null,
+                                             ?int      $playerCount = null, bool $inProgress = false,
                                              ?CVersion $customGameVersion = null, ?string $hostSecret = null,
-                                             ?string $serverType = null, ?IPEndPoint $endpoint = null): HostedGame
+                                             ?string   $serverType = null, ?IPEndPoint $endpoint = null): HostedGame
     {
         $hg = new HostedGame();
 
@@ -471,6 +471,19 @@ class BrowseControllerTest extends TestCase
         $lobbies = self::executeBrowseRequestAndGetGames($request);
         $this->assertContainsGameWithName("VanillaQuickPlay", $lobbies,
             "ServerBrowser 0.7.0 SHOULD return Quick Play games");
+    }
+
+    public function testQuestBrowserFiltersOfficialServers()
+    {
+        $request = self::createBrowseRequest(['platform' => 'steam']);
+        $request->headers["user-agent"] = "ServerBrowserQuest/1.0.0 (BeatSaber/1.12.2) (steam)";
+        $lobbies = self::executeBrowseRequestAndGetGames($request);
+        $this->assertNotContainsGameWithName("VanillaQuickPlay", $lobbies,
+            "ServerBrowserQuest should NOT return Vanilla Quick Play (official) games");
+        $this->assertNotContainsGameWithName("BoringOculus", $lobbies,
+            "ServerBrowserQuest should NOT return Vanilla Dedicated (official) games");
+        $this->assertContainsGameWithName("ModdedSteamCrossplayX", $lobbies,
+            "ServerBrowserQuest SHOULD return Player Hosted Cross-play games for the current version");
     }
 
     public function testExplicitServerTypeFilter()

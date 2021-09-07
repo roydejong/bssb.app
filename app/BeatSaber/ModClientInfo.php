@@ -38,6 +38,9 @@ class ModClientInfo
      */
     public string $platformId = ModPlatformId::UNKNOWN;
 
+    // -----------------------------------------------------------------------------------------------------------------
+    // Parse
+
     public static function fromUserAgent(string $userAgent): ModClientInfo
     {
         $result = new ModClientInfo();
@@ -67,5 +70,27 @@ class ModClientInfo
         }
 
         return $result;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Helpers
+
+    public function getIsServerBrowserPc(): bool
+    {
+        return $this->modName === self::MOD_SERVER_BROWSER_PC;
+    }
+
+    public function getIsServerBrowserQuest()
+    {
+        return $this->modName === self::MOD_SERVER_BROWSER_QUEST;
+    }
+
+    public function getSupportsQuickPlayServers(): bool
+    {
+        // Server Browser PC added this feature in v0.7
+        if ($this->getIsServerBrowserPc()) {
+            return $this->assemblyVersion->greaterThanOrEquals(new CVersion("0.7"));
+        }
+        return true;
     }
 }
