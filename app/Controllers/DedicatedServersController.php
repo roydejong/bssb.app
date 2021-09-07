@@ -11,7 +11,7 @@ use app\Models\HostedGame;
 
 class DedicatedServersController
 {
-    const CACHE_KEY = "home_page";
+    const CACHE_KEY = "dedicated_servers";
     const CACHE_TTL = 1;
 
     public function getServerList(Request $request): Response
