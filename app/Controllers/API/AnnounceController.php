@@ -59,8 +59,9 @@ class AnnounceController
         $isNewGame = false;
         $isQuickplay = false;
 
-        if ($serverType === HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY)  {
-            // Quickplay mode: identify games by their secrets
+        if ($serverType === HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY
+            || $serverType === HostedGame::SERVER_TYPE_BEATTOGETHER_QUICKPLAY)  {
+            // Classic Quickplay mode: identify games by their secrets
             $isQuickplay = true;
 
             /**

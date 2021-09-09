@@ -20,11 +20,13 @@ class HostedGame extends Model implements \JsonSerializable
     const MAX_PLAYER_LIMIT_VANILLA = 5;
     const MAX_PLAYER_LIMIT_MODDED = 100;
 
-    public const SERVER_TYPE_PLAYER_HOST = "player_host";
+    public const SERVER_TYPE_BEATTOGETHER_DEDICATED = "beattogether_dedicated";
+    public const SERVER_TYPE_BEATTOGETHER_QUICKPLAY = "beattogether_quickplay";
     public const SERVER_TYPE_BEATDEDI_CUSTOM = "beatdedi_custom";
     public const SERVER_TYPE_BEATDEDI_QUICKPLAY = "beatdedi_quickplay";
-    public const SERVER_TYPE_VANILLA_QUICKPLAY = "vanilla_quickplay";
     public const SERVER_TYPE_VANILLA_DEDICATED = "vanilla_dedicated";
+    public const SERVER_TYPE_VANILLA_QUICKPLAY = "vanilla_quickplay";
+    public const SERVER_TYPE_PLAYER_HOST = "player_host";
 
     // -----------------------------------------------------------------------------------------------------------------
     // Columns
@@ -258,11 +260,13 @@ class HostedGame extends Model implements \JsonSerializable
     public function describeServerType(): string
     {
         return match ($this->serverType) {
-            null, self::SERVER_TYPE_PLAYER_HOST => "Player hosted (Old P2P)",
+            self::SERVER_TYPE_BEATTOGETHER_DEDICATED => "BeatTogether Dedicated",
+            self::SERVER_TYPE_BEATTOGETHER_QUICKPLAY => "BeatTogether Quickplay",
+            self::SERVER_TYPE_BEATDEDI_CUSTOM => "BeatDedi Custom",
+            self::SERVER_TYPE_BEATDEDI_QUICKPLAY => "BeatDedi Quickplay",
             self::SERVER_TYPE_VANILLA_QUICKPLAY => "Official Quickplay",
             self::SERVER_TYPE_VANILLA_DEDICATED => "Official Dedicated (Player managed)",
-            self::SERVER_TYPE_BEATDEDI_QUICKPLAY => "BeatDedi Quickplay",
-            self::SERVER_TYPE_BEATDEDI_CUSTOM => "BeatDedi Custom",
+            null, self::SERVER_TYPE_PLAYER_HOST => "Player hosted (Old P2P)",
             default => "Unknown"
         };
     }
@@ -306,6 +310,12 @@ class HostedGame extends Model implements \JsonSerializable
         return PirateDetect::detect($this->ownerId, $this->ownerName);
     }
 
+    public function getIsBeatTogether(): bool
+    {
+        return $this->serverType === self::SERVER_TYPE_BEATTOGETHER_DEDICATED ||
+            $this->serverType === self::SERVER_TYPE_BEATTOGETHER_QUICKPLAY;
+    }
+
     public function getIsBeatDedi(): bool
     {
         return $this->serverType === self::SERVER_TYPE_BEATDEDI_CUSTOM ||
@@ -314,7 +324,8 @@ class HostedGame extends Model implements \JsonSerializable
 
     public function getIsQuickplay(): bool
     {
-        return $this->serverType === self::SERVER_TYPE_BEATDEDI_QUICKPLAY ||
+        return $this->serverType === self::SERVER_TYPE_BEATTOGETHER_QUICKPLAY ||
+            $this->serverType === self::SERVER_TYPE_BEATDEDI_QUICKPLAY ||
             $this->serverType === self::SERVER_TYPE_VANILLA_QUICKPLAY;
     }
 

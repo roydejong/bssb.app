@@ -133,10 +133,11 @@ class BrowseController
         // Hide Quick Play games if unsupported by mod version
         if (!$mci->getSupportsQuickPlayServers()) {
             $baseQuery->andWhere('server_type IS NULL OR server_type NOT IN (?)',
-                [HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY, HostedGame::SERVER_TYPE_BEATDEDI_QUICKPLAY]);
+                [HostedGame::SERVER_TYPE_BEATTOGETHER_QUICKPLAY, HostedGame::SERVER_TYPE_BEATDEDI_QUICKPLAY,
+                    HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY]);
         }
 
-        // Hide Official games if we are on modded Quest
+        // Hide Official/Vanilla games if we are on modded Quest
         if ($mci->getIsServerBrowserQuest()) {
             $baseQuery->andWhere('server_type NOT IN (?)', [HostedGame::SERVER_TYPE_VANILLA_DEDICATED,
                 HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY]);
