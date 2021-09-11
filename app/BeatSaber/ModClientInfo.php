@@ -93,4 +93,13 @@ class ModClientInfo
         }
         return true;
     }
+
+    public function getSupportsCustomMasterServers(): bool
+    {
+        // Server Browser PC added this feature in v0.2
+        if ($this->getIsServerBrowserPc()) {
+            return $this->assemblyVersion->greaterThanOrEquals(new CVersion("0.2"));
+        }
+        return true;
+    }
 }

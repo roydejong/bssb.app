@@ -4,7 +4,6 @@ namespace app\Controllers\API;
 
 use app\BeatSaber\ModPlatformId;
 use app\BeatSaber\MultiplayerLobbyState;
-use app\Common\CVersion;
 use app\HTTP\Request;
 use app\HTTP\Response;
 use app\HTTP\Responses\BadRequestResponse;
@@ -94,8 +93,7 @@ class BrowseController
 
         // Hide custom master servers if we are below mod version 0.2
         $officialMasterServerLike = "%.mp.beatsaber.com";
-        $supportsCustomMasterServers = $mci->assemblyVersion
-            ->greaterThanOrEquals(new CVersion("0.2"));
+        $supportsCustomMasterServers = $mci->getSupportsCustomMasterServers();
 
         if ($supportsCustomMasterServers) {
             // Filter games that are on "$excludePlatform", UNLESS they're using non-official servers
