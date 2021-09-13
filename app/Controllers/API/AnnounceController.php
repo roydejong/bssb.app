@@ -214,6 +214,9 @@ class AnnounceController
         if ($game->serverType === HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY) {
             $difficultyName = LevelDifficulty::describe($game->difficulty);
             $game->gameName = "Official Quick Play - {$difficultyName}";
+        } else if ($game->serverType === HostedGame::SERVER_TYPE_BEATTOGETHER_QUICKPLAY) {
+            $difficultyName = LevelDifficulty::describe($game->difficulty);
+            $game->gameName = "BeatTogether Quick Play - {$difficultyName}";
         }
 
         // -------------------------------------------------------------------------------------------------------------
