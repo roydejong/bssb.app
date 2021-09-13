@@ -25,12 +25,15 @@ class DedicatedServersController
         // -------------------------------------------------------------------------------------------------------------
 
         $dedicatedServers = HostedGame::query()
-            ->andWhere('endpoint IS NOT NULL')
-            ->andWhere('server_type IS NOT NULL AND server_type != ?', [HostedGame::SERVER_TYPE_PLAYER_HOST])
-            ->andWhere('endpoint NOT LIKE ?', "127.%")
-            ->andWhere('endpoint NOT LIKE ?', "192.%")
+            ->select('*')
+            ->from('hosted_games hg1')
+            ->innerJoin('(SELECT MAX(last_update) max_last_update, endpoint FROM hosted_games WHERE endpoint IS NOT NULL AND server_type IS NOT NULL AND server_type != ? GROUP BY endpoint) hg2 ON (hg1.endpoint = hg2.endpoint AND hg1.last_update = hg2.max_last_update)',
+                HostedGame::SERVER_TYPE_PLAYER_HOST)
+            ->andWhere('hg1.endpoint IS NOT NULL')
+            ->andWhere('hg1.server_type IS NOT NULL AND hg1.server_type != ?', HostedGame::SERVER_TYPE_PLAYER_HOST)
+            ->andWhere('hg1.endpoint NOT LIKE ?', "127.%")
+            ->andWhere('hg1.endpoint NOT LIKE ?', "192.%")
             ->orderBy('last_update DESC')
-            ->groupBy('endpoint')
             ->queryAllModels();
 
         $geoIp = new GeoIp();
