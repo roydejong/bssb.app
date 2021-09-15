@@ -269,6 +269,7 @@ class AnnounceController
                     $userId = $playerItem['UserId'] ?? null;
                     $userName = $playerItem['UserName'] ?? null;
                     $isHost = intval($playerItem['IsHost'] ?? 0) === 1;
+                    $isAnnouncer = intval($playerItem['IsAnnouncer'] ?? 0) === 1;
                     $latency = floatval($playerItem['Latency'] ?? 0);
 
                     if ($sortIndex === -1) {
@@ -304,6 +305,7 @@ class AnnounceController
                     $playerRecord->userId = $userId;
                     $playerRecord->userName = $userName;
                     $playerRecord->isHost = $isHost;
+                    $playerRecord->isAnnouncer = $isAnnouncer;
                     $playerRecord->latency = $latency;
                     $playerRecord->isConnected = true;
                     $playerRecord->save();

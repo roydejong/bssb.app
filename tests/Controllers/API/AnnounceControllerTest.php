@@ -529,6 +529,7 @@ class AnnounceControllerTest extends TestCase
             'UserId' => 'theServerHostWithoutAName',
             'UserName' => '',
             'IsHost' => true,
+            'IsAnnouncer' => false,
             'Latency' => 0.1234
         ];
         $request->json['Players'][] = [
@@ -536,6 +537,7 @@ class AnnounceControllerTest extends TestCase
             'UserId' => 'testPlayerListSync_0',
             'UserName' => 'Bob',
             'IsHost' => false,
+            'IsAnnouncer' => true,
             'Latency' => 0.1234
         ];
 
@@ -555,6 +557,7 @@ class AnnounceControllerTest extends TestCase
         $this->assertSame('theServerHostWithoutAName', $hostPlayer->userId);
         $this->assertSame('Dedicated Server', $hostPlayer->userName);
         $this->assertSame(true, $hostPlayer->isHost);
+        $this->assertSame(false, $hostPlayer->isAnnouncer);
         $this->assertSame(0.1234, $hostPlayer->latency);
 
         $firstPlayer = $players[1];
@@ -563,6 +566,7 @@ class AnnounceControllerTest extends TestCase
         $this->assertSame('testPlayerListSync_0', $firstPlayer->userId);
         $this->assertSame('Bob', $firstPlayer->userName);
         $this->assertSame(false, $firstPlayer->isHost);
+        $this->assertSame(true, $firstPlayer->isAnnouncer);
         $this->assertSame(0.1234, $firstPlayer->latency);
 
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
