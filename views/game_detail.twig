@@ -215,6 +215,12 @@
                                                           title="This player slot is not visible in the lobby">
                                                         👻 Ghost</span>
                                                 {% endif %}
+                                                {% if player.isAnnouncer %}
+                                                    <span class="badge bg-success" data-toggle="tooltip"
+                                                          data-placement="bottom"
+                                                          title="This player is announcing the lobby to the Server Browser">
+                                                        📢 Announcer</span>
+                                                {% endif %}
                                             </td>
                                             <td>
                                                 {% if player.isHost %}

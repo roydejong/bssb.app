@@ -17,6 +17,7 @@ class HostedGamePlayer extends Model
     public string $userId;
     public string $userName;
     public bool $isHost;
+    public bool $isAnnouncer;
     public float $latency;
     public bool $isConnected;
 
