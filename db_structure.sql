@@ -16,6 +16,23 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `hosted_game_announcers`
+--
+
+DROP TABLE IF EXISTS `hosted_game_announcers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `hosted_game_announcers` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `player_id` int unsigned NOT NULL,
+  `game_id` int unsigned NOT NULL,
+  `last_announce` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `hosted_game_players`
 --
 
@@ -29,6 +46,7 @@ CREATE TABLE `hosted_game_players` (
   `user_id` varchar(255) NOT NULL,
   `user_name` varchar(255) NOT NULL,
   `is_host` tinyint NOT NULL DEFAULT '0',
+  `is_announcer` tinyint NOT NULL DEFAULT '0',
   `latency` decimal(8,4) NOT NULL DEFAULT '0.0000',
   `is_connected` tinyint NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
@@ -36,7 +54,7 @@ CREATE TABLE `hosted_game_players` (
   UNIQUE KEY `hgp_game_and_sort_index` (`hosted_game_id`,`sort_index`),
   KEY `hgp_game_id_idx` (`hosted_game_id`),
   CONSTRAINT `hgp_game_id` FOREIGN KEY (`hosted_game_id`) REFERENCES `hosted_games` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=234470 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=261944 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -75,7 +93,7 @@ CREATE TABLE `hosted_games` (
   `endpoint` varchar(255) DEFAULT NULL,
   `manager_id` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=63598 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=66171 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -102,7 +120,7 @@ CREATE TABLE `level_records` (
   UNIQUE KEY `level_id_UNIQUE` (`level_id`),
   UNIQUE KEY `beatsaver_id_UNIQUE` (`beatsaver_id`),
   UNIQUE KEY `hash_UNIQUE` (`hash`)
-) ENGINE=InnoDB AUTO_INCREMENT=43032 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=45813 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -129,4 +147,4 @@ CREATE TABLE `system_config` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-09-07 19:04:39
+-- Dump completed on 2021-09-15 22:08:20
