@@ -2,7 +2,6 @@
 
 namespace app\Controllers\API;
 
-use app\BeatSaber\ModPlatformId;
 use app\BeatSaber\MultiplayerLobbyState;
 use app\HTTP\Request;
 use app\HTTP\Response;
@@ -77,36 +76,11 @@ class BrowseController
                 $likeParam, $likeParam, $likeParam);
         }
 
-        // Platform constraint
-        $excludePlatformId = null;
-
-        switch ($platformConstraint) {
-            case ModPlatformId::OCULUS:
-                // Oculus shouldn't see Steam
-                $excludePlatformId = ModPlatformId::STEAM;
-                break;
-            case ModPlatformId::STEAM:
-                // Steam should see Oculus
-                $excludePlatformId = ModPlatformId::OCULUS;
-                break;
-        }
-
         // Hide custom master servers if we are below mod version 0.2
         $officialMasterServerLike = "%.mp.beatsaber.com";
         $supportsCustomMasterServers = $mci->getSupportsCustomMasterServers();
 
-        if ($supportsCustomMasterServers) {
-            // Filter games that are on "$excludePlatform", UNLESS they're using non-official servers
-            if ($excludePlatformId) {
-                $baseQuery->andWhere("(platform != ? OR (master_server_host IS NOT NULL AND master_server_host NOT LIKE ?))",
-                    $excludePlatformId, $officialMasterServerLike);
-            }
-        } else {
-            // Don't show games on $excludePlatform
-            if ($excludePlatformId) {
-                $baseQuery->andWhere("platform != ?", $excludePlatformId);
-            }
-
+        if (!$supportsCustomMasterServers) {
             // Don't show games wih custom master servers
             $baseQuery->andWhere("(master_server_host IS NULL OR master_server_host LIKE ?)",
                 $officialMasterServerLike);

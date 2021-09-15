@@ -314,7 +314,7 @@ class BrowseControllerTest extends TestCase
         );
 
         $this->assertContainsGameWithName("BoringSteam", $lobbies);
-        $this->assertNotContainsGameWithName("BoringOculus", $lobbies);
+        $this->assertContainsGameWithName("BoringOculus", $lobbies, "Cross-play should be enabled");
         $this->assertContainsGameWithName("BoringUnknown", $lobbies,
             "When platform filtering, unknown games should still show as they COULD be compatible");
         $this->assertContainsGameWithName("ModdedSteam", $lobbies);
@@ -332,11 +332,11 @@ class BrowseControllerTest extends TestCase
             ])
         );
 
-        $this->assertNotContainsGameWithName("BoringSteam", $lobbies);
+        $this->assertContainsGameWithName("BoringSteam", $lobbies, "Cross-play should be enabled");
         $this->assertContainsGameWithName("BoringOculus", $lobbies);
         $this->assertContainsGameWithName("BoringUnknown", $lobbies,
             "When platform filtering, unknown games should still show as they COULD be compatible");
-        $this->assertNotContainsGameWithName("ModdedSteam", $lobbies);
+        $this->assertContainsGameWithName("ModdedSteam", $lobbies, "Cross-play should be enabled");
         $this->assertContainsGameWithName("ModdedSteamCrossplayX", $lobbies,
             "When platform filtering, cross-play servers should never be excluded");
     }
