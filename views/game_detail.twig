@@ -195,7 +195,13 @@
                                                     <span class="badge bg-primary" data-toggle="tooltip"
                                                           data-placement="bottom"
                                                           title="This player is hosting the game server">
-                                                        👑 Host</span>
+                                                        🔌 Host</span>
+                                                {% endif %}
+                                                {% if player.userId == game.managerId %}
+                                                    <span class="badge bg-primary" data-toggle="tooltip"
+                                                          data-placement="bottom"
+                                                          title="This player is in control of the lobby">
+                                                        👑 Party Leader</span>
                                                 {% endif %}
                                                 {% if player.getIsPirate() %}
                                                     <span class="badge bg-dark" data-toggle="tooltip"

@@ -72,7 +72,8 @@ class AnnounceControllerTest extends TestCase
             'MpExVersion' => '1.2.3.4.5',
             'ServerType' => HostedGame::SERVER_TYPE_PLAYER_HOST,
             'HostSecret' => 'abc1234',
-            'Endpoint' => '127.0.0.1:2312'
+            'Endpoint' => '127.0.0.1:2312',
+            'ManagerId' => 'unit_test_testFullAnnounceMgr'
         ]);
         $request->method = "POST";
         $request->path = "/api/v1/announce";
@@ -120,6 +121,7 @@ class AnnounceControllerTest extends TestCase
         $this->assertSame(HostedGame::SERVER_TYPE_PLAYER_HOST, $announce->serverType);
         $this->assertSame("abc1234", $announce->hostSecret);
         $this->assertEquals(new IPEndPoint("127.0.0.1", 2312), $announce->endpoint);
+        $this->assertSame("unit_test_testFullAnnounceMgr", $announce->managerId);
 
         self::$fullAnnounceTestResult = $announce;
 

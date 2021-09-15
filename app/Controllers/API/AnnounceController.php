@@ -44,6 +44,7 @@ class AnnounceController
         $serverType = $input['ServerType'] ?? null;
         $hostSecret = $input['HostSecret'] ?? null;
         $endpoint = IPEndPoint::tryParse($input['Endpoint'] ?? null);
+        $managerId = $input['ManagerId'] ?? "";
 
         if (empty($ownerId) || $ownerId === "SERVER_MESSAGE") {
             // Owner ID is always required, and can't be "SERVER_MESSAGE" as we reserve that for our own use
@@ -135,6 +136,7 @@ class AnnounceController
         $game->serverType = $serverType;
         $game->hostSecret = $hostSecret;
         $game->endpoint = $endpoint;
+        $game->managerId = $managerId;
 
         // -------------------------------------------------------------------------------------------------------------
         // Validation and processing
