@@ -329,6 +329,11 @@ class HostedGame extends Model implements \JsonSerializable
             $this->serverType === self::SERVER_TYPE_VANILLA_QUICKPLAY;
     }
 
+    public function getIsDedicatedServer(): bool
+    {
+        return $this->serverType && $this->serverType !== self::SERVER_TYPE_PLAYER_HOST;
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     // Moderation
 

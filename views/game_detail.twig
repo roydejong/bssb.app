@@ -75,10 +75,6 @@
                                         <td><span class="difficulty-txt -d{{ game.difficulty }}">{{ game.describeDifficulty() }}</span></td>
                                     </tr>
                                 {% endif %}
-                                <tr>
-                                    <th scope="row">Server type</th>
-                                    <td>{{ game.describeServerType() }}</td>
-                                </tr>
                                 {% if game.gameVersion %}
                                     <tr>
                                         <th scope="row">Game version</th>
@@ -100,6 +96,16 @@
                                         {% endif %}
                                     </td>
                                 </tr>
+                                <tr>
+                                    <th scope="row">Server type</th>
+                                    <td>{{ game.describeServerType() }}</td>
+                                </tr>
+                                {% if game.endpoint and game.getIsDedicatedServer() and game.masterServerHost %}
+                                    <tr>
+                                        <th scope="row">Server endpoint</th>
+                                        <td><code>{{ game.endpoint }}</code></td>
+                                    </tr>
+                                {% endif %}
                                 <tr>
                                     <th scope="row">Master server</th>
                                     <td>
