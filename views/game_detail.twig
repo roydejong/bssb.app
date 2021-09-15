@@ -59,7 +59,7 @@
                             </h5>
                             <table class="card-table table table-bordered">
                                 <tbody>
-                                {% if (players is not defined or players|length == 0) and not game.getIsQuickplay() %}
+                                {% if game.ownerName and (players is not defined or players|length == 0) and not game.getIsQuickplay() %}
                                     <tr>
                                         <th scope="row">Host player</th>
                                         <td>{{ game.ownerName ? game.ownerName : "Unknown" }}</td>
