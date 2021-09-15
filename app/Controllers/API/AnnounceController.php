@@ -51,50 +51,27 @@ class AnnounceController
             return new BadRequestResponse();
         }
 
+        $lastLobbyStateNormalized = null;
+        $isNewGame = false;
+
         /**
          * @var $game HostedGame|null
          */
-        $game = null;
-        $lastLobbyStateNormalized = null;
-        $isNewGame = false;
-        $isQuickplay = false;
-
-        if ($serverType === HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY
-            || $serverType === HostedGame::SERVER_TYPE_BEATTOGETHER_QUICKPLAY)  {
-            // Classic Quickplay mode: identify games by their secrets
-            $isQuickplay = true;
-
-            /**
-             * @var $gameBySecret HostedGame|null
-             */
-            $gameBySecret = HostedGame::query()
-                ->where('server_type = ?', $serverType)
+        if ($hostSecret) {
+            // Default: identify lobbies uniquely by Host ID + Host Secret
+            $game = HostedGame::query()
+                ->where('owner_id = ?', $ownerId)
                 ->andWhere('host_secret = ?', $hostSecret)
                 ->querySingleModel();
-
-            if ($gameBySecret) {
-                // Replace existing
-                $game = $gameBySecret;
-                $lastLobbyStateNormalized = $game->getAdjustedState();
-            }
         } else {
-            // Normal mode: identify games by their owners
-            /**
-             * @var $gameByOwner HostedGame|null
-             */
-            $gameByOwner = HostedGame::query()
+            // Fallback, for backwards compatibility with p2p games: identify by Host ID + an explicitly missing secret
+            $game = HostedGame::query()
                 ->where('owner_id = ?', $ownerId)
+                ->andWhere('host_secret IS NULL')
                 ->querySingleModel();
-
-            if ($gameByOwner) {
-                // Replace existing
-                $game = $gameByOwner;
-                $lastLobbyStateNormalized = $game->getAdjustedState();
-            }
         }
 
-        if (!$game)
-        {
+        if (!$game) {
             // Create new
             $game = new HostedGame();
             $isNewGame = true;
@@ -108,38 +85,36 @@ class AnnounceController
         $game->playerLimit = intval($input['PlayerLimit'] ?? 0);
         $game->isModded = intval($input['IsModded'] ?? 0) === 1;
         $game->lobbyState = intval($input['LobbyState'] ?? MultiplayerLobbyState::None);
+        $game->platform = isset($input['Platform']) ? strtolower($input['Platform']) : ModPlatformId::UNKNOWN;
+        $game->masterServerHost = $input['MasterServerHost'] ?? null;
+        $game->masterServerPort = isset($input['MasterServerPort']) ? intval($input['MasterServerPort']) : null;
+        $game->modName = $modClientInfo->modName;
+        $game->modVersion = $modClientInfo->assemblyVersion;
+        $game->gameVersion = $modClientInfo->beatSaberVersion;
+        $game->serverType = $serverType;
+        $game->hostSecret = $hostSecret;
+        $game->endpoint = $endpoint;
+        $game->managerId = $managerId;
 
-        if (empty($game->gameName)) {
-            $game->gameName = "Untitled Beat Game";
-        }
+        $mpExVersion = isset($input['MpExVersion']) ? new CVersion($input['MpExVersion']) : null;
+        $game->mpExVersion = $mpExVersion ? $mpExVersion->toString(3) : null;
 
         if (!empty($input['LevelId'])) {
             $game->levelId = LevelId::cleanLevelHash($input['LevelId']);
             $game->songName = $input['SongName'] ?? null;
             $game->songAuthor = $input['SongAuthor'] ?? null;
         }
-        if (!empty($input['LevelId']) || $isQuickplay) {
+
+        if (!empty($input['LevelId']) || $game->getIsQuickplay()) {
             $game->difficulty = isset($input['Difficulty']) ? intval($input['Difficulty']) : null;
         }
 
-        $game->platform = isset($input['Platform']) ? strtolower($input['Platform']) : ModPlatformId::UNKNOWN;
-        $game->masterServerHost = $input['MasterServerHost'] ?? null;
-        $game->masterServerPort = isset($input['MasterServerPort']) ? intval($input['MasterServerPort']) : null;
-
-        $mpExVersion = isset($input['MpExVersion']) ? new CVersion($input['MpExVersion']) : null;
-        $game->mpExVersion = $mpExVersion ? $mpExVersion->toString(3) : null;
-
-        $game->modName = $modClientInfo->modName;
-        $game->modVersion = $modClientInfo->assemblyVersion;
-        $game->gameVersion = $modClientInfo->beatSaberVersion;
-
-        $game->serverType = $serverType;
-        $game->hostSecret = $hostSecret;
-        $game->endpoint = $endpoint;
-        $game->managerId = $managerId;
-
         // -------------------------------------------------------------------------------------------------------------
         // Validation and processing
+
+        if (empty($game->gameName)) {
+            $game->gameName = "Untitled Beat Game";
+        }
 
         if (!$game->isModded) {
             // For some reason the "modded" flag doesn't always get set, so apply failsafes
@@ -149,7 +124,7 @@ class AnnounceController
             }
         }
 
-        if (!$isQuickplay && (empty($game->serverCode) || strlen($game->serverCode) !== 5|| !ctype_alnum($game->serverCode))) {
+        if (!$game->getIsQuickplay() && (empty($game->serverCode) || strlen($game->serverCode) !== 5|| !ctype_alnum($game->serverCode))) {
             // Server code should always be alphanumeric, 5 characters, e.g. "ABC123"
             return new BadRequestResponse();
         }
@@ -179,7 +154,7 @@ class AnnounceController
             return new BadRequestResponse();
         }
 
-        if ($isQuickplay && empty($game->hostSecret)) {
+        if ($game->getIsQuickplay() && empty($game->hostSecret)) {
             // Trying to announce a Quickplay game, but no host secret provided
             return new BadRequestResponse();
         }
@@ -293,7 +268,7 @@ class AnnounceController
                     $playerRecord->hostedGameId = $game->id;
                     $playerRecord->sortIndex = $sortIndex;
 
-                    if (!$isNewGame) {
+                    if ($game->id) {
                         // Replace existing player on this index, if it exists
                         $existingPlayerRecord = HostedGamePlayer::query()
                             ->where('hosted_game_id = ?', $game->id)

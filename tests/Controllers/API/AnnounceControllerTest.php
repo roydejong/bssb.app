@@ -147,6 +147,7 @@ class AnnounceControllerTest extends TestCase
             'ServerCode' => 'ABC12',
             'GameName' => 'My Game But Newer',
             'OwnerId' => 'unit_test_testFullAnnounce',
+            'HostSecret' => 'abc1234',
             'OwnerName' => 'My Name',
             'PlayerCount' => 2,
             'PlayerLimit' => 5,
@@ -181,6 +182,7 @@ class AnnounceControllerTest extends TestCase
     }
 
     public static MockJsonRequest $minimalAnnounceRequest;
+    private static ?HostedGame $minimalAnnounceTestResult;
 
     /**
      * @depends testFullAnnounce
@@ -189,7 +191,8 @@ class AnnounceControllerTest extends TestCase
     {
         $request = new MockJsonRequest([
             'ServerCode' => '12345',
-            'OwnerId' => 'unit_test_testMinimalAnnounce'
+            'OwnerId' => 'unit_test_testMinimalAnnounce',
+            'HostSecret' => null
         ]);
         $request->method = "POST";
         $request->path = "/api/v1/announce";
@@ -204,6 +207,8 @@ class AnnounceControllerTest extends TestCase
 
         $announceId = $responseJson['id'];
         $announce = HostedGame::fetch($announceId);
+
+        self::$minimalAnnounceTestResult = $announce;
 
         $this->assertSame("Untitled Beat Game", $announce->gameName);
         $this->assertSame("Unknown", $announce->ownerName);
@@ -223,6 +228,39 @@ class AnnounceControllerTest extends TestCase
         $this->assertNull($announce->mpExVersion);
         $this->assertNull($announce->hostSecret);
         $this->assertNull($announce->endpoint);
+    }
+
+    /**
+     * @depends testMinimalAnnounce
+     */
+    public function testReplaceMinimalAnnounce()
+    {
+        // -------------------------------------------------------------------------------------------------------------
+        // Create request
+
+        $request = new MockJsonRequest([
+            'ServerCode' => '12345',
+            'OwnerId' => 'unit_test_testMinimalAnnounce',
+            'HostSecret' => null,
+            'GameName' => 'setting a name'
+        ]);
+        $request->method = "POST";
+        $request->path = "/api/v1/announce";
+
+        // -------------------------------------------------------------------------------------------------------------
+        // Test updated object
+
+        $response = (new AnnounceController())->announce($request);
+        $responseJson = json_decode($response->body, true);
+
+        $this->assertSame("ok", $responseJson['result']);
+        $this->assertSame(self::$minimalAnnounceTestResult->id, $responseJson['id'],
+            "The previously created announce should be replaced/updated, keeping its original id.");
+
+        $updatedResult = HostedGame::fetch(self::$minimalAnnounceTestResult->id);
+
+        $this->assertSame("setting a name", $updatedResult->gameName,
+            "new data needs to be applied");
     }
 
     /**
