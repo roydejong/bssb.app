@@ -6,7 +6,6 @@ use app\BeatSaber\LevelDifficulty;
 use app\BeatSaber\LevelId;
 use app\BeatSaber\ModPlatformId;
 use app\BeatSaber\MultiplayerLobbyState;
-use app\Common\CString;
 use app\Common\CVersion;
 use app\Common\IPEndPoint;
 use app\HTTP\Request;
@@ -144,9 +143,6 @@ class AnnounceController
             // For some reason the "modded" flag doesn't always get set, so apply failsafes
             if ($game->mpExVersion != null) {
                 // MpEx version provided, must be modded
-                $game->isModded = true;
-            } else if (!$isQuickplay && $game->levelId && CString::startsWith($game->levelId, "custom_level_")) {
-                // Custom song given, must be modded
                 $game->isModded = true;
             }
         }
