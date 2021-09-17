@@ -381,6 +381,8 @@ class HostedGame extends Model implements \JsonSerializable
     {
         $sz = $this->getPropertyValues();
         unset($sz['ownerId']);
+        unset($sz['id']);
+        $sz['key'] = self::id2hash($this->id);
         return $sz;
     }
 }

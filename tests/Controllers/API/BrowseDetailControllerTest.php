@@ -67,7 +67,7 @@ class BrowseDetailControllerTest extends TestCase
 
             $responseJson = @json_decode($response->body, true);
 
-            $this->assertSame($responseJson['id'], $sampleGame->id);
+            $this->assertSame($responseJson['key'], $hashId);
             $this->assertSame($responseJson['hostSecret'], 'unit_test_testBrowseDetail_200');
             $this->assertSame($responseJson['serverCode'], '55555');
         } finally {
