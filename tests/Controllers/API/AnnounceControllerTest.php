@@ -89,12 +89,13 @@ class AnnounceControllerTest extends TestCase
 
         $responseJson = json_decode($response->body, true);
 
-        $this->assertSame("ok", $responseJson['result']);
-        $this->assertIsNumeric($announceId = $responseJson['id']);
+        $this->assertSame(true, $responseJson['success']);
+        $this->assertIsString($announceKey = $responseJson['key']);
 
         // -------------------------------------------------------------------------------------------------------------
         // Test data written to db
 
+        $announceId = HostedGame::hash2id($announceKey);
         $announce = HostedGame::fetch($announceId);
 
         $this->assertSame("ABC12", $announce->serverCode);
@@ -168,9 +169,9 @@ class AnnounceControllerTest extends TestCase
         $response = (new AnnounceController())->announce($request);
         $responseJson = json_decode($response->body, true);
 
-        $this->assertSame("ok", $responseJson['result']);
-        $this->assertSame(self::$fullAnnounceTestResult->id, $responseJson['id'],
-            "The previously created announce should be replaced/updated, keeping its original id.");
+        $this->assertSame(true, $responseJson['success']);
+        $this->assertSame(self::$fullAnnounceTestResult->getHashId(), $responseJson['key'],
+            "The previously created announce should be replaced/updated, keeping its original key.");
 
         $updatedResult = HostedGame::fetch(self::$fullAnnounceTestResult->id);
 
@@ -203,9 +204,10 @@ class AnnounceControllerTest extends TestCase
         $this->assertSame(200, $response->code);
 
         $responseJson = json_decode($response->body, true);
-        $this->assertSame("ok", $responseJson['result']);
+        $this->assertSame(true, $responseJson['success']);
 
-        $announceId = $responseJson['id'];
+        $announceKey = $responseJson['key'];
+        $announceId = HostedGame::hash2id($announceKey);
         $announce = HostedGame::fetch($announceId);
 
         self::$minimalAnnounceTestResult = $announce;
@@ -253,8 +255,8 @@ class AnnounceControllerTest extends TestCase
         $response = (new AnnounceController())->announce($request);
         $responseJson = json_decode($response->body, true);
 
-        $this->assertSame("ok", $responseJson['result']);
-        $this->assertSame(self::$minimalAnnounceTestResult->id, $responseJson['id'],
+        $this->assertSame(true, $responseJson['success']);
+        $this->assertSame(self::$minimalAnnounceTestResult->getHashId(), $responseJson['key'],
             "The previously created announce should be replaced/updated, keeping its original id.");
 
         $updatedResult = HostedGame::fetch(self::$minimalAnnounceTestResult->id);
@@ -283,7 +285,7 @@ class AnnounceControllerTest extends TestCase
             $this->assertSame(200, $response->code, "Sanity check: announce should return 200 OK");
 
             $json = json_decode($response->body, true);
-            return HostedGame::fetch($json['id'])->platform;
+            return HostedGame::fetch(HostedGame::hash2id($json['key']))->platform;
         };
 
         $this->assertSame("unknown", $fnTestRequestPlatform(null, null),
@@ -314,7 +316,7 @@ class AnnounceControllerTest extends TestCase
         $this->assertSame(200, $response->code, "Sanity check: announce should return 200 OK");
 
         $json = json_decode($response->body, true);
-        $game = HostedGame::fetch($json['id']);
+        $game = HostedGame::fetch(HostedGame::hash2id($json['key']));
 
         $this->assertSame("1.2.3", $game->mpExVersion, "MpExVersion should be read and written");
         $this->assertSame(true, $game->isModded, "MpExVersion should automatically set modded flag");
@@ -342,7 +344,7 @@ class AnnounceControllerTest extends TestCase
 
         $json = json_decode($response->body, true);
 
-        $game = HostedGame::fetch($json['id']);
+        $game = HostedGame::fetch(HostedGame::hash2id($json['key']));
         $this->assertSame(5, $game->playerLimit, "Vanilla lobbies should be capped at 5 players");
     }
 
@@ -366,7 +368,7 @@ class AnnounceControllerTest extends TestCase
 
         $json = json_decode($response->body, true);
 
-        $game = HostedGame::fetch($json['id']);
+        $game = HostedGame::fetch(HostedGame::hash2id($json['key']));
         $this->assertSame(100, $game->playerLimit, "Modded lobbies should be capped at 20 players");
     }
 
@@ -390,7 +392,7 @@ class AnnounceControllerTest extends TestCase
 
         $json = json_decode($response->body, true);
 
-        $game = HostedGame::fetch($json['id']);
+        $game = HostedGame::fetch(HostedGame::hash2id($json['key']));
         $this->assertSame(5, $game->playerLimit,
             "Modded lobbies should be capped at 5 players if using official servers");
     }
@@ -460,7 +462,7 @@ class AnnounceControllerTest extends TestCase
         $response = (new AnnounceController())->announce($request);
         $json = json_decode($response->body, true);
 
-        $game = HostedGame::fetch($json['id']);
+        $game = HostedGame::fetch(HostedGame::hash2id($json['key']));
         $this->assertSame("custom_level_58EB1C803030D10EE71E91D4FE6C966B09AC341C", $game->levelId);
     }
 
@@ -474,7 +476,7 @@ class AnnounceControllerTest extends TestCase
 
         $response = (new AnnounceController())->announce($request);
         $json = json_decode($response->body, true);
-        $game = HostedGame::fetch($json['id']);
+        $game = HostedGame::fetch(HostedGame::hash2id($json['key']));
 
         $this->assertSame("Untitled Beat Game", $game->gameName,
             "Empty game names should be prevented");
@@ -490,7 +492,7 @@ class AnnounceControllerTest extends TestCase
 
         $response = (new AnnounceController())->announce($request);
         $json = json_decode($response->body, true);
-        $game = HostedGame::fetch($json['id']);
+        $game = HostedGame::fetch(HostedGame::hash2id($json['key']));
 
         $this->assertNotNull($game->endedAt, "Uninteresting games should be marked as ended immediately");
     }
@@ -544,7 +546,7 @@ class AnnounceControllerTest extends TestCase
 
         $response = (new AnnounceController())->announce($request);
         $json = json_decode($response->body, true);
-        $game = HostedGame::fetch($json['id']);
+        $game = HostedGame::fetch(HostedGame::hash2id($json['key']));
 
         $this->assertSame("Official Quick Play - Hard", $game->gameName);
     }
@@ -583,7 +585,7 @@ class AnnounceControllerTest extends TestCase
 
         $response = (new AnnounceController())->announce($request);
         $json = json_decode($response->body, true);
-        $game = HostedGame::fetch($json['id']);
+        $game = HostedGame::fetch(HostedGame::hash2id($json['key']));
 
         $players = $game->fetchPlayers();
 
@@ -707,7 +709,7 @@ class AnnounceControllerTest extends TestCase
         // Part 4: Cancelling & resurrecting a game should empty the player list
 
         // kill the game
-        $game = HostedGame::fetch($json['id']);
+        $game = HostedGame::fetch(HostedGame::hash2id($json['key']));
         $game->endedAt = new \DateTime('now');
         $game->save();
 

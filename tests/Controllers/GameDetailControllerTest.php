@@ -36,7 +36,7 @@ class GameDetailControllerTest extends TestCase
 
         try {
             $controller = new GameDetailController();
-            $response = $controller->getGameDetail(new MockModClientRequest(), HostedGame::id2hash($hostedGame->id));
+            $response = $controller->getGameDetail(new MockModClientRequest(), $hostedGame->getHashId());
 
             $this->assertSame(200, $response->code);
         } finally {

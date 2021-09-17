@@ -55,7 +55,7 @@ class BrowseDetailControllerTest extends TestCase
         $sampleGame->lastUpdate = $sampleGame->firstSeen;
         $sampleGame->save();
 
-        $hashId = HostedGame::id2hash($sampleGame->id);
+        $hashId = $sampleGame->getHashId();
 
         try {
             $request = new MockModClientRequest();

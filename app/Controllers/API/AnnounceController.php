@@ -318,8 +318,8 @@ class AnnounceController
 
         if ($saveOk) {
             return new JsonResponse([
-                "result" => "ok",
-                "id" => $game->id
+                "success" => true,
+                "key" => $game->getHashId()
             ]);
         }
 

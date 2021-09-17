@@ -352,6 +352,11 @@ class HostedGame extends Model implements \JsonSerializable
     // -----------------------------------------------------------------------------------------------------------------
     // URLs
 
+    public function getHashId(): string
+    {
+        return self::id2hash($this->id);
+    }
+
     private static function getHashids(): Hashids
     {
         return BSSB::getHashids("HostedGame");
@@ -370,8 +375,7 @@ class HostedGame extends Model implements \JsonSerializable
 
     public function getWebDetailUrl(): string
     {
-        $hash = self::id2hash($this->id);
-        return "/game/{$hash}";
+        return "/game/{$this->getHashId()}";
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -381,7 +385,7 @@ class HostedGame extends Model implements \JsonSerializable
     {
         $sz = $this->getPropertyValues();
         unset($sz['ownerId']);
-        $sz['key'] = self::id2hash($this->id);
+        $sz['key'] = $this->getHashId();
         return $sz;
     }
 }
