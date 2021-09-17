@@ -2,6 +2,7 @@
 
 use app\Controllers\API\AnnounceController;
 use app\Controllers\API\BrowseController;
+use app\Controllers\API\BrowseDetailController;
 use app\Controllers\API\StatusController;
 use app\Controllers\API\UnAnnounceController;
 use app\Controllers\DedicatedServersController;
@@ -29,6 +30,7 @@ $router->register('/dedicated-servers', [new DedicatedServersController(), 'getS
 $router->register('/api/v1/announce', [new AnnounceController(), 'announce']);
 $router->register('/api/v1/unannounce', [new UnAnnounceController(), 'unAnnounce']);
 $router->register('/api/v1/browse', [new BrowseController(), 'browse']);
+$router->register('/api/v1/browse/$hashId', [new BrowseDetailController(), 'browseDetail']);
 $router->register('/api/v1/status', [new StatusController(), 'getStatus']);
 
 // Run!
