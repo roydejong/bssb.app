@@ -720,4 +720,25 @@ class AnnounceControllerTest extends TestCase
         $this->assertCount(1, $game->fetchPlayers(),
             'fetchPlayers() should only contain the host after resurrecting a game');
     }
+
+    /**
+     * @depends testMinimalAnnounce
+     */
+    public function testMasterServerBlacklist()
+    {
+        global $bssbConfig;
+        $bssbConfig['master_server_blacklist'] = ["sekr.it"];
+
+        $request = new MockJsonRequest([
+            'ServerCode' => '12345',
+            'OwnerId' => 'unit_test_testMinimalAnnounce',
+            'HostSecret' => null,
+            'MasterServerHost' => "sekr.it"
+        ]);
+        $request->method = "POST";
+        $request->path = "/api/v1/announce";
+
+        $response = (new AnnounceController())->announce($request);
+        $this->assertSame(403, $response->code);
+    }
 }

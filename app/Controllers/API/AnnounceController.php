@@ -21,6 +21,8 @@ class AnnounceController
 {
     public function announce(Request $request): Response
     {
+        global $bssbConfig;
+
         // -------------------------------------------------------------------------------------------------------------
         // Pre-flight checks
 
@@ -111,6 +113,11 @@ class AnnounceController
 
         // -------------------------------------------------------------------------------------------------------------
         // Validation and processing
+
+        if (isset($bssbConfig['master_server_blacklist']) && in_array($game->masterServerHost, $bssbConfig['master_server_blacklist'])) {
+            // Master server is blacklisted, do not allow announce
+            return new Response(403, 'leaker stop leaking');
+        }
 
         if (empty($game->gameName)) {
             $game->gameName = "Untitled Beat Game";

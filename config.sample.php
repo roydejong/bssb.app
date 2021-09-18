@@ -30,6 +30,12 @@ $bssbConfig['response_cache_enabled'] = true;
 $bssbConfig['hashids_salt'] = "🧂";
 
 /**
+ * master server blacklist, array of strings
+ *  → Games with a master server from this list will not be allowed to announce.
+ */
+$bssbConfig['master_server_blacklist'] = [];
+
+/**
  * Instarecord configuration
  */
 $dbConfig = Instarecord::config();
