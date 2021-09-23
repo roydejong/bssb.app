@@ -4,54 +4,68 @@
 
 {% block main %}
 <main role="main" class="container-fluid">
-    <div class="main-page">
+    <div class="content-page">
 
-        <h1>Dedicated Server List</h1>
-        <p>An overview of all known dedicated server hosts, uniquely identified by their endpoint. These are official servers, and servers provided by the modding community.</p>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Server Browser</a></li>
+                <li class="breadcrumb-item"><a href="/stats">Stats</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Dedicated Server List</li>
+            </ol>
+        </nav>
 
-        <table class="table table-bordered table-striped">
-            <thead class="thead-dark">
-            <tr>
-                <th>Name</th>
-                <th>Endpoint</th>
-                <th>Location (GeoIP)</th>
-                <th>Type</th>
-                <th>Last seen</th>
-                <th>Last status</th>
-            </tr>
-            </thead>
-            <tbody>
-                {% for server in servers %}
-                    <tr>
-                        <td><strong><a href="{{ server.getWebDetailUrl() }}">{{ server.gameName }}</a></strong></td>
-                        <td><code>{{ server.endpoint }}</code></td>
-                        <td>
-                            {% set geo = geoData[server.endpoint.__toString()] %}
-                            {% if geo and geo.text %}
-                                {% if geo.countryCode %}
-                                    <img src="/static/flags/{{ geo.countryCode|lower }}.png" alt="{{ geo.countryCode }}"/>
-                                 {% endif %}
-                                <span>{{ geo.text }}</span>
-                            {% else %}
-                                <span>-</span>
-                            {% endif %}
-                        </td>
-                        <td>{{ server.describeServerType() }}</td>
-                        <td>{{ server.lastUpdate.format('r')|timeago_html|raw }}</td>
-                        <td class="{% if server.getIsStale() %}-stale{% else %}-success{% endif %}">
-                            <span>{{ server.describeState() }} ({{ server.playerCount }} of {{ server.playerLimit }} players)</span>
-                        </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="100" class="no-results-cell">
-                            <i class="mdi mdi-emoticon-sad-outline"></i>
-                            <span>No servers found</span>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="stats-page">
+
+            <h1>Dedicated Server List</h1>
+            <p class="lead">An overview of all known dedicated server hosts, uniquely identified by their endpoint. These are official servers, and servers provided by the modding community.</p>
+
+            <hr />
+
+            <table class="table table-bordered table-striped">
+                <thead class="thead-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Endpoint</th>
+                    <th>Location (GeoIP)</th>
+                    <th>Type</th>
+                    <th>Last seen</th>
+                    <th>Last status</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for server in servers %}
+                        <tr>
+                            <td><strong><a href="{{ server.getWebDetailUrl() }}">{{ server.gameName }}</a></strong></td>
+                            <td><code>{{ server.endpoint }}</code></td>
+                            <td>
+                                {% set geo = geoData[server.endpoint.__toString()] %}
+                                {% if geo and geo.text %}
+                                    {% if geo.countryCode %}
+                                        <img src="/static/flags/{{ geo.countryCode|lower }}.png" alt="{{ geo.countryCode }}"/>
+                                     {% endif %}
+                                    <span>{{ geo.text }}</span>
+                                {% else %}
+                                    <span>-</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ server.describeServerType() }}</td>
+                            <td>{{ server.lastUpdate.format('r')|timeago_html|raw }}</td>
+                            <td class="{% if server.getIsStale() %}-stale{% else %}-success{% endif %}">
+                                <span>{{ server.describeState() }} ({{ server.playerCount }} of {{ server.playerLimit }} players)</span>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="100" class="no-results-cell">
+                                <i class="mdi mdi-emoticon-sad-outline"></i>
+                                <span>No servers found</span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
 
     </div>
 </main>
