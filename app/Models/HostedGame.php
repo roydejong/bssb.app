@@ -9,6 +9,7 @@ use app\BSSB;
 use app\Common\CVersion;
 use app\Common\IPEndPoint;
 use app\Utils\PirateDetect;
+use DateTime;
 use Hashids\Hashids;
 use SoftwarePunt\Instarecord\Model;
 
@@ -336,6 +337,23 @@ class HostedGame extends Model implements \JsonSerializable
     public function getIsDedicatedServer(): bool
     {
         return $this->serverType && $this->serverType !== self::SERVER_TYPE_PLAYER_HOST;
+    }
+
+    public function determineTrueFirstSeen(): DateTime
+    {
+        if ($this->getIsDedicatedServer()) {
+            // Dedicated server - identify first seen by endpoint
+            $minFirstSeen = HostedGame::query()
+                ->select('MIN(first_seen)')
+                ->where('endpoint = ?', $this->endpoint->dbSerialize())
+                ->querySingleValue();
+            if ($minFirstSeen) {
+                return new \DateTime($minFirstSeen);
+            }
+        }
+
+        // Fallback or Player host (old P2P) - use regular first seen value
+        return $this->firstSeen;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -59,22 +59,10 @@
                             </h5>
                             <table class="card-table table table-bordered">
                                 <tbody>
-                                {% if game.ownerName and (players is not defined or players|length == 0) and not game.getIsQuickplay() %}
-                                    <tr>
-                                        <th scope="row">Host player</th>
-                                        <td>{{ game.ownerName ? game.ownerName : "Unknown" }}</td>
-                                    </tr>
-                                {% endif %}
                                 <tr>
-                                    <th scope="row">{{ game.getIsStale() or game.endedAt is not null ? 'Last status' : 'Current status' }}</th>
-                                    <td>{{ game.describeState() }} ({{ game.playerCount }} of {{ game.playerLimit }} players)</td>
+                                    <th scope="row">Server type</th>
+                                    <td>{{ game.describeServerType() }}</td>
                                 </tr>
-                                {% if game.difficulty is not null %}
-                                    <tr>
-                                        <th scope="row">{{ game.getIsPlayingLevel() ? "Current difficulty" : "Last difficulty" }}</th>
-                                        <td><span class="difficulty-txt -d{{ game.difficulty }}">{{ game.describeDifficulty() }}</span></td>
-                                    </tr>
-                                {% endif %}
                                 {% if game.gameVersion %}
                                     <tr>
                                         <th scope="row">Game version</th>
@@ -96,10 +84,22 @@
                                         {% endif %}
                                     </td>
                                 </tr>
+                                {% if game.ownerName and (players is not defined or players|length == 0) and not game.getIsQuickplay() %}
+                                    <tr>
+                                        <th scope="row">Host player</th>
+                                        <td>{{ game.ownerName ? game.ownerName : "Unknown" }}</td>
+                                    </tr>
+                                {% endif %}
                                 <tr>
-                                    <th scope="row">Server type</th>
-                                    <td>{{ game.describeServerType() }}</td>
+                                    <th scope="row">{{ game.getIsStale() or game.endedAt is not null ? 'Last status' : 'Current status' }}</th>
+                                    <td>{{ game.describeState() }} ({{ game.playerCount }} of {{ game.playerLimit }} players)</td>
                                 </tr>
+                                {% if game.difficulty is not null %}
+                                    <tr>
+                                        <th scope="row">{{ game.getIsPlayingLevel() ? "Current difficulty" : "Last difficulty" }}</th>
+                                        <td><span class="difficulty-txt -d{{ game.difficulty }}">{{ game.describeDifficulty() }}</span></td>
+                                    </tr>
+                                {% endif %}
                                 {% if game.endpoint and game.getIsDedicatedServer() and game.masterServerHost %}
                                     <tr>
                                         <th scope="row">Server endpoint</th>
@@ -154,9 +154,15 @@
                                     </tr>
                                 {% endif %}
                                 <tr>
-                                    <th scope="row">First seen</th>
-                                    <td>{{ game.firstSeen.format('r')|timeago_html|raw }}</td>
+                                    <th scope="row"><abbr title="The first time this server's endpoint was seen by the Server Browser.">First seen</abbr></th>
+                                    <td>{{ game.determineTrueFirstSeen().format('r')|timeago_html|raw }}</td>
                                 </tr>
+                                {% if game.getIsDedicatedServer() %}
+                                    <tr>
+                                        <th scope="row"><abbr title="The time the current lobby was created on this server.">Lobby created</abbr></th>
+                                        <td>{{ game.firstSeen.format('r')|timeago_html|raw }}</td>
+                                    </tr>
+                                {% endif %}
                                 <tr>
                                     <th scope="row">Last update</th>
                                     <td>{{ game.lastUpdate.format('r')|timeago_html|raw }}</td>
