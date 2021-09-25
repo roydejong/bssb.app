@@ -219,10 +219,15 @@ class HostedGame extends Model implements \JsonSerializable
     public function describeSong(): string
     {
         $parts = [];
+
         if ($this->songAuthor)
             $parts[] = $this->songAuthor;
         if ($this->songName)
             $parts[] = $this->songName;
+
+        if (empty($parts))
+            return $this->levelId;
+
         return implode(' - ', $parts);
     }
 
