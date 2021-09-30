@@ -269,13 +269,15 @@ class HostedGame extends Model implements \JsonSerializable
 
     public function describeServerType(): string
     {
+        $isOfficial = $this->getIsOfficial();
+
         return match ($this->serverType) {
             self::SERVER_TYPE_BEATTOGETHER_DEDICATED => "BeatTogether Dedicated",
             self::SERVER_TYPE_BEATTOGETHER_QUICKPLAY => "BeatTogether Quickplay",
             self::SERVER_TYPE_BEATDEDI_CUSTOM => "BeatDedi Custom",
             self::SERVER_TYPE_BEATDEDI_QUICKPLAY => "BeatDedi Quickplay",
-            self::SERVER_TYPE_VANILLA_QUICKPLAY => "Official Quickplay",
-            self::SERVER_TYPE_VANILLA_DEDICATED => "Official Dedicated (Player managed)",
+            self::SERVER_TYPE_VANILLA_QUICKPLAY => ($isOfficial ? "Official Quickplay" : "Unofficial Quickplay"),
+            self::SERVER_TYPE_VANILLA_DEDICATED => ($isOfficial ? "Official Dedicated" : "Unofficial Dedicated"),
             null, self::SERVER_TYPE_PLAYER_HOST => "Player hosted (Old P2P)",
             default => "Unknown"
         };

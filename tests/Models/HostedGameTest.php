@@ -1,5 +1,6 @@
 <?php
 
+use app\BeatSaber\MasterServer;
 use app\BeatSaber\MultiplayerLobbyState;
 use app\Common\CVersion;
 use app\Models\HostedGame;
@@ -116,5 +117,27 @@ class HostedGameTest extends TestCase
 
         $this->assertSame(3, $game->getAdjustedState(new CVersion("1.16.2")),
             "getAdjustedState() should translate 1.16.3 states downwards for 1.16.2 observer");
+    }
+
+    public function testDescribeServerType_OfficialUnofficial()
+    {
+        $game = new HostedGame();
+
+        $game->masterServerHost = "partycube.pg69.edu";
+        $game->serverType = HostedGame::SERVER_TYPE_VANILLA_DEDICATED;
+        $this->assertSame("Unofficial Dedicated", $game->describeServerType());
+
+        $game->masterServerHost = MasterServer::OFFICIAL_HOSTNAME_STEAM;
+        $game->serverType = HostedGame::SERVER_TYPE_VANILLA_DEDICATED;
+        $this->assertSame("Official Dedicated", $game->describeServerType());
+
+        $game->masterServerHost = "partycube.pg69.edu";
+        $game->serverType = HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY;
+        $this->assertSame("Unofficial Quickplay", $game->describeServerType());
+
+        $game->masterServerHost = MasterServer::OFFICIAL_HOSTNAME_PS4;
+        $game->serverType = HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY;
+        $this->assertSame("Official Quickplay", $game->describeServerType());
+
     }
 }
