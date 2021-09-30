@@ -36,6 +36,9 @@ class HostedGamePlayer extends Model
 
     public function getIsBot(): bool
     {
+        if ($this->sortIndex < 0 && $this->userName === "Dedicated Server")
+            return true;
+
         return PlayerBotDetect::detect($this->userId, $this->userName);
     }
 }
