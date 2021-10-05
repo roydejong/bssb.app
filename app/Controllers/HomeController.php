@@ -23,6 +23,7 @@ class HomeController
         }
 
         // -------------------------------------------------------------------------------------------------------------
+        // Prepare base query
 
         $query = HostedGameLevelRecord::query()
             ->select("hosted_games.*, lr.beatsaver_id, lr.cover_url, lr.name AS level_name")
@@ -33,6 +34,19 @@ class HomeController
             ->andWhere("ended_at IS NULL");
 
         // -------------------------------------------------------------------------------------------------------------
+        // Prepare filter options
+
+        $filterGameVersionOptions = ['all' => 'All versions'];
+
+        $optionQuery = clone $query;
+        $optionQuery->select('DISTINCT hosted_games.game_version');
+
+        foreach ($optionQuery->querySingleValueArray() as $gameVersionOption) {
+            $filterGameVersionOptions[$gameVersionOption] = $gameVersionOption;
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        // Apply filters
 
         $filterGameVersion = $request->queryParams['version'] ?? null;
 
@@ -46,19 +60,6 @@ class HomeController
          * @var $games HostedGame[]
          */
         $games = $query->queryAllModels();
-
-        // -------------------------------------------------------------------------------------------------------------
-
-        $filterGameVersionOptions = ['all' => 'All versions'];
-
-        foreach ($games as $game) {
-            if ($game->gameVersion) {
-                $gameVersion = $game->gameVersion->toString();
-                if (!isset($filterGameVersionOptions[$gameVersion])) {
-                    $filterGameVersionOptions[$gameVersion] = $gameVersion;
-                }
-            }
-        }
 
         // -------------------------------------------------------------------------------------------------------------
 

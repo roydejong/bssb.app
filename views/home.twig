@@ -45,7 +45,7 @@
                     <label for="version">Game version:</label>
                     <select id="version" name="version">
                         {% for key, label in filterGameVersionOptions %}
-                            <option value="{{ key }}" {% if filterGameVersion == key %}checked{% endif %}>{{ label }}</option>
+                            <option value="{{ key }}" {% if filterGameVersion == key %}selected{% endif %}>{{ label }}</option>
                         {% endfor %}
                     </select>
                 </div>
