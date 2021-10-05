@@ -336,6 +336,8 @@ footer {
       margin: 0;
       display: inline-flex;
       margin-right: 6px;
+      flex-grow: 1;
+      flex-shrink: 0;
     }
   }
 }

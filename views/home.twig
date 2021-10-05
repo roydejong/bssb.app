@@ -43,7 +43,7 @@
                 </div>
                 <div class="filter">
                     <label for="version">Game version:</label>
-                    <select id="version" name="version">
+                    <select id="version" class="custom-select custom-select-sm" name="version">
                         {% for key, label in filterGameVersionOptions %}
                             <option value="{{ key }}" {% if filterGameVersion == key %}selected{% endif %}>{{ label }}</option>
                         {% endfor %}
