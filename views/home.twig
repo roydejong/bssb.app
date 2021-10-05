@@ -35,6 +35,23 @@
             </div>
         {% endif %}
 
+        <form method="get" id="filters">
+            <div class="filters">
+                <div class="title">
+                    <i class="mdi mdi-filter"></i>
+                    <span>Filters</span>
+                </div>
+                <div class="filter">
+                    <label for="version">Game version:</label>
+                    <select id="version" name="version">
+                        {% for key, label in filterGameVersionOptions %}
+                            <option value="{{ key }}" {% if filterGameVersion == key %}checked{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </form>
+
         {% include "tables/hosted_games_table.twig" %}
 
     </div>

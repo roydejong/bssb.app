@@ -22,23 +22,53 @@ class HomeController
             return $resCache->readAsResponse();
         }
 
-        /**
-         * @var $games HostedGame[]
-         */
-        $games = HostedGameLevelRecord::query()
+        // -------------------------------------------------------------------------------------------------------------
+
+        $query = HostedGameLevelRecord::query()
             ->select("hosted_games.*, lr.beatsaver_id, lr.cover_url, lr.name AS level_name")
             ->from("hosted_games")
             ->leftJoin("level_records lr ON (lr.level_id = hosted_games.level_id)")
             ->orderBy("player_count >= player_limit ASC, player_count > 1 ASC, player_limit DESC, hosted_games.id DESC")
             ->where("last_update >= ?", HostedGame::getStaleGameCutoff())
-            ->andWhere("ended_at IS NULL")
-            ->queryAllModels();
+            ->andWhere("ended_at IS NULL");
+
+        // -------------------------------------------------------------------------------------------------------------
+
+        $filterGameVersion = $request->queryParams['version'] ?? null;
+
+        if ($filterGameVersion && $filterGameVersion !== "all") {
+            $query->andWhere('game_version = ?', $filterGameVersion);
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+
+        /**
+         * @var $games HostedGame[]
+         */
+        $games = $query->queryAllModels();
+
+        // -------------------------------------------------------------------------------------------------------------
+
+        $filterGameVersionOptions = ['all' => 'All versions'];
+
+        foreach ($games as $game) {
+            if ($game->gameVersion) {
+                $gameVersion = $game->gameVersion->toString();
+                if (!isset($filterGameVersionOptions[$gameVersion])) {
+                    $filterGameVersionOptions[$gameVersion] = $gameVersion;
+                }
+            }
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
 
         $sysConfig = SystemConfig::fetchInstance();
 
         $view = new View('home.twig');
         $view->set('games', $games);
         $view->set('serverMessage', $sysConfig->getCleanServerMessage());
+        $view->set('filterGameVersion', $filterGameVersion);
+        $view->set('filterGameVersionOptions', $filterGameVersionOptions);
 
         $response = $view->asResponse();
         $resCache->writeResponse($response);
