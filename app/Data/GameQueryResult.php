@@ -26,4 +26,9 @@ class GameQueryResult
      * @var string[]
      */
     public array $filterValues;
+
+    public function getIsFiltered(): bool
+    {
+        return !empty($this->filterValues);
+    }
 }

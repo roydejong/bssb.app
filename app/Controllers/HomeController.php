@@ -44,6 +44,7 @@ class HomeController
         $view->set('filters', $queryResult->filters);
         $view->set('filterOptions', $queryResult->filterOptions);
         $view->set('filterValues', $queryResult->filterValues);
+        $view->set('isFiltered', $queryResult->getIsFiltered());
 
         $response = $view->asResponse();
 
