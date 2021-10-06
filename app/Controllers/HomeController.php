@@ -18,10 +18,14 @@ class HomeController
 
     public function index(Request $request)
     {
-        $resCache = new ResponseCache(self::CACHE_KEY, self::CACHE_TTL);
+        $enableCache = empty($request->queryParams);
 
-        if ($resCache->getIsAvailable()) {
-            return $resCache->readAsResponse();
+        if ($enableCache) {
+            $resCache = new ResponseCache(self::CACHE_KEY, self::CACHE_TTL);
+
+            if ($resCache->getIsAvailable()) {
+                return $resCache->readAsResponse();
+            }
         }
 
         $gameQuery = new GameQuery();
@@ -42,7 +46,11 @@ class HomeController
         $view->set('filterValues', $queryResult->filterValues);
 
         $response = $view->asResponse();
-        $resCache->writeResponse($response);
+
+        if ($enableCache) {
+            $resCache->writeResponse($response);
+        }
+
         return $response;
     }
 }
