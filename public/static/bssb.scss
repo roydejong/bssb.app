@@ -315,13 +315,9 @@ footer {
   > div {
     display: flex;
     align-items: center;
-    min-height: 48px;
+    height: 80px;
     border-right: 1px solid rgba(255, 255, 255, .1);
-    padding: 0 12px;
-
-    &:last-child {
-      border-right: 0;
-    }
+    padding: 0 16px;
   }
   .title {
     font-weight: bold;
@@ -331,13 +327,18 @@ footer {
     }
   }
   .filter {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+
     label {
       padding: 0;
-      margin: 0;
       display: inline-flex;
-      margin-right: 6px;
-      flex-grow: 1;
+      margin: 0 0 4px 0;
+      flex-grow: 0;
       flex-shrink: 0;
+      opacity: .666;
+      font-size: 14px;
     }
   }
 }

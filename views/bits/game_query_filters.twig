@@ -1,0 +1,19 @@
+<form method="get" id="filters">
+    <div class="filters">
+        <div class="title">
+            <i class="mdi mdi-filter"></i>
+            <span>Filters</span>
+        </div>
+            {% for filterId, filter in filters %}
+                <div class="filter">
+                    {% set _filterOptions = filterOptions[filterId] %}
+                    <label for="{{ filterId }}">{{ filter.getLabel() }}:</label>
+                    <select id="{{ filterId }}" name="{{ filterId }}" class="custom-select custom-select-sm">
+                        {% for key, label in _filterOptions %}
+                            <option value="{{ key }}" {% if filterValues[filterId] == key %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endfor %}
+    </div>
+</form>
