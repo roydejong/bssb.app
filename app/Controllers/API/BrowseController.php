@@ -2,6 +2,7 @@
 
 namespace app\Controllers\API;
 
+use app\BeatSaber\GameVersionAliases;
 use app\BeatSaber\MultiplayerLobbyState;
 use app\HTTP\Request;
 use app\HTTP\Response;
@@ -66,7 +67,8 @@ class BrowseController
 
         if ($mci->beatSaberVersion) {
             // Only show results from same game version
-            $baseQuery->andWhere('game_version = ?', $mci->beatSaberVersion);
+            $compatibleGameVersions = GameVersionAliases::getAliasesFor($mci->beatSaberVersion, true);
+            $baseQuery->andWhere('game_version IN (?)', $compatibleGameVersions);
         }
 
         // Search query

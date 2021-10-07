@@ -40,6 +40,8 @@ class BrowseControllerTest extends TestCase
         $endedSteam->endedAt = new \DateTime('now');
         $endedSteam->save();
 
+        self::createSampleGame(10, "1.18.1", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, true, customGameVersion: new CVersion("1.18.1"));
+
         self::createSampleGame(0, "BadGameVersion", customGameVersion: new CVersion("1.2.3"));
 
         self::createSampleGame(null, "VanillaQuickPlay", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 3, false, hostSecret: "abc123", serverType: HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY, endpoint: new IPEndPoint("1.2.3.4", "1234"));
@@ -70,7 +72,10 @@ class BrowseControllerTest extends TestCase
         $hg = new HostedGame();
 
         if ($number !== null)
-            $hg->serverCode = "TEST{$number}";
+            if ($number >= 0 && $number < 9)
+                $hg->serverCode = "TEST{$number}";
+            else
+                $hg->serverCode = "TST{$number}";
 
         $hg->playerLimit = 5;
         $hg->playerCount = $playerCount !== null ? $playerCount : 5;
@@ -238,8 +243,8 @@ class BrowseControllerTest extends TestCase
 
         $this->assertNotSame($pageOne, $pageTwo);
 
-        // NB: -1 for OldSteam, -1 for EndedSteam, -1 for BadGameVersion
-        $expectedTotalItems = self::$createdSampleGameCount - 3;
+        // NB: -1 for OldSteam, -1 for EndedSteam, -1 for BadGameVersion, -1 for 1.18.1
+        $expectedTotalItems = self::$createdSampleGameCount - 4;
 
         $this->assertGreaterThanOrEqual($expectedTotalItems, count($pageOne) + count($pageTwo),
             "Pages one and two should make up the sample game count together");
@@ -453,6 +458,20 @@ class BrowseControllerTest extends TestCase
 
         $this->assertCount(1, $lobbies, "We should only get one result for this game version");
         $this->assertContainsGameWithName("BadGameVersion", $lobbies, "We should only get the single matching game for this version");
+    }
+
+    /**
+     * @depends testBrowseVersionFiltering
+     */
+    public function testBrowseVersionFiltering_Aliased()
+    {
+        $request = self::createBrowseRequest();
+        $request->headers["user-agent"] = "ServerBrowser/1.0.0 (BeatSaber/1.18.0) (steam)";
+
+        $lobbies = self::executeBrowseRequestAndGetGames($request);
+
+        $this->assertContainsGameWithName("1.18.1", $lobbies,
+            "We should get 1.18.1 result for 1.18.0 request (alias)");
     }
 
     /**
