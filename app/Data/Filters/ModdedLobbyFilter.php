@@ -24,12 +24,35 @@ class ModdedLobbyFilter extends BaseFilter
             'modded' => 'Modded only (any version)'
         ];
 
-        $baseQuery->select('DISTINCT hosted_games.mp_ex_version');
-        $baseQuery->andWhere('is_modded = 1');
+        $baseQuery->select('DISTINCT is_modded, mp_ex_version');
 
-        foreach ($baseQuery->querySingleValueArray() as $mpExVersionOption) {
-            $options["mpex_{$mpExVersionOption}"] = "MultiplayerExtensions {$mpExVersionOption}";
+        $anyUnmodded = false;
+        $anyModded = false;
+
+        foreach ($baseQuery->queryAllRows() as $row) {
+            $isModded = $row['is_modded'] == 1;
+            $mpExVersion = $row['mp_ex_version'];
+
+            if ($isModded) {
+                $anyModded = true;
+            } else {
+                $anyUnmodded = true;
+            }
+
+            if ($mpExVersion) {
+                $mpExOptionKey = "mpex_{$mpExVersion}";
+
+                if (!isset($options[$mpExOptionKey])) {
+                    $options[$mpExOptionKey] = "MultiplayerExtensions {$mpExVersion}";
+                }
+            }
         }
+
+        if (!$anyUnmodded)
+            unset($options['vanilla']);
+
+        if (!$anyModded)
+            unset($options['modded']);
 
         return $options;
     }
