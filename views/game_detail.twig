@@ -22,7 +22,7 @@
                 {% if game.getIsPirate() %}
                     <div class="alert alert-warning">
                         <strong>🏴‍☠️ <span>Ahoy there. This here 'ost be a gentleman o' fortune!</span></strong><br />
-                        <span>Pirates sometimes share the same host ID or randomize it, so game data may not be reliable.</span><br />
+                        <span>It looks like this player is a pirate. Things may not work as expected.</span><br />
                         <br />
                         <span><strong>You should <a href="https://store.steampowered.com/app/620980/Beat_Saber/" target="_blank">buy the game</a> if you enjoy it!</strong></span>
                     </div>
@@ -212,7 +212,7 @@
                                                 {% if player.getIsPirate() %}
                                                     <span class="badge bg-dark" data-toggle="tooltip"
                                                           data-placement="bottom"
-                                                          title="It looks like this player is a dirty stinking pirate">
+                                                          title="This player is (most likely) a dirty stinking pirate and they aren't really trying to hide it">
                                                         ☠ Pirate</span>
                                                 {% endif %}
                                                 {% if player.getIsBot() %}
