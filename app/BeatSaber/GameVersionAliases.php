@@ -9,15 +9,12 @@ final class GameVersionAliases
     /**
      * @param CVersion $gameVersion The game version to get aliases for.
      * @param bool $includeBaseVersion If set, include passed $gameVersion in the result array.
+     * @param bool $recurse If true, recursively include aliased-on-aliased versions.
      * @return CVersion[] A list of any aliases, including $gameVersion if $includeBaseVersion is set.
      */
-    public static function getAliasesFor(CVersion $gameVersion, bool $includeBaseVersion = true): array
+    public static function getAliasesFor(CVersion $gameVersion, bool $includeBaseVersion = true, bool $recurse = true): array
     {
         $results = [];
-
-        if ($includeBaseVersion) {
-            $results[] = $gameVersion;
-        }
 
         foreach (self::$_aliases as $one => $two) {
             $versionCompareStr = $gameVersion->toString(3);
@@ -28,6 +25,21 @@ final class GameVersionAliases
                 $results[] = new CVersion($one);
             }
         }
+
+        if ($recurse) {
+            foreach ($results as $resultVersion) {
+                $subAliases = self::getAliasesFor($resultVersion, includeBaseVersion: false, recurse: false);
+                foreach ($subAliases as $subAlias) {
+                    $results[] = $subAlias;
+                }
+            }
+        }
+
+        if ($includeBaseVersion) {
+            $results[] = $gameVersion;
+        }
+
+        $results = array_unique($results);
 
         usort($results, function (CVersion $a, CVersion $b): int {
             if ($a->greaterThan($b)) return +1;

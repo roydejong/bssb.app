@@ -1,7 +1,5 @@
 <?php
 
-namespace tests;
-
 use app\BeatSaber\GameVersionAliases;
 use app\Common\CVersion;
 use PHPUnit\Framework\TestCase;
@@ -22,15 +20,21 @@ class GameVersionAliasesTest extends TestCase
         );
 
         $this->assertEquals(
-            [new CVersion("1.18.0"), new CVersion("1.18.1")],
+            [new CVersion("1.18.0"), new CVersion("1.18.1"), new CVersion("1.18.2")],
             GameVersionAliases::getAliasesFor(new CVersion("1.18.0"), true),
-            "Should return aliased version for 1.80.0 (left side alias)"
+            "1.18.0 should return all (3) aliased versions for 1.18.0"
         );
 
         $this->assertEquals(
-            [new CVersion("1.18.0"), new CVersion("1.18.1")],
+            [new CVersion("1.18.0"), new CVersion("1.18.1"), new CVersion("1.18.2")],
             GameVersionAliases::getAliasesFor(new CVersion("1.18.1"), true),
-            "Should return aliased version for 1.80.1, sorted in order (right side alias)"
+            "1.18.1 should return all (3) aliased versions for 1.18.0, sorted in order"
+        );
+
+        $this->assertEquals(
+            [new CVersion("1.18.0"), new CVersion("1.18.1"), new CVersion("1.18.2")],
+            GameVersionAliases::getAliasesFor(new CVersion("1.18.2"), true),
+            "1.18.2 should return all (3) aliased version for 1.18.0, sorted in order"
         );
     }
 }
