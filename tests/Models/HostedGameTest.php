@@ -3,6 +3,7 @@
 use app\BeatSaber\MasterServer;
 use app\BeatSaber\MultiplayerLobbyState;
 use app\Common\CVersion;
+use app\Common\IPEndPoint;
 use app\Models\HostedGame;
 use PHPUnit\Framework\TestCase;
 
@@ -23,6 +24,23 @@ class HostedGameTest extends TestCase
         $this->assertTrue($game->getIsStale(), "10-minute old games SHOULD be marked as stale");
     }
 
+    public function getIsDirectConnect()
+    {
+        $game = new HostedGame();
+        $game->masterServerHost = null;
+        $game->endpoint = null;
+        $this->assertFalse($game->getIsDirectConnect(),
+            "Games without endpoint should not be recognized as direct connect");
+
+        $game->endpoint = new IPEndPoint("host.com", 1234);
+        $this->assertTrue($game->getIsDirectConnect(),
+            "Games with endpoint, but no master server, should be recognized as direct connect");
+
+        $game->masterServerHost = "host.com";
+        $this->assertFalse($game->getIsDirectConnect(),
+            "Games with master server should not be recognized as direct connect");
+    }
+
     public function testGetIsOfficial()
     {
         $game = new HostedGame();
@@ -32,6 +50,13 @@ class HostedGameTest extends TestCase
         $game = new HostedGame();
         $game->masterServerHost = null;
         $this->assertTrue($game->getIsOfficial(), "Games without master server should be official");
+
+        $game = new HostedGame();
+        $game->masterServerHost = null;
+        $game->endpoint = new IPEndPoint("host.com", 1234);
+        $this->assertTrue($game->getIsDirectConnect());
+        $this->assertFalse($game->getIsOfficial(),
+            "Games without master server, with endpoint, are direct connect and should not be marked official");
 
         $game = new HostedGame();
         $game->masterServerHost = "oculus.production.mp.beatsaber.com";
