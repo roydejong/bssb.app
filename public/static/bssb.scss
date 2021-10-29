@@ -21,6 +21,14 @@ abbr[data-original-title], abbr[title] {
 
   .card {
     margin-bottom: 1.5rem;
+
+    .close {
+      position: absolute;
+      color: #fff;
+      top: 15px;
+      right: 15px;
+      cursor: pointer;
+    }
   }
 }
 .content-page {

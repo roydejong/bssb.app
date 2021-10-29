@@ -10,7 +10,8 @@
         <p class="lead">A Beat Saber modification that adds a server browser to multiplayer (PC only currently).</p>
 
         {% if not isFiltered %}
-            <div class="card" style="width: 375px;">
+            <div id="mod-card" class="card" style="width: 375px;">
+                <a class="close" id="mod-card-close" title="Dismiss promo card"><i class="mdi mdi-close"></i></a>
                 <img src="/static/stuff/browser_v3.png" class="card-img-top"/>
                 <div class="card-body">
                     <h5 class="card-title">Download the mod to:</h5>
@@ -43,4 +44,19 @@
 
     </div>
 </main>
+{% endblock %}
+
+{% block scripts %}
+<script>$(function () {
+  let modCard = $('#mod-card');
+  if (localStorage.getItem("dismiss-mod-card")) {
+    modCard.hide();
+  }
+  $('#mod-card-close').click((e) => {
+    e.preventDefault();
+    localStorage.setItem("dismiss-mod-card", "yeah");
+    modCard.hide();
+    return false;
+  });
+})</script>
 {% endblock %}
