@@ -52,6 +52,7 @@ final class GameVersionAliases
 
     private static array $_aliases = [
         "1.18.1" => "1.18.0",
-        "1.18.2" => "1.18.0"
+        "1.18.2" => "1.18.0",
+        "1.18.3" => "1.18.0"
     ];
 }
