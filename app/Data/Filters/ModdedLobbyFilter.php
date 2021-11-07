@@ -24,7 +24,7 @@ class ModdedLobbyFilter extends BaseFilter
             'modded' => 'Modded only (any version)'
         ];
 
-        $baseQuery->select('DISTINCT is_modded, mp_ex_version');
+        $baseQuery->select('DISTINCT is_modded, mp_ex_version, id, player_count, player_limit');
 
         $anyUnmodded = false;
         $anyModded = false;

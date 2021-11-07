@@ -19,7 +19,7 @@ class ServerTypeFilter extends BaseFilter
 
     public function queryOptions(ModelQuery $baseQuery): array
     {
-        $baseQuery->select('DISTINCT hosted_games.server_type');
+        $baseQuery->select('DISTINCT server_type, id, player_count, player_limit');
 
         $finalOptions = ["all" => "All servers"];
 

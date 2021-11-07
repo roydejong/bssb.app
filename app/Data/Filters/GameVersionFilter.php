@@ -20,7 +20,7 @@ class GameVersionFilter extends BaseFilter
     {
         $options = ['all' => 'All versions'];
 
-        $baseQuery->select('DISTINCT hosted_games.game_version');
+        $baseQuery->select('DISTINCT game_version, id, player_count, player_limit');
 
         foreach ($baseQuery->querySingleValueArray() as $gameVersionOption) {
             $options[$gameVersionOption] = $gameVersionOption;
