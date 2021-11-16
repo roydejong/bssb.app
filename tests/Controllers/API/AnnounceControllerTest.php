@@ -704,21 +704,6 @@ class AnnounceControllerTest extends TestCase
         $this->assertSame(4, $disconnectedCount,
             'fetchPlayers() should contain three disconnected players after third announce');
         $this->assertSame(['Bob', 'Sally'], $connectedNames);
-
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-        // Part 4: Cancelling & resurrecting a game should empty the player list
-
-        // kill the game
-        $game = HostedGame::fetch(HostedGame::hash2id($json['key']));
-        $game->endedAt = new \DateTime('now');
-        $game->save();
-
-        // repeat last request, which is a "resurrect"
-        (new AnnounceController())->announce($request);
-
-        // player list should be empty exept for host
-        $this->assertCount(1, $game->fetchPlayers(),
-            'fetchPlayers() should only contain the host after resurrecting a game');
     }
 
     /**

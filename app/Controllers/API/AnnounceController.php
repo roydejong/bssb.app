@@ -297,16 +297,7 @@ class AnnounceController
                     $playerIndexesKnown[] = $sortIndex;
                 }
 
-                if ($isNewGame) {
-                    // New game, player list was just freshly created
-                } else if ($isResurrectedGame) {
-                    // Resurrected game, player list may contain stale items - clean all except host
-                    HostedGamePlayer::query()
-                        ->delete()
-                        ->where('hosted_game_id = ?', $game->id)
-                        ->andWhere('(is_host = 0 OR sort_index = -1)')
-                        ->execute();
-                } else {
+                if (!$isNewGame) {
                     // This is an update: mark players that may have disconnected
                     if (!empty($playerIndexesKnown)) {
                         HostedGamePlayer::query()
