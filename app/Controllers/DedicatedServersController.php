@@ -13,7 +13,7 @@ use DateTime;
 class DedicatedServersController
 {
     const CACHE_KEY = "dedicated_servers";
-    const CACHE_TTL = 1;
+    const CACHE_TTL = 30;
 
     public function getServerList(Request $request): Response
     {
