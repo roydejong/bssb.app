@@ -8,6 +8,7 @@ use app\Frontend\View;
 use app\HTTP\Request;
 use app\HTTP\Response;
 use app\Models\HostedGame;
+use DateTime;
 
 class DedicatedServersController
 {
@@ -24,6 +25,8 @@ class DedicatedServersController
 
         // -------------------------------------------------------------------------------------------------------------
 
+        $oneWeekAgo = new DateTime('-1 week');
+
         $dedicatedServers = HostedGame::query()
             ->select('*')
             ->from('hosted_games hg1')
@@ -33,6 +36,7 @@ class DedicatedServersController
             ->andWhere('hg1.server_type IS NOT NULL AND hg1.server_type != ?', HostedGame::SERVER_TYPE_PLAYER_HOST)
             ->andWhere('hg1.endpoint NOT LIKE ?', "127.%")
             ->andWhere('hg1.endpoint NOT LIKE ?', "192.%")
+            ->andWhere('last_update >= ?', $oneWeekAgo)
             ->orderBy('last_update DESC')
             ->queryAllModels();
 
