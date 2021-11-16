@@ -22,33 +22,34 @@ class UnAnnounceController
         // -------------------------------------------------------------------------------------------------------------
         // Input
 
-        $serverCode = $request->queryParams['serverCode'] ?? null; // unused right now because what's the point
+        $serverCode = $request->queryParams['serverCode'] ?? null;
         $ownerId = $request->queryParams['ownerId'] ?? null;
+        $hostSecret = $request->queryParams['hostSecret'] ?? null;
 
         $now = new \DateTime('now');
 
         // -------------------------------------------------------------------------------------------------------------
         // Validate
 
-        if (empty($ownerId) || $ownerId === "SERVER_MESSAGE") {
-            return new BadRequestResponse();
+        if (empty($ownerId) || $ownerId === "SERVER_MESSAGE" || empty($serverCode)) {
+            return new BadRequestResponse("ownerId is invalid");
         }
 
         // -------------------------------------------------------------------------------------------------------------
         // Execute
 
-        $anyChanges = false;
+        $query = HostedGame::query()
+            ->update()
+            ->set("ended_at = ?", $now)
+            ->andWhere('owner_id = ?', $ownerId)
+            ->andWhere('server_code = ?', $serverCode)
+            ->andWhere('ended_at IS NULL');
 
-        if ($ownerId) {
-            if (HostedGame::query()
-                ->update()
-                ->set("ended_at = ?", $now)
-                ->where('ended_at IS NULL')
-                ->andWhere('owner_id = ?', $ownerId)
-                ->execute() > 0) {
-                $anyChanges = true;
-            }
+        if ($hostSecret) {
+            $query->andWhere('host_secret = ?', $hostSecret);
         }
+
+        $anyChanges = ($query->execute() > 0);
 
         // -------------------------------------------------------------------------------------------------------------
         // Response

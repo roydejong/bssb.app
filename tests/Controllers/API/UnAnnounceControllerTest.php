@@ -33,7 +33,7 @@ class UnAnnounceControllerTest extends TestCase
     {
         $request = new Request();
         $request->queryParams["ownerId"] = $ownerId;
-        $request->queryParams["serverId"] = $serverId;
+        $request->queryParams["serverCode"] = $serverId;
         $request->method = "POST";
         $request->path = "/api/v1/unannounce";
         $request->headers["x-bssb"] = "1";
@@ -81,7 +81,7 @@ class UnAnnounceControllerTest extends TestCase
         $testGameBefore = self::createSampleGame("SIMPL", $ownerId);
         $this->assertNull($testGameBefore->endedAt);
 
-        $response = $this->sendUnAnnounceRequest($ownerId, null);
+        $response = $this->sendUnAnnounceRequest($ownerId, "SIMPL");
         $this->assertSame(200, $response->code);
 
         $responseJson = json_decode($response->body, true);
@@ -89,25 +89,6 @@ class UnAnnounceControllerTest extends TestCase
 
         $testGameAfter = HostedGame::fetch($testGameBefore->id);
         $this->assertNotNull($testGameAfter->endedAt);
-    }
-
-    /**
-     * @depends testUnAnnounceSimple
-     */
-    public function testUnAnnounceMultiple()
-    {
-        $ownerId = "unit_test_testUnAnnounceMultiple";
-
-        $testGameBefore1 = self::createSampleGame("MULT1", $ownerId);
-        $testGameBefore2 = self::createSampleGame("MULT2", $ownerId);
-
-        $this->sendUnAnnounceRequest($ownerId, null);
-
-        $testGameAfter1 = HostedGame::fetch($testGameBefore1->id);
-        $testGameAfter2 = HostedGame::fetch($testGameBefore2->id);
-
-        $this->assertNotNull($testGameAfter1->endedAt);
-        $this->assertNotNull($testGameAfter2->endedAt);
     }
 
     /**
