@@ -227,8 +227,8 @@ class AnnounceController
         // Insert or update
         $saveOk = $game->save();
 
-        if ($saveOk && $game->id) {
-            // Mark any older games from same owner as "ended"
+        if ($saveOk && $game->id && $game->serverType === HostedGame::SERVER_TYPE_PLAYER_HOST) {
+            // Mark any older games from same P2P owner as "ended"
             HostedGame::query()
                 ->update()
                 ->set("ended_at = ?", $now)
