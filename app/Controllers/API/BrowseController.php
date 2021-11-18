@@ -3,6 +3,7 @@
 namespace app\Controllers\API;
 
 use app\BeatSaber\GameVersionAliases;
+use app\BeatSaber\MasterServer;
 use app\BeatSaber\MultiplayerLobbyState;
 use app\HTTP\Request;
 use app\HTTP\Response;
@@ -113,8 +114,8 @@ class BrowseController
 
         // Hide Official/Vanilla games if we are on modded Quest
         if ($mci->getIsServerBrowserQuest()) {
-            $baseQuery->andWhere('server_type NOT IN (?)', [HostedGame::SERVER_TYPE_VANILLA_DEDICATED,
-                HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY]);
+            $baseQuery->andWhere('master_server_host NOT LIKE ?',
+                '%' . MasterServer::OFFICIAL_HOSTNAME_SUFFIX);
         }
 
         // Server type filter (0.7.0+)
