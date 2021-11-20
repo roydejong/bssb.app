@@ -11,7 +11,7 @@ class MockModClientRequest extends Request
         parent::__construct();
 
         $this->headers["content-type"] = "application/json";
-        $this->headers["user-agent"] = "ServerBrowser/0.2.0 (BeatSaber/1.12.2) (steam)";
+        $this->headers["user-agent"] = "ServerBrowser/0.7.6 (BeatSaber/1.18.3) (steam)";
         $this->headers["x-bssb"] = "✔";
     }
 }

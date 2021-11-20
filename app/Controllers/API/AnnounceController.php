@@ -115,7 +115,7 @@ class AnnounceController
         // Validation and processing
 
         if (isset($bssbConfig['master_server_blacklist']) && in_array($game->masterServerHost, $bssbConfig['master_server_blacklist'])) {
-            // Master server is blacklisted, do not allow announce
+            // Master server is blacklisted, do not allow announcing
             return new Response(403, 'leaker stop leaking');
         }
 
@@ -129,6 +129,12 @@ class AnnounceController
                 // MpEx version provided, must be modded
                 $game->isModded = true;
             }
+        }
+
+        $isModernMultiplayer = $modClientInfo->beatSaberVersion->greaterThanOrEquals(new CVersion("1.16.3"));
+        if ($game->isModded && $isModernMultiplayer && $game->getIsOfficial()) {
+            // Official games *cannot* be modded anymore as of 1.16.3
+            $game->isModded = false;
         }
 
         if (!$game->getIsQuickplay() && (empty($game->serverCode) || strlen($game->serverCode) !== 5|| !ctype_alnum($game->serverCode))) {

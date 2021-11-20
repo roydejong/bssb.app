@@ -67,10 +67,10 @@ class AnnounceControllerTest extends TestCase
             'SongAuthor' => "GilvaSunner",
             'Difficulty' => LevelDifficulty::Easy,
             'Platform' => ModPlatformId::STEAM,
-            'MasterServerHost' => MasterServer::OFFICIAL_HOSTNAME_STEAM,
+            'MasterServerHost' => "custom-server.com",
             'MasterServerPort' => 2328,
             'MpExVersion' => '1.2.3.4.5',
-            'ServerType' => HostedGame::SERVER_TYPE_PLAYER_HOST,
+            'ServerType' => HostedGame::SERVER_TYPE_VANILLA_DEDICATED,
             'HostSecret' => 'abc1234',
             'Endpoint' => '127.0.0.1:2312',
             'ManagerId' => 'unit_test_testFullAnnounceMgr'
@@ -108,10 +108,11 @@ class AnnounceControllerTest extends TestCase
         $this->assertSame(4, $announce->lobbyState);
         $this->assertSame("custom_level_6D4021498979AB7C07D430C488C24DE45EEDADB4", $announce->levelId);
         $this->assertSame('"It\'s a me, Mario!" - Super Mario 64', $announce->songName);
-        $this->assertSame("GilvaSunner", $announce->songAuthor);        $this->assertTrue($announce->isModded);
+        $this->assertSame("GilvaSunner", $announce->songAuthor);
+        $this->assertTrue($announce->isModded);
         $this->assertSame(0, $announce->difficulty);
         $this->assertSame("steam", $announce->platform);
-        $this->assertSame("steam.production.mp.beatsaber.com", $announce->masterServerHost);
+        $this->assertSame("custom-server.com", $announce->masterServerHost);
         $this->assertSame(2328, $announce->masterServerPort);
         $this->assertNull($announce->endedAt);
         $this->assertSame('1.2.3', $announce->mpExVersion,
@@ -119,7 +120,7 @@ class AnnounceControllerTest extends TestCase
         $this->assertEquals("ServerBrowser", $announce->modName);
         $this->assertEquals(new CVersion("4.2.0"), $announce->modVersion);
         $this->assertEquals(new CVersion("6.9.42"), $announce->gameVersion);
-        $this->assertSame(HostedGame::SERVER_TYPE_PLAYER_HOST, $announce->serverType);
+        $this->assertSame(HostedGame::SERVER_TYPE_VANILLA_DEDICATED, $announce->serverType);
         $this->assertSame("abc1234", $announce->hostSecret);
         $this->assertEquals(new IPEndPoint("127.0.0.1", 2312), $announce->endpoint);
         $this->assertSame("unit_test_testFullAnnounceMgr", $announce->managerId);
@@ -307,7 +308,8 @@ class AnnounceControllerTest extends TestCase
             'ServerCode' => '12345',
             'IsModded' => false,
             'OwnerId' => 'unit_test_testMpExVersionInfersModded',
-            'MpExVersion' => "1.2.3"
+            'MpExVersion' => "1.2.3",
+            "MasterServerHost" => 'custom-server.com'
         ]);
         $request->method = "POST";
         $request->path = "/api/v1/announce";
@@ -725,5 +727,62 @@ class AnnounceControllerTest extends TestCase
 
         $response = (new AnnounceController())->announce($request);
         $this->assertSame(403, $response->code);
+    }
+
+    /**
+     * @depends testMinimalAnnounce
+     */
+    public function testOldOfficialPlayerHostCanBeModded()
+    {
+        $request = new MockJsonRequest([
+            'ServerCode' => '12345',
+            'OwnerId' => 'unit_test_testOldOfficialPlayerHostCanBeModded',
+            'HostSecret' => null,
+            'MasterServerHost' => MasterServer::OFFICIAL_HOSTNAME_STEAM,
+            'MpExVersion' => '1.2.3.4',
+            'IsModded' => true,
+        ]);
+        $request->method = "POST";
+        $request->path = "/api/v1/announce";
+        $request->headers["user-agent"] = "ServerBrowser/1.0.0 (BeatSaber/1.16.2) (steam)";
+
+        $response = (new AnnounceController())->announce($request);
+        $json = json_decode($response->body, true);
+        $game = HostedGame::fetch(HostedGame::hash2id($json['key']));
+
+        // sanity checks
+        $this->assertTrue($game->getIsOfficial());
+        $this->assertFalse($game->gameVersion->greaterThanOrEquals(new CVersion("1.16.3")));
+        $this->assertTrue($game->serverType == null || $game->serverType === HostedGame::SERVER_TYPE_PLAYER_HOST);
+
+        $this->assertTrue($game->isModded, "An MpEx-modded P2P game (pre 1.16.3) CAN be modded");
+    }
+
+    /**
+     * @depends testOldOfficialPlayerHostCanBeModded
+     */
+    public function testOfficialCantBeModded()
+    {
+        $request = new MockJsonRequest([
+            'ServerCode' => '12345',
+            'OwnerId' => 'unit_test_testOfficialCantBeModded',
+            'HostSecret' => null,
+            'MasterServerHost' => MasterServer::OFFICIAL_HOSTNAME_STEAM,
+            'MpExVersion' => '1.2.3.4',
+            'IsModded' => true
+        ]);
+        $request->method = "POST";
+        $request->path = "/api/v1/announce";
+        $request->headers["user-agent"] = "ServerBrowser/1.0.0 (BeatSaber/1.16.3) (steam)";
+
+        $response = (new AnnounceController())->announce($request);
+        $json = json_decode($response->body, true);
+        $game = HostedGame::fetch(HostedGame::hash2id($json['key']));
+
+        // sanity checks
+        $this->assertTrue($game->getIsOfficial());
+        $this->assertTrue($game->gameVersion->greaterThanOrEquals(new CVersion("1.16.3")));
+
+        $this->assertFalse($game->isModded, "An MpEx-modded P2P game (pre 1.16.3) CANNOT be modded");
     }
 }
