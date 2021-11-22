@@ -25,8 +25,8 @@ class HostedGame extends Model implements \JsonSerializable
     public const SERVER_TYPE_BEATTOGETHER_QUICKPLAY = "beattogether_quickplay";
     public const SERVER_TYPE_BEATDEDI_CUSTOM = "beatdedi_custom";
     public const SERVER_TYPE_BEATDEDI_QUICKPLAY = "beatdedi_quickplay";
-    public const SERVER_TYPE_VANILLA_DEDICATED = "vanilla_dedicated";
-    public const SERVER_TYPE_VANILLA_QUICKPLAY = "vanilla_quickplay";
+    public const SERVER_TYPE_NORMAL_DEDICATED = "vanilla_dedicated";
+    public const SERVER_TYPE_NORMAL_QUICKPLAY = "vanilla_quickplay";
     public const SERVER_TYPE_PLAYER_HOST = "player_host";
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -284,8 +284,8 @@ class HostedGame extends Model implements \JsonSerializable
             self::SERVER_TYPE_BEATTOGETHER_QUICKPLAY => "BeatTogether Quickplay",
             self::SERVER_TYPE_BEATDEDI_CUSTOM => "BeatDedi Custom",
             self::SERVER_TYPE_BEATDEDI_QUICKPLAY => "BeatDedi Quickplay",
-            self::SERVER_TYPE_VANILLA_QUICKPLAY => ($isOfficial ? "Official Quickplay" : "Unofficial Quickplay"),
-            self::SERVER_TYPE_VANILLA_DEDICATED => ($isOfficial ? "Official Dedicated" : "Unofficial Dedicated"),
+            self::SERVER_TYPE_NORMAL_QUICKPLAY => ($isOfficial ? "Official Quickplay" : "Unofficial Quickplay"),
+            self::SERVER_TYPE_NORMAL_DEDICATED => ($isOfficial ? "Official Dedicated" : "Unofficial Dedicated"),
             null, self::SERVER_TYPE_PLAYER_HOST => "Player hosted (Old P2P)",
             default => "Unknown"
         };
@@ -346,7 +346,7 @@ class HostedGame extends Model implements \JsonSerializable
     {
         return $this->serverType === self::SERVER_TYPE_BEATTOGETHER_QUICKPLAY ||
             $this->serverType === self::SERVER_TYPE_BEATDEDI_QUICKPLAY ||
-            $this->serverType === self::SERVER_TYPE_VANILLA_QUICKPLAY;
+            $this->serverType === self::SERVER_TYPE_NORMAL_QUICKPLAY;
     }
 
     public function getIsDedicatedServer(): bool
@@ -356,7 +356,7 @@ class HostedGame extends Model implements \JsonSerializable
 
     public function determineTrueFirstSeen(): DateTime
     {
-        if ($this->getIsDedicatedServer()) {
+        if ($this->getIsDedicatedServer() && $this->endpoint) {
             // Dedicated server - identify first seen by endpoint
             $minFirstSeen = HostedGame::query()
                 ->select('MIN(first_seen)')

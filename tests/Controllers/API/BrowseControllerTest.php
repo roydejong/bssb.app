@@ -21,9 +21,9 @@ class BrowseControllerTest extends TestCase
     {
         self::tearDownAfterClass(); // reset
 
-        self::createSampleGame(1, "BoringSteam", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, false, serverType: HostedGame::SERVER_TYPE_VANILLA_DEDICATED);
-        self::createSampleGame(2, "BoringOculus", false, MasterServer::OFFICIAL_HOSTNAME_OCULUS, ModPlatformId::OCULUS, 1, false, serverType: HostedGame::SERVER_TYPE_VANILLA_DEDICATED);
-        self::createSampleGame(3, "BoringUnknown", false, null, ModPlatformId::UNKNOWN, 1, false, serverType: HostedGame::SERVER_TYPE_VANILLA_DEDICATED);
+        self::createSampleGame(1, "BoringSteam", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, false, serverType: HostedGame::SERVER_TYPE_NORMAL_DEDICATED);
+        self::createSampleGame(2, "BoringOculus", false, MasterServer::OFFICIAL_HOSTNAME_OCULUS, ModPlatformId::OCULUS, 1, false, serverType: HostedGame::SERVER_TYPE_NORMAL_DEDICATED);
+        self::createSampleGame(3, "BoringUnknown", false, null, ModPlatformId::UNKNOWN, 1, false, serverType: HostedGame::SERVER_TYPE_NORMAL_DEDICATED);
         self::createSampleGame(4, "ModdedSteam", true, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, false, serverType: HostedGame::SERVER_TYPE_PLAYER_HOST);
         self::createSampleGame(5, "ModdedSteamCrossplayX", true, "beat.with.me", ModPlatformId::STEAM, 1, false, serverType: HostedGame::SERVER_TYPE_PLAYER_HOST);
 
@@ -44,7 +44,7 @@ class BrowseControllerTest extends TestCase
 
         self::createSampleGame(0, "BadGameVersion", customGameVersion: new CVersion("1.2.3"));
 
-        self::createSampleGame(null, "VanillaQuickPlay", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 3, false, hostSecret: "abc123", serverType: HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY, endpoint: new IPEndPoint("1.2.3.4", "1234"));
+        self::createSampleGame(null, "VanillaQuickPlay", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 3, false, hostSecret: "abc123", serverType: HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY, endpoint: new IPEndPoint("1.2.3.4", "1234"));
     }
 
     public static function tearDownAfterClass(): void
@@ -509,7 +509,7 @@ class BrowseControllerTest extends TestCase
     {
         $request = self::createBrowseRequest([
             'platform' => 'steam',
-            'filterServerType' => HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY
+            'filterServerType' => HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY
         ]);
         $request->headers["user-agent"] = "ServerBrowser/0.7.0 (BeatSaber/1.12.2) (steam)";
         $lobbies = self::executeBrowseRequestAndGetGames($request);
@@ -524,7 +524,7 @@ class BrowseControllerTest extends TestCase
     {
         $request = self::createBrowseRequest([
             'platform' => 'steam',
-            'filterServerType' => HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY
+            'filterServerType' => HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY
         ]);
         $request->headers["user-agent"] = "ServerBrowser/0.7.0 (BeatSaber/1.12.2) (steam)";
         $lobbies = self::executeBrowseRequestAndGetGames($request);

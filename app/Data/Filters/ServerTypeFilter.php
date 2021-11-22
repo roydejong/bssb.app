@@ -2,6 +2,7 @@
 
 namespace app\Data\Filters;
 
+use app\BeatSaber\MasterServer;
 use app\Models\HostedGame;
 use SoftwarePunt\Instarecord\Database\ModelQuery;
 
@@ -19,32 +20,46 @@ class ServerTypeFilter extends BaseFilter
 
     public function queryOptions(ModelQuery $baseQuery): array
     {
-        $baseQuery->select('DISTINCT server_type, id, player_count, player_limit');
+        $baseQuery->select('DISTINCT server_type, master_server_host, id, player_count, player_limit');
 
         $finalOptions = ["all" => "All servers"];
 
-        foreach ($baseQuery->querySingleValueArray() as $serverTypeOption) {
-            switch ($serverTypeOption) {
+        foreach ($baseQuery->queryAllRows() as $row) {
+            $serverType = $row['server_type'] ?? null;
+            $masterServerHost = $row['master_server_host'] ?? null;
+
+            $isOfficial = $masterServerHost === null
+                || str_ends_with($masterServerHost, MasterServer::OFFICIAL_HOSTNAME_SUFFIX);
+
+            switch ($serverType) {
                 case null:
-                case HostedGame::SERVER_TYPE_VANILLA_DEDICATED:
+                case HostedGame::SERVER_TYPE_NORMAL_DEDICATED:
+                    if ($isOfficial)
+                        $finalOptions["official_dedicated"] = "Official Dedicated";
+                    else
+                        $finalOptions["other_dedicated"] = "Other Dedicated";
+                    break;
                 case HostedGame::SERVER_TYPE_PLAYER_HOST:
-                    $finalOptions["vanilla_custom"] = "Vanilla Custom";
+                    $finalOptions["old_p2p"] = "Old player hosted (P2P)";
                     break;
                 case HostedGame::SERVER_TYPE_BEATTOGETHER_DEDICATED:
-                    $finalOptions[$serverTypeOption] = "BeatTogether Custom";
+                    $finalOptions[$serverType] = "BeatTogether Server";
                     break;
                 case HostedGame::SERVER_TYPE_BEATTOGETHER_QUICKPLAY:
-                    $finalOptions[$serverTypeOption] = "BeatTogether Quick Play";
+                    $finalOptions[$serverType] = "BeatTogether Quick Play";
                     break;
-                case HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY:
-                    $finalOptions[HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY] = "Vanilla Quick Play";
+                case HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY:
+                    if ($isOfficial)
+                        $finalOptions["official_quickplay"] = "Official Quick Play";
+                    else
+                        $finalOptions["other_quickplay"] = "Other Quick PLay";
                     break;
                 case HostedGame::SERVER_TYPE_BEATDEDI_CUSTOM:
                 case HostedGame::SERVER_TYPE_BEATDEDI_QUICKPLAY:
                     $finalOptions["beatdedi"] = "BeatDedi";
                     break;
                 default:
-                    $finalOptions[$serverTypeOption] = $serverTypeOption;
+                    $finalOptions[$serverType] = $serverType;
                     break;
             }
         }
@@ -57,9 +72,33 @@ class ServerTypeFilter extends BaseFilter
         if (empty($inputValue) || $inputValue === "all")
             return;
 
-        if ($inputValue === "vanilla_custom") {
+        if ($inputValue === "official_dedicated") {
+            $baseQuery->andWhere('(master_server_host IS NULL OR master_server_host LIKE ?) AND (server_type = ? OR server_type IS NULL)',
+                ("%" . MasterServer::OFFICIAL_HOSTNAME_SUFFIX),
+                HostedGame::SERVER_TYPE_NORMAL_DEDICATED
+            );
+        } else if ($inputValue === "other_dedicated") {
+            $baseQuery->andWhere('(master_server_host IS NOT NULL AND master_server_host NOT LIKE ?) AND (server_type = ? OR server_type IS NULL)',
+                ("%" . MasterServer::OFFICIAL_HOSTNAME_SUFFIX),
+                HostedGame::SERVER_TYPE_NORMAL_DEDICATED
+            );
+        } else if ($inputValue === "official_quickplay") {
+            $baseQuery->andWhere('(master_server_host IS NULL OR master_server_host LIKE ?) AND server_type = ?',
+                ("%" . MasterServer::OFFICIAL_HOSTNAME_SUFFIX),
+                HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY
+            );
+        } else if ($inputValue === "other_quickplay") {
+            $baseQuery->andWhere('(master_server_host IS NOT NULL AND master_server_host NOT LIKE ?) AND server_type = ?',
+                ("%" . MasterServer::OFFICIAL_HOSTNAME_SUFFIX),
+                HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY
+            );
+        } else if ($inputValue === "old_p2p") {
+            $baseQuery->andWhere('server_type  = ?', [
+                HostedGame::SERVER_TYPE_PLAYER_HOST,
+            ]);
+        } else if ($inputValue === "vanilla_custom") {
             $baseQuery->andWhere('server_type IS NULL OR server_type IN (?)', [
-                HostedGame::SERVER_TYPE_VANILLA_DEDICATED,
+                HostedGame::SERVER_TYPE_NORMAL_DEDICATED,
                 HostedGame::SERVER_TYPE_PLAYER_HOST,
             ]);
         } else if ($inputValue === "beatdedi") {

@@ -137,7 +137,7 @@ class AnnounceController
             $game->isModded = false;
         }
 
-        if (!$game->getIsQuickplay() && (empty($game->serverCode) || strlen($game->serverCode) !== 5|| !ctype_alnum($game->serverCode))) {
+        if (!$game->getIsQuickplay() && (empty($game->serverCode) || strlen($game->serverCode) !== 5 || !ctype_alnum($game->serverCode))) {
             // Server code should always be alphanumeric, 5 characters, e.g. "ABC123"
             return new BadRequestResponse();
         }
@@ -197,7 +197,7 @@ class AnnounceController
         // -------------------------------------------------------------------------------------------------------------
         // Game name overrides
 
-        if ($game->serverType === HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY) {
+        if ($game->serverType === HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY) {
             $difficultyName = LevelDifficulty::describe($game->difficulty);
             $game->gameName = "Official Quick Play - {$difficultyName}";
         } else if ($game->serverType === HostedGame::SERVER_TYPE_BEATTOGETHER_QUICKPLAY) {

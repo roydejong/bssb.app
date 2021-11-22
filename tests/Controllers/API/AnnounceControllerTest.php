@@ -70,7 +70,7 @@ class AnnounceControllerTest extends TestCase
             'MasterServerHost' => "custom-server.com",
             'MasterServerPort' => 2328,
             'MpExVersion' => '1.2.3.4.5',
-            'ServerType' => HostedGame::SERVER_TYPE_VANILLA_DEDICATED,
+            'ServerType' => HostedGame::SERVER_TYPE_NORMAL_DEDICATED,
             'HostSecret' => 'abc1234',
             'Endpoint' => '127.0.0.1:2312',
             'ManagerId' => 'unit_test_testFullAnnounceMgr'
@@ -120,7 +120,7 @@ class AnnounceControllerTest extends TestCase
         $this->assertEquals("ServerBrowser", $announce->modName);
         $this->assertEquals(new CVersion("4.2.0"), $announce->modVersion);
         $this->assertEquals(new CVersion("6.9.42"), $announce->gameVersion);
-        $this->assertSame(HostedGame::SERVER_TYPE_VANILLA_DEDICATED, $announce->serverType);
+        $this->assertSame(HostedGame::SERVER_TYPE_NORMAL_DEDICATED, $announce->serverType);
         $this->assertSame("abc1234", $announce->hostSecret);
         $this->assertEquals(new IPEndPoint("127.0.0.1", 2312), $announce->endpoint);
         $this->assertSame("unit_test_testFullAnnounceMgr", $announce->managerId);
@@ -523,7 +523,7 @@ class AnnounceControllerTest extends TestCase
     public function testRejectsQuickplayGamesWithoutHostSecret()
     {
         $request = clone self::$minimalAnnounceRequest;
-        $request->json['ServerType'] = HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY;
+        $request->json['ServerType'] = HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY;
         unset($request->json['HostSecret']);
 
         $this->assertSame(400, ((new AnnounceController())->announce($request))->code,
@@ -541,7 +541,7 @@ class AnnounceControllerTest extends TestCase
     public function testSetsQuickPlayName()
     {
         $request = clone self::$minimalAnnounceRequest;
-        $request->json['ServerType'] = HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY;
+        $request->json['ServerType'] = HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY;
         $request->json['HostSecret'] = 'bla1234';
         $request->json['Difficulty'] = LevelDifficulty::Hard;
         $request->json['GameName'] = '💩';

@@ -149,19 +149,19 @@ class HostedGameTest extends TestCase
         $game = new HostedGame();
 
         $game->masterServerHost = "partycube.pg69.edu";
-        $game->serverType = HostedGame::SERVER_TYPE_VANILLA_DEDICATED;
+        $game->serverType = HostedGame::SERVER_TYPE_NORMAL_DEDICATED;
         $this->assertSame("Unofficial Dedicated", $game->describeServerType());
 
         $game->masterServerHost = MasterServer::OFFICIAL_HOSTNAME_STEAM;
-        $game->serverType = HostedGame::SERVER_TYPE_VANILLA_DEDICATED;
+        $game->serverType = HostedGame::SERVER_TYPE_NORMAL_DEDICATED;
         $this->assertSame("Official Dedicated", $game->describeServerType());
 
         $game->masterServerHost = "partycube.pg69.edu";
-        $game->serverType = HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY;
+        $game->serverType = HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY;
         $this->assertSame("Unofficial Quickplay", $game->describeServerType());
 
         $game->masterServerHost = MasterServer::OFFICIAL_HOSTNAME_PS4;
-        $game->serverType = HostedGame::SERVER_TYPE_VANILLA_QUICKPLAY;
+        $game->serverType = HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY;
         $this->assertSame("Official Quickplay", $game->describeServerType());
 
     }
