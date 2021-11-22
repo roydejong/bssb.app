@@ -39,7 +39,7 @@ class ModdedLobbyFilter extends BaseFilter
                 $anyUnmodded = true;
             }
 
-            if ($mpExVersion) {
+            if ($isModded && $mpExVersion) {
                 $mpExOptionKey = "mpex_{$mpExVersion}";
 
                 if (!isset($options[$mpExOptionKey])) {
