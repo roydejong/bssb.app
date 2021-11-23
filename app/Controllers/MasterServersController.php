@@ -29,7 +29,8 @@ class MasterServersController
         $masterServerHosts = HostedGame::query()
             ->select('DISTINCT master_server_host, master_server_port, MIN(first_seen) AS min_first_seen, MAX(last_update) AS max_last_update, COUNT(*) as game_count')
             ->where('master_server_host IS NOT NULL')
-            ->andWhere('master_server_host NOT IN (?)', ["127.0.0.1", "localhost", "secret.dont.announce"])
+            ->andWhere('master_server_host NOT IN (?)', ["127.0.0.1", "localhost", "secret.dont.announce",
+                "sekr.it"])
             ->andWhere('master_server_host NOT LIKE ?', "192.%")
             ->groupBy('master_server_host')
             ->orderBy('game_count DESC')
