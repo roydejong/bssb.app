@@ -2,6 +2,7 @@
 
 namespace app\Controllers;
 
+use app\External\GeoIp;
 use app\Frontend\ResponseCache;
 use app\Frontend\View;
 use app\HTTP\Request;
@@ -17,6 +18,9 @@ class GameDetailController
 
     public function getGameDetail(Request $request, string $hashId)
     {
+        // -------------------------------------------------------------------------------------------------------------
+        // Cache
+
         $id = HostedGame::hash2id($hashId);
 
         if (!$id) {
@@ -31,12 +35,18 @@ class GameDetailController
             return $resCache->readAsResponse();
         }
 
+        // -------------------------------------------------------------------------------------------------------------
+        // Game data
+
         $game = HostedGame::fetch($id);
 
         if (!$game) {
             // Not found, 404 redirect
             return new RedirectResponse('/', 404);
         }
+
+        // -------------------------------------------------------------------------------------------------------------
+        // Level data
 
         $level = null;
 
@@ -49,12 +59,30 @@ class GameDetailController
                 ->querySingleModel();
         }
 
+        // -------------------------------------------------------------------------------------------------------------
+        // GeoIP info
+
+        $geoIp = new GeoIp();
+
+        $geoCountry = null;
+        $geoText = null;
+
+        if ($game->endpoint) {
+            $geoCountry = $geoIp->getCountryCode($game->endpoint);
+            $geoText = $geoIp->describeLocation($game->endpoint);
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        // Response
+
         $view = new View('game_detail.twig');
         $view->set('pageUrl', $game->getWebDetailUrl());
         $view->set('game', $game);
         $view->set('players', $game->fetchPlayers());
         $view->set('level', $level);
         $view->set('ldJson', $this->generateLdJson($game, $level));
+        $view->set('geoCountry', $geoCountry);
+        $view->set('geoText', $geoText);
 
         $response = $view->asResponse();
         @$resCache->writeResponse($response);

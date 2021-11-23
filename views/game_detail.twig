@@ -105,6 +105,17 @@
                                         <th scope="row">Server endpoint</th>
                                         <td><code>{{ game.endpoint }}</code></td>
                                     </tr>
+                                    {% if geoText %}
+                                        <tr>
+                                            <th scope="row" width="220">Server location (GeoIP)</th>
+                                            <td>
+                                                {% if geoCountry %}
+                                                    <img src="/static/flags/{{ geoCountry|lower }}.png" alt="{{ geoCountry }}"/>
+                                                {% endif %}
+                                                <span>{{ geoText }}</span>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
                                 {% endif %}
                                 <tr>
                                     <th scope="row">Master server</th>
