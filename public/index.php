@@ -8,6 +8,7 @@ use app\Controllers\API\UnAnnounceController;
 use app\Controllers\DedicatedServersController;
 use app\Controllers\GameDetailController;
 use app\Controllers\HomeController;
+use app\Controllers\MasterServersController;
 use app\Controllers\PrivacyController;
 use app\Controllers\StatsController;
 use app\HTTP\Request;
@@ -24,6 +25,7 @@ $router->register('/stats/top/$urlSection', StatsController::class, 'getTopLevel
 $router->register('/stats/top/$urlSection/playlist', StatsController::class, 'getTopLevelsPlaylist');
 $router->register('/game/$hashId', GameDetailController::class, 'getGameDetail');
 $router->register('/privacy', PrivacyController::class, 'getPrivacy');
+$router->register('/master-servers', MasterServersController::class, 'getServerList');
 $router->register('/dedicated-servers', DedicatedServersController::class, 'getServerList');
 
 // API routes

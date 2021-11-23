@@ -2,6 +2,7 @@
 
 use app\Controllers\DedicatedServersController;
 use app\Controllers\HomeController;
+use app\Controllers\MasterServersController;
 use app\Controllers\StatsController;
 use app\HTTP\Request;
 use Crunz\Schedule;
@@ -20,6 +21,10 @@ $task = $schedule->run(function () {
     $statsController->getStats(new Request());
     $statsController->getTopLevelsSubPage(new Request(), "custom-levels");
     $statsController->getTopLevelsSubPage(new Request(), "official-levels");
+
+    // Master Server list
+    $masterServersController = new MasterServersController();
+    $masterServersController->getServerList(new Request());
 
     // Dedicated Server list
     $dedicatedServersController = new DedicatedServersController();

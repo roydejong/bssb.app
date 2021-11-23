@@ -2,7 +2,7 @@
 <table class="table table-bordered table-striped">
     <thead class="thead-dark">
     <tr>
-        <th width="20"></th>
+        <th width="64"></th>
         <th></th>
         <th>Name</th>
         <th>Author</th>
@@ -15,6 +15,9 @@
             <td>
                 {% set levelIndex = levelIndex + 1 %}
                 #{{ levelIndex }}
+                {% if levelIndex <= 3 %}
+                    <i class="mdi mdi-trophy rank-trophy rank-trophy-{{ levelIndex }}"></i>
+                {% endif %}
             </td>
             <td class="cover-art-cell">
                 {% if level.coverUrl %}
