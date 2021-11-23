@@ -45,6 +45,16 @@ class MasterServersController
             ->queryKeyValueArray();
 
         // -------------------------------------------------------------------------------------------------------------
+        // Sort by 7 day
+
+        usort($masterServerHosts, function (array $a, array $b) use ($sevenDayGameCounts): int {
+            $sevenDayCountA = $sevenDayGameCounts[$a['master_server_host']] ?? 0;
+            $sevenDayCountB = $sevenDayGameCounts[$b['master_server_host']] ?? 0;
+            if ($sevenDayCountA === $sevenDayCountB) return 0;
+            return $sevenDayCountA > $sevenDayCountB ? -1 : +1;
+        });
+
+        // -------------------------------------------------------------------------------------------------------------
 
         $geoIp = new GeoIp();
 

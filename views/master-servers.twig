@@ -27,14 +27,20 @@
                     <th>Hostname</th>
                     <th>Endpoint</th>
                     <th>Location (GeoIP)</th>
-                    <th width="111">Games (all)</th>
-                    <th width="111">Games (7d)</th>
                     <th>Last seen</th>
+                    <th width="111">Games (7d)</th>
+                    <th width="111">Games (all)</th>
                 </tr>
                 </thead>
                 <tbody>
                     {% for server in servers %}
                         <tr>
+                            {% set sevenDayCount = 0 %}
+                            {% set seenThisWeek = false %}
+                            {% if sevenDayGameCounts[server.master_server_host] %}
+                                {% set sevenDayCount = sevenDayGameCounts[server.master_server_host]|number_format(0, ',') %}
+                                {% set seenThisWeek = true %}
+                            {% endif %}
                             <td>
                                 {% if loop.index <= 3 %}
                                     <i class="mdi mdi-trophy rank-trophy rank-trophy-{{ loop.index }}"></i>
@@ -57,19 +63,11 @@
                                     <span>-</span>
                                 {% endif %}
                             </td>
-                            <td>{{ server.game_count|number_format(0, ',') }}</td>
-                            <td>
-                                {% set seenThisWeek = false %}
-                                {% if sevenDayGameCounts[server.master_server_host] %}
-                                    {{ sevenDayGameCounts[server.master_server_host]|number_format(0, ',') }}
-                                    {% set seenThisWeek = true %}
-                                {% else %}
-                                    0
-                                {% endif %}
-                            </td>
                             <td class="{% if not seenThisWeek %}-stale{% else %}-success{% endif %}">
                                 {{ server.max_last_update|timeago_html|raw }}
                             </td>
+                            <td>{{ sevenDayCount }}</td>
+                            <td>{{ server.game_count|number_format(0, ',') }}</td>
                         </tr>
                     {% else %}
                         <tr>
