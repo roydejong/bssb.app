@@ -3,6 +3,7 @@
 namespace app\HTTP;
 
 use app\HTTP\Responses\NotFoundResponse;
+use RuntimeException;
 
 class RequestRouter
 {
@@ -33,10 +34,11 @@ class RequestRouter
      * Configures a $routeTarget for a given $path.
      *
      * @param string $path The path of the request URI, optionally with variables, e.g. "/user/$id/edit".
-     * @param callable $routeTarget The route target to register.
+     * @param string $controllerClass Class name of the controller to instantiate.
+     * @param string $methodName Method name to call on the controller instance.
      * @return $this
      */
-    public function register(string $path, callable $routeTarget): self
+    public function register(string $path, string $controllerClass, string $methodName): self
     {
         $pathParts = explode('/', $path);
         array_shift($pathParts); // First item in path parts should be an empty string because of the "/"
@@ -64,7 +66,7 @@ class RequestRouter
             }
         }
 
-        $routesStep['_'] = $routeTarget;
+        $routesStep['_'] = [$controllerClass, $methodName];
         return $this;
     }
 
@@ -102,7 +104,26 @@ class RequestRouter
             return null;
         }
 
-        return $routesStep["_"] ?? null;
+        if (!isset($routesStep["_"]))
+            return null;
+
+        return self::createCallableFromRouteTarget($routesStep["_"]);
+    }
+
+    private static function createCallableFromRouteTarget(array $routeTarget): callable
+    {
+        $controllerClass = $routeTarget[0];
+        $methodName = $routeTarget[1];
+
+        if (!class_exists($controllerClass, autoload: true))
+            throw new RuntimeException("Route target class does not exist: {$controllerClass}");
+
+        $controllerInstance = new $controllerClass();
+
+        if (!method_exists($controllerInstance, $methodName))
+            throw new RuntimeException("Route target method does not exist: {$controllerClass}->{$methodName}");
+
+        return [$controllerInstance, $methodName];
     }
 
     public function dispatch(Request $request): Response

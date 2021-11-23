@@ -18,20 +18,20 @@ require_once "../bootstrap.php";
 $router = new RequestRouter();
 
 // Site routes
-$router->register('/', [new HomeController(), 'index']);
-$router->register('/stats', [new StatsController(), 'getStats']);
-$router->register('/stats/top/$urlSection', [new StatsController(), 'getTopLevelsSubPage']);
-$router->register('/stats/top/$urlSection/playlist', [new StatsController(), 'getTopLevelsPlaylist']);
-$router->register('/game/$hashId', [new GameDetailController(), 'getGameDetail']);
-$router->register('/privacy', [new PrivacyController(), 'getPrivacy']);
-$router->register('/dedicated-servers', [new DedicatedServersController(), 'getServerList']);
+$router->register('/', HomeController::class, 'index');
+$router->register('/stats', StatsController::class, 'getStats');
+$router->register('/stats/top/$urlSection', StatsController::class, 'getTopLevelsSubPage');
+$router->register('/stats/top/$urlSection/playlist', StatsController::class, 'getTopLevelsPlaylist');
+$router->register('/game/$hashId', GameDetailController::class, 'getGameDetail');
+$router->register('/privacy', PrivacyController::class, 'getPrivacy');
+$router->register('/dedicated-servers', DedicatedServersController::class, 'getServerList');
 
 // API routes
-$router->register('/api/v1/announce', [new AnnounceController(), 'announce']);
-$router->register('/api/v1/unannounce', [new UnAnnounceController(), 'unAnnounce']);
-$router->register('/api/v1/browse', [new BrowseController(), 'browse']);
-$router->register('/api/v1/browse/$hashId', [new BrowseDetailController(), 'browseDetail']);
-$router->register('/api/v1/status', [new StatusController(), 'getStatus']);
+$router->register('/api/v1/announce', AnnounceController::class, 'announce');
+$router->register('/api/v1/unannounce', UnAnnounceController::class, 'unAnnounce');
+$router->register('/api/v1/browse', BrowseController::class, 'browse');
+$router->register('/api/v1/browse/$hashId', BrowseDetailController::class, 'browseDetail');
+$router->register('/api/v1/status', StatusController::class, 'getStatus');
 
 // Run!
 $request = Request::deduce();
