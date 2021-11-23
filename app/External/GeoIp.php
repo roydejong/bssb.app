@@ -54,8 +54,10 @@ final class GeoIp
             $parts = [];
 
             // Subdivision (state)
-            foreach ($record['subdivisions'] as $subdivision) {
-                $parts[] = $subdivision['names']['en'];
+            if (isset($record['subdivisions'])) {
+                foreach ($record['subdivisions'] as $subdivision) {
+                    $parts[] = $subdivision['names']['en'];
+                }
             }
 
             // Country name
