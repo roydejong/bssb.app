@@ -17,7 +17,7 @@ This is the PHP source code powering the API server that is used by [BeatSaberSe
 
 ### Requirements
 - Web server (recommended: nginx)
-- PHP 8.0+ with extensions:
+- PHP 8.1+ with extensions:
    - `curl`, `dom`, `json`, `mbstring`, `pdo`, `xml`
 - [Composer](https://getcomposer.org/)
 - MySQL (or compatible) database server
