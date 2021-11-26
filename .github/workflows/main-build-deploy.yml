@@ -34,7 +34,7 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: 8.1
-        extensions: none, json, phar, tokenizer, curl
+        extensions: json, phar, tokenizer, curl, iconv, mbstring
         coverage: none
         tools: none
 
