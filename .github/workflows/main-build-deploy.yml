@@ -35,7 +35,7 @@ jobs:
       with:
         php-version: 8.1
         extensions: json, phar, tokenizer, curl, iconv, mbstring
-        coverage: none
+        coverage: xdebug
         tools: none
 
     - name: Validate composer.json and composer.lock
