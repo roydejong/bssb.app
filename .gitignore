@@ -8,7 +8,8 @@ config.php
 storage/cache
 
 # PhpStorm
-/.idea
+.idea/workspace.xml
+.idea/php-test-framework.xml
 
 # Composer
 /vendor
