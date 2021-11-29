@@ -414,7 +414,7 @@ class HostedGame extends Model implements \JsonSerializable
     // -----------------------------------------------------------------------------------------------------------------
     // Serialize
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $sz = $this->getPropertyValues();
         unset($sz['ownerId']);

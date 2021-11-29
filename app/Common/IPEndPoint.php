@@ -42,7 +42,7 @@ class IPEndPoint implements IDatabaseSerializable, \JsonSerializable
         return null;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return $this->dbSerialize();
     }

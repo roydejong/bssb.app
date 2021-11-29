@@ -18,7 +18,7 @@ final class CVersion implements IDatabaseSerializable
 
     public function setValue(?string $value): void
     {
-        $parts = explode('.', $value);
+        $parts = explode('.', $value ?? "");
         $partCount = count($parts);
 
         for ($i = 0; $i < $partCount; $i++) {
