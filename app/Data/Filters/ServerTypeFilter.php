@@ -52,7 +52,7 @@ class ServerTypeFilter extends BaseFilter
                     if ($isOfficial)
                         $finalOptions["official_quickplay"] = "Official Quick Play";
                     else
-                        $finalOptions["other_quickplay"] = "Other Quick PLay";
+                        $finalOptions["other_quickplay"] = "Other Quick Play";
                     break;
                 case HostedGame::SERVER_TYPE_BEATDEDI_CUSTOM:
                 case HostedGame::SERVER_TYPE_BEATDEDI_QUICKPLAY:
