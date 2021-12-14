@@ -27,7 +27,7 @@ jobs:
     - name: MySQL check / import db_structure.sql
       run: |
         mysql --version
-        sudo apt-get install -y mysql-client
+        sudo apt update && sudo apt install mysql-client mysql-client-8.0 -y 
         mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -uuser -psecret test_db < db_structure.sql
 
     - name: Install PHP 8.1
