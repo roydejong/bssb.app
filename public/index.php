@@ -1,10 +1,10 @@
 <?php
 
-use app\Controllers\API\AnnounceController;
-use app\Controllers\API\BrowseController;
-use app\Controllers\API\BrowseDetailController;
-use app\Controllers\API\StatusController;
-use app\Controllers\API\UnAnnounceController;
+use app\Controllers\API\V1\AnnounceController;
+use app\Controllers\API\V1\BrowseController;
+use app\Controllers\API\V1\BrowseDetailController;
+use app\Controllers\API\V1\StatusController;
+use app\Controllers\API\V1\UnAnnounceController;
 use app\Controllers\DedicatedServersController;
 use app\Controllers\GameDetailController;
 use app\Controllers\HomeController;

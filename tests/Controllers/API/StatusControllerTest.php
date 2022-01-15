@@ -1,6 +1,6 @@
 <?php
 
-use app\Controllers\API\StatusController;
+use app\Controllers\API\V1\StatusController;
 use app\HTTP\Request;
 use PHPUnit\Framework\TestCase;
 use SoftwarePunt\Instarecord\Instarecord;

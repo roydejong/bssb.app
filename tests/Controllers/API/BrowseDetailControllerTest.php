@@ -1,6 +1,6 @@
 <?php
 
-use app\Controllers\API\BrowseDetailController;
+use app\Controllers\API\V1\BrowseDetailController;
 use app\HTTP\Request;
 use app\Models\HostedGame;
 use PHPUnit\Framework\TestCase;

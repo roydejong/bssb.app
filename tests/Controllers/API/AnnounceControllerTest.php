@@ -6,7 +6,7 @@ use app\BeatSaber\ModPlatformId;
 use app\BeatSaber\MultiplayerLobbyState;
 use app\Common\CVersion;
 use app\Common\IPEndPoint;
-use app\Controllers\API\AnnounceController;
+use app\Controllers\API\V1\AnnounceController;
 use app\Models\HostedGame;
 use app\Models\LevelRecord;
 use PHPUnit\Framework\TestCase;

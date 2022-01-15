@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Controllers\API;
+namespace app\Controllers\API\V1;
 
 use app\BeatSaber\LevelDifficulty;
 use app\BeatSaber\LevelId;
@@ -16,6 +16,7 @@ use app\HTTP\Responses\JsonResponse;
 use app\Models\HostedGame;
 use app\Models\HostedGamePlayer;
 use app\Models\LevelRecord;
+use function app\Controllers\API\ctype_alnum;
 
 class AnnounceController
 {
@@ -137,7 +138,7 @@ class AnnounceController
             $game->isModded = false;
         }
 
-        if (!$game->getIsQuickplay() && (empty($game->serverCode) || strlen($game->serverCode) !== 5 || !ctype_alnum($game->serverCode))) {
+        if (!$game->getIsQuickplay() && (empty($game->serverCode) || strlen($game->serverCode) !== 5 || !\ctype_alnum($game->serverCode))) {
             // Server code should always be alphanumeric, 5 characters, e.g. "ABC123"
             return new BadRequestResponse();
         }

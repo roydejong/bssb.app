@@ -2,7 +2,7 @@
 
 use app\BeatSaber\MasterServer;
 use app\BeatSaber\MultiplayerLobbyState;
-use app\Controllers\API\UnAnnounceController;
+use app\Controllers\API\V1\UnAnnounceController;
 use app\HTTP\Request;
 use app\HTTP\Response;
 use app\Models\HostedGame;

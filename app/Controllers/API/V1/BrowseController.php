@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Controllers\API;
+namespace app\Controllers\API\V1;
 
 use app\BeatSaber\GameVersionAliases;
 use app\BeatSaber\MasterServer;

@@ -6,7 +6,7 @@ use app\BeatSaber\MultiplayerLobbyState;
 use app\Common\CString;
 use app\Common\CVersion;
 use app\Common\IPEndPoint;
-use app\Controllers\API\BrowseController;
+use app\Controllers\API\V1\BrowseController;
 use app\HTTP\Request;
 use app\Models\HostedGame;
 use app\Models\SystemConfig;
