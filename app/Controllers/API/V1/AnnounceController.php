@@ -111,6 +111,9 @@ class AnnounceController
         $game->endpoint = $endpoint;
         $game->managerId = $managerId;
 
+        $mpCoreVersion = isset($input['MpCoreVersion']) ? new CVersion($input['MpCoreVersion']) : null;
+        $game->mpCoreVersion = $mpCoreVersion ? $mpCoreVersion->toString(3) : null;
+        
         $mpExVersion = isset($input['MpExVersion']) ? new CVersion($input['MpExVersion']) : null;
         $game->mpExVersion = $mpExVersion ? $mpExVersion->toString(3) : null;
 
@@ -161,7 +164,7 @@ class AnnounceController
 
         if (!$game->isModded) {
             // For some reason the "modded" flag doesn't always get set, so apply failsafes
-            if ($game->mpExVersion != null) {
+            if ($game->mpCoreVersion != null || $game->mpExVersion != null) {
                 // MpEx version provided, must be modded
                 $game->isModded = true;
             }

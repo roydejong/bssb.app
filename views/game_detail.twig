@@ -72,18 +72,27 @@
                                 <tr>
                                     <th scope="row">Modded</th>
                                     <td>
-                                        {% if game.mpExVersion %}
+                                        {% if game.isModded %}
                                             <i class="mdi mdi-check-circle"></i>
-                                            MultiplayerExtensions v{{ game.mpExVersion }}
-                                        {% elseif game.isModded %}
-                                            <i class="mdi mdi-check-circle"></i>
-                                            Game is modded
+                                            Modded (custom songs enabled)
                                         {% else %}
                                             <i class="mdi mdi-lock"></i>
                                             Vanilla (custom songs off)
                                         {% endif %}
                                     </td>
                                 </tr>
+                                {% if game.mpCoreVersion %}
+                                    <tr>
+                                        <th scope="row">Core mod</th>
+                                        <td>MultiplayerCore v{{ game.mpCoreVersion }}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if game.mpExVersion %}
+                                    <tr>
+                                        <th scope="row">Extensions mod</th>
+                                        <td>MultiplayerExtensions v{{ game.mpExVersion }}</td>
+                                    </tr>
+                                {% endif %}
                                 {% if game.ownerName and (players is not defined or players|length == 0) and not game.getIsQuickplay() %}
                                     <tr>
                                         <th scope="row">Host player</th>

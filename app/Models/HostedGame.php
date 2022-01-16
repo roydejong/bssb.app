@@ -123,6 +123,12 @@ class HostedGame extends Model implements \JsonSerializable
      */
     public ?\DateTime $endedAt;
     /**
+     * The version of the MultiplayerCore mod the announcer has.
+     * Used to verify compatibility; only clients with the exact same version should join.
+     * Only available since Server Browser v1.0+, which depends on MultiplayerCore.
+     */
+    public ?string $mpCoreVersion;
+    /**
      * The version of the MultiplayerExtensions mod the announcer has.
      * Used to verify compatibility; only clients with the exact same version should join.
      */

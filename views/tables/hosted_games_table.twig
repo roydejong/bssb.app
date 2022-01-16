@@ -8,7 +8,8 @@
         <th>Difficulty</th>
         <th>Players</th>
         <th>Game</th>
-        <th>Type</th>
+        <th>Server</th>
+        <th>Modded</th>
     </tr>
     </thead>
     <tbody>
@@ -73,15 +74,24 @@
                 {% else %}
                     <i class="mdi mdi-connection"></i> Unofficial
                 {% endif %}
+                <small>({{ game.describeMasterServer() }})</small>
+            </td>
+            <td class="align-middle">
                 {% if game.isModded %}
-                    Modded
-                    {% if game.mpExVersion %}
-                        <span title="MultiplayerExtensions version">{{ game.mpExVersion }}</span>
+                    {% if game.mpCoreVersion %}
+                        <span class="mp-core-version">
+                            Core v{{ game.mpCoreVersion }}
+                        </span>
+                    {% elseif game.mpExVersion %}
+                        <span class="mp-ex-version">
+                            Extensions v{{ game.mpExVersion }}
+                        </span>
+                    {% else %}
+                        Modded
                     {% endif %}
                 {% else %}
                     Vanilla
                 {% endif %}
-                <small>({{ game.describeMasterServer() }})</small>
             </td>
         </tr>
     {% else %}

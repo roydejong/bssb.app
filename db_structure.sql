@@ -11,7 +11,7 @@
  Target Server Version : 80027
  File Encoding         : 65001
 
- Date: 17/01/2022 00:03:34
+ Date: 17/01/2022 00:40:47
 */
 
 SET NAMES utf8mb4;
@@ -76,6 +76,7 @@ CREATE TABLE `hosted_games`  (
   `master_server_host` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `master_server_port` int UNSIGNED NULL DEFAULT NULL,
   `ended_at` datetime NULL DEFAULT NULL,
+  `mp_core_version` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `mp_ex_version` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `mod_name` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'ServerBrowser',
   `mod_version` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
