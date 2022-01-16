@@ -114,14 +114,37 @@ class AnnounceController
         $mpExVersion = isset($input['MpExVersion']) ? new CVersion($input['MpExVersion']) : null;
         $game->mpExVersion = $mpExVersion ? $mpExVersion->toString(3) : null;
 
-        if (!empty($input['LevelId'])) {
-            $game->levelId = LevelId::cleanLevelHash($input['LevelId']);
-            $game->songName = $input['SongName'] ?? null;
-            $game->songAuthor = $input['SongAuthor'] ?? null;
-        }
+        if (isset($input['Level']) && is_array($input['Level'])) {
+            // Modern level input
+            $levelInput = $input['Level'];
 
-        if (!empty($input['LevelId']) || $game->getIsQuickplay()) {
-            $game->difficulty = isset($input['Difficulty']) ? intval($input['Difficulty']) : null;
+            $levelId = $levelInput['LevelId'] ?? null;
+            $songName = $levelInput['SongName'] ?? null;
+            $songSubName = $levelInput['SongSubName'] ?? null;
+            $songAuthorName = $levelInput['SongAuthorName'] ?? null;
+            $levelAuthorName = $levelInput['LevelAuthorName'] ?? null;
+            $difficulty = $levelInput['Difficulty'] ?? null;
+            $characteristic = $levelInput['Characteristic'] ?? null;
+
+            if ($levelId) {
+                $game->levelId = LevelId::cleanLevelHash($levelId);
+                $game->songName = $songName;
+                $game->songAuthor = $songAuthorName;
+            }
+
+            $game->difficulty = intval($difficulty);
+            $game->characteristic = $characteristic;
+        } else {
+            // Legacy level input
+            if (!empty($input['LevelId'])) {
+                $game->levelId = LevelId::cleanLevelHash($input['LevelId']);
+                $game->songName = $input['SongName'] ?? null;
+                $game->songAuthor = $input['SongAuthor'] ?? null;
+            }
+
+            if (!empty($input['LevelId']) || $game->getIsQuickplay()) {
+                $game->difficulty = isset($input['Difficulty']) ? intval($input['Difficulty']) : null;
+            }
         }
 
         // -------------------------------------------------------------------------------------------------------------

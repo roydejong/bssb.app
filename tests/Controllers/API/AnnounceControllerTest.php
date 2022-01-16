@@ -245,7 +245,14 @@ class AnnounceControllerTest extends TestCase
             'ServerCode' => 'MODRN',
             'OwnerId' => 'unit_test_testModernizedV1Announce',
             'HostSecret' => "testModernizedV1Announce",
-            'MasterServerEp' => 'server.host.com:1234'
+            'MasterServerEp' => 'server.host.com:1234',
+            'Level' => [
+                'Difficulty' => 3,
+                'Characteristic' => 'Standard',
+                'LevelId' => 'Sugar',
+                'SongName' => 'Sugar',
+                'SongAuthorName' => 'Maroon 5'
+            ]
         ]);
         $request->method = "POST";
         $request->path = "/api/v1/announce";
@@ -262,6 +269,11 @@ class AnnounceControllerTest extends TestCase
 
         $this->assertSame("server.host.com", $game->masterServerHost);
         $this->assertSame(1234, $game->masterServerPort);
+        $this->assertSame("Sugar", $game->levelId);
+        $this->assertSame("Sugar", $game->songName);
+        $this->assertSame("Maroon 5", $game->songAuthor);
+        $this->assertSame(3, $game->difficulty);
+        $this->assertSame("Standard", $game->characteristic);
     }
 
     /**

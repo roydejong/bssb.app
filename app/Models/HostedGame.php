@@ -102,6 +102,11 @@ class HostedGame extends Model implements \JsonSerializable
      */
     public ?int $difficulty;
     /**
+     * Characteristic of the level being played.
+     * Only available in ServerBrowser v1.0+.
+     */
+    public ?string $characteristic;
+    /**
      * Platform identifier indicating cross-play compatibility.
      */
     public string $platform = ModPlatformId::UNKNOWN;
