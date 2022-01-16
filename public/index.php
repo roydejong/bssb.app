@@ -5,6 +5,7 @@ use app\Controllers\API\V1\BrowseController;
 use app\Controllers\API\V1\BrowseDetailController;
 use app\Controllers\API\V1\StatusController;
 use app\Controllers\API\V1\UnAnnounceController;
+use app\Controllers\API\V2\UnAnnounceControllerV2;
 use app\Controllers\DedicatedServersController;
 use app\Controllers\GameDetailController;
 use app\Controllers\HomeController;
@@ -34,6 +35,9 @@ $router->register('/api/v1/unannounce', UnAnnounceController::class, 'unAnnounce
 $router->register('/api/v1/browse', BrowseController::class, 'browse');
 $router->register('/api/v1/browse/$hashId', BrowseDetailController::class, 'browseDetail');
 $router->register('/api/v1/status', StatusController::class, 'getStatus');
+
+// API routes (v2)
+$router->register('/api/v2/unannounce', UnAnnounceControllerV2::class, 'unAnnounce');
 
 // Run!
 $request = Request::deduce();
