@@ -89,8 +89,20 @@ class AnnounceController
         $game->isModded = intval($input['IsModded'] ?? 0) === 1;
         $game->lobbyState = intval($input['LobbyState'] ?? MultiplayerLobbyState::None);
         $game->platform = isset($input['Platform']) ? strtolower($input['Platform']) : ModPlatformId::UNKNOWN;
-        $game->masterServerHost = $input['MasterServerHost'] ?? null;
-        $game->masterServerPort = isset($input['MasterServerPort']) ? intval($input['MasterServerPort']) : null;
+
+        if (isset($input['MasterServerEp']))
+        {
+            $epParts = explode(':', $input['MasterServerEp'], 2);
+
+            $game->masterServerHost = $epParts[0] ?? null;
+            $game->masterServerPort = isset($epParts[1]) ? intval($epParts[1]) : null;
+        }
+        else
+        {
+            $game->masterServerHost = $input['MasterServerHost'] ?? null;
+            $game->masterServerPort = isset($input['MasterServerPort']) ? intval($input['MasterServerPort']) : null;
+        }
+
         $game->modName = $modClientInfo->modName;
         $game->modVersion = $modClientInfo->assemblyVersion;
         $game->gameVersion = $modClientInfo->beatSaberVersion;

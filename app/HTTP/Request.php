@@ -73,7 +73,6 @@ class Request
     {
         if ($this->method === "POST") {
             // This request method may have a body
-
             if (CString::startsWith($this->headers["content-type"] ?? "", "application/json")) {
                 // Request headers indicate this is a JSON request
                 return true;

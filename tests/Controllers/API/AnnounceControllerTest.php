@@ -236,10 +236,41 @@ class AnnounceControllerTest extends TestCase
     /**
      * @depends testMinimalAnnounce
      */
+    public function testModernizedV1Announce()
+    {
+        // -------------------------------------------------------------------------------------------------------------
+        // Send mock request
+
+        $request = new MockJsonRequest([
+            'ServerCode' => 'MODRN',
+            'OwnerId' => 'unit_test_testModernizedV1Announce',
+            'HostSecret' => "testModernizedV1Announce",
+            'MasterServerEp' => 'server.host.com:1234'
+        ]);
+        $request->method = "POST";
+        $request->path = "/api/v1/announce";
+
+        // -------------------------------------------------------------------------------------------------------------
+        // Test created object
+
+        $response = (new AnnounceController())->announce($request);
+        $responseJson = json_decode($response->body, true);
+
+        $this->assertSame(true, $responseJson['success']);
+
+        $game = HostedGame::fetch(HostedGame::hash2id($responseJson['key']));
+
+        $this->assertSame("server.host.com", $game->masterServerHost);
+        $this->assertSame(1234, $game->masterServerPort);
+    }
+
+    /**
+     * @depends testMinimalAnnounce
+     */
     public function testReplaceMinimalAnnounce()
     {
         // -------------------------------------------------------------------------------------------------------------
-        // Create request
+        // Send mock request
 
         $request = new MockJsonRequest([
             'ServerCode' => '12345',
