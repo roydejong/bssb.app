@@ -425,11 +425,34 @@ class HostedGame extends Model implements \JsonSerializable
     // -----------------------------------------------------------------------------------------------------------------
     // Serialize
 
-    public function jsonSerialize(): mixed
+    public function jsonSerialize(bool $includeDetails = false): array
     {
         $sz = $this->getPropertyValues();
-        unset($sz['ownerId']);
         $sz['key'] = $this->getHashId();
+
+        if ($includeDetails) {
+            $sz['players'] = $this->serializePlayers();
+        }
+
+        return $sz;
+    }
+
+    public function serializePlayers(): array
+    {
+        $sz = [];
+
+        foreach ($this->fetchPlayers() as $player) {
+            $sz[] = [
+                'userId' => $player->userId,
+                'userName' => $player->userName,
+                'sortIndex' => $player->sortIndex,
+                'isHost' => $player->isHost,
+                'isPartyLeader' => $player->userId == $this->managerId,
+                'isAnnouncer' => $player->isAnnouncer,
+                'latency' => $player->latency
+            ];
+        }
+
         return $sz;
     }
 }

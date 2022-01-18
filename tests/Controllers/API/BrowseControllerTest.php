@@ -443,7 +443,6 @@ class BrowseControllerTest extends TestCase
         $aLobby = $lobbies[0];
 
         $this->assertArrayHasKey("ownerName", $aLobby);
-        $this->assertArrayNotHasKey("ownerId", $aLobby);
     }
 
     /**

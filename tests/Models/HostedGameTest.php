@@ -82,18 +82,6 @@ class HostedGameTest extends TestCase
         $this->assertFalse($game->getIsUninteresting());
     }
 
-    public function testSerializeConcealsOwnerId()
-    {
-        $game = new HostedGame();
-        $game->ownerName = "test";
-        $game->ownerId = "test";
-
-        $sz = $game->jsonSerialize();
-
-        $this->assertArrayHasKey("ownerName", $sz);
-        $this->assertArrayNotHasKey("ownerId", $sz);
-    }
-
     public function testIsPirate()
     {
         $game = new HostedGame();
@@ -163,6 +151,5 @@ class HostedGameTest extends TestCase
         $game->masterServerHost = MasterServer::OFFICIAL_HOSTNAME_PS4;
         $game->serverType = HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY;
         $this->assertSame("Official Quickplay", $game->describeServerType());
-
     }
 }
