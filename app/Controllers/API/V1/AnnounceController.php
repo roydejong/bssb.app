@@ -181,9 +181,8 @@ class AnnounceController
             return new BadRequestResponse();
         }
 
-        $maxPlayerLimit = $game->getMaxPlayerLimit();
-        if ($game->playerLimit <= 0 || $game->playerLimit > $maxPlayerLimit) {
-            $game->playerLimit = $maxPlayerLimit;
+        if ($game->playerLimit <= 0) {
+            $game->playerLimit = 5;
         }
 
         $minPlayerCount = $game->getMinPlayerCount();

@@ -18,9 +18,6 @@ class HostedGame extends Model implements \JsonSerializable
     // -----------------------------------------------------------------------------------------------------------------
     // Consts
 
-    const MAX_PLAYER_LIMIT_VANILLA = 5;
-    const MAX_PLAYER_LIMIT_MODDED = 100;
-
     public const SERVER_TYPE_BEATTOGETHER_DEDICATED = "beattogether_dedicated";
     public const SERVER_TYPE_BEATTOGETHER_QUICKPLAY = "beattogether_quickplay";
     public const SERVER_TYPE_BEATDEDI_CUSTOM = "beatdedi_custom";
@@ -325,15 +322,6 @@ class HostedGame extends Model implements \JsonSerializable
         }
 
         return 1;
-    }
-
-    public function getMaxPlayerLimit(): int
-    {
-        if (!$this->getIsOfficial() && $this->isModded) {
-            // Higher player limit is only possible for modded games on unofficial servers
-            return self::MAX_PLAYER_LIMIT_MODDED;
-        }
-        return self::MAX_PLAYER_LIMIT_VANILLA;
     }
 
     public function getIsPirate(): bool

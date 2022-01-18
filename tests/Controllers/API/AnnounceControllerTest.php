@@ -396,55 +396,6 @@ class AnnounceControllerTest extends TestCase
     /**
      * @depends testMinimalAnnounce
      */
-    public function testLobbyLimitModded()
-    {
-        $request = new MockJsonRequest([
-            'ServerCode' => '12345',
-            'IsModded' => true,
-            'OwnerId' => 'unit_test_testLobbyLimitModded',
-            'PlayerLimit' => 999,
-            'MasterServerHost' => 'unofficial-server.com'
-        ]);
-        $request->method = "POST";
-        $request->path = "/api/v1/announce";
-
-        $response = (new AnnounceController())->announce($request);
-        $this->assertSame(200, $response->code, "Sanity check: announce should return 200 OK");
-
-        $json = json_decode($response->body, true);
-
-        $game = HostedGame::fetch(HostedGame::hash2id($json['key']));
-        $this->assertSame(100, $game->playerLimit, "Modded lobbies should be capped at 20 players");
-    }
-
-    /**
-     * @depends testMinimalAnnounce
-     */
-    public function testLobbyLimitModdedButOfficialServer()
-    {
-        $request = new MockJsonRequest([
-            'ServerCode' => '12345',
-            'IsModded' => true,
-            'OwnerId' => 'unit_test_testLobbyLimitModdedButOfficialServer',
-            'PlayerLimit' => 999,
-            'MasterServerHost' => MasterServer::OFFICIAL_HOSTNAME_STEAM
-        ]);
-        $request->method = "POST";
-        $request->path = "/api/v1/announce";
-
-        $response = (new AnnounceController())->announce($request);
-        $this->assertSame(200, $response->code, "Sanity check: announce should return 200 OK");
-
-        $json = json_decode($response->body, true);
-
-        $game = HostedGame::fetch(HostedGame::hash2id($json['key']));
-        $this->assertSame(5, $game->playerLimit,
-            "Modded lobbies should be capped at 5 players if using official servers");
-    }
-
-    /**
-     * @depends testMinimalAnnounce
-     */
     public function testAnnounceRejectsNonModRequests()
     {
         $request = clone self::$minimalAnnounceRequest;
