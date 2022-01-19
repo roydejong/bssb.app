@@ -152,4 +152,22 @@ class HostedGameTest extends TestCase
         $game->serverType = HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY;
         $this->assertSame("Official Quickplay", $game->describeServerType());
     }
+
+    public function testGetUsesBeatTogetherMaster()
+    {
+        $game = new HostedGame();
+        $this->assertFalse($game->getUsesBeatTogetherMaster());
+
+        $game->masterServerHost = "partycube.pg69.edu";
+        $this->assertFalse($game->getUsesBeatTogetherMaster());
+
+        $game->masterServerHost = "btogether.xn--9o8hpe.ws";
+        $this->assertTrue($game->getUsesBeatTogetherMaster());
+
+        $game->masterServerHost = "master.beattogether.systems";
+        $this->assertTrue($game->getUsesBeatTogetherMaster());
+
+        $game->masterServerHost = "beholdasecrethostname.beattogether.systems";
+        $this->assertTrue($game->getUsesBeatTogetherMaster());
+    }
 }

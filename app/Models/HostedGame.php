@@ -218,6 +218,17 @@ class HostedGame extends Model implements \JsonSerializable
             || strpos($this->masterServerHost, ".mp.beatsaber.com") !== false;
     }
 
+    public function getUsesBeatTogetherMaster(): bool
+    {
+        if (!$this->masterServerHost)
+            return false;
+
+        if ($this->masterServerHost == "btogether.xn--9o8hpe.ws")
+            return true;
+
+        return str_ends_with($this->masterServerHost, ".beattogether.systems");
+    }
+
     public function describeMasterServer(): string
     {
         if ($this->getIsDirectConnect())

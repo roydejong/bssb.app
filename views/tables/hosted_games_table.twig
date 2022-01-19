@@ -8,8 +8,8 @@
         <th>Difficulty</th>
         <th>Players</th>
         <th>Game</th>
-        <th>Server</th>
         <th>Modded</th>
+        <th>Master Server</th>
     </tr>
     </thead>
     <tbody>
@@ -63,20 +63,6 @@
             <td class="align-middle">{{ game.playerCount }}/{{ game.playerLimit }}</td>
             <td class="align-middle">{{ game.gameVersion ? ('v' ~ game.gameVersion) : '?' }}</td>
             <td class="align-middle">
-                {% if game.getIsOfficial() %}
-                    {% if game.platform == "steam" %}
-                        <i class="mdi mdi-steam"></i> Steam
-                    {% elseif game.platform == "oculus" %}
-                        {% include "oculus_icon.twig"%} Oculus
-                    {% else %}
-                        <i class="mdi mdi-head-question"></i> Unknown
-                    {% endif %}
-                {% else %}
-                    <i class="mdi mdi-connection"></i> Unofficial
-                {% endif %}
-                <small>({{ game.describeMasterServer() }})</small>
-            </td>
-            <td class="align-middle">
                 {% if game.isModded %}
                     {% if game.mpCoreVersion %}
                         <span class="mp-core-version">
@@ -90,7 +76,20 @@
                         Modded
                     {% endif %}
                 {% else %}
-                    Vanilla
+                    <span class="vanilla-version">Vanilla</span>
+                {% endif %}
+            </td>
+            <td class="align-middle">
+                {% if game.getIsOfficial() and (game.platform == "steam" or game.platform == "oculus") %}
+                    {% if game.platform == "steam" %}
+                        <i class="mdi mdi-steam"></i> Steam
+                    {% elseif game.platform == "oculus" %}
+                        {% include "oculus_icon.twig"%} Oculus
+                    {% endif %}
+                {% elseif game.getUsesBeatTogetherMaster() %}
+                    <i class="mdi mdi-handshake"></i> BeatTogether
+                {% else %}
+                    <i class="mdi mdi-connection"></i> {{ game.describeMasterServer() }}
                 {% endif %}
             </td>
         </tr>

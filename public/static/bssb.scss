@@ -10,6 +10,10 @@ abbr[data-original-title], abbr[title] {
   border: none;
   border-bottom: 1px dotted rgba(0, 0, 0, .5);
 }
+
+.vanilla-version {
+  opacity: .5;
+}
 .mp-core-version {
   color: #2ecc71;
 }
