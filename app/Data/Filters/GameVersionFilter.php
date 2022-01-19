@@ -23,8 +23,13 @@ class GameVersionFilter extends BaseFilter
         $baseQuery->select('DISTINCT game_version, id, player_count, player_limit');
 
         foreach ($baseQuery->querySingleValueArray() as $gameVersionOption) {
+            if (empty($gameVersionOption))
+                continue;
+
             $options[$gameVersionOption] = $gameVersionOption;
         }
+
+        krsort($options);
 
         return $options;
     }
