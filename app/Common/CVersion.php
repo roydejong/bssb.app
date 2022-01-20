@@ -4,7 +4,7 @@ namespace app\Common;
 
 use SoftwarePunt\Instarecord\Serialization\IDatabaseSerializable;
 
-final class CVersion implements IDatabaseSerializable
+final class CVersion implements IDatabaseSerializable, \JsonSerializable
 {
     public ?int $major = null;
     public ?int $minor = null;
@@ -121,5 +121,10 @@ final class CVersion implements IDatabaseSerializable
     public function dbUnserialize(string $storedValue): void
     {
         $this->setValue($storedValue);
+    }
+
+    public function jsonSerialize(): array
+    {
+        return $this->dbSerialize();
     }
 }
