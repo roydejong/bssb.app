@@ -84,13 +84,21 @@
                                 {% if game.mpCoreVersion %}
                                     <tr>
                                         <th scope="row">Core mod</th>
-                                        <td>MultiplayerCore v{{ game.mpCoreVersion }}</td>
+                                        <td>
+                                            <span class="mp-core-version">
+                                                MultiplayerCore v{{ game.mpCoreVersion }}
+                                            </span>
+                                        </td>
                                     </tr>
                                 {% endif %}
                                 {% if game.mpExVersion %}
                                     <tr>
                                         <th scope="row">Extensions mod</th>
-                                        <td>MultiplayerExtensions v{{ game.mpExVersion }}</td>
+                                        <td>
+                                            <span class="mp-ex-version">
+                                                MultiplayerExtensions v{{ game.mpExVersion }}
+                                            </span>
+                                        </td>
                                     </tr>
                                 {% endif %}
                                 {% if game.ownerName and (players is not defined or players|length == 0) and not game.getIsQuickplay() %}
