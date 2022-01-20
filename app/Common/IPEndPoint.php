@@ -15,17 +15,34 @@ class IPEndPoint implements IDatabaseSerializable, \JsonSerializable
         $this->port = $port;
     }
 
-    public function dbSerialize(): string
+    public function getIsIPv6(): bool
     {
+        return filter_var($this->host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false;
+    }
+
+    public function dbSerialize(bool $wrapIPv6 = true): string
+    {
+        if ($wrapIPv6 && $this->getIsIPv6())
+            return "[{$this->host}]:{$this->port}";
+
         return "{$this->host}:{$this->port}";
     }
 
     public function dbUnserialize(string $storedValue): void
     {
-        $parts = explode(':', $storedValue, 2);
+        if (str_starts_with($storedValue, '[') && str_contains($storedValue, ']:')) {
+            // Unpack IPv6 address
+            $endBracketIdx = strrpos($storedValue, ']:');
 
-        $this->host = $parts[0];
-        $this->port = intval($parts[1] ?? 0);
+            $this->host = substr($storedValue, 1, ($endBracketIdx - 1));
+            $this->port = intval(substr($storedValue, ($endBracketIdx + 2)));
+        } else {
+            // Default mode: IPv4 address or hostname
+            $parts = explode(':', $storedValue, 2);
+
+            $this->host = $parts[0];
+            $this->port = intval($parts[1] ?? 0);
+        }
     }
 
     public static function tryParse(?string $value): ?IPEndPoint
@@ -49,6 +66,6 @@ class IPEndPoint implements IDatabaseSerializable, \JsonSerializable
 
     public function __toString(): string
     {
-        return self::dbSerialize();
+        return self::dbSerialize(false);
     }
 }

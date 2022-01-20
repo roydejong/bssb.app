@@ -779,4 +779,28 @@ class AnnounceControllerTest extends TestCase
 
         $this->assertFalse($game->isModded, "An MpEx-modded P2P game (pre 1.16.3) CANNOT be modded");
     }
+
+    /**
+     * @depends testMinimalAnnounce
+     */
+    public function testIPv6Announce()
+    {
+        $request = new MockJsonRequest([
+            'ServerCode' => '12345',
+            'OwnerId' => 'unit_test_testIPv6Announce',
+            'HostSecret' => 'unit_test_testIPv6Announce',
+            'MasterServerHost' => "some.server.com",
+            'EndPoint' => "[2001:db8:3333:4444:5555:6666:7777:8888]:1234"
+        ]);
+        $request->method = "POST";
+        $request->path = "/api/v1/announce";
+        $request->headers["user-agent"] = "ServerBrowser/1.0.0 (BeatSaber/1.19.0) (steam)";
+
+        $response = (new AnnounceController())->announce($request);
+        $json = json_decode($response->body, true);
+        $game = HostedGame::fetch(HostedGame::hash2id($json['key']));
+
+        $this->assertSame("2001:db8:3333:4444:5555:6666:7777:8888", $game->endpoint->host);
+        $this->assertSame(1234, $game->endpoint->port);
+    }
 }
