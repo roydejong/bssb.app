@@ -306,7 +306,7 @@ class HostedGame extends Model implements \JsonSerializable
             self::SERVER_TYPE_NORMAL_QUICKPLAY => ($isOfficial ? "Official Quickplay" : "Unofficial Quickplay"),
             self::SERVER_TYPE_NORMAL_DEDICATED => ($isOfficial ? "Official Dedicated" : "Unofficial Dedicated"),
             null, self::SERVER_TYPE_PLAYER_HOST => "Player hosted (Old P2P)",
-            default => "Unknown"
+            default => $this->serverType
         };
     }
 

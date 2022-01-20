@@ -20,9 +20,9 @@ class IPEndPoint implements IDatabaseSerializable, \JsonSerializable
         return filter_var($this->host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false;
     }
 
-    public function dbSerialize(bool $wrapIPv6 = true): string
+    public function dbSerialize(): string
     {
-        if ($wrapIPv6 && $this->getIsIPv6())
+        if ($this->getIsIPv6())
             return "[{$this->host}]:{$this->port}";
 
         return "{$this->host}:{$this->port}";
@@ -66,6 +66,6 @@ class IPEndPoint implements IDatabaseSerializable, \JsonSerializable
 
     public function __toString(): string
     {
-        return self::dbSerialize(false);
+        return self::dbSerialize();
     }
 }
