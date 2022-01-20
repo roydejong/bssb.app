@@ -104,7 +104,7 @@ class HostedGame extends Model implements \JsonSerializable
      */
     public ?string $characteristic;
     /**
-     * Platform identifier indicating cross-play compatibility.
+     * Announcer's platform (e.g. "steam", "oculus")
      */
     public string $platform = ModPlatformId::UNKNOWN;
     /**

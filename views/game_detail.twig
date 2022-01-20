@@ -44,12 +44,6 @@
                     </div>
                 {% endif %}
 
-                {% if not game.masterServerHost and not game.endpoint %}
-                    <div class="alert alert-warning">
-                        This game was added with an older version of the Server Browser mod, cross-play may not work as expected.
-                    </div>
-                {% endif %}
-
                 <div class="row">
                     <div class="col-sm">
 
@@ -149,7 +143,7 @@
                                                     <i class="mdi mdi-head-question"></i> Unknown
                                                 {% endif %}
                                             {% else %}
-                                                <i class="mdi mdi-connection"></i> Unofficial cross-play
+                                                <i class="mdi mdi-connection"></i> Unofficial server
                                             {% endif %}
                                             {% if game.masterServerHost %}
                                                 (<code>{{ game.masterServerHost }}:{{ game.masterServerPort ? game.masterServerPort : 2328 }}</code>)
