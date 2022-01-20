@@ -790,7 +790,7 @@ class AnnounceControllerTest extends TestCase
             'OwnerId' => 'unit_test_testIPv6Announce',
             'HostSecret' => 'unit_test_testIPv6Announce',
             'MasterServerHost' => "some.server.com",
-            'EndPoint' => "[2001:db8:3333:4444:5555:6666:7777:8888]:1234"
+            'Endpoint' => "[2001:db8:3333:4444:5555:6666:7777:8888]:1234"
         ]);
         $request->method = "POST";
         $request->path = "/api/v1/announce";
