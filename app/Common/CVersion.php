@@ -123,7 +123,7 @@ final class CVersion implements IDatabaseSerializable, \JsonSerializable
         $this->setValue($storedValue);
     }
 
-    public function jsonSerialize(): array
+    public function jsonSerialize(): mixed
     {
         return $this->dbSerialize();
     }
