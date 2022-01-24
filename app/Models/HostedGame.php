@@ -429,9 +429,11 @@ class HostedGame extends Model implements \JsonSerializable
         $sz = $this->getPropertyValues();
         $sz['key'] = $this->getHashId();
 
-        if ($includeDetails) {
+1        if ($this->masterServerHost && $this->masterServerPort)
+            $sz['masterServerEp'] = "{$this->masterServerHost}:{$this->masterServerPort}";
+
+        if ($includeDetails)
             $sz['players'] = $this->serializePlayers();
-        }
 
         return $sz;
     }

@@ -530,5 +530,8 @@ class BrowseControllerTest extends TestCase
 
         $vanillaQuickPlay = reset($lobbies);
         $this->assertSame("1.2.3.4:1234", $vanillaQuickPlay['endpoint']);
+        $this->assertSame("steam.production.mp.beatsaber.com", $vanillaQuickPlay['masterServerHost']);
+        $this->assertSame(1234, $vanillaQuickPlay['masterServerPort']);
+        $this->assertSame("steam.production.mp.beatsaber.com:1234", $vanillaQuickPlay['masterServerEp']);
     }
 }
