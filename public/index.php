@@ -3,6 +3,7 @@
 use app\Controllers\API\V1\AnnounceController;
 use app\Controllers\API\V1\BrowseController;
 use app\Controllers\API\V1\BrowseDetailController;
+use app\Controllers\API\V1\BrowseServerCodeController;
 use app\Controllers\API\V1\StatusController;
 use app\Controllers\API\V1\UnAnnounceController;
 use app\Controllers\API\V2\UnAnnounceControllerV2;
@@ -34,7 +35,7 @@ $router->register('/api/v1/announce', AnnounceController::class, 'announce');
 $router->register('/api/v1/unannounce', UnAnnounceController::class, 'unAnnounce');
 $router->register('/api/v1/browse', BrowseController::class, 'browse');
 $router->register('/api/v1/browse/$hashId', BrowseDetailController::class, 'browseDetail');
-$router->register('/api/v1/browse/code/$serverCode', BrowseServerCodeController::class, 'browseDetail');
+$router->register('/api/v1/browse/code/$serverCode', BrowseServerCodeController::class, 'browseServerCode');
 $router->register('/api/v1/status', StatusController::class, 'getStatus');
 
 // API routes (v2)
