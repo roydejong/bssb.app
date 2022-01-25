@@ -34,6 +34,7 @@ $router->register('/api/v1/announce', AnnounceController::class, 'announce');
 $router->register('/api/v1/unannounce', UnAnnounceController::class, 'unAnnounce');
 $router->register('/api/v1/browse', BrowseController::class, 'browse');
 $router->register('/api/v1/browse/$hashId', BrowseDetailController::class, 'browseDetail');
+$router->register('/api/v1/browse/code/$serverCode', BrowseServerCodeController::class, 'browseDetail');
 $router->register('/api/v1/status', StatusController::class, 'getStatus');
 
 // API routes (v2)
