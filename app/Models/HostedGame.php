@@ -2,6 +2,8 @@
 
 namespace app\Models;
 
+use app\AWS\GameSessionArn;
+use app\AWS\GameSessionArnParser;
 use app\BeatSaber\LevelDifficulty;
 use app\BeatSaber\ModPlatformId;
 use app\BeatSaber\MultiplayerLobbyState;
@@ -206,16 +208,37 @@ class HostedGame extends Model implements \JsonSerializable
 
     public function getIsDirectConnect(): bool
     {
-        return empty($this->masterServerHost) && !empty($this->endpoint);
+        return empty($this->masterServerHost) && !empty($this->endpoint) && !$this->getIsGameLiftServer();
     }
 
     public function getIsOfficial(): bool
     {
+        if ($this->getIsGameLiftServer())
+            return true;
+
         if ($this->getIsDirectConnect())
             return false;
 
         return $this->masterServerHost === null
             || strpos($this->masterServerHost, ".mp.beatsaber.com") !== false;
+    }
+
+    public function getIsGameLiftServer(): bool
+    {
+        return str_starts_with($this->ownerId, "arn:aws:gamelift:");
+    }
+
+    public function tryGetGameLiftInfo(): ?GameSessionArn
+    {
+        if (!$this->getIsGameLiftServer())
+            return null;
+
+        return GameSessionArnParser::tryParse($this->ownerId);
+    }
+
+    public function tryGetGameLiftRegion(): ?string
+    {
+        return $this->tryGetGameLiftInfo()?->fleetRegion;
     }
 
     public function getUsesBeatTogetherMaster(): bool
@@ -231,6 +254,9 @@ class HostedGame extends Model implements \JsonSerializable
 
     public function describeMasterServer(): string
     {
+        if ($this->getIsGameLiftServer())
+            return "Official GameLift";
+
         if ($this->getIsDirectConnect())
             return "Direct Connection";
 

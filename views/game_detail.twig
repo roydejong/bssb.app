@@ -111,7 +111,8 @@
                                         <td><span class="difficulty-txt -d{{ game.difficulty }}">{{ game.describeDifficulty() }}</span></td>
                                     </tr>
                                 {% endif %}
-                                {% if game.endpoint and game.getIsDedicatedServer() and game.masterServerHost %}
+                                {% if game.endpoint and game.getIsDedicatedServer()
+                                    and (game.getIsGameLiftServer() or game.masterServerHost) %}
                                     <tr>
                                         <th scope="row">Server endpoint</th>
                                         <td><code>{{ game.endpoint }}</code></td>
@@ -131,7 +132,10 @@
                                 <tr>
                                     <th scope="row">Master server</th>
                                     <td>
-                                        {% if not game.masterServerHost and game.endpoint %}
+                                        {% if game.getIsGameLiftServer() %}
+                                            <i class="mdi mdi-aws"></i>
+                                            <span>GameLift {{ game.tryGetGameLiftRegion() }}</span>
+                                        {% elseif not game.masterServerHost and game.endpoint %}
                                             Direct connection (<code>{{ game.endpoint }}</code>)
                                         {% else %}
                                             {% if game.getIsOfficial() %}

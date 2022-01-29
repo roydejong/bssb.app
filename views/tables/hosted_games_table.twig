@@ -80,7 +80,10 @@
                 {% endif %}
             </td>
             <td class="align-middle">
-                {% if game.getIsOfficial() and (game.platform == "steam" or game.platform == "oculus") %}
+                {% if game.getIsGameLiftServer() %}
+                    <i class="mdi mdi-aws"></i>
+                    <span>GameLift {{ game.tryGetGameLiftRegion() }}</span>
+                {% elseif game.getIsOfficial() and (game.platform == "steam" or game.platform == "oculus") %}
                     {% if game.platform == "steam" %}
                         <i class="mdi mdi-steam"></i> Steam
                     {% elseif game.platform == "oculus" %}
