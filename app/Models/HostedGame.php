@@ -255,7 +255,7 @@ class HostedGame extends Model implements \JsonSerializable
     public function describeMasterServer(): string
     {
         if ($this->getIsGameLiftServer())
-            return "Official GameLift";
+            return "GameLift {$this->tryGetGameLiftRegion()}";
 
         if ($this->getIsDirectConnect())
             return "Direct Connection";
@@ -460,6 +460,9 @@ class HostedGame extends Model implements \JsonSerializable
 
         if ($includeDetails)
             $sz['players'] = $this->serializePlayers();
+
+        $sz['serverTypeText'] = $this->describeServerType();
+        $sz['masterServerText'] = $this->describeMasterServer();
 
         return $sz;
     }
