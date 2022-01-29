@@ -15,6 +15,8 @@ class DedicatedServersController
     const CACHE_KEY = "dedicated_servers";
     const CACHE_TTL = 30;
 
+    const CUTOFF_DAYS = 3;
+
     public function getServerList(Request $request): Response
     {
         $resCache = new ResponseCache(self::CACHE_KEY, self::CACHE_TTL);
@@ -25,7 +27,8 @@ class DedicatedServersController
 
         // -------------------------------------------------------------------------------------------------------------
 
-        $oneWeekAgo = new DateTime('-1 week');
+        $cutoffDays = self::CUTOFF_DAYS;
+        $activityCutoff = new DateTime("-{$cutoffDays} days");
 
         $dedicatedServers = HostedGame::query()
             ->select('*')
@@ -36,7 +39,7 @@ class DedicatedServersController
             ->andWhere('hg1.server_type IS NOT NULL AND hg1.server_type != ?', HostedGame::SERVER_TYPE_PLAYER_HOST)
             ->andWhere('hg1.endpoint NOT LIKE ?', "127.%")
             ->andWhere('hg1.endpoint NOT LIKE ?', "192.%")
-            ->andWhere('last_update >= ?', $oneWeekAgo)
+            ->andWhere('last_update >= ?', $activityCutoff)
             ->orderBy('last_update DESC')
             ->queryAllModels();
 
@@ -61,6 +64,7 @@ class DedicatedServersController
         $view = new View('dedicated-servers.twig');
         $view->set('servers', $dedicatedServers);
         $view->set('geoData', $geoData);
+        $view->set('cutoffDays', $cutoffDays);
 
         $response = $view->asResponse();
         $resCache->writeResponse($response);
