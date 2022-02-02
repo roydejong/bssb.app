@@ -1,0 +1,15 @@
+<td class="cover-art-cell">
+    {% if coverUrl %}
+        <img src="{{ coverUrl }}" alt="{{ altText }}" title="{{ altText }}" height="25" class="cover-art"/>
+    {% else %}
+        {% if levelId %}
+            <span class="unknown-song" title="{{ altText }}">
+                <i class="mdi mdi-music"></i>
+            </span>
+        {% else %}
+            <span class="no-song" title="{{ altText }}">
+                <i class="mdi mdi-new-box"></i>
+            </span>
+        {% endif %}
+    {% endif %}
+</td>

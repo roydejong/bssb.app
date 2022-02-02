@@ -109,6 +109,15 @@ td.cover-art-cell {
     font-weight: 600;
     font-size: 16px;
     opacity: .5;
+
+    &.unknown-song {
+      background: linear-gradient(125deg, rgba(231,15,1,1) 0%, rgb(0 103 230) 100%);
+      color: #fff;
+      opacity: 1.0;
+    }
+    &.no-song {
+
+    }
   }
   > img {
     text-indent: 100%;

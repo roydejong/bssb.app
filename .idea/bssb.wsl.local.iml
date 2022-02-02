@@ -93,6 +93,8 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpunit/php-code-coverage" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/myclabs/deep-copy" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpspec/prophecy" />
+      <excludeFolder url="file://$MODULE_DIR$/storage/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/storage/response_cache" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
