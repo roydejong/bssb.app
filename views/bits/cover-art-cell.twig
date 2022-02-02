@@ -1,6 +1,6 @@
 <td class="cover-art-cell">
     {% if coverUrl %}
-        <img src="{{ coverUrl }}" alt="{{ altText }}" title="{{ altText }}" height="25" class="cover-art"/>
+        <img src="{{ coverUrl }}" alt="{{ altText }}" title="{{ altText }}" height="25" class="cover-art" loading="lazy"/>
     {% else %}
         {% if levelId %}
             <span class="unknown-song" title="{{ altText }}">
