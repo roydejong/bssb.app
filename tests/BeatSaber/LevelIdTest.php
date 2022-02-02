@@ -34,6 +34,12 @@ class LevelIdTest extends TestCase
             LevelId::cleanLevelHash("custom_level_58EB1C803030D10EE71E91D4FE6C966B09AC341C_71e5 (Moudoku ga Osou - Tootie)"));
         $this->assertSame("custom_level_CF5E32D6B7F30095F7198DA5894139C92336CAD7",
             LevelId::cleanLevelHash("custom_level_CF5E32D6B7F30095F7198DA5894139C92336CAD7_cf5e32d6b7f30095f7198da5894139c92336cad7"));
+        $this->assertSame("custom_level_6089D255B56DEA46C030AEB3A66BE8AA48029E7D",
+            LevelId::cleanLevelHash("custom_level_6089D255B56DEA46C030AEB3A66BE8AA48029E7D_Ievan Polkka"));
+        $this->assertSame("custom_level_9CA1E958CAC871EB1520751244D2BCED44768FCC",
+            LevelId::cleanLevelHash("custom_level_9CA1E958CAC871EB1520751244D2BCED44768FCC_Savages"));
+        $this->assertSame("custom_level_27FCBAB3FB731B16EABA14A5D039EEFFD7BD44C9",
+            LevelId::cleanLevelHash("custom_level_27FCBAB3FB731B16EABA14A5D039EEFFD7BD44C9_1ef6 (Overkill - Krydar)"));
     }
 
 

@@ -41,6 +41,7 @@ class DedicatedServersController
             ->andWhere('hg1.endpoint NOT LIKE ?', "192.%")
             ->andWhere('last_update >= ?', $activityCutoff)
             ->orderBy('last_update DESC')
+            ->limit(999)
             ->queryAllModels();
 
         $geoIp = new GeoIp();

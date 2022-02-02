@@ -16,7 +16,11 @@ class StatsController
     // -----------------------------------------------------------------------------------------------------------------
     // Shared functions
 
-    private function queryTopLevels(bool $customs = true, int $offset = 0, int $pageSize = 10): array
+    const TopOfficialLevels = "official-levels";
+    const TopCustomLevels = "custom-levels";
+    const TopNonBeatSaverLevels = "non-beatsaver-levels";
+
+    private function queryTopLevels(string $topType, int $offset = 0, int $pageSize = 10): array
     {
         $query = LevelRecord::query()
             ->where('stat_play_count > 0')
@@ -24,11 +28,13 @@ class StatsController
             ->limit($pageSize)
             ->orderBy('stat_play_count DESC');
 
-        if ($customs) {
+        if ($topType === self::TopOfficialLevels)
+            $query->andWhere('hash IS NULL AND level_id NOT LIKE ?', "custom_level_%");
+        else if ($topType === self::TopCustomLevels || $topType === self::TopNonBeatSaverLevels)
             $query->andWhere('hash IS NOT NULL');
-        } else {
-            $query->andWhere('hash IS NULL');
-        }
+
+        if ($topType === self::TopNonBeatSaverLevels)
+            $query->andWhere('beatsaver_id IS NULL');
 
         return $query->queryAllModels();
     }
@@ -61,8 +67,8 @@ class StatsController
             ->select("SUM(stat_play_count) AS count")
             ->querySingleValue());
 
-        $topLevelsCustom = $this->queryTopLevels(true, 0, 10);
-        $topLevelsOfficial = $this->queryTopLevels(false, 0, 10);
+        $topLevelsCustom = $this->queryTopLevels(self::TopCustomLevels, 0, 10);
+        $topLevelsOfficial = $this->queryTopLevels(self::TopOfficialLevels, 0, 10);
 
         $view = new View('stats.twig');
         $view->set('pageUrl', '/stats');
@@ -88,13 +94,17 @@ class StatsController
     public function getTopLevelsSubPage(Request $request, string $urlSection)
     {
         switch ($urlSection) {
-            case "custom-levels":
-                $showCustomLevels = true;
+            case self::TopCustomLevels:
                 $pageTitle = "Top 100 Custom Levels";
+                $pageDescr = "These are the most played custom levels in modded Beat Saber multiplayer. Check out the list, or download them all at once as a playlist!";
                 break;
-            case "official-levels":
-                $showCustomLevels = false;
+            case self::TopOfficialLevels:
                 $pageTitle = "Top 100 Official Levels";
+                $pageDescr = "These are the most played official OST and DLC levels in Beat Saber multiplayer.";
+                break;
+            case self::TopNonBeatSaverLevels:
+                $pageTitle = "Top 100 Non-Beat Saver Levels";
+                $pageDescr = "These are the most played custom levels in modded Beat Saber multiplayer that are NOT available for download on Beat Saver.";
                 break;
             default:
                 return new NotFoundResponse();
@@ -107,11 +117,12 @@ class StatsController
             return $resCache->readAsResponse();
         }
 
-        $topLevels = $this->queryTopLevels($showCustomLevels, 0, 100);
+        $topLevels = $this->queryTopLevels($urlSection, 0, 100);
 
         $view = new View('stats_top_levels.twig');
         $view->set('pageUrl', "/stats/top/{$urlSection}");
         $view->set('pageTitle', $pageTitle);
+        $view->set('pageDescr', $pageDescr);
         $view->set('urlSection', $urlSection);
         $view->set('levels', $topLevels);
 
@@ -128,7 +139,7 @@ class StatsController
 
     public function getTopLevelsPlaylist(Request $request, string $urlSection)
     {
-        if ($urlSection !== "custom-levels") {
+        if ($urlSection !== self::TopCustomLevels) {
             // Only supported for custom levels because official ones don't have a hash and probably won't work
             return new NotFoundResponse();
         }
@@ -155,7 +166,7 @@ class StatsController
             $bplist->setImageFromLocalFile(DIR_BASE . "/public/static/bsassets/BSSBTop100CustomLevels256.png");
             $bplist->setSyncUrl("https://bssb.app/stats/top/custom-levels/playlist");
 
-            $topLevels = $this->queryTopLevels(true, 0, 100);
+            $topLevels = $this->queryTopLevels(self::TopCustomLevels, 0, 100);
             foreach ($topLevels as $levelRecord) {
                 $bplist->addSongByLevelRecord($levelRecord);
             }

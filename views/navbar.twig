@@ -13,7 +13,7 @@
                     <a class="nav-link" href="https://github.com/roydejong/BeatSaberServerBrowser" target="_blank"><i class="mdi mdi-github"></i> GitHub</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="https://github.com/roydejong/BeatSaberServerBrowser/releases/latest" target="_blank"><i class="mdi mdi-download-circle"></i> Download</a>
+                    <a class="nav-link" href="https://github.com/roydejong/BeatSaberServerBrowser/releases/latest" target="_blank"><i class="mdi mdi-download-outline"></i> Download</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="mdi mdi-discord"></i> Discord</a>
@@ -25,13 +25,15 @@
                 <li class="nav-item dropdown {% if tab == "stats" %}active{% endif %}">
                     <a class="nav-link dropdown-toggle" href="/stats" target="_self" title="Statistics" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="mdi mdi-chart-bar"></i> Stats {% if tab == "stats" %}<span class="sr-only">(current)</span>{% endif %}</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown02">
-                        <a class="dropdown-item" href="/stats">Overview</a>
+                        <a class="dropdown-item" href="/stats"><strong>Stats Overview</strong></a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="/stats/top/custom-levels">Top 100 Custom Levels</a>
                         <a class="dropdown-item" href="/stats/top/official-levels">Top 100 Official Levels</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="/master-servers">Master Server List</a>
                         <a class="dropdown-item" href="/dedicated-servers">Dedicated Server List</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/stats/top/non-beatsaver-levels">Top 100 Non Beat Saver Levels</a>
                     </div>
                 </li>
             </ul>
