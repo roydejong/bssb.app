@@ -647,7 +647,7 @@ class AnnounceControllerTest extends TestCase
         ];
         (new AnnounceController())->announce($request);
 
-        $players = $game->fetchPlayers();
+        $players = $game->fetchPlayers(false);
 
         $this->assertCount(6, $players,
             'fetchPlayers() should contain 6 players after second announce');
@@ -680,7 +680,7 @@ class AnnounceControllerTest extends TestCase
 
         (new AnnounceController())->announce($request);
 
-        $players = $game->fetchPlayers();
+        $players = $game->fetchPlayers(false);
 
         $connectedCount = 0;
         $disconnectedCount = 0;

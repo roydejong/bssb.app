@@ -6,7 +6,7 @@ use app\BeatSaber\LevelId;
 use app\External\BeatSaver;
 use SoftwarePunt\Instarecord\Model;
 
-class LevelRecord extends Model
+class LevelRecord extends Model implements \JsonSerializable
 {
     public int $id;
     public string $levelId;
@@ -29,13 +29,17 @@ class LevelRecord extends Model
         return LevelId::isCustomLevel($this->levelId);
     }
 
-    public function describeSong(): string
+    public function describeSong(): ?string
     {
         $parts = [];
         if ($this->songAuthor)
             $parts[] = $this->songAuthor;
         if ($this->songName)
             $parts[] = $this->songName;
+
+        if (empty($parts))
+            return null;
+
         return implode(' - ', $parts);
     }
 
@@ -220,5 +224,20 @@ class LevelRecord extends Model
             ->set('stat_play_count = stat_play_count + 1')
             ->where('id = ?', $this->id)
             ->execute() > 0;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Serialize
+
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'levelId' => $this->levelId,
+            'songName' => $this->songName,
+            'songSubName' => null, // TODO
+            'songAuthorName' => $this->songAuthor,
+            'levelAuthorName' => $this->levelAuthor,
+            'coverUrl' => $this->coverUrl
+        ];
     }
 }

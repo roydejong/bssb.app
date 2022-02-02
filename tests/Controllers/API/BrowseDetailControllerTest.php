@@ -71,6 +71,7 @@ class BrowseDetailControllerTest extends TestCase
             $this->assertSame($responseJson['hostSecret'], 'unit_test_testBrowseDetail_200');
             $this->assertSame($responseJson['serverCode'], '55555');
             $this->assertIsArray($responseJson['players']);
+            $this->assertArrayHasKey('level', $responseJson);
         } finally {
             @$sampleGame->delete();
         }

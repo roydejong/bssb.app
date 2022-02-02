@@ -168,17 +168,44 @@ class HostedGame extends Model implements \JsonSerializable
     // Relationships
 
     /**
+     * @var HostedGamePlayer[]|null
+     */
+    private ?array $players;
+    private ?LevelRecord $levelRecord;
+
+    /**
      * @return HostedGamePlayer[]
      */
-    public function fetchPlayers(): array
+    public function fetchPlayers(bool $allowCache = true): array
     {
-        if ($this->id > 0) {
-            return HostedGamePlayer::query()
-                ->where('hosted_game_id = ?', $this->id)
-                ->orderBy('sort_index ASC')
-                ->queryAllModels();
+        if (!isset($this->players) || !$allowCache) {
+            if ($this->id > 0) {
+                $this->players = HostedGamePlayer::query()
+                    ->where('hosted_game_id = ?', $this->id)
+                    ->orderBy('sort_index ASC')
+                    ->queryAllModels();
+            } else {
+                $this->players = [];
+            }
         }
-        return [];
+        return $this->players;
+    }
+
+    /**
+     * @return LevelRecord
+     */
+    public function fetchLevel(bool $allowCache = true): ?LevelRecord
+    {
+        if (!isset($this->levelRecord) || !$allowCache) {
+            if ($this->levelId) {
+                $this->levelRecord = LevelRecord::query()
+                    ->where('level_id = ?', $this->levelId)
+                    ->querySingleModel();
+            } else {
+                $this->levelRecord = null;
+            }
+        }
+        return $this->levelRecord;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -269,7 +296,7 @@ class HostedGame extends Model implements \JsonSerializable
         }
     }
 
-    public function describeSong(): string
+    public function describeSong(): ?string
     {
         $parts = [];
 
@@ -279,7 +306,10 @@ class HostedGame extends Model implements \JsonSerializable
             $parts[] = $this->songName;
 
         if (empty($parts))
-            return $this->levelId;
+            if ($this->levelId)
+                return $this->levelId;
+            else
+                return null;
 
         return implode(' - ', $parts);
     }
@@ -458,13 +488,20 @@ class HostedGame extends Model implements \JsonSerializable
         if ($this->masterServerHost && $this->masterServerPort)
             $sz['masterServerEp'] = "{$this->masterServerHost}:{$this->masterServerPort}";
 
-        if ($includeDetails)
+        if ($includeDetails) {
+            $sz['level'] = $this->serializeLevel();
             $sz['players'] = $this->serializePlayers();
+        }
 
         $sz['serverTypeText'] = $this->describeServerType();
         $sz['masterServerText'] = $this->describeMasterServer();
 
         return $sz;
+    }
+
+    public function serializeLevel(): ?array
+    {
+        return $this->fetchLevel()?->jsonSerialize() ?? null;
     }
 
     public function serializePlayers(): array
