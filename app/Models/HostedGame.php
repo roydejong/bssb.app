@@ -24,6 +24,8 @@ class HostedGame extends Model implements \JsonSerializable
     public const SERVER_TYPE_BEATTOGETHER_QUICKPLAY = "beattogether_quickplay";
     public const SERVER_TYPE_BEATDEDI_CUSTOM = "beatdedi_custom";
     public const SERVER_TYPE_BEATDEDI_QUICKPLAY = "beatdedi_quickplay";
+    public const SERVER_TYPE_BEATUPSERVER_DEDICATED = "beatupserver_dedicated";
+    public const SERVER_TYPE_BEATUPSERVER_QUICKPLAY = "beatupserver_quickplay";
     public const SERVER_TYPE_NORMAL_DEDICATED = "vanilla_dedicated";
     public const SERVER_TYPE_NORMAL_QUICKPLAY = "vanilla_quickplay";
     public const SERVER_TYPE_PLAYER_HOST = "player_host";
@@ -361,6 +363,8 @@ class HostedGame extends Model implements \JsonSerializable
             self::SERVER_TYPE_BEATDEDI_QUICKPLAY => "BeatDedi Quickplay",
             self::SERVER_TYPE_NORMAL_QUICKPLAY => ($isOfficial ? "Official Quickplay" : "Unofficial Quickplay"),
             self::SERVER_TYPE_NORMAL_DEDICATED => ($isOfficial ? "Official Dedicated" : "Unofficial Dedicated"),
+            self::SERVER_TYPE_BEATUPSERVER_QUICKPLAY => "BeatUpServer Quickplay",
+            self::SERVER_TYPE_BEATUPSERVER_DEDICATED => "BeatUpServer Dedicated",
             null, self::SERVER_TYPE_PLAYER_HOST => "Player hosted (Old P2P)",
             default => $this->serverType
         };
