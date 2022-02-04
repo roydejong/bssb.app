@@ -215,6 +215,7 @@
                                         <th>#</th>
                                         <th>Player</th>
                                         <th>Latency</th>
+                                        <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -222,7 +223,7 @@
                                         <tr class="{{ player.isConnected ? "connected-player" : "disconnected-player" }}">
                                             <td>{{ player.sortIndex }}</td>
                                             <td>
-                                                <span>{{ player.userName }}</span>
+                                                {{ player.userName }}
                                                 {% if player.isHost %}
                                                     <span class="badge bg-primary" data-toggle="tooltip"
                                                           data-placement="bottom"
@@ -270,6 +271,12 @@
                                                 {% else %}
                                                     {{ player.describeLatency() }}
                                                 {% endif %}
+                                            </td>
+                                            <td class="mini-profile">
+                                                <a class="btn btn-sm btn-primary" href="{{ player.getProfileUrl() }}" title="View profile">
+                                                    <i class="mdi mdi-account"></i>
+                                                    <span>Profile</span>
+                                                </a>
                                             </td>
                                         </tr>
                                     {% endfor %}

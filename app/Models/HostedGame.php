@@ -224,6 +224,11 @@ class HostedGame extends Model implements \JsonSerializable
         return $this->lastUpdate < self::getStaleGameCutoff();
     }
 
+    public function getIsStaleOrEnded(): bool
+    {
+        return $this->getIsStale() || $this->endedAt;
+    }
+
     public static function getStaleGameCutoff(): \DateTime
     {
         $cutoffMinutes = self::STALE_GAME_AFTER_MINUTES;

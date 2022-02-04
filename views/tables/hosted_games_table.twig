@@ -24,12 +24,12 @@
                     <code><strong>{{ game.serverCode }}</strong></code>
                 {% endif %}
             </td>
-            <td class="align-middle">
+            <td class="align-middle server-name-cell">
                 <a href="{{ game.getWebDetailUrl() }}" title="View game details" target="_self">
                     <strong>{{ game.gameName }}</strong>
                 </a>
             </td>
-            <td class="align-middle">
+            <td class="align-middle level-text-cell">
                 {% if not game.getIsPlayingLevel() %}
                     <i class="mdi mdi-account-group-outline"></i> In lobby
                 {% else %}

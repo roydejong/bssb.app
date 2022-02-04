@@ -1,0 +1,111 @@
+{% extends "_base.twig" %}
+
+{% block main %}
+    <main role="main" class="container-fluid">
+        <div class="content-page">
+
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Server Browser</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Player detail</li>
+                </ol>
+            </nav>
+
+            <div class="player-detail">
+
+                <h1><strong>{{ player.getDisplayName() }}</strong></h1>
+
+                <hr />
+
+                <div class="row">
+                    <div class="col-md-9">
+
+                        {% if recentGames and recentGames|length > 0 %}
+                            <h4>Recent games</h4>
+                            {% for game in recentGames %}
+                                {% set isDead = game.getIsStaleOrEnded() %}
+                                <a class="card server-card {% if not isDead %}-alive{% endif %}" href="{{ game.webDetailUrl }}">
+                                    {% if game.coverUrl %}
+                                        <div class="bg" style="background-image:url('{{ game.coverUrl }}');"></div>
+                                    {% endif %}
+                                    <div class="col-cover">
+                                        <img src="{{ game.coverUrl ? game.coverUrl : "/static/bsassets/BeatGamesLogo.png" }}"/>
+                                    </div>
+                                    <div class="col-details">
+                                        <strong>{{ game.gameName }}</strong>
+                                        <p>{{ game.describeServerType() }}</p>
+                                        {% if not isDead %}
+                                            <span class="badge bg-success" data-toggle="tooltip" data-placement="bottom" title="This game is active and may be joinable">Joinable</span>
+                                        {% endif %}
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        {% else %}
+                            <div class="alert alert-danger">No game history found</div>
+                        {% endif %}
+
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="face-render -unknown">
+                                <div class="eyes"></div>
+                            </div>
+                            <p class="avatar-disclaim">Actual avatar preview coming soon(tm)</p>
+                        </div>
+                        <br />
+                        <div class="card">
+                            <table class="card-table -fully-rounded table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">User type</th>
+                                        <td>{{ player.describeType() }}</td>
+                                    </tr>
+                                    {% if player.platformType %}
+                                        <tr>
+                                            <th scope="row">Platform</th>
+                                            <td>
+                                                {% if player.platformType == "steam" %}
+                                                    <i class="mdi mdi-steam"></i>
+                                                    <span>Steam</span>
+                                                {% elseif player.platformType == "oculus" %}
+                                                    {% include "oculus_icon.twig"%}
+                                                    <span>Oculus</span>
+                                                {% else %}
+                                                    {{ player.platformType }}
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                    <tr>
+                                        <th scope="row">First seen</th>
+                                        <td>{{ player.firstSeen.format('r')|timeago_html|raw }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Last seen</th>
+                                        <td>{{ player.lastSeen.format('r')|timeago_html|raw }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="profile-links">
+                            {% if player.platformType == "steam" and player.platformUserId %}
+                                <a href="https://steamcommunity.com/profiles/{{ player.platformUserId }}" target="_blank" title="ScoreSaber Profile" class="btn btn-primary">
+                                    <i class="mdi mdi-steam"></i>
+                                    <span>Steam Profile</span>
+                                </a>
+                            {% endif %}
+                            {% if player.platformUserId %}
+                                <a href="https://scoresaber.com/u/{{ player.platformUserId }}" target="_blank" title="ScoreSaber Profile" class="btn btn-primary">
+                                    <img src="/static/icons/ScoreSaber.svg" alt="ScoreSaber" height="18" width="18"/>
+                                    <span>ScoreSaber Profile</span>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+{% endblock %}

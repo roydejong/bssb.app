@@ -2,6 +2,10 @@ body {
   padding-top: 5rem;
 }
 
+a.btn {
+  border: 1px solid rgba(255, 255, 255, .1) !important;
+}
+
 small.muted {
   opacity: .555;
 }
@@ -126,6 +130,19 @@ td.cover-art-cell {
   }
 }
 
+td.server-name-cell {
+  max-width: 350px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+td.level-text-cell {
+  max-width: 500px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 td.no-results-cell {
   text-align: center;
   vertical-align: middle;
@@ -231,6 +248,21 @@ i.rank-trophy-3 {
     }
   }
 }
+.card-table.-fully-rounded {
+  overflow: hidden;
+  border-radius: .25rem;
+
+  tr:first-child {
+    th, td {
+      border-top: 0;
+    }
+  }
+  tr:last-child {
+    th, td {
+      border-bottom: 0;
+    }
+  }
+}
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Game detail
@@ -247,9 +279,107 @@ i.rank-trophy-3 {
     td {
       color: #e74c3c;
       opacity: .75;
+
+      &.mini-profile {
+        opacity: 1;
+      }
     }
     td:first-child {
       text-decoration: line-through;
+    }
+  }
+
+  td.mini-profile {
+    width: 105px;
+    padding-top: 0;
+    padding-bottom: 0;
+    vertical-align: middle;
+    text-align: center;
+
+    .btn {
+      padding-top: 0;
+      padding-bottom: 0;
+
+      i {
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Player detail
+
+.player-detail {
+  .profile-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    > * {
+      margin: 20px 5px;
+    }
+  }
+}
+
+.server-card {
+  margin: 15px 0;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  padding: 15px;
+  overflow: hidden;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, .5);
+
+  &.-alive {
+    border-color: green !important;
+  }
+
+  .bg {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 0;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    opacity: .5;
+    filter: blur(8px);
+    -webkit-filter: blur(8px);
+  }
+
+  .col-cover {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    max-width: 100px;
+
+    img {
+      background: #666;
+      border-radius: 6px;
+      margin-right: 15px;
+      height: 48px;
+      width: 48px;
+      object-fit: cover;
+      overflow: hidden;
+      box-shadow: 0 0 5px rgba(0, 0, 0, .5);
+    }
+  }
+  .col-details {
+    position: relative;
+    z-index: 1;
+    display: block;
+    flex-grow: 1;
+    margin: 0;
+
+    p {
+      margin: 0;
+      opacity: .75;
     }
   }
 }
@@ -416,7 +546,7 @@ body[data-theme="dark"] {
 
   .card {
     background-color: #303030;
-    border-color: #375a7f !important;
+    border-color: #375a7f;
     color: #eee;
   }
   .card-header {
@@ -529,6 +659,45 @@ body[data-theme="dark"] {
 }
 body[data-theme="dark"] .oculus-icon {
   .st0{fill:#fff;}
+}
+
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Face render
+
+.face-render {
+  position: relative;
+  height: 128px;
+  width: 128px;
+  background: #0993ed;
+  display: flex;
+  align-self: center;
+  justify-self: center;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 15px;
+  border-radius: 30px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, .5), inset 0 0 5px 5px rgba(255, 255, 255, .5);
+
+  .eyes {
+    display: block;
+    position: absolute;
+    height: 60px;
+    width: 100%;
+    background-image: url('bsassets/sactx_1024x1024_DXT5_AvatarEyes.png');
+    background-position: 0% 104%;
+    background-size: 400%;
+    top: 35%;
+  }
+}
+.avatar-disclaim {
+  font-size: 13px;
+  opacity: .5;
+  padding: 5px;
+  padding-bottom: 0;
+  text-align: center;
+  display: block;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

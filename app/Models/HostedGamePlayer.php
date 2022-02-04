@@ -41,4 +41,14 @@ class HostedGamePlayer extends Model
 
         return PlayerBotDetect::detect($this->userId, $this->userName);
     }
+
+    public function getUrlSafeUserId(): string
+    {
+        return Player::cleanUserIdForUrl($this->userId);
+    }
+
+    public function getProfileUrl(): string
+    {
+        return "/player/{$this->getUrlSafeUserId()}";
+    }
 }

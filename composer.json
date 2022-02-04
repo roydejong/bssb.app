@@ -29,5 +29,11 @@
       "app\\": "app/",
       "tests\\": "tests/"
     }
+  },
+  "config": {
+    "preferred-install": {
+      "softwarepunt/*": "source",
+      "*": "dist"
+    }
   }
 }
