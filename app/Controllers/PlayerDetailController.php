@@ -59,11 +59,12 @@ class PlayerDetailController
         $staleGameCutoff = HostedGame::getStaleGameCutoff();
 
         $activeGames = (clone $baseQuery)
+            ->andWhere("hgp.is_connected = 1")
             ->andWhere("last_update >= ? AND ended_at IS NULL", $staleGameCutoff)
             ->queryAllModels();
 
         $recentGames = (clone $baseQuery)
-            ->andWhere("last_update < ? OR ended_at IS NOT NULL", $staleGameCutoff)
+            ->andWhere("hgp.is_connected = 0 OR last_update < ? OR ended_at IS NOT NULL", $staleGameCutoff)
             ->limit(10)
             ->queryAllModels();
 
