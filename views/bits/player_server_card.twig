@@ -1,0 +1,13 @@
+{% set isDead = game.getIsStaleOrEnded() %}
+<a class="card server-card {% if not isDead %}-alive{% endif %}" href="{{ game.webDetailUrl }}">
+    {% if game.coverUrl %}
+        <div class="bg" style="background-image:url('{{ game.coverUrl }}');"></div>
+    {% endif %}
+    <div class="col-cover">
+        <img src="{{ game.coverUrl ? game.coverUrl : "/static/bsassets/BeatGamesLogo.png" }}" alt="Cover art" loading="lazy"/>
+    </div>
+    <div class="col-details">
+        <strong>{{ game.gameName }}</strong>
+        <p>{{ game.describeServerType() }}</p>
+    </div>
+</a>

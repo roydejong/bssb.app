@@ -20,27 +20,27 @@
                 <div class="row">
                     <div class="col-md-9">
 
+                        {% set anyData = 0 %}
+
+                        {% if activeGames and activeGames|length > 0 %}
+                            {% set anyData = 1 %}
+                            <h4>{{ activeGames|length == 1 ? "Current game" : "Active games" }}</h4>
+                            {% for game in activeGames %}
+                                {% include "bits/player_server_card.twig" %}
+                            {% endfor %}
+                        {% endif %}
+
+                        {% if anyData %}<hr/>{% endif %}
+
                         {% if recentGames and recentGames|length > 0 %}
+                            {% set anyData = 1 %}
                             <h4>Recent games</h4>
                             {% for game in recentGames %}
-                                {% set isDead = game.getIsStaleOrEnded() %}
-                                <a class="card server-card {% if not isDead %}-alive{% endif %}" href="{{ game.webDetailUrl }}">
-                                    {% if game.coverUrl %}
-                                        <div class="bg" style="background-image:url('{{ game.coverUrl }}');"></div>
-                                    {% endif %}
-                                    <div class="col-cover">
-                                        <img src="{{ game.coverUrl ? game.coverUrl : "/static/bsassets/BeatGamesLogo.png" }}"/>
-                                    </div>
-                                    <div class="col-details">
-                                        <strong>{{ game.gameName }}</strong>
-                                        <p>{{ game.describeServerType() }}</p>
-                                        {% if not isDead %}
-                                            <span class="badge bg-success" data-toggle="tooltip" data-placement="bottom" title="This game is active and may be joinable">Joinable</span>
-                                        {% endif %}
-                                    </div>
-                                </a>
+                                {% include "bits/player_server_card.twig" %}
                             {% endfor %}
-                        {% else %}
+                        {% endif %}
+
+                        {% if not anyData %}
                             <div class="alert alert-danger">No game history found</div>
                         {% endif %}
 
@@ -77,12 +77,16 @@
                                         </tr>
                                     {% endif %}
                                     <tr>
-                                        <th scope="row">First seen</th>
-                                        <td>{{ player.firstSeen.format('r')|timeago_html|raw }}</td>
+                                        <th scope="row">Last seen</th>
+                                        {% if activeNow %}
+                                            <td><div class="active-lamp -on"></div> Active now</td>
+                                        {% else %}
+                                            <td>{{ player.lastSeen.format('r')|timeago_html|raw }}</td>
+                                        {% endif %}
                                     </tr>
                                     <tr>
-                                        <th scope="row">Last seen</th>
-                                        <td>{{ player.lastSeen.format('r')|timeago_html|raw }}</td>
+                                        <th scope="row">First seen</th>
+                                        <td>{{ player.firstSeen.format('r')|timeago_html|raw }}</td>
                                     </tr>
                                 </tbody>
                             </table>

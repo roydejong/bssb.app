@@ -5,6 +5,7 @@ namespace app\Controllers;
 use app\Frontend\ResponseCache;
 use app\Frontend\View;
 use app\HTTP\Request;
+use app\Models\HostedGame;
 use app\Models\Joins\HostedGameLevelRecord;
 use app\Models\Player;
 
@@ -48,12 +49,21 @@ class PlayerDetailController
         // -------------------------------------------------------------------------------------------------------------
         // Player data
 
-        $recentGames = HostedGameLevelRecord::query()
+        $baseQuery = HostedGameLevelRecord::query()
             ->select("hg.*, lr.beatsaver_id, lr.cover_url, lr.name AS level_name")
             ->from("hosted_games hg")
             ->innerJoin("hosted_game_players hgp ON (hgp.hosted_game_id = hg.id AND hgp.user_id = ?)", $player->userId)
             ->leftJoin("level_records lr ON (lr.level_id = hg.level_id)")
-            ->orderBy("last_update DESC")
+            ->orderBy("last_update DESC");
+
+        $staleGameCutoff = HostedGame::getStaleGameCutoff();
+
+        $activeGames = (clone $baseQuery)
+            ->andWhere("last_update >= ? AND ended_at IS NULL", $staleGameCutoff)
+            ->queryAllModels();
+
+        $recentGames = (clone $baseQuery)
+            ->andWhere("last_update < ? OR ended_at IS NOT NULL", $staleGameCutoff)
             ->limit(10)
             ->queryAllModels();
 
@@ -62,9 +72,11 @@ class PlayerDetailController
 
         $view = new View('player_detail.twig');
         $view->set('player', $player);
+        $view->set('activeGames', $activeGames);
         $view->set('recentGames', $recentGames);
         $view->set('pageTitle', "Player: {$player->getDisplayName()}");
         $view->set('pageDescr', "{$player->getDisplayName()} is a Beat Saber multiplayer {$player->describeType(true)}. View their profile and played games here.");
+        $view->set('activeNow', !empty($activeGames));
 
         $response = $view->asResponse();
         @$resCache->writeResponse($response);
