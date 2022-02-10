@@ -30,21 +30,12 @@ abbr[data-original-title], abbr[title] {
   word-break: break-all;
 }
 
-.main-page {
-  padding: 0 1.5rem;
+// ---------------------------------------------------------------------------------------------------------------------
 
-  .card {
-    margin-bottom: 1.5rem;
+@import "scss/home";
 
-    .close {
-      position: absolute;
-      color: #fff;
-      top: 15px;
-      right: 15px;
-      cursor: pointer;
-    }
-  }
-}
+// ---------------------------------------------------------------------------------------------------------------------
+
 .content-page {
   padding: 0 1.5rem;
 
