@@ -8,6 +8,7 @@ use app\HTTP\Request;
 use app\Models\HostedGame;
 use app\Models\Joins\HostedGameLevelRecord;
 use app\Models\Player;
+use app\Models\PlayerAvatar;
 
 class PlayerDetailController
 {
@@ -68,6 +69,13 @@ class PlayerDetailController
             ->limit(10)
             ->queryAllModels();
 
+        /**
+         * @var $avatarData PlayerAvatar|null
+         */
+        $avatarData = PlayerAvatar::query()
+            ->where('player_id = ?', $player->id)
+            ->querySingleModel();
+
         // -------------------------------------------------------------------------------------------------------------
         // Response
 
@@ -78,6 +86,7 @@ class PlayerDetailController
         $view->set('pageTitle', "Player: {$player->getDisplayName()}");
         $view->set('pageDescr', "{$player->getDisplayName()} is a Beat Saber multiplayer {$player->describeType(true)}. View their profile and played games here.");
         $view->set('activeNow', !empty($activeGames));
+        $view->set('avatarData', $avatarData?->jsonSerialize());
 
         $response = $view->asResponse();
         @$resCache->writeResponse($response);

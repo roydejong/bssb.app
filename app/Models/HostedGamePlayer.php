@@ -51,4 +51,15 @@ class HostedGamePlayer extends Model
     {
         return "/player/{$this->getUrlSafeUserId()}";
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Player connection
+
+    public function syncProfileData(?array $avatarData): void
+    {
+        $player = Player::fromServerPlayer($this);
+
+        if ($avatarData)
+            $player->syncAvatarData($avatarData);
+    }
 }

@@ -46,11 +46,8 @@
 
                     </div>
                     <div class="col-md-3">
-                        <div class="card">
-                            <div class="face-render -unknown">
-                                <div class="eyes"></div>
-                            </div>
-                            <p class="avatar-disclaim">Actual avatar preview coming soon(tm)</p>
+                        <div class="card" id="avatar-render">
+                            <p class="avatar-disclaim">Avatar preview loading...</p>
                         </div>
                         <br />
                         <div class="card">
@@ -112,4 +109,21 @@
 
         </div>
     </main>
+{% endblock %}
+
+{% block scripts %}
+    <script src="/static/bsavatar/BeatSaberAvatar.js" async defer></script>
+    <script>
+        window.addEventListener('load', function () {
+            const renderTarget = document.getElementById('avatar-render');
+            const avatarData = {{ avatarData|json_encode|raw }};
+            BeatSaberAvatar.setup(renderTarget, avatarData, {
+                assetsBaseDir: "/static/bsavatar/",
+                enableControls: true,
+                rotateAnimation: true,
+                enableGlasses: false,
+                enableFacialHair: false
+            });
+        });
+    </script>
 {% endblock %}

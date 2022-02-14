@@ -100,3 +100,24 @@
     }
   }
 }
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+#avatar-render {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0;
+  width: 100%;
+  min-height: 500px;
+  overflow: hidden;
+  background-image: url('/static/bsavatar/avatar-stage-bg.jpg');
+  background-position: center center;
+  background-size: cover;
+
+  canvas {
+    position: relative;
+    z-index: 2;
+  }
+}

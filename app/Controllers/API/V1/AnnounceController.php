@@ -303,6 +303,7 @@ class AnnounceController
                     $isHost = intval($playerItem['IsHost'] ?? 0) === 1;
                     $isAnnouncer = intval($playerItem['IsAnnouncer'] ?? 0) === 1;
                     $latency = floatval($playerItem['Latency'] ?? 0);
+                    $avatarData = $playerItem['AvatarData'] ?? null;
 
                     if ($sortIndex === -1) {
                         // -1 slot is used for dedicated servers only
@@ -341,6 +342,7 @@ class AnnounceController
                     $playerRecord->latency = $latency;
                     $playerRecord->isConnected = true;
                     $playerRecord->save();
+                    $playerRecord->syncProfileData($avatarData);
 
                     $playerIndexesKnown[] = $sortIndex;
                 }
