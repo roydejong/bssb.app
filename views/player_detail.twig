@@ -46,8 +46,15 @@
 
                     </div>
                     <div class="col-md-3">
-                        <div class="card" id="avatar-render">
-                            <p class="avatar-disclaim">Avatar preview loading...</p>
+                        <div class="avatar-render-wrap">
+                            <div class="card" id="avatar-render">
+                                <p class="avatar-disclaim">Avatar preview loading...</p>
+                            </div>
+                            {% if not avatarData %}
+                                <div class="avatar-render-warning">
+                                    <p>Sorry, we don't quite know what this player looks like yet...</p>
+                                </div>
+                            {% endif %}
                         </div>
                         <br />
                         <div class="card">
@@ -116,13 +123,30 @@
     <script>
         window.addEventListener('load', function () {
             const renderTarget = document.getElementById('avatar-render');
-            const avatarData = {{ avatarData|json_encode|raw }};
+
+            {% if avatarData %}
+                const avatarData = {{ avatarData|json_encode|raw }};
+            {% else %}
+                const avatarData = {
+                    headTopId: "None",
+                    glassesId: "None",
+                    facialHairId: "None",
+                    handsId: "BareHands",
+                    clothesId: "Tracksuit",
+                    clothesPrimaryColor: "#fff",
+                    clothesSecondaryColor: "#fff",
+                    clothesDetailColor: "#fff",
+                    skinColorId: "Zombie",
+                    eyesId: "QuestionMark"
+                };
+            {% endif %}
+
             BeatSaberAvatar.setup(renderTarget, avatarData, {
                 assetsBaseDir: "/static/bsavatar/",
                 enableControls: true,
                 rotateAnimation: true,
-                enableGlasses: false,
-                enableFacialHair: false
+                enableGlasses: true,
+                enableFacialHair: true
             });
         });
     </script>

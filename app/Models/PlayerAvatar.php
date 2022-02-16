@@ -54,9 +54,12 @@ class PlayerAvatar extends Model implements \JsonSerializable
         if (empty($this->glassesId) || $this->glassesId === "Default") $this->glassesId = "None";
         if (empty($this->facialHairId)) $this->facialHairId = "None";
         if (empty($this->handsId)) $this->handsId = "BareHands";
-        if (empty($this->clothesId)) $this->clothesId = "Basket";
+        if (empty($this->clothesId)) $this->clothesId = "Tracksuit";
+        if (empty($this->clothesPrimaryColor)) $this->clothesPrimaryColor = "#fff";
+        if (empty($this->clothesSecondaryColor)) $this->clothesSecondaryColor = "#fff";
+        if (empty($this->clothesDetailColor)) $this->clothesDetailColor = "#fff";
         if (empty($this->skinColorId)) $this->skinColorId = "Zombie";
-        if (empty($this->eyesId)) $this->eyesId = "Eyes10";
+        if (empty($this->eyesId)) $this->eyesId = "QuestionMark";
     }
 
     private function convertUnityColorToHex(?array $unityColorData): string

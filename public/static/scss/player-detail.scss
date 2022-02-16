@@ -103,6 +103,17 @@
 
 // ---------------------------------------------------------------------------------------------------------------------
 
+.avatar-render-wrap {
+  position: relative;
+  overflow: hidden;
+
+  > div {
+    overflow: hidden;
+    border-radius: 0.25rem;
+    border: 1px solid #375a7f;
+  }
+}
+
 #avatar-render {
   display: flex;
   align-items: center;
@@ -120,4 +131,26 @@
     position: relative;
     z-index: 2;
   }
+}
+
+.avatar-render-warning {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, .75);
+  overflow: hidden;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  padding: 50px;
+  font-size: 16px;
+  font-weight: bold;
+  pointer-events: none;
+  user-select: none;
+  text-shadow: 0 0 3px rgba(0, 0, 0, .1);
 }
