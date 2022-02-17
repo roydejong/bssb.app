@@ -35,6 +35,7 @@ class BrowseController
         $searchQuery = $request->queryParams['query'] ?? null;
         $platformConstraint = $request->queryParams['platform'] ?? null;
         $isVanilla = intval($request->queryParams['vanilla'] ?? 0) === 1;
+        $includeLevel = intval($request->queryParams['includeLevel'] ?? 0) === 1;
 
         $filterFull = intval($request->queryParams['filterFull'] ?? 0) === 1;
         $filterInProgress = intval($request->queryParams['filterInProgress'] ?? 0) === 1;
@@ -131,13 +132,20 @@ class BrowseController
         $totalCount = intval($countQuery->select()->count()->querySingleValue());
 
         // Data
-        $games = [];
+        $gamesSz = [];
 
         if ($totalCount > 0) {
+            /**
+             * @var $games HostedGame[]
+             */
             $games = $baseQuery
                 ->offset($offset)
                 ->limit($limit)
                 ->queryAllModels();
+
+            foreach ($games as $game) {
+                $gamesSz[] = $game->jsonSerialize(false, $includeLevel);
+            }
         }
 
         $sysConfig = SystemConfig::fetchInstance();
@@ -146,7 +154,7 @@ class BrowseController
             "Count" => $totalCount,
             "Offset" => $offset,
             "Limit" => $limit,
-            "Lobbies" => $games,
+            "Lobbies" => $gamesSz,
             "Message" => $sysConfig->serverMessage
         ]);
     }

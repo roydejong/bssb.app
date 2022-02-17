@@ -489,7 +489,7 @@ class HostedGame extends Model implements \JsonSerializable
     // -----------------------------------------------------------------------------------------------------------------
     // Serialize
 
-    public function jsonSerialize(bool $includeDetails = false): array
+    public function jsonSerialize(bool $includeDetails = false, bool $includeLevelObject = false): array
     {
         $sz = $this->getPropertyValues();
         $sz['key'] = $this->getHashId();
@@ -498,8 +498,17 @@ class HostedGame extends Model implements \JsonSerializable
             $sz['masterServerEp'] = "{$this->masterServerHost}:{$this->masterServerPort}";
 
         if ($includeDetails) {
-            $sz['level'] = $this->serializeLevel();
             $sz['players'] = $this->serializePlayers();
+        }
+
+        if ($includeDetails || $includeLevelObject) {
+            $sz['level'] = $this->serializeLevel();
+            unset($sz['beatsaverId']);
+            unset($sz['coverUrl']);
+            unset($sz['levelName']);
+            unset($sz['levelId']);
+            unset($sz['songName']);
+            unset($sz['songAuthor']);
         }
 
         $sz['serverTypeText'] = $this->describeServerType();
