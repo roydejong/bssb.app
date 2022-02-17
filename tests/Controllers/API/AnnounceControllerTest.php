@@ -9,6 +9,7 @@ use app\Common\IPEndPoint;
 use app\Controllers\API\V1\AnnounceController;
 use app\Models\HostedGame;
 use app\Models\LevelRecord;
+use app\Models\Player;
 use PHPUnit\Framework\TestCase;
 use tests\Mock\MockJsonRequest;
 
@@ -574,9 +575,12 @@ class AnnounceControllerTest extends TestCase
             'SortIndex' => 0,
             'UserId' => 'testPlayerListSync_0',
             'UserName' => 'Bob',
+            'PlatformType' => 'OculusQuest',
+            'PlatformUserId' => '1234567890',
             'IsHost' => false,
             'IsAnnouncer' => true,
-            'Latency' => 0.1234
+            'Latency' => 0.1234,
+            'AvatarData' => ['skinColorId' => 'Smurf']
         ];
 
         $response = (new AnnounceController())->announce($request);
@@ -606,6 +610,24 @@ class AnnounceControllerTest extends TestCase
         $this->assertSame(false, $firstPlayer->isHost);
         $this->assertSame(true, $firstPlayer->isAnnouncer);
         $this->assertSame(0.1234, $firstPlayer->latency);
+
+        /**
+         * @var $playerProfile Player|null
+         */
+        $playerProfile = Player::query()
+            ->where('user_id = ?', $firstPlayer->userId)
+            ->querySingleModel();
+
+        $this->assertNotNull($playerProfile, "Player profile should be created automatically");
+        $this->assertSame($firstPlayer->userId, $playerProfile->userId);
+        $this->assertSame($firstPlayer->userName, $playerProfile->userName);
+        $this->assertSame(ModPlatformId::OCULUS, $playerProfile->platformType);
+        $this->assertSame("1234567890", $playerProfile->platformUserId);
+
+        $playerAvatar = $playerProfile->fetchAvatar();
+        $this->assertNotNull($playerAvatar,
+            "Player avatar should be created automatically when AvatarData is supplied");
+        $this->assertSame("Smurf", $playerAvatar->skinColorId);
 
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         // Part 2: Adding in new players in the next announce

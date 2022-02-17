@@ -2,6 +2,7 @@
 
 namespace app\Models;
 
+use app\BeatSaber\ModPlatformId;
 use app\Utils\PirateDetect;
 use app\Utils\PlayerBotDetect;
 use SoftwarePunt\Instarecord\Model;
@@ -55,11 +56,19 @@ class HostedGamePlayer extends Model
     // -----------------------------------------------------------------------------------------------------------------
     // Player connection
 
-    public function syncProfileData(?array $avatarData): void
+    public function syncProfileData(?string $platformType, ?string $platformUserId, ?array $avatarData): void
     {
         $player = Player::fromServerPlayer($this);
 
+        if ($platformType)
+            $player->platformType = ModPlatformId::normalize($platformType);
+
+        if ($platformUserId)
+            $player->platformUserId = $platformUserId;
+
         if ($avatarData)
             $player->syncAvatarData($avatarData);
+
+        $player->save();
     }
 }

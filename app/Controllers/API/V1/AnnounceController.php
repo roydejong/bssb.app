@@ -300,6 +300,8 @@ class AnnounceController
                     $sortIndex = intval($playerItem['SortIndex'] ?? -999);
                     $userId = $playerItem['UserId'] ?? null;
                     $userName = $playerItem['UserName'] ?? null;
+                    $platformType = $playerItem['PlatformType'] ?? null;
+                    $platformUserId = $playerItem['PlatformUserId'] ?? null;
                     $isHost = intval($playerItem['IsHost'] ?? 0) === 1;
                     $isAnnouncer = intval($playerItem['IsAnnouncer'] ?? 0) === 1;
                     $latency = floatval($playerItem['Latency'] ?? 0);
@@ -342,7 +344,8 @@ class AnnounceController
                     $playerRecord->latency = $latency;
                     $playerRecord->isConnected = true;
                     $playerRecord->save();
-                    $playerRecord->syncProfileData($avatarData);
+
+                    $playerRecord->syncProfileData($platformType, $platformUserId, $avatarData);
 
                     $playerIndexesKnown[] = $sortIndex;
                 }

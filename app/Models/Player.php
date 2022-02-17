@@ -66,14 +66,19 @@ class Player extends Model
         return $playerRecord;
     }
 
-    public function syncAvatarData(array $avatarData): void
+    public function fetchAvatar(): ?PlayerAvatar
+    {
+        return PlayerAvatar::query()
+            ->where('player_id = ?', $this->id)
+            ->querySingleModel();
+    }
+
+    public function syncAvatarData(array $avatarData): ?PlayerAvatar
     {
         if (!$this->id)
             throw new \RuntimeException("Cannot sync avatar data before saving player model");
 
-        $avatar = PlayerAvatar::query()
-            ->where('player_id = ?', $this->id)
-            ->querySingleModel();
+        $avatar = $this->fetchAvatar();
 
         if (!$avatar) {
             $avatar = new PlayerAvatar();
@@ -82,6 +87,8 @@ class Player extends Model
 
         $avatar->fillAvatarData($avatarData);
         $avatar->save();
+
+        return $avatar;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

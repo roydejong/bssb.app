@@ -33,33 +33,22 @@ class PlayerAvatar extends Model implements \JsonSerializable
 
     public function fillAvatarData(array $avatarData): void
     {
-        $this->headTopId = $avatarData['headTopId'] ?? null;
-        $this->headTopPrimaryColor = $this->convertUnityColorToHex($avatarData['headTopPrimaryColor']);
-        $this->headTopSecondaryColor = $this->convertUnityColorToHex($avatarData['headTopSecondaryColor']);
-        $this->glassesId = $avatarData['glassesId'] ?? null;
-        $this->glassesColor = $this->convertUnityColorToHex($avatarData['glassesColor']);
-        $this->facialHairId = $avatarData['facialHairId'] ?? null;
-        $this->facialHairColor = $this->convertUnityColorToHex($avatarData['facialHairColor']);
-        $this->handsId = $avatarData['handsId'] ?? null;
-        $this->handsColor = $this->convertUnityColorToHex($avatarData['handsColor']);
-        $this->clothesId = $avatarData['clothesId'] ?? null;
-        $this->clothesPrimaryColor = $this->convertUnityColorToHex($avatarData['clothesPrimaryColor']);
-        $this->clothesSecondaryColor = $this->convertUnityColorToHex($avatarData['clothesSecondaryColor']);
-        $this->clothesDetailColor = $this->convertUnityColorToHex($avatarData['clothesDetailColor']);
-        $this->skinColorId = $avatarData['skinColorId'] ?? null;
-        $this->eyesId = $avatarData['eyesId'] ?? null;
-        $this->mouthId = $avatarData['mouthId'] ?? null;
-
-        if (empty($this->headTopId)) $this->headTopId = "None";
-        if (empty($this->glassesId) || $this->glassesId === "Default") $this->glassesId = "None";
-        if (empty($this->facialHairId)) $this->facialHairId = "None";
-        if (empty($this->handsId)) $this->handsId = "BareHands";
-        if (empty($this->clothesId)) $this->clothesId = "Tracksuit";
-        if (empty($this->clothesPrimaryColor)) $this->clothesPrimaryColor = "#fff";
-        if (empty($this->clothesSecondaryColor)) $this->clothesSecondaryColor = "#fff";
-        if (empty($this->clothesDetailColor)) $this->clothesDetailColor = "#fff";
-        if (empty($this->skinColorId)) $this->skinColorId = "Zombie";
-        if (empty($this->eyesId)) $this->eyesId = "QuestionMark";
+        $this->headTopId = $avatarData['headTopId'] ?? "None";
+        $this->headTopPrimaryColor = $this->convertUnityColorToHex($avatarData['headTopPrimaryColor'] ?? null);
+        $this->headTopSecondaryColor = $this->convertUnityColorToHex($avatarData['headTopSecondaryColor'] ?? null);
+        $this->glassesId = $avatarData['glassesId'] ?? "None";
+        $this->glassesColor = $this->convertUnityColorToHex($avatarData['glassesColor'] ?? null);
+        $this->facialHairId = $avatarData['facialHairId'] ?? "None";
+        $this->facialHairColor = $this->convertUnityColorToHex($avatarData['facialHairColor'] ?? null);
+        $this->handsId = $avatarData['handsId'] ?? "BareHands";
+        $this->handsColor = $this->convertUnityColorToHex($avatarData['handsColor'] ?? null);
+        $this->clothesId = $avatarData['clothesId'] ?? "Tracksuit";
+        $this->clothesPrimaryColor = $this->convertUnityColorToHex($avatarData['clothesPrimaryColor'] ?? null);
+        $this->clothesSecondaryColor = $this->convertUnityColorToHex($avatarData['clothesSecondaryColor'] ?? null);
+        $this->clothesDetailColor = $this->convertUnityColorToHex($avatarData['clothesDetailColor'] ?? null);
+        $this->skinColorId = $avatarData['skinColorId'] ?? "Default";
+        $this->eyesId = $avatarData['eyesId'] ?? "QuestionMark";
+        $this->mouthId = $avatarData['mouthId'] ?? "None";
     }
 
     private function convertUnityColorToHex(?array $unityColorData): string
