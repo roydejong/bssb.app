@@ -13,13 +13,15 @@
     padding-top: 78px - 15px;
   }
 
-  &:before, &:after {
+  &:before, video, &:after {
     content: "";
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
+    max-width: 100%;
+    max-height: 100%;
   }
   &:before {
     z-index: 1;
@@ -28,14 +30,20 @@
     background-position: center center;
     background-size: cover;
   }
-  &:after {
+  video {
     z-index: 2;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+  }
+  &:after {
+    z-index: 3;
     backdrop-filter: blur(4px);
     background: rgba(0, 0, 0, .5);
   }
 
   > .container {
-    z-index: 3;
+    z-index: 4;
     flex-direction: column;
     text-shadow: 0 0 2px rgba(0, 0, 0, .1);
 

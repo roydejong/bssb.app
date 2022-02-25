@@ -1,0 +1,81 @@
+.face {
+  position: relative;
+  height: 256px;
+  width: 256px;
+  background: #0993ed;
+  display: flex;
+  align-self: center;
+  justify-self: center;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 15px;
+  border-radius: 32px;
+  box-shadow: 0 0 24px rgba(0, 0, 0, .5), inset 0 0 12px 12px rgba(200, 200, 255, .25);
+
+  &.-size-xl { }
+  &.-size-lg {
+    height: 128px;
+    width: 128px;
+    border-radius: 16px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, .5), inset 0 0 6px 6px rgba(200, 200, 255, .25);
+  }
+  &.-size-md {
+    height: 64px;
+    width: 64px;
+    border-radius: 8px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, .5), inset 0 0 3px 3px rgba(200, 200, 255, .25);
+  }
+  &.-size-sm {
+    height: 32px;
+    width: 32px;
+    border-radius: 4px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, .5), inset 0 0 1.5px 1.5px rgba(200, 200, 255, .25);
+  }
+
+  &.-skin-Default { background-color: #E5A9A9; }
+  &.-skin-Light { background-color: #EBD6C7; }
+  &.-skin-Mid { background-color: #D9B9A3; }
+  &.-skin-Brown { background-color: #806753; }
+  &.-skin-DarkBrown { background-color: #593D2D; }
+  &.-skin-Black { background-color: #402A21; }
+  &.-skin-Alien { background-color: #2FBC2F; }
+  &.-skin-Smurf { background-color: #1A8AE0; }
+  &.-skin-Zombie { background-color: #FFFFFF; }
+  &.-skin-Purple { background-color: #AB36A7; }
+}
+
+.face .eyes {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-position: center 40%;
+  background-repeat: no-repeat;
+  background-size: 100%;
+
+  &.-Eyes1 { background-image: url('/static/bsavatar/Eyes/Eyes3.png'); }
+  &.-Eyes2 { background-image: url('/static/bsavatar/Eyes/Eyes1.png'); }
+  &.-Eyes3 { background-image: url('/static/bsavatar/Eyes/Eyes7.png'); }
+  &.-Eyes4 { background-image: url('/static/bsavatar/Eyes/Eyes8.png'); }
+  &.-Eyes5 { background-image: url('/static/bsavatar/Eyes/Eyes11.png'); }
+  &.-Eyes6 { background-image: url('/static/bsavatar/Eyes/Eyes10.png'); }
+  &.-Eyes7 { background-image: url('/static/bsavatar/Eyes/Eyes2.png'); }
+  &.-Eyes8 { background-image: url('/static/bsavatar/Eyes/Eyes5.png'); }
+  &.-Eyes9 { background-image: url('/static/bsavatar/Eyes/Eyes6.png'); }
+  &.-Eyes10 { background-image: url('/static/bsavatar/Eyes/Eyes9.png'); }
+  &.-Eyes11 { background-image: url('/static/bsavatar/Eyes/Eyes4.png'); }
+  &.-QuestionMark { background-image: url('/static/bsavatar/Eyes/QuestionMark.png'); }
+}
+
+.face-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  > .face {
+    margin: 0 1rem;
+  }
+}
