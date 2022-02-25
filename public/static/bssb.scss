@@ -15,9 +15,13 @@
 :root {
   --col-bg-main: #202124;
   --col-txt-main: #fff;
+  --col-txt-muted: #666;
+  --col-txt-muted-light: #ececec;
   --col-saber-left: #e5a300;
   --col-saber-right: #cf0389;
   --col-blue: #0078d4;
+  --col-green: #2ecc71;
+  --col-green-dark: #27ae60;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-bold: 700;
@@ -63,7 +67,8 @@ body {
 // ---------------------------------------------------------------------------------------------------------------------
 // Component imports
 
-// TODO
+@import "scss/components/btn";
+@import "scss/components/hero";
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Page imports
