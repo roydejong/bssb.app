@@ -70,6 +70,12 @@ a {
 // ---------------------------------------------------------------------------------------------------------------------
 // Layout core
 
+.turbo-progress-bar {
+  height: 3px;
+  background-color: var(--col-saber-right);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, .1);
+}
+
 #content-inner {
   min-height: calc(100vh - 328px);
 }
