@@ -33,19 +33,19 @@
                 </div>
             </a>
             <nav class="nav">
-                <a class="-active">
+                <a class="-active" title="Homepage - Server Browser web app">
                     <i class="mdi mdi-server"></i>
                     <span>Overview</span>
                 </a>
-                <a>
+                <a title="Download Beat Saber Server Browser for PC or Quest">
                     <i class="mdi mdi-tray-arrow-down"></i>
                     <span>Download</span>
                 </a>
-                <a>
+                <a title="Trending and popular multiplayer songs">
                     <i class="mdi mdi-poll"></i>
                     <span>Statistics</span>
                 </a>
-                <a>
+                <a title="Interactive guide for Beat Saber multiplayer modding">
                     <i class="mdi mdi-book-open-variant"></i>
                     <span>Multiplayer Guide</span>
                 </a>
@@ -62,7 +62,7 @@
     <div class="hero -pull-up">
         <div class="container">
             <h1>Beat Saber Server Browser</h1>
-            <p class="lead">BSSB is a game modification that helps you share and find multiplayer lobbies.</p>
+            <p class="lead">BSSB is a mod for Beat Saber that makes it easy to share and join multiplayer lobbies.</p>
             <div class="buttons">
                 <a class="btn -download" title="Download the Server Browser mod for Beat Saber">
                     <i class="mdi mdi-tray-arrow-down"></i> Download the mod
@@ -74,32 +74,13 @@
         </div>
     </div>
 
+    <br />
 
-    <div class="face-stats">
+    <main>
         <div class="container">
-
-            <div class="face -skin-Black -size-sm">
-                <div class="eyes -Eyes10"></div>
-            </div>
-
-            <div class="face -skin-Smurf -size-sm">
-                <div class="eyes -Eyes6"></div>
-            </div>
-
-            <div class="face -skin-Light -size-sm">
-                <div class="eyes -Eyes11"></div>
-            </div>
-
-            <div class="face -skin-Alien -size-sm">
-                <div class="eyes -Eyes3"></div>
-            </div>
-
-            <div class="face -skin-Zombie -size-sm">
-                <div class="eyes -Eyes10"></div>
-            </div>
-
+            {% include "tables/hosted_games_table.twig" %}
         </div>
-    </div>
+    </main>
 
 </body>
 </html>

@@ -74,6 +74,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+
+  .container {
+    flex-direction: row;
+
+    .left {
+      flex-grow: 2;
+    }
+  }
 
   > .face {
     margin: 0 1rem;

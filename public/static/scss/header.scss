@@ -20,6 +20,7 @@ header {
       user-select: none;
       cursor: pointer;
       text-shadow: 0 0 2px rgba(0, 0, 0, .1);
+      text-decoration: none !important;
 
       &, * {
         transition: box-shadow .1s ease-out, color .1s ease-out;
