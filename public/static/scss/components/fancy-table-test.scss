@@ -30,7 +30,7 @@
 
     td {
       transition: box-shadow .05s linear;
-      background: #1a1a1d;
+      background: var(--col-bg-darker);
       overflow: hidden;
     }
     td:first-child {

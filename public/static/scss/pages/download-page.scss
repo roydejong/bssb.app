@@ -24,7 +24,7 @@
   .download {
     display: flex;
     align-items: center;
-    margin: 1.5rem 0;
+    margin: 0 0 1.5rem 0;
     padding: 3rem;
     background: var(--col-bg-darker);
     width: 100%;
@@ -95,5 +95,17 @@
     }
   }
 
+  .help-text {
+    width: 100%;
 
+    a {
+      display: inline-flex;
+      align-items: center;
+
+      i {
+        color: var(--col-txt-muted-medium);
+        margin-right: 5px;
+      }
+    }
+  }
 }

@@ -14,7 +14,7 @@
 
 :root {
   --col-bg-main: #202124;
-  --col-bg-darker: #1d1e20;
+  --col-bg-darker: #19191a;
   --col-txt-main: #fff;
   --col-txt-muted: #666;
   --col-txt-muted-medium: #888;
@@ -22,6 +22,7 @@
   --col-saber-left: #e5a300;
   --col-saber-right: #cf0389;
   --col-blue: #0078d4;
+  --col-blue-dark: #0984e3;
   --col-green: #2ecc71;
   --col-green-dark: #27ae60;
   --font-weight-regular: 400;
@@ -37,6 +38,7 @@ html, body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  overflow-anchor: none;
 }
 html {
   font-size: 10px;
@@ -58,7 +60,7 @@ body {
 }
 
 a {
-  color: var(--col-blue);
+  color: var(--col-blue-dark);
   text-decoration: none;
   cursor: pointer;
 
