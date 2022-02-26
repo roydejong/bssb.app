@@ -109,6 +109,14 @@ header {
     .auth {
       flex-grow: 1;
 
+      a.profile-link {
+        display: inline-flex;
+        align-items: center;
+
+        .face {
+          margin: 0 1rem 0 0;
+        }
+      }
       a.steam-login {
         padding: .5rem 1.5rem;
         background-color: var(--col-blue);

@@ -43,6 +43,11 @@ class Request
      */
     public string $protocol = "http";
 
+    /**
+     * Raw request cookies as key-value array.
+     */
+    public array $cookies = [];
+
     public function __construct() { }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -174,6 +179,7 @@ class Request
         $result->path = strtok($_SERVER['REQUEST_URI'], '?'); // strtok to remove query string
         $result->queryParams = $_GET;
         $result->protocol = !empty($_SERVER['HTTPS']) ? "https" : "http";
+        $result->cookies = $_COOKIE;
 
         // Request headers
         $result->headers = [];

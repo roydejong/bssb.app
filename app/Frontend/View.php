@@ -7,11 +7,13 @@ use app\HTTP\Response;
 class View
 {
     protected string $fileName;
+    protected bool $liteMode;
     protected array $context;
 
-    public function __construct(string $fileName)
+    public function __construct(string $fileName, bool $liteMode = false)
     {
         $this->fileName = $fileName;
+        $this->liteMode = $liteMode;
         $this->context = [];
     }
 
@@ -23,7 +25,7 @@ class View
     public function render(): string
     {
         return ViewRenderer::instance()
-            ->render($this->fileName, $this->context);
+            ->render($this->fileName, $this->context, !$this->liteMode);
     }
 
     public function asResponse(int $responseCode = 200): Response

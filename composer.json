@@ -18,7 +18,8 @@
     "softwarepunt/instarecord": "dev-master@dev",
     "hashids/hashids": "^4.0",
     "sentry/sdk": "^3.0",
-    "lavary/crunz": "^3.0"
+    "lavary/crunz": "^3.0",
+    "xpaw/steam-openid": "^2.0"
   },
   "require-dev": {
     "ext-xdebug": "*",

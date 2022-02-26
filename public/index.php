@@ -11,12 +11,15 @@ use app\Controllers\DedicatedServersController;
 use app\Controllers\DownloadController;
 use app\Controllers\GameDetailController;
 use app\Controllers\HomeController;
+use app\Controllers\LoginController;
 use app\Controllers\MasterServersController;
+use app\Controllers\MeController;
 use app\Controllers\PlayerDetailController;
 use app\Controllers\PrivacyController;
 use app\Controllers\StatsController;
 use app\HTTP\Request;
 use app\HTTP\RequestRouter;
+use app\Session\Session;
 
 require_once "../bootstrap.php";
 
@@ -34,6 +37,11 @@ $router->register('/privacy', PrivacyController::class, 'getPrivacy');
 $router->register('/master-servers', MasterServersController::class, 'getServerList');
 $router->register('/dedicated-servers', DedicatedServersController::class, 'getServerList');
 
+// Session/auth
+$router->register('/me', MeController::class, 'getMe');
+$router->register('/login', LoginController::class, 'getLogin');
+$router->register('/login/return', LoginController::class, 'getLoginReturn');
+
 // API routes
 $router->register('/api/v1/announce', AnnounceController::class, 'announce');
 $router->register('/api/v1/unannounce', UnAnnounceController::class, 'unAnnounce');
@@ -45,7 +53,12 @@ $router->register('/api/v1/status', StatusController::class, 'getStatus');
 // API routes (v2)
 $router->register('/api/v2/unannounce', UnAnnounceControllerV2::class, 'unAnnounce');
 
-// Run!
+// Runtime
+$session = Session::getInstance();
 $request = Request::deduce();
+$session->onRequest($request);
+
 $response = $router->dispatch($request);
+
+$session->beforeResponse($response);
 $response->send();

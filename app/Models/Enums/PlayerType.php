@@ -5,7 +5,7 @@ namespace app\Models\Enums;
 enum PlayerType : string
 {
     /**
-     * A player that has announced data to the server browser.
+     * A player that has announced data to the server browser OR that has logged onto the site with Steam.
      */
     case PlayerModUser = 'player_mod_user';
     /**

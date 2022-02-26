@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a1ba2b14095c0f5b289fcbf0606f23cd",
+    "content-hash": "aa22097bc2b2b34c0fedc2d575714744",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -3938,6 +3938,54 @@
                 "source": "https://github.com/webmozarts/assert/tree/1.10.0"
             },
             "time": "2021-03-09T10:59:23+00:00"
+        },
+        {
+            "name": "xpaw/steam-openid",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/xPaw/SteamOpenID.php.git",
+                "reference": "ad502f905bad3790283d06f07904213072b18d0d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/xPaw/SteamOpenID.php/zipball/ad502f905bad3790283d06f07904213072b18d0d",
+                "reference": "ad502f905bad3790283d06f07904213072b18d0d",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=7.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "xPaw\\Steam\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A correct and simple implementation of OpenID authentication for Steam",
+            "homepage": "https://github.com/xPaw/SteamOpenID.php",
+            "keywords": [
+                "OpenId",
+                "steam",
+                "steamcommunity",
+                "valve"
+            ],
+            "support": {
+                "issues": "https://github.com/xPaw/SteamOpenID.php/issues",
+                "source": "https://github.com/xPaw/SteamOpenID.php/tree/v2.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/xPaw",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-10-02T12:06:48+00:00"
         }
     ],
     "packages-dev": [

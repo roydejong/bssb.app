@@ -2,6 +2,7 @@
 
 namespace app\Frontend;
 
+use app\Session\Session;
 use app\Utils\TimeAgo;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -48,11 +49,23 @@ class ViewRenderer
             $userContext = [];
         }
 
-        // Add version (for cache busting)
+        // Add version info (for cache busting)
         $versionFilePath = DIR_BASE . "/.version";
         $userContext['version_hash'] = trim(@file_get_contents($versionFilePath));
         $userContext['version_hash_short'] = substr($userContext['version_hash'],0,7);
         $userContext['version_date'] = @filemtime($versionFilePath);
+
+        // Add session info
+        $session = Session::getInstance();
+
+        if ($session->getIsSteamAuthed()) {
+            $player = $session->getPlayer();
+
+            $userContext['steam_authed'] = true;
+            $userContext['self_player_name'] = $player?->userName ?? "Steam User";
+            $userContext['self_face_render'] = $player?->renderFaceHtml();
+        }
+
 
         return $userContext;
     }
@@ -60,9 +73,10 @@ class ViewRenderer
     // -----------------------------------------------------------------------------------------------------------------
     // Render
 
-    public function render(string $viewFileName, ?array $context): string
+    public function render(string $viewFileName, ?array $context, bool $processContext = true): string
     {
-        return $this->twig->render($viewFileName, $this->processContext($context));
+        $contextArg = $processContext ? $this->processContext($context) : $context;
+        return $this->twig->render($viewFileName, $contextArg);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

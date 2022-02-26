@@ -2,6 +2,9 @@
 
 namespace app\Models;
 
+use app\BeatSaber\ModPlatformId;
+use app\BeatSaber\MultiplayerUserId;
+use app\Frontend\View;
 use app\Models\Enums\PlayerType;
 use SoftwarePunt\Instarecord\Model;
 
@@ -64,6 +67,33 @@ class Player extends Model
         $playerRecord->save();
 
         return $playerRecord;
+    }
+
+    public static function fromSteamId(string $steamId): Player
+    {
+        $hashedUserId = MultiplayerUserId::hash("Steam", $steamId);
+
+        $player = Player::query()
+            ->where('(user_id = ?) OR (platform_type = ? AND platform_user_id = ?)',
+                $hashedUserId, ModPlatformId::STEAM, $steamId)
+            ->querySingleModel();
+
+        $now = new \DateTime('now');
+
+        if ($player === null) {
+            $player = new Player();
+            $player->userId = $hashedUserId;
+            $player->userName = "Steam User";
+            $player->firstSeen = $now;
+        }
+
+        $player->type = PlayerType::PlayerModUser;
+        $player->platformType = ModPlatformId::STEAM;
+        $player->platformUserId = $steamId;
+        $player->lastSeen = $now;
+        $player->save();
+
+        return $player;
     }
 
     public function fetchAvatar(): ?PlayerAvatar
@@ -148,5 +178,22 @@ class Player extends Model
     public function getWebDetailUrl(): string
     {
         return "/player/{$this->getUrlSafeUserId()}";
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Face
+
+    public function renderFaceHtml(): string
+    {
+        $avatarData = $this->fetchAvatar();
+
+        $skinColorId = $avatarData?->skinColorId ?? "Alien";
+        $eyesId = $avatarData?->eyesId ?? "QuestionMark";
+
+        $view = new View("bits/face.twig", true);
+        $view->set('size', "sm");
+        $view->set('skinColorId', $skinColorId);
+        $view->set('eyesId', $eyesId);
+        return $view->render();
     }
 }
