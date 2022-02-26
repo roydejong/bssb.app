@@ -11,10 +11,10 @@
     </thead>
     <tbody>
         {% for game in games %}
-            <tr>
+            <tr style="cursor: pointer;" onclick="document.location = '{{ game.webDetailUrl }}'; return false;">
                 <td>
                     <div class="inner">
-                        <img class="cover-art" src="{{ game.coverUrl }}" alt="CoverArtName" loading="lazy"/>
+                        <img class="cover-art" src="{{ game.coverUrl }}" alt="{{ game.levelName }}" loading="lazy"/>
                         <div class="stacked-text">
                             <a href="{{ game.webDetailUrl }}">{{ game.gameName }}</a>
                             <div>

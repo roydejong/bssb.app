@@ -1,11 +1,16 @@
 .fancy-table-test {
   width: 100%;
   border-collapse: separate;
+  border-spacing: 0 5px;
 
   td, th {
     text-align: left;
     vertical-align: middle;
     font-size: 1.4rem;
+    border-spacing: 50px;
+    padding: 6px 8px;
+    border: none!important;
+    border-style: solid none;
 
     > .inner {
       display: flex;
@@ -20,18 +25,21 @@
   }
 
   tbody tr {
+    border-radius: 6px;
+    overflow: hidden;
+
     td {
       transition: box-shadow .05s linear;
       background: #1a1a1d;
-      padding: 6px;
+      overflow: hidden;
     }
     td:first-child {
-      border-top-left-radius: 6px;
-      border-bottom-left-radius: 6px;
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 8px;
     }
     td:last-child {
-      border-top-right-radius: 6px;
-      border-bottom-right-radius: 6px;
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
     }
   }
   tbody tr:hover {
@@ -45,6 +53,7 @@
     height: 64px;
     width: 64px;
     margin-right: 1.5rem;
+    background: #333;
   }
 
   .stacked-text {

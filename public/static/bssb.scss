@@ -16,6 +16,7 @@
   --col-bg-main: #202124;
   --col-txt-main: #fff;
   --col-txt-muted: #666;
+  --col-txt-muted-medium: #888;
   --col-txt-muted-light: #ececec;
   --col-saber-left: #e5a300;
   --col-saber-right: #cf0389;
@@ -49,6 +50,11 @@ body {
 // ---------------------------------------------------------------------------------------------------------------------
 // Typography core
 
+::selection {
+  background: var(--col-saber-left);
+  color: var(--col-txt-main);
+}
+
 a {
   color: var(--col-blue);
   text-decoration: none;
@@ -77,6 +83,7 @@ a {
 // Layout core - imports
 
 @import "scss/header";
+@import "scss/footer";
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Component imports
