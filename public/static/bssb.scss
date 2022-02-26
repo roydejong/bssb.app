@@ -15,6 +15,7 @@
 :root {
   --col-bg-main: #202124;
   --col-bg-darker: #19191a;
+  --col-bg-darkest: #131314;
   --col-txt-main: #fff;
   --col-txt-muted: #666;
   --col-txt-muted-medium: #888;
@@ -69,6 +70,12 @@ a {
   }
 }
 
+abbr {
+  text-decoration: none;
+  border-bottom: 1px dotted #444;
+  cursor: help;
+}
+
 // ---------------------------------------------------------------------------------------------------------------------
 // Layout core
 
@@ -102,6 +109,7 @@ a {
 // ---------------------------------------------------------------------------------------------------------------------
 // Component imports
 
+@import "scss/components/alert";
 @import "scss/components/btn";
 @import "scss/components/face";
 @import "scss/components/fancy-table-test";
@@ -111,3 +119,4 @@ a {
 // Page imports
 
 @import "scss/pages/download-page";
+@import "scss/pages/player-profile";

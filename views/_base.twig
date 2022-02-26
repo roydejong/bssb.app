@@ -21,6 +21,7 @@
 </script>
 {% endif %}
 <script type="text/javascript" src="/static/vendor/turbo.es2017-umd.js" defer async></script>
+{% block scriptsHead %}{% endblock %}
 </head>
 <body>
 
@@ -89,6 +90,8 @@
         </div>
         <div class="hippopotamus"></div>
     </footer>
+
+{% block scriptsBody %}{% endblock %}
 
 </body>
 </html>

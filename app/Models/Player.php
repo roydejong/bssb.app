@@ -183,7 +183,7 @@ class Player extends Model
     // -----------------------------------------------------------------------------------------------------------------
     // Face
 
-    public function renderFaceHtml(): string
+    public function renderFaceHtml(string $size = 'sm'): string
     {
         $avatarData = $this->fetchAvatar();
 
@@ -191,7 +191,7 @@ class Player extends Model
         $eyesId = $avatarData?->eyesId ?? "QuestionMark";
 
         $view = new View("bits/face.twig", true);
-        $view->set('size', "sm");
+        $view->set('size', $size);
         $view->set('skinColorId', $skinColorId);
         $view->set('eyesId', $eyesId);
         return $view->render();

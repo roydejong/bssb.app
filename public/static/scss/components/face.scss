@@ -33,7 +33,7 @@
     box-shadow: 0 0 3px rgba(0, 0, 0, .5), inset 0 0 1.5px 1.5px rgba(200, 200, 255, .25);
   }
 
-  &.-skin-Default { background-color: #E5A9A9; }
+  &, &.-skin-Default { background-color: #E5A9A9; }
   &.-skin-Light { background-color: #EBD6C7; }
   &.-skin-Mid { background-color: #D9B9A3; }
   &.-skin-Brown { background-color: #806753; }
@@ -56,6 +56,7 @@
   background-repeat: no-repeat;
   background-size: 100%;
 
+  &, &.-QuestionMark { background-image: url('/static/bsavatar/Eyes/QuestionMark.png'); }
   &.-Eyes1 { background-image: url('/static/bsavatar/Eyes/Eyes3.png'); }
   &.-Eyes2 { background-image: url('/static/bsavatar/Eyes/Eyes1.png'); }
   &.-Eyes3 { background-image: url('/static/bsavatar/Eyes/Eyes7.png'); }
@@ -67,7 +68,6 @@
   &.-Eyes9 { background-image: url('/static/bsavatar/Eyes/Eyes6.png'); }
   &.-Eyes10 { background-image: url('/static/bsavatar/Eyes/Eyes9.png'); }
   &.-Eyes11 { background-image: url('/static/bsavatar/Eyes/Eyes4.png'); }
-  &.-QuestionMark { background-image: url('/static/bsavatar/Eyes/QuestionMark.png'); }
 }
 
 .face-stats {
