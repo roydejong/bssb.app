@@ -19,6 +19,13 @@
   &, * {
     transition: box-shadow .1s ease-out, color .1s ease-out;
   }
+
+  &.-download {
+    background-color: var(--col-green-dark);
+  }
+  &.-guide {
+    background-color: var(--col-blue);
+  }
 }
 .btn:hover {
   box-shadow: inset 999px 999px 999px rgba(255, 255, 255, .1);

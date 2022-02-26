@@ -37,7 +37,7 @@ class HomeController
         $gameQuery->applyFiltersFromRequest($request);
         $queryResult = $gameQuery->execute();
 
-        $view = new View('home.twig');
+        $view = new View('pages/home.twig');
         $view->set('serverMessage', (SystemConfig::fetchInstance())
             ->getCleanServerMessage());
         $view->set('games', $queryResult->games);

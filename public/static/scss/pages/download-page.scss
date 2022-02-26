@@ -1,0 +1,99 @@
+.download-page {
+  width: 100%;
+
+  .container {
+    flex-direction: column;
+  }
+
+  .text-intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 3rem 0;
+
+    h1 {
+      margin: 0 0 1.5rem 0;
+    }
+    p {
+      margin: 0 0 1.5rem 0;
+      font-size: 1.6rem;
+      color: var(--col-txt-muted-light);
+    }
+  }
+
+  .download {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0;
+    padding: 3rem;
+    background: var(--col-bg-darker);
+    width: 100%;
+    border-radius: 6px;
+
+    img.preview {
+      height: 96px;
+      width: 96px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-right: 1.5rem;
+    }
+
+    .left {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+
+      h2 {
+        font-size: 2.2rem;
+        margin: 0 0 1.9rem 0;
+      }
+      .platform {
+        margin: 0 0 1rem 0;
+        color: var(--col-txt-muted-light);
+        font-size: 1.6rem;
+      }
+      .author {
+        margin: 0;
+        color: var(--col-txt-muted-medium);
+        font-size: 1.4rem;
+      }
+    }
+
+    .right {
+      display: flex;
+      flex-direction: column;
+
+      > .btn {
+        margin-bottom: 1.5rem;
+      }
+      > .secondary-link {
+        color: var(--col-txt-muted-light);
+        font-weight: var(--font-weight-medium);
+        margin-bottom: .75rem;
+        font-size: 1.4rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        > i {
+          margin-right: .5rem;
+        }
+      }
+    }
+
+    .oculus-icon {
+      display: inline-block;
+      font-size: inherit;
+      text-rendering: auto;
+      line-height: inherit;
+      -webkit-font-smoothing: antialiased;
+      height: 19px;
+      max-width: 16px;
+      margin-top: 4px;
+      margin-bottom: -4px;
+    }
+  }
+
+
+}

@@ -14,6 +14,7 @@
 
 :root {
   --col-bg-main: #202124;
+  --col-bg-darker: #1d1e20;
   --col-txt-main: #fff;
   --col-txt-muted: #666;
   --col-txt-muted-medium: #888;
@@ -35,6 +36,7 @@ html, body {
   min-height: 100%;
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
 html {
   font-size: 10px;
@@ -68,6 +70,10 @@ a {
 // ---------------------------------------------------------------------------------------------------------------------
 // Layout core
 
+#content-inner {
+  min-height: calc(100vh - 328px);
+}
+
 .container {
   position: relative;
   display: flex;
@@ -96,4 +102,4 @@ a {
 // ---------------------------------------------------------------------------------------------------------------------
 // Page imports
 
-// TODO
+@import "scss/pages/download-page";

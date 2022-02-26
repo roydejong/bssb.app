@@ -8,6 +8,7 @@ use app\Controllers\API\V1\StatusController;
 use app\Controllers\API\V1\UnAnnounceController;
 use app\Controllers\API\V2\UnAnnounceControllerV2;
 use app\Controllers\DedicatedServersController;
+use app\Controllers\DownloadController;
 use app\Controllers\GameDetailController;
 use app\Controllers\HomeController;
 use app\Controllers\MasterServersController;
@@ -23,6 +24,7 @@ $router = new RequestRouter();
 
 // Site routes
 $router->register('/', HomeController::class, 'index');
+$router->register('/download', DownloadController::class, 'getDownloadPage');
 $router->register('/stats', StatsController::class, 'getStats');
 $router->register('/stats/top/$urlSection', StatsController::class, 'getTopLevelsSubPage');
 $router->register('/stats/top/$urlSection/playlist', StatsController::class, 'getTopLevelsPlaylist');
