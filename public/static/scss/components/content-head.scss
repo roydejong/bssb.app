@@ -1,0 +1,27 @@
+.content-head {
+  display: flex;
+  align-items: center;
+  margin: 1.5rem 0;
+  width: 100%;
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    h1 {
+      margin: 0 0 1rem 0;
+      font-size: 3.2rem;
+      color: var(--col-txt-main);
+    }
+    p {
+      margin: 0;
+      font-size: 1.6rem;
+      color: var(--col-txt-muted-light);
+    }
+  }
+  .buttons {
+    display: flex;
+    align-items: center;
+  }
+}

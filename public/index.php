@@ -17,6 +17,7 @@ use app\Controllers\MeController;
 use app\Controllers\PlayerProfileController;
 use app\Controllers\PrivacyController;
 use app\Controllers\StatsController;
+use app\Controllers\UserSettingsController;
 use app\HTTP\Request;
 use app\HTTP\RequestRouter;
 use app\Session\Session;
@@ -37,10 +38,11 @@ $router->register('/privacy', PrivacyController::class, 'getPrivacy');
 $router->register('/master-servers', MasterServersController::class, 'getServerList');
 $router->register('/dedicated-servers', DedicatedServersController::class, 'getServerList');
 
-// Session/auth
+// Auth + user
 $router->register('/me', MeController::class, 'getMe');
 $router->register('/login', LoginController::class, 'getLogin');
 $router->register('/login/return', LoginController::class, 'getLoginReturn');
+$router->register('/settings', UserSettingsController::class, 'getUserSettings');
 
 // API routes
 $router->register('/api/v1/announce', AnnounceController::class, 'announce');

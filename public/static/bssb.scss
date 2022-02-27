@@ -110,7 +110,10 @@ abbr {
 // Component imports
 
 @import "scss/components/alert";
+@import "scss/components/block";
 @import "scss/components/btn";
+@import "scss/components/check-switch";
+@import "scss/components/content-head";
 @import "scss/components/face";
 @import "scss/components/fancy-table-test";
 @import "scss/components/hero";
@@ -121,3 +124,4 @@ abbr {
 @import "scss/pages/download-page";
 @import "scss/pages/player-profile";
 @import "scss/pages/text-page";
+@import "scss/pages/user-settings";

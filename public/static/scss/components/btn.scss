@@ -6,10 +6,13 @@
   user-select: none;
   cursor: pointer;
   text-shadow: 0 0 2px rgba(0, 0, 0, .1);
+  font: inherit;
   font-weight: var(--font-weight-medium);
   background: var(--col-blue);
   color: var(--col-txt-main);
   text-decoration: none !important;
+  border: none;
+  appearance: none;
 
   > i {
     font-size: 1.8rem;
@@ -22,10 +25,10 @@
     transition: box-shadow .1s ease-out, color .1s ease-out;
   }
 
-  &.-download {
+  &.-green, &.-download, &.-save {
     background-color: var(--col-green-dark);
   }
-  &.-guide {
+  &.-blue, &.-guide {
     background-color: var(--col-blue);
   }
 }

@@ -111,6 +111,7 @@ class Session
     public function setPlayerInfo(Player $player): void
     {
         $this->set('player_id', $player->id);
+        $this->cachedPlayer = $player;
     }
 
     private ?Player $cachedPlayer = null;
@@ -122,8 +123,11 @@ class Session
 
         $playerId = intval($this->get('player_id'));
 
-        if (!$playerId)
-            return null;
+        if (!$playerId) {
+            $player = Player::fromSteamId($this->getSteamUserId64());
+            $this->setPlayerInfo($player);
+            return $player;
+        }
 
         if ($this->cachedPlayer && $this->cachedPlayer->id == $playerId)
             return $this->cachedPlayer;
@@ -135,5 +139,48 @@ class Session
 
         $this->cachedPlayer = $player;
         return $player;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // CSRF
+
+    private function getCsrfSessionKey(string $key): string
+    {
+        return "csrf_{$key}";
+    }
+
+    public function getCsrfToken(string $key): string
+    {
+        $sessionKey = $this->getCsrfSessionKey($key);
+        $token = $this->get($sessionKey);
+
+        if (!$token) {
+            $token = bin2hex(random_bytes(32));
+            $this->set($sessionKey, $token);
+        }
+
+        return $token;
+    }
+
+    public function invalidateCsrfToken(string $key): void
+    {
+        $sessionKey = $this->getCsrfSessionKey($key);
+        $this->set($sessionKey, null);
+    }
+
+    public function validateCsrfToken(string $key, ?string $token, bool $invalidate = true): bool
+    {
+        $isValid = !empty($token) && $token === $this->getCsrfToken($key);
+
+        if ($invalidate)
+            $this->invalidateCsrfToken($key);
+
+        return $isValid;
+    }
+
+    public function validateCsrfRequest(Request $request, string $key, bool $invalidate = true): bool
+    {
+        $tokenInput = $request->postParams['__token'] ?? null;
+        return $this->validateCsrfToken($key, $tokenInput, $invalidate);
     }
 }

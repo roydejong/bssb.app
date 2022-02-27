@@ -11,13 +11,13 @@
                     <p class="descr">{{ player.describeType() }}</p>
                 </div>
                 <div class="buttons">
-                    {% if player.platformType == "steam" and player.platformUserId %}
+                    {% if player.platformType == "steam" and player.platformUserId and player.showSteam %}
                         <a href="https://steamcommunity.com/profiles/{{ player.platformUserId }}" target="_blank" title="ScoreSaber Profile" class="btn btn-primary">
                             <i class="mdi mdi-steam"></i>
                             <span>Steam Profile</span>
                         </a>
                     {% endif %}
-                    {% if player.platformUserId %}
+                    {% if player.platformUserId and player.showScoreSaber %}
                         <a href="https://scoresaber.com/u/{{ player.platformUserId }}" target="_blank" title="ScoreSaber Profile" class="btn btn-primary">
                             <img src="/static/icons/ScoreSaber.svg" alt="ScoreSaber" height="18" width="18"/>
                             <span>ScoreSaber Profile</span>
@@ -107,41 +107,34 @@
                 </section>
             </div>
 
+            {% if player.profileBio %}
+                <section class="block">
+                    <div class="title">
+                        <i class="mdi mdi-text-account"></i>
+                        <h3>Profile bio</h3>
+                    </div>
+                    <div class="inner -textarea-fill">
+                        <textarea readonly name="profileBio">{{ player.profileBio }}</textarea>
+                    </div>
+                </section>
+            {% endif %}
+
             {% if privacyMode %}
-                <div class="alert">
-                    <i class="mdi mdi-eye-off"></i>
-                    <strong>This player has never used the Server Browser mod, so their game history is hidden by default.</strong>
-                </div>
+                {% if not user.showHistory %}
+                    <div class="alert">
+                        <i class="mdi mdi-eye-off"></i>
+                        <strong>This player has disabled their game history.</strong>
+                    </div>
+                {% else %}
+                    <div class="alert">
+                        <i class="mdi mdi-eye-off"></i>
+                        <strong>This player has never used the Server Browser mod, so their game history is hidden by default.</strong>
+                    </div>
+                {% endif %}
             {% endif %}
 
         </div>
     </main>
-{% endblock %}
-
-{% block contentold %}
-<main class="player-detail">
-    <div class="container">
-
-
-        <div class="avatar-render-wrap">
-            <div class="card" id="avatar-render">
-                <p class="avatar-disclaim">Avatar preview loading...</p>
-            </div>
-            {% if not avatarData %}
-                <div class="avatar-render-warning">
-                    <p>Sorry, we don't quite know what this player looks like yet...</p>
-                </div>
-            {% endif %}
-        </div>
-
-
-
-        <div class="profile-links">
-
-        </div>
-
-    </div>
-</main>
 {% endblock %}
 
 {% block scriptsHead %}

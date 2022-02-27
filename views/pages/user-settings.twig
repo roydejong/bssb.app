@@ -1,0 +1,65 @@
+{% extends "_base.twig" %}
+
+{% block content %}
+    <main class="user-settings">
+        <div class="container">
+
+            <form method="post" action="/settings">
+                <input type="hidden" name="__token" value="{{ __token }}"/>
+
+                <div class="content-head">
+                    <div class="text">
+                        <h1>User Settings</h1>
+                        <p class="lead">These settings affect your player profile on BSSB.</p>
+                    </div>
+                    <div class="buttons">
+                        <button type="submit" class="btn -save"><i class="mdi mdi-content-save"></i> Save Settings</button>
+                    </div>
+                </div>
+
+                {% if formError %}
+                    <div class="alert">Your profile could not be updated. Please check your input and try again.</div>
+                {% endif %}
+
+                <div class="settings-form">
+                    <div class="block">
+                        <div class="title">
+                            <i class="mdi mdi-text-account"></i>
+                            <h3>Profile bio</h3>
+                        </div>
+                        <div class="inner -textarea-fill">
+                            <textarea name="profileBio" placeholder="Enter optional text to show on your profile">{{ formData.profileBio }}</textarea>
+                        </div>
+                    </div>
+                    <div class="block">
+                        <div class="title">
+                            <i class="mdi mdi-cog"></i>
+                            <h3>Preferences</h3>
+                        </div>
+                        <div class="inner">
+                            <div class="check-switch">
+                                <input type="checkbox" name="showSteam" id="showSteam"
+                                       {% if formData.showSteam %}checked{% endif %} value="1"/>
+                                <label for="showSteam">Link to Steam profile</label>
+                                <p class="help">A link to your Steam profile will be shown.</p>
+                            </div>
+                            <div class="check-switch">
+                                <input type="checkbox" name="showScoreSaber" id="showScoreSaber"
+                                       {% if formData.showScoreSaber %}checked{% endif %} value="1"/>
+                                <label for="showScoreSaber">Link to ScoreSaber profile</label>
+                                <p class="help">A link to your ScoreSaber profile will be shown.</p>
+                            </div>
+                            <div class="check-switch">
+                                <input type="checkbox" name="showHistory" id="showHistory"
+                                       {% if formData.showHistory %}checked{% endif %} value="1"/>
+                                <label for="showHistory">Show game history</label>
+                                <p class="help">Show your public game history on your profile.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </main>
+{% endblock %}

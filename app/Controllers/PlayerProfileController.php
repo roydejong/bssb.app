@@ -59,7 +59,7 @@ class PlayerProfileController
 
         $isMe = $viewerPlayer->id === $player->id;
 
-        $enablePrivacyShield = $player->type === PlayerType::PlayerObserved;
+        $enablePrivacyShield = $player->type === PlayerType::PlayerObserved || !$player->showHistory;
 
         // -------------------------------------------------------------------------------------------------------------
         // Player data

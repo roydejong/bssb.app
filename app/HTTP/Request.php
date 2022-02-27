@@ -34,6 +34,11 @@ class Request
     public array $queryParams = [];
 
     /**
+     * POST form parameters as associative array.
+     */
+    public array $postParams = [];
+
+    /**
      * Raw request headers as associative array, all keys lowercase.
      */
     public array $headers = [];
@@ -178,6 +183,7 @@ class Request
         $result->host = $_SERVER['HTTP_HOST'] ?? null;
         $result->path = strtok($_SERVER['REQUEST_URI'], '?'); // strtok to remove query string
         $result->queryParams = $_GET;
+        $result->postParams = $_POST;
         $result->protocol = !empty($_SERVER['HTTPS']) ? "https" : "http";
         $result->cookies = $_COOKIE;
 

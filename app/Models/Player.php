@@ -24,6 +24,10 @@ class Player extends Model
     public ?string $platformUserId;
     public \DateTime $firstSeen;
     public \DateTime $lastSeen;
+    public ?string $profileBio;
+    public bool $showSteam = true;
+    public bool $showScoreSaber = true;
+    public bool $showHistory = true;
 
     // -----------------------------------------------------------------------------------------------------------------
     // Create/update
