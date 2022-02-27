@@ -1,0 +1,31 @@
+.text-page {
+  margin: 1.5rem 0 0 0;
+  line-height: 1.45;
+  font-size: 1.6rem;
+
+  h1 {
+    font-size: 3.2rem;
+    font-weight: var(--font-weight-bold);
+    margin: 0 0 1.5rem 0;
+  }
+
+  .last-update {
+    display: block;
+    color: var(--col-txt-muted-medium);
+    font-size: 14px;
+    margin: -1rem 0 1.5rem 0;
+  }
+
+  hr {
+    margin: 1.5rem 0;
+    padding: 0;
+    border: none;
+    height: 1px;
+    width: 100%;
+    background: rgba(255, 255, 255, .05);
+  }
+
+  h2 {
+    margin: 2rem 0 0 0;
+  }
+}

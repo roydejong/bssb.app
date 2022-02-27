@@ -156,11 +156,6 @@
             if (typeof BeatSaberAvatar === "undefined")
                 return;
 
-            if (window.didAvatarInit)
-                return;
-
-            const renderTarget = document.getElementById('avatar-render');
-
             {% if avatarData %}
             const avatarData = {{ avatarData|json_encode|raw }};
             {% else %}
@@ -178,7 +173,14 @@
             };
             {% endif %}
 
-            BeatSaberAvatar.setup(renderTarget, avatarData, {
+            if (window.didAvatarInit) {
+                window.avatarRenderer.setAvatarData(avatarData);
+                return;
+            }
+
+            const renderTarget = document.getElementById('avatar-render');
+
+            window.avatarRenderer = BeatSaberAvatar.setup(renderTarget, avatarData, {
                 assetsBaseDir: "/static/bsavatar/",
                 enableControls: true,
                 rotateAnimation: true,

@@ -2,70 +2,64 @@
 
 {% set pageTitle = 'Privacy Policy' %}
 
-{% block main %}
-    <main role="main" class="container-fluid">
-        <div class="content-page">
-
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/">Server Browser</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Statistics</li>
-                </ol>
-            </nav>
+{% block content %}
+    <main role="main" class="text-page">
+        <div class="container">
 
             <div class="privacy-page">
 
                 <h1>Privacy Policy</h1>
-                <p class="lead">Last updated: June 15th, 2021</p>
+
+                <p class="last-update"><i class="mdi mdi-clock"></i> Last updated: 27 Feb, 2022</p>
+
+                <div class="alert">
+                    <i class="mdi mdi-email-newsletter"></i>
+                    <span>If you have any questions, comments, or data requests: e-mail us at <a href="mailto:admin@bssb.app">admin@bssb.app</a></span>
+                </div>
+
                 <hr />
 
-                <p class="lead">When you visit our website or use the game modification, we collect data. Collected data may be shown publicly to make the Server Browser possible, if you choose to share it.</p>
+                <p class="lead">When you visit our website or use a Server Browser game mod, we collect data. This includes information you provide to us, data we collect automatically, and data we receive from other sources. This Privacy Policy explains how we collect, use, store, and share your personal information.</p>
 
                 <h2>Data we collect</h2>
                 <p>This is an overview of the data we may collect, depending on your use of the service:</p>
                 <p><strong>If you visit the <a href="https://bssb.app" target="_blank">bssb.app</a> website or use the game modification to access its services:</strong></p>
                 <ul>
                     <li>Basic log information: your IP address, user agent, and which requests are sent to our server</li>
+                    <li>Optional authentication: if you log in via Steam, we'll collect your Steam User ID</li>
                 </ul>
-                <p><strong>If you install the <a href="https://github.com/roydejong/BeatSaberServerBrowser" target="_blank">game modification</a>, the following information may be collected and sent to our servers:</strong></p>
+                <p><strong>If you install the <a href="/download" target="_blank">game modification</a>, the following information may be collected and sent to our servers:</strong></p>
                 <ul>
-                    <li>Version information about, the game, game modifications you have installed, and the platform you are playing on</li>
-                    <li>Basic profile information from the third party game service you are using (e.g. Steam, Oculus); like username and unique ID</li>
-                    <li>Game data, such as which level you are playing and who you are playing it with</li>
-                    <li>Connection metadata, such as the servers you play on and the codes needed to connect to it</li>
+                    <li>Version information about the game and any game modifications you have installed</li>
+                    <li>The platform you are playing on (like Steam or Oculus) and your User ID for that service</li>
+                    <li>Game data, such as which level you are playing, and who you are playing it with</li>
+                    <li>Connection metadata, such as the servers you play on and the codes and keys needed to connect to it</li>
                 </ul>
-                <p>You can disable data collection within the game modification at any time by choosing not to share your servers.</p>
+                <p>We only collect game data if it is publicly shared to the Server Browser. The lobby owner controls this, and may choose to opt out at any time.</p>
+                <p>We may automatically collect data on you when you play in games shared to the Server Browser by other players, even if you don't have the game modification installed yourself.</p>
 
                 <h2>How we use your data</h2>
+                <p>We do not perform any marketing or advertising, nor send any emails.</p>
                 <p>Your data is only used to facilitate the server browser's functionality, specifically:</p>
                 <ul>
                     <li>
-                        To provide you and other users with the Server Browser service
+                        To provide you and other users with the Server Browser service, on the website and through the mods
                     </li>
                     <li>
-                        To publicly <a href="/" target="_blank">display game information</a> and <a href="/stats" target="_blank">statistics</a>, should you choose to share it
+                        To display <a href="/" target="_blank">lobby information</a>, profile information and <a href="/stats" target="_blank">general statistics</a> - but only for publicly shared lobbies
                     </li>
                     <li>
                         To perform basic, generalised analysis on how users interact with our service so we can monitor and improve it
                     </li>
                 </ul>
-
-                <h2>Data retention</h2>
-                <p>All collected data may be retained on our server for up to one month, or as long as is needed for the purposes set out in this policy.</p>
-
-                <h2>Data transfer and disclosure</h2>
+                <p>Additionally, there may be exceptional circumstances that require the use of your data, such as:</p>
                 <ul>
-                    <li>Game, profile and connection information is publicly displayed and disclosed, and as such, may be transferred to other regions.</li>
-                    <li>Sensitive information like your IP address is only used for analytical and operational purposes and won't be shared with any third-parties.</li>
-                    <li>We work with third parties to provide some of our services. For example, our third-party providers provide web hosting services. These providers are bound by their privacy policies to safeguard that data.</li>
+                    <li>To protect our services from attacks or other security threats</li>
+                    <li>To comply with legal obligations, where required by law or if we are compelled to do so by a court order or regulatory body</li>
                 </ul>
 
                 <h2>Changes to this policy</h2>
                 <p>We will update this privacy policy as needed so that it is current, accurate, and as clear as possible. Your continued use of our services confirms your acceptance of our updated Privacy Policy.</p>
-
-                <h2>Contact us</h2>
-                <p>Contact us with any questions or requests at:</p>
-                <p><strong><a class="btn btn-info" href="mailto:privacy@bssb.app">📧 privacy@bssb.app</a></strong></p>
 
             </div>
 
