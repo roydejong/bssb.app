@@ -69,7 +69,7 @@ class StatsController
         $topLevelsCustom = $this->queryTopLevels(self::TopCustomLevels, 0, 10);
         $topLevelsOfficial = $this->queryTopLevels(self::TopOfficialLevels, 0, 10);
 
-        $view = new View('stats.twig');
+        $view = new View('pages/stats.twig');
         $view->set('pageUrl', '/stats');
         $view->set('stats', [
             'totalPlayerCount' => $totalPlayerCount,

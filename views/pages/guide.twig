@@ -1,0 +1,53 @@
+{% extends "_base.twig" %}
+
+{% set tab = "guide" %}
+
+{% block content %}
+
+    <main role="main" class="guide-page">
+        <div class="container">
+            <h1>Multiplayer Modding Guide</h1>
+            <div class="disclaimer"><i class="mdi mdi-clock-outline"></i> Last updated {{ lastUpdate|timeago_html|raw }} for Beat Saber {{ currentGameVersion }}</div>
+            <div class="guide-bubble">
+                <div class="face -skin-Smurf -size-md">
+                    <div class="eyes -Eyes6"></div>
+                </div>
+                <div class="text">
+                    <p>This interactive guide will help you set up modded Beat Saber multiplayer, so you can play custom songs.</p>
+                    <p class="instruction">Select your platform and game version below.</p>
+                </div>
+            </div>
+            <div class="guide-filters">
+                <div class="block">
+                    <div class="inner">
+                        <div class="field">
+                            <label for="platform">Your platform:</label>
+                            <select name="platform" id="platform">
+                                <option value="steam">Steam (PC)</option>
+                                <option value="steam">Oculus (PC / Link)</option>
+                                <option value="steam">Oculus Quest</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="version">Game version:</label>
+                            <select name="version" id="version">
+                                <option value="{{ currentGameVersion }}">{{ currentGameVersion }} (Latest)</option>
+                                <option value="Other">Other or older version</option>
+                            </select>
+                        </div>
+                        <div class="button-wrap">
+                            <button type="submit" class="btn -green">
+                                <i class="mdi mdi-arrow-right-bold"></i>
+                                <span>Continue</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="help-text">
+                <p>If you can't find what you're looking for here, you can also ask questions in the <a href="https://discord.com/invite/gezGrFG4tz" target="_blank"><i class="mdi mdi-discord"></i> BeatTogether Community</a> or <a href="https://discord.gg/beatsabermods" target="_blank"><i class="mdi mdi-discord"></i> Beat Saber Modding Group</a></p>
+            </div>
+        </div>
+    </main>
+
+{% endblock %}
