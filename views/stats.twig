@@ -3,6 +3,38 @@
 {% set pageTitle = 'Statistics' %}
 {% set tab = "stats" %}
 
+{% block content %}
+
+    <main role="main" class="stats-page">
+        <div class="container">
+            <h1>Stats</h1>
+            <p class="lead">The Server Browser tracks statistics for public games that were announced to it.</p>
+        </div>
+        <div class="container">
+            <div class="stats-cards">
+                <div class="card">
+                    <div class="label">Levels played</div>
+                    <div class="metric">{{ stats.totalPlayCount|number_format(0, ',') }}</div>
+                    <div class="details">The total amount of unique players seen in public multiplayer lobbies.</div>
+                </div>
+                <div class="card">
+                    <div class="label">Lobbies hosted</div>
+                    <div class="metric">{{ stats.totalLobbyCount|number_format(0, ',') }}</div>
+                    <div class="details">The total amount of public multiplayer lobbies that were announced to the Server Browser.</div>
+                </div>
+                <div class="card">
+                    <div class="label">Players seen</div>
+                    <div class="metric">{{ stats.totalPlayerCount|number_format(0, ',') }}</div>
+                    <div class="details">The total amount of unique players we've seen across all public multiplayer lobbies.</div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+
+{% endblock %}
+
 {% block main %}
     <main role="main" class="container-fluid">
         <div class="content-page">

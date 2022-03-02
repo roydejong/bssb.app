@@ -50,6 +50,7 @@ class UserSettingsController
                 $player->showSteam = intval($formData['showSteam']) === 1;
                 $player->showScoreSaber = intval($formData['showScoreSaber']) === 1;
                 $player->showHistory = intval($formData['showHistory']) === 1;
+                $player->lastSeen = new \DateTime('now');
                 $player->save();
 
                 return new RedirectResponse($player->getWebDetailUrl(), 303);
