@@ -19,20 +19,26 @@
             </div>
             <div class="guide-filters">
                 <div class="block">
-                    <div class="inner">
+                    <form class="inner" method="post" action="/guide">
                         <div class="field">
                             <label for="platform">Your platform:</label>
                             <select name="platform" id="platform">
-                                <option value="steam">Steam (PC)</option>
-                                <option value="steam">Oculus (PC / Link)</option>
-                                <option value="steam">Oculus Quest</option>
+                                {% for key, label in platformOptions %}
+                                    <option value="{{ key }}">{{ label }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                         <div class="field">
                             <label for="version">Game version:</label>
                             <select name="version" id="version">
-                                <option value="{{ currentGameVersion }}">{{ currentGameVersion }} (Latest)</option>
-                                <option value="Other">Other or older version</option>
+                                {% for gameVersion in allGameVersions %}
+                                    {% if gameVersion == currentGameVersion %}
+                                        <option value="{{ currentGameVersion }}">{{ currentGameVersion }} (Latest)</option>
+                                    {% else %}
+                                        <option value="{{ gameVersion }}">{{ gameVersion }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                                <option value="other">Other or older version</option>
                             </select>
                         </div>
                         <div class="button-wrap">
@@ -41,7 +47,7 @@
                                 <span>Continue</span>
                             </button>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
             <div class="help-text">

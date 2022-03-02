@@ -34,6 +34,7 @@ $router->register('/stats', StatsController::class, 'getStats');
 $router->register('/stats/top/$urlSection', StatsController::class, 'getTopLevelsSubPage');
 $router->register('/stats/top/$urlSection/playlist', StatsController::class, 'getTopLevelsPlaylist');
 $router->register('/guide', GuideController::class, 'getGuideIndex');
+$router->register('/guide/$platform/$version', GuideController::class, 'getGuideResult');
 $router->register('/game/$hashId', GameDetailController::class, 'getGameDetail');
 $router->register('/player/$userId', PlayerProfileController::class, 'getPlayerProfile');
 $router->register('/privacy', PrivacyController::class, 'getPrivacy');
