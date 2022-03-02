@@ -56,7 +56,7 @@ class HostedGamePlayer extends Model
     // -----------------------------------------------------------------------------------------------------------------
     // Player connection
 
-    public function syncProfileData(?string $platformType, ?string $platformUserId, ?array $avatarData): void
+    public function syncProfileData(?string $platformType, ?string $platformUserId, ?array $avatarData): Player
     {
         $player = Player::fromServerPlayer($this);
 
@@ -70,5 +70,6 @@ class HostedGamePlayer extends Model
             $player->syncAvatarData($avatarData);
 
         $player->save();
+        return $player;
     }
 }

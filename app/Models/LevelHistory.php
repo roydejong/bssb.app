@@ -8,5 +8,7 @@ class LevelHistory extends Model
 {
     public int $id;
     public int $hostedGameId;
-    public int $levelId;
+    public int $levelRecordId;
+    public \DateTime $startedAt;
+    public \DateTime $endedAt;
 }

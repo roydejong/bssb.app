@@ -15,6 +15,7 @@ class LevelRecord extends Model implements \JsonSerializable
     public ?string $coverUrl;
     public string $name;
     public string $songName;
+    public ?string $songSubName;
     public ?string $songAuthor;
     public ?string $levelAuthor;
     public ?int $duration;

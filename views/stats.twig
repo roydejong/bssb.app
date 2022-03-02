@@ -13,19 +13,19 @@
         <div class="container">
             <div class="stats-cards">
                 <div class="card">
-                    <div class="label">Levels played</div>
+                    <div class="label"><i class="mdi mdi-sword-cross"></i> Levels played</div>
                     <div class="metric">{{ stats.totalPlayCount|number_format(0, ',') }}</div>
-                    <div class="details">The total amount of unique players seen in public multiplayer lobbies.</div>
+                    <div class="details">Every time a level was played in a public lobby</div>
                 </div>
                 <div class="card">
-                    <div class="label">Lobbies hosted</div>
+                    <div class="label"><i class="mdi mdi-earth"></i> Lobbies hosted</div>
                     <div class="metric">{{ stats.totalLobbyCount|number_format(0, ',') }}</div>
-                    <div class="details">The total amount of public multiplayer lobbies that were announced to the Server Browser.</div>
+                    <div class="details">This many public lobbies were announced to us</div>
                 </div>
                 <div class="card">
-                    <div class="label">Players seen</div>
+                    <div class="label"><i class="mdi mdi-emoticon-cool"></i> Players seen</div>
                     <div class="metric">{{ stats.totalPlayerCount|number_format(0, ',') }}</div>
-                    <div class="details">The total amount of unique players we've seen across all public multiplayer lobbies.</div>
+                    <div class="details">The total amount of unique players we've seen</div>
                 </div>
             </div>
 
