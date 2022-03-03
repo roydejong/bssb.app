@@ -24,7 +24,7 @@
                             <label for="platform">Your platform:</label>
                             <select name="platform" id="platform">
                                 {% for key, label in platformOptions %}
-                                    <option value="{{ key }}">{{ label }}</option>
+                                    <option value="{{ key }}" {% if platformValue == key %}selected{% endif %}>{{ label }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -35,7 +35,7 @@
                                     {% if gameVersion == currentGameVersion %}
                                         <option value="{{ currentGameVersion }}">{{ currentGameVersion }} (Latest)</option>
                                     {% else %}
-                                        <option value="{{ gameVersion }}">{{ gameVersion }}</option>
+                                        <option value="{{ gameVersion }}" {% if versionValue == gameVersion %}selected{% endif %}>{{ gameVersion }}</option>
                                     {% endif %}
                                 {% endfor %}
                                 <option value="other">Other or older version</option>

@@ -7,6 +7,7 @@ use app\Frontend\View;
 use app\HTTP\Request;
 use app\HTTP\Response;
 use app\HTTP\Responses\RedirectResponse;
+use app\Session\Session;
 
 class GuideController
 {
@@ -32,6 +33,8 @@ class GuideController
 
     public function getGuideIndex(Request $request): Response
     {
+        $session = Session::getInstance();
+
         $currentGameVersion = new CVersion(self::VersionLatest);
 
         if ($request->method === "POST") {
@@ -53,6 +56,8 @@ class GuideController
         $view->set('currentGameVersion', $currentGameVersion);
         $view->set('allGameVersions', array_reverse(self::$allGameVersions));
         $view->set('platformOptions', self::$platformOptions);
+        $view->set('platformValue', $session->get('guide_platform'));
+        $view->set('versionValue', $session->get('guide_version'));
         return $view->asResponse();
     }
 
@@ -75,6 +80,10 @@ class GuideController
 
         $platformName = self::$platformOptions[$platform];
         $versionText = $version;
+
+        $session = Session::getInstance();
+        $session->set('guide_platform', $platform);
+        $session->set('guide_version', $version);
 
         // -------------------------------------------------------------------------------------------------------------
         // Analysis
