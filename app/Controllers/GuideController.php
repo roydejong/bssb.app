@@ -11,8 +11,10 @@ use app\HTTP\Responses\RedirectResponse;
 class GuideController
 {
     private const LastUpdate = "2022-03-02 21:30";
-    private const CurrentGameVersion = "1.19.1";
-    private const AbsoluteMaxVersion = "1.18.3";
+
+    private const VersionLatest = "1.19.1";
+    private const VersionOverallMax = "1.18.3";
+    private const VersionOverallMin = "1.17.1";
     private const PcSupportedVersion = "1.18.3";
     private const BmbfSupportedVersion = "1.17.1";
 
@@ -30,7 +32,7 @@ class GuideController
 
     public function getGuideIndex(Request $request): Response
     {
-        $currentGameVersion = new CVersion(self::CurrentGameVersion);
+        $currentGameVersion = new CVersion(self::VersionLatest);
 
         if ($request->method === "POST") {
             $platform = $request->postParams['platform'];
@@ -38,7 +40,7 @@ class GuideController
 
             if (isset(self::$platformOptions[$platform]) &&
                 (in_array($version, self::$allGameVersions) || $version === "other")) {
-                return new RedirectResponse("/guide/{$platform}/{$version}");
+                return new RedirectResponse("/guide/{$platform}/{$version}", 303);
             } else {
                 return new Response(400);
             }
@@ -62,11 +64,11 @@ class GuideController
 
         if ($version === "latest")
             // Redirect to latest version
-            return new RedirectResponse("/guide/{$platform}/" . self::CurrentGameVersion);
+            return new RedirectResponse("/guide/{$platform}/" . self::VersionLatest);
 
         if (!in_array($version, self::$allGameVersions) && $version !== "other")
-            // Invalid request, go back to guide
-            return new RedirectResponse('/guide');
+            // Invalid version, go to "other" version
+            return new RedirectResponse("/guide/{$platform}/other");
 
         if ($version !== "other")
             $version = new CVersion($version);
@@ -84,7 +86,9 @@ class GuideController
         else
             $platformVersion = new CVersion(self::BmbfSupportedVersion);
 
-        $absoluteMaxVersion = new CVersion(self::AbsoluteMaxVersion);
+        $absoluteMaxVersion = new CVersion(self::VersionOverallMax);
+        $absoluteMinVersion = new CVersion(self::VersionOverallMin);
+        $relMaxVersion = CVersion::min($platformVersion, $absoluteMaxVersion);
 
         $resultText = "";
         $resultInstruction = "";
@@ -92,21 +96,31 @@ class GuideController
         $resultEyes = null;
         $faqSets = [];
 
-        if ($version === "other") {
-            $versionText = "Other/Older Version";
-            $resultText = "You've selected \"Other\", which means the version of Beat Saber you have is either too new or too old. Multiplayer mods are not supported for this version.";
-            $resultInstruction = "If you want to use multiplayer mods, you should upgrade or downgrade your game for now. On {$platformName}, we recommend Beat Saber {$platformVersion}.";
+        if ($version === "other" || $version->lessThan($absoluteMinVersion)) {
+            if ($version === "other") {
+                $versionText = "Other/Older Version";
+                $resultText = "The game version you're using is no longer, or not yet, supported by multiplayer mods.";
+                $resultInstruction = "You'll have to upgrade or downgrade Beat Saber if you want to use multiplayer mods. For {$platformName}, switch to {$platformVersion}.";
+            } else {
+                $resultText = "The game version you're using is no longer supported by multiplayer mods.";
+                $resultInstruction = "You'll have to upgrade Beat Saber if you want to use multiplayer mods. For {$platformName}, upgrade to {$platformVersion}.";
+            }
+
             $resultBad = true;
             $resultEyes = "Eyes2";
 
-            $faqSets[] = "mpDowngrade";
-            $faqSets[] = "downgrade";
+            $faqSets[] = "versions";
+            if ($version === "other") {
+                $faqSets[] = "mpDowngrade";
+                $faqSets[] = "downgrade";
+            }
         } else if ($platform === self::PlatformQuest && $version->greaterThan($platformVersion)) {
             $resultText = "Sorry, you can't install mods for Beat Saber {$version} yet on Quest. You'll have to wait for BMBF and core mods to be updated first.";
             $resultInstruction = "If you want to use multiplayer mods, you should downgrade your game to Beat Saber {$platformVersion} for now.";
             $resultBad = true;
             $resultEyes = "Eyes10";
 
+            $faqSets[] = "versions";
             $faqSets[] = "bmbfDowngrade";
             $faqSets[] = "downgrade";
         } else if ($version->greaterThan($absoluteMaxVersion)) {
@@ -115,7 +129,7 @@ class GuideController
             $resultBad = true;
             $resultEyes = "Eyes10";
 
-            $faqSets[] = "mpDowngrade";
+            $faqSets[] = "versions";
             $faqSets[] = "downgrade";
         }
 
@@ -131,6 +145,9 @@ class GuideController
         $view->set('version', $version);
         $view->set('versionText', $versionText);
         $view->set('platformVersion', $platformVersion);
+        $view->set('absMinVersion', $absoluteMinVersion);
+        $view->set('absMaxVersion', $absoluteMaxVersion);
+        $view->set('relMaxVersion', $relMaxVersion);
         $view->set('eyes', $resultEyes);
         $view->set('resultText', $resultText);
         $view->set('resultInstruction', $resultInstruction);

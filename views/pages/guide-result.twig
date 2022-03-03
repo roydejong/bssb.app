@@ -28,19 +28,26 @@
                 <div class="faqs">
                     <h2>Relevant topics</h2>
 
+                    {% if "versions" in faqSet %}
+                        <div class="faq">
+                            <h3>What game versions are supported?</h3>
+                            <p>Multiplayer mods are usually only maintained for the latest possible game versions.</p>
+                            <p>{% if absMinVersion != relMaxVersion %}Currently, the minimum game version is {{ absMinVersion }}. {% endif %}On {{ platformName }} the {% if absMinVersion != relMaxVersion %}maximum{% else %}only supported{% endif%} game version is {{ relMaxVersion }}, which is the recommended version for you. {% if relMaxVersion != absMaxVersion %}The highest supported version on other platforms is {{ absMaxVersion }}.{% endif %}</p>
+                        </div>
+                        {% if "bmbfDowngrade" not in faqSet %}
+                            <div class="faq">
+                                <h3>Why are mods not available for this version?</h3>
+                                <p>Multiplayer mods are complicated to develop and maintain. When the game updates, this sometimes includes changes to multiplayer that aren't compatible with older versions.</p>
+                                <p>In addition to building the mods across two platforms (PC and Quest), we also need to build private servers that allow modded content, while having to worry about the differences in versions and mods across both platforms. Things get complicated, they take time, and updates may not always be backwards compatible.</p>
+                                <p>In the meantime, downgrading or upgrading your game is an option.</p>
+                            </div>
+                        {% endif %}
+                    {% endif %}
                     {% if "bmbfDowngrade" in faqSet %}
                         <div class="faq">
-                            <h3>Why can't I install mods for this version?</h3>
-                            <p>BMBF isn't always up to date with the current version of Beat Saber. At the moment, {{ versionText }} isn't supported.</p>
+                            <h3>Why can't I install mods for this newer version?</h3>
+                            <p>BMBF, core mods, and multiplayer mods aren't always up to date with the current version of Beat Saber. At the moment, {{ versionText }} isn't supported.</p>
                             <p>To use mods on Quest, for now, you'll have to be on version {{ platformVersion }}.</p>
-                        </div>
-                    {% endif %}
-                    {% if "mpDowngrade" in faqSet %}
-                        <div class="faq">
-                            <h3>Why are mods not (yet) available for this version?</h3>
-                            <p>Multiplayer mods are complicated to develop and maintain. When the game updates, this sometimes includes changes to multiplayer that aren't compatible with older versions.</p>
-                            <p>In addition to building the mods across two platforms (PC and Quest), we also need to build private servers that allow modded content, while having to worry about the differences in versions and mods across both platforms. Things get complicated, and they take time.</p>
-                            <p>In the meantime, downgrading your game is an option.</p>
                         </div>
                     {% endif %}
                     {% if "downgrade" in faqSet %}
@@ -48,7 +55,7 @@
                             <h3>How do I downgrade my game on {{ platformName }}?</h3>
                             <p>For all your downgrading needs, please check out the <i class="mdi mdi-discord"></i> <a href="https://discord.gg/MrwMx5e" target="_blank">Beat Saber Legacy Group (BSLG)</a> Discord.</p>
                             {% if platformKey == "quest" %}
-                                <p>Here's a good general explainer video: <i class="mdi mdi-youtube"></i> <a href="https://www.youtube.com/watch?v=lBqplOOpzDE&t=2s" target="_blank">Get CUSTOM SONGS on QUEST for BEAT SABER</a> </p>
+                                <p>Here's a good general explainer video for setting BMBF, including the process of downgrading your game:<br /><i class="mdi mdi-youtube"></i> <a href="https://www.youtube.com/watch?v=lBqplOOpzDE&t=2s" target="_blank">Get CUSTOM SONGS on QUEST for BEAT SABER</a> </p>
                             {% endif %}
                         </div>
                     {% endif %}
