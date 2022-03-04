@@ -13,6 +13,7 @@ use app\Common\IPEndPoint;
 use app\Models\HostedGame;
 use app\Models\HostedGamePlayer;
 use app\Models\LevelHistory;
+use app\Models\LevelHistoryPlayer;
 use app\Models\LevelRecord;
 
 final class AnnounceProcessor
@@ -20,7 +21,8 @@ final class AnnounceProcessor
     private ModClientInfo $clientInfo;
     private array $data;
     private ?LevelRecord $tempLevelData;
-    private bool $startedLevel;
+    private ?string $sessionGameId;
+    private bool $legacyLevelStarted;
     private ?LevelHistory $serverLevel;
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -37,7 +39,8 @@ final class AnnounceProcessor
             $this->data[strtolower($key)] = $value;
         }
         $this->tempLevelData = null;
-        $this->startedLevel = false;
+        $this->sessionGameId = null;
+        $this->legacyLevelStarted = false;
     }
 
     public function process(): ?HostedGame
@@ -115,7 +118,7 @@ final class AnnounceProcessor
         $ownerId = $this->getString('OwnerId');
         $ownerName = $this->getString('OwnerName', "");
         $hostSecret = $this->getString('HostSecret');
-        $serverCode = $this->getString('ServerCode');
+        $serverCode = $this->getString('ServerCode') ?? "";
         $serverType = $this->getString('ServerType');
         $managerId = $this->getString('ManagerId');
         $playerCount = $this->getInt('PlayerCount');
@@ -191,7 +194,7 @@ final class AnnounceProcessor
             throw new AnnounceException("Announce rejected: must include valid HostSecret");
 
         // Infer "level started" event from current state
-        $this->startedLevel = $wasInLobby && $game->getIsPlayingLevel();
+        $this->legacyLevelStarted = $wasInLobby && $game->getIsPlayingLevel();
 
         // Insert or update game record
         $now = new \DateTime('now');
@@ -225,13 +228,29 @@ final class AnnounceProcessor
         $this->tempLevelData = LevelRecord::syncFromAnnounce($this->tempLevelData->levelId,
             $this->tempLevelData->songName, $this->tempLevelData->songAuthor);
 
-        if ($this->startedLevel) {
-            // This was a new level start; increment play count
+        if ($this->legacyLevelStarted) {
+            // Legacy "level start" detection (state change)
             $this->tempLevelData->incrementPlayStat();
+        }
 
-            // TODO Create server-level record
-        } else {
-            // TODO Find existing server-level record
+        if ($this->sessionGameId) {
+            // Modern level history
+            $this->serverLevel = LevelHistory::query()
+                ->where('hosted_game_id = ?', $game->id)
+                ->andWhere('session_game_id = ?', $this->sessionGameId)
+                ->querySingleModel();
+
+            $now = new \DateTime('now');
+
+            if (!$this->serverLevel) {
+                $this->serverLevel = new LevelHistory();
+                $this->serverLevel->hostedGameId = $game->id;
+                $this->serverLevel->sessionGameId = $this->sessionGameId;
+                $this->serverLevel->levelRecordId = $this->tempLevelData->id;
+                $this->serverLevel->startedAt = $now;
+                $this->serverLevel->endedAt = null;
+                $this->serverLevel->save();
+            }
         }
     }
 
@@ -306,8 +325,19 @@ final class AnnounceProcessor
             // Sync profile data
             $playerProfile = $dbPlayer->syncProfileData($platformType, $platformUserId, $avatarData);
 
-            if ($this->serverLevel) {
-                // TODO Insert/update LevelHistoryPlayer record
+            // Sync history data
+            if ($this->serverLevel && $dbPlayer->isConnected && $dbPlayer->sortIndex >= 0) {
+                $historyPlayer = LevelHistoryPlayer::query()
+                    ->where('level_history_id = ?', $this->serverLevel->id)
+                    ->andWhere('player_id = ?', $playerProfile->id)
+                    ->querySingleModel();
+
+                if (!$historyPlayer) {
+                    $historyPlayer = new LevelHistoryPlayer();
+                    $historyPlayer->levelHistoryId = $this->serverLevel->id;
+                    $historyPlayer->playerId = $playerProfile->id;
+                    $historyPlayer->save();
+                }
             }
         }
 
@@ -394,6 +424,7 @@ final class AnnounceProcessor
             $levelAuthorName = $levelData['LevelAuthorName'] ?? null;
             $difficulty = intval($levelData['Difficulty']) ?? null;
             $characteristic = $levelData['Characteristic'] ?? null;
+            $sessionGameId = $levelData['SessionGameId'] ?? null;
         } else {
             // Legacy announce format: separate fields
             $levelId = $this->getString('LevelId');
@@ -403,6 +434,7 @@ final class AnnounceProcessor
             $levelAuthorName = null; // not supported yet <v1
             $difficulty = $this->getInt('Difficulty');
             $characteristic = null; // not supported yet <v1
+            $sessionGameId = null; // not supported yet <v1
         }
 
         if ($levelId) {
@@ -419,8 +451,11 @@ final class AnnounceProcessor
             $this->tempLevelData->songSubName = $songSubName;
             $this->tempLevelData->songAuthor = $songAuthorName;
             $this->tempLevelData->levelAuthor = $levelAuthorName;
+
+            $this->sessionGameId = $sessionGameId;
         } else {
             $this->tempLevelData = null;
+            $this->sessionGameId = null;
         }
 
         if ($levelId || $game->getIsQuickplay()) {

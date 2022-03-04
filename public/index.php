@@ -1,6 +1,7 @@
 <?php
 
 use app\Controllers\API\V1\AnnounceController;
+use app\Controllers\API\V1\AnnounceResultsController;
 use app\Controllers\API\V1\BrowseController;
 use app\Controllers\API\V1\BrowseDetailController;
 use app\Controllers\API\V1\BrowseServerCodeController;
@@ -49,6 +50,7 @@ $router->register('/settings', UserSettingsController::class, 'getUserSettings')
 
 // API routes
 $router->register('/api/v1/announce', AnnounceController::class, 'announce');
+$router->register('/api/v1/announce_results', AnnounceResultsController::class, 'announceResults');
 $router->register('/api/v1/unannounce', UnAnnounceController::class, 'unAnnounce');
 $router->register('/api/v1/browse', BrowseController::class, 'browse');
 $router->register('/api/v1/browse/$hashId', BrowseDetailController::class, 'browseDetail');
