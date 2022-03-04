@@ -1,0 +1,136 @@
+{% extends "pages/player-profile.base.twig" %}
+
+{% block innerContent %}
+    <div class="row">
+        <section class="block">
+            <div class="title">
+                <i class="mdi mdi-account-circle"></i>
+                <h3>Info</h3>
+            </div>
+            <div class="inner">
+                <table class="card-table -fully-rounded table table-bordered">
+                    <tbody>
+                    <tr>
+                        <th scope="row">User type</th>
+                        <td>{{ player.describeType() }}</td>
+                    </tr>
+                    {% if player.platformType %}
+                        <tr>
+                            <th scope="row">Platform</th>
+                            <td>
+                                {% if player.platformType == "steam" %}
+                                    <i class="mdi mdi-steam"></i>
+                                    <span>Steam</span>
+                                {% elseif player.platformType == "oculus" %}
+                                    {% include "oculus_icon.twig"%}
+                                    <span>Oculus</span>
+                                {% else %}
+                                    {{ player.platformType }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endif %}
+                    <tr>
+                        <th scope="row">First seen</th>
+                        <td>{{ player.firstSeen.format("F Y") }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Last seen</th>
+                        {% if activeNow %}
+                            <td><div class="active-lamp -on"></div> Active now</td>
+                        {% else %}
+                            <td>{{ player.lastSeen.format('r')|timeago_html|raw }}</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <th scope="row">Lobbies hosted</th>
+                        <td>{{ stats.hostCount }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Lobbies joined</th>
+                        <td>{{ stats.joinCount }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Levels played</th>
+                        <td>{{ stats.playCount }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <section class="block">
+            <div class="title">
+                <i class="mdi mdi-account"></i>
+                <h3>Avatar</h3>
+            </div>
+            <div class="avatar-container">
+                <div id="avatar-render"></div>
+            </div>
+        </section>
+    </div>
+
+    {% if player.profileBio %}
+        <section class="block">
+            <div class="title">
+                <i class="mdi mdi-text"></i>
+                <h3>Player bio</h3>
+            </div>
+            <div class="inner -textarea-fill -no-shadow">
+                <textarea readonly name="profileBio">{{ player.profileBio }}</textarea>
+            </div>
+        </section>
+    {% endif %}
+{% endblock %}
+
+{% block scriptsHead %}
+    <script src="/static/bsavatar/BeatSaberAvatar.js" async defer
+            onload="window.dispatchEvent(new CustomEvent('BeatSaberAvatarLoaded'));"></script>
+{% endblock %}
+
+{% block scriptsBody %}
+    <script>
+        window.didAvatarInit = false;
+        window.tryInitAvatar = function() {
+            if (typeof BeatSaberAvatar === "undefined")
+                return;
+
+            {% if avatarData %}
+            const avatarData = {{ avatarData|json_encode|raw }};
+            {% else %}
+            const avatarData = {
+                headTopId: "None",
+                glassesId: "None",
+                facialHairId: "None",
+                handsId: "BareHands",
+                clothesId: "Tracksuit",
+                clothesPrimaryColor: "#fff",
+                clothesSecondaryColor: "#fff",
+                clothesDetailColor: "#fff",
+                skinColorId: "Zombie",
+                eyesId: "QuestionMark"
+            };
+            {% endif %}
+
+            if (window.didAvatarInit) {
+                window.avatarRenderer.setAvatarData(avatarData);
+                return;
+            }
+
+            const renderTarget = document.getElementById('avatar-render');
+
+            window.avatarRenderer = BeatSaberAvatar.setup(renderTarget, avatarData, {
+                assetsBaseDir: "/static/bsavatar/",
+                enableControls: true,
+                rotateAnimation: true,
+                enableGlasses: true,
+                enableFacialHair: true,
+                initialZoomLevel: 1.25
+            });
+            window.didAvatarInit = true;
+        };
+
+        window.addEventListener('load', window.tryInitAvatar);
+        window.addEventListener('turbo:load', window.tryInitAvatar);
+        window.addEventListener('BeatSaberAvatarLoaded', window.tryInitAvatar);
+    </script>
+{% endblock %}

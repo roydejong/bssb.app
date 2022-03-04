@@ -38,6 +38,7 @@ $router->register('/guide', GuideController::class, 'getGuideIndex');
 $router->register('/guide/$platform/$version', GuideController::class, 'getGuideResult');
 $router->register('/game/$hashId', GameDetailController::class, 'getGameDetail');
 $router->register('/player/$userId', PlayerProfileController::class, 'getPlayerProfile');
+$router->register('/player/$userId/$profileSection', PlayerProfileController::class, 'getPlayerProfile');
 $router->register('/privacy', PrivacyController::class, 'getPrivacy');
 $router->register('/master-servers', MasterServersController::class, 'getServerList');
 $router->register('/dedicated-servers', DedicatedServersController::class, 'getServerList');

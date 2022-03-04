@@ -1,0 +1,57 @@
+{% extends "_base.twig" %}
+
+{% block content %}
+    <main class="player-profile">
+        <div class="container">
+
+            <div class="name-tag">
+                {{ player.renderFaceHtml('md')|raw }}
+                <div class="text">
+                    <h1>{{ player.userName }}</h1>
+                    <p class="descr">{{ player.describeType() }}</p>
+                </div>
+                <div class="buttons">
+                    {% if player.platformType == "steam" and player.platformUserId and player.showSteam %}
+                        <a href="https://steamcommunity.com/profiles/{{ player.platformUserId }}" target="_blank" title="ScoreSaber Profile" class="btn btn-primary">
+                            <i class="mdi mdi-steam"></i>
+                            <span>Steam Profile</span>
+                        </a>
+                    {% endif %}
+                    {% if player.platformUserId and player.showScoreSaber %}
+                        <a href="https://scoresaber.com/u/{{ player.platformUserId }}" target="_blank" title="ScoreSaber Profile" class="btn btn-primary">
+                            <img src="/static/icons/ScoreSaber.svg" alt="ScoreSaber" height="18" width="18"/>
+                            <span>ScoreSaber Profile</span>
+                        </a>
+                    {% endif %}
+                    {% if isMe %}
+                        <a class="btn -download" href="/settings" title="Profile settings">
+                            <i class="mdi mdi-cog"></i>
+                            <span>Edit Settings</span>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if isMe and profileTab == "info" %}
+                <div class="alert">
+                    <i class="mdi mdi-hand-wave"></i>
+                    <span>Hey, welcome to your profile. It'll be updated automatically as you play Server Browser tracked games. Click "Edit Settings" for customization and privacy options.</span>
+                </div>
+            {% endif %}
+
+            <div class="profile-tabs">
+                <a href="{{ profileBaseUrl }}" class="{% if profileTab == "info" %}-active{% endif %}">
+                    <i class="mdi mdi-account"></i>
+                    <span>Info</span>
+                </a>
+                <a href="{{ profileBaseUrl }}/plays" class="{% if profileTab == "plays" %}-active{% endif %}">
+                    <i class="mdi mdi-play"></i>
+                    <span>Play history</span>
+                </a>
+            </div>
+
+            {% block innerContent %}{% endblock %}
+
+        </div>
+    </main>
+{% endblock %}

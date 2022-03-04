@@ -3,8 +3,9 @@
 namespace app\Models\Joins;
 
 use app\Models\HostedGame;
+use SoftwarePunt\Instarecord\Models\IReadOnlyModel;
 
-class HostedGameLevelRecord extends HostedGame
+class HostedGameLevelRecord extends HostedGame implements IReadOnlyModel
 {
     public ?string $beatsaverId;
     public ?string $coverUrl;
