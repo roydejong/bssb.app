@@ -55,6 +55,15 @@
     margin-right: 1.5rem;
     background: #333;
   }
+  .dummy-cover-art {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: linear-gradient(125deg, #e70f01 0%, #0067e6 100%);
+    color: #fff;
+    font-size: 22px;
+  }
 
   .stacked-text {
     display: flex;

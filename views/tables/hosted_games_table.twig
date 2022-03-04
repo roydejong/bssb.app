@@ -14,12 +14,27 @@
             <tr style="cursor: pointer;" onclick="document.location = '{{ game.webDetailUrl }}'; return false;">
                 <td>
                     <div class="inner">
-                        <img class="cover-art" src="{{ game.coverUrl }}" alt="{{ game.levelName }}" loading="lazy"/>
+                        {% if game.coverUrl %}
+                            <img class="cover-art" src="{{ game.coverUrl }}" alt="{{ game.levelName }}" loading="lazy"/>
+                        {% else %}
+                            <div class="cover-art dummy-cover-art">
+                                {% if game.getIsPlayingLevel() %}
+                                    <i class="mdi mdi-music"></i>
+                                {% else %}
+                                    <i class="mdi mdi-new-box"></i>
+                                {% endif %}
+                            </div>
+                        {% endif %}
                         <div class="stacked-text">
                             <a href="{{ game.webDetailUrl }}">{{ game.gameName }}</a>
                             <div>
-                                <i class="mdi mdi-gamepad"></i>
-                                <span class="level-limit" title="{{ game.levelName }} on {{ game.describeDifficulty }}">Playing {{ game.levelName }} ({{ game.describeDifficulty() }})</span>
+                                {% if game.getIsPlayingLevel() %}
+                                    <i class="mdi mdi-gamepad"></i>
+                                    <span class="level-limit" title="{{ game.levelName }} on {{ game.describeDifficulty }}">Playing {{ game.levelName }} ({{ game.describeDifficulty() }})</span>
+                                {% else %}
+                                    <i class="mdi mdi-account-group"></i>
+                                    <span class="level-limit">{{ game.describeState() }}</span>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -38,7 +53,11 @@
                     <div class="inner">
                         <div class="stacked-text -smaller">
                             <span>{{ game.describeServerType() }}</span>
-                            <span>{{ game.masterServerHost }}</span>
+                            {% if game.getIsGameLiftServer() %}
+                                <span>GameLift ({{ game.tryGetGameLiftRegion() }})</span>
+                            {% else %}
+                                <span>{{ game.masterServerHost }}</span>
+                            {% endif %}
                         </div>
                     </div>
                 </td>
