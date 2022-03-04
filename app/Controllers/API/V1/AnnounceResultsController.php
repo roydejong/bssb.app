@@ -4,6 +4,7 @@ namespace app\Controllers\API\V1;
 
 use app\BeatSaber\Enums\PlayerLevelEndReason;
 use app\BeatSaber\Enums\PlayerLevelEndState;
+use app\BeatSaber\Enums\PlayerScoreRank;
 use app\HTTP\Request;
 use app\HTTP\Response;
 use app\HTTP\Responses\BadRequestResponse;
@@ -53,7 +54,7 @@ class AnnounceResultsController
         }
 
         if ($levelHistory->endedAt) {
-            return new Response(200, "lmao ignored you but you still get a 200 👎");
+            return new Response(200, "lmao ignored 👎");
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -85,6 +86,9 @@ class AnnounceResultsController
                 $userIdToPlayerId[$playerProfile->userId] = $playerProfile->id;
             }
 
+            $rankedHistoryPlayers = [];
+
+            // Fill history players from the submitted results
             foreach ($results as $resultItem) {
                 $userId = $resultItem['UserId'] ?? null;
 
@@ -95,11 +99,11 @@ class AnnounceResultsController
                 $playerProfile = $playerProfiles[$playerId];
                 $historyPlayer = $historyPlayers[$playerId];
 
-                $historyPlayer->endReason = isset($resultItem['LevelEndReason']) ? PlayerLevelEndReason::tryFrom($resultItem['LevelEndReason']) : null;
-                $historyPlayer->endState = isset($resultItem['LevelEndState']) ? PlayerLevelEndState::tryFrom($resultItem['LevelEndState']) : null;
+                $historyPlayer->endReason = isset($resultItem['LevelEndReason']) ? PlayerLevelEndReason::tryFrom(intval($resultItem['LevelEndReason'])) : null;
+                $historyPlayer->endState = isset($resultItem['LevelEndState']) ? PlayerLevelEndState::tryFrom(intval($resultItem['LevelEndState'])) : null;
                 $historyPlayer->rawScore = intval($resultItem['RawScore'] ?? 0);
                 $historyPlayer->modifiedScore = intval($resultItem['ModifiedScore'] ?? 0);
-                $historyPlayer->rank = intval($resultItem['Rank'] ?? 0);
+                $historyPlayer->rank = isset($resultItem['Rank']) ? PlayerScoreRank::tryFrom(intval($resultItem['Rank'])) : null;
                 $historyPlayer->goodCuts = intval($resultItem['GoodCuts'] ?? 0);
                 $historyPlayer->badCuts = intval($resultItem['BadCuts'] ?? 0);
                 $historyPlayer->missCount = intval($resultItem['MissCount'] ?? 0);
@@ -113,7 +117,20 @@ class AnnounceResultsController
                     $historyPlayer->badgeSubtitle = $badgeData['Subtitle'] ?? null;
                 }
 
-                $historyPlayer->save();
+                $rankedHistoryPlayers[$historyPlayer->modifiedScore] = $historyPlayer;
+            }
+
+            // Order by achieved score, assign ranks, save final history players
+            krsort($rankedHistoryPlayers);
+            $rankNumber = 1;
+            foreach ($rankedHistoryPlayers as $player) {
+                if ($player->endState === PlayerLevelEndState::SongFinished) {
+                    $player->rankNumber = $rankNumber;
+                    $rankNumber++;
+                } else {
+                    $player->rankNumber = null; // did not finish level, do not rank
+                }
+                $player->save();
             }
         }
 
