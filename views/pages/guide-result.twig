@@ -31,8 +31,7 @@
                     {% if "versions" in faqSet %}
                         <div class="faq">
                             <h3>What game versions are supported?</h3>
-                            <p>Multiplayer mods are usually only maintained for the latest possible game versions.</p>
-                            <p>{% if absMinVersion != relMaxVersion %}Currently, the minimum game version is {{ absMinVersion }}. {% endif %}On {{ platformName }} the {% if absMinVersion != relMaxVersion %}maximum{% else %}only supported{% endif%} game version is {{ relMaxVersion }}, which is the recommended version for you. {% if relMaxVersion != absMaxVersion %}The highest supported version on other platforms is {{ absMaxVersion }}.{% endif %}</p>
+                            <p>Multiplayer mods are usually only maintained for the latest possible game versions. {% if absMinVersion != relMaxVersion %}The oldest supported game version right now is {{ absMinVersion }}. {% endif %}On {{ platformName }} the {% if absMinVersion != relMaxVersion %}newest supported{% else %}only supported{% endif%} game version is {{ relMaxVersion }}, which is the recommended version for you. {% if relMaxVersion != absMaxVersion %}The highest supported version on other platforms is {{ absMaxVersion }}.{% endif %}</p>
                         </div>
                         {% if "bmbfDowngrade" not in faqSet %}
                             <div class="faq">

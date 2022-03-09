@@ -13,7 +13,7 @@ class GuideController
 {
     private const LastUpdate = "2022-03-02 21:30";
 
-    private const VersionLatest = "1.19.1";
+    private const VersionLatest = "1.20.0";
     private const VersionOverallMax = "1.18.3";
     private const VersionOverallMin = "1.17.1";
     private const PcSupportedVersion = "1.18.3";
@@ -29,7 +29,7 @@ class GuideController
     ];
 
     private static $allGameVersions = ["1.17.1", "1.18.0", "1.18.1",
-        "1.18.2", "1.18.3", "1.19.0", "1.19.1"];
+        "1.18.2", "1.18.3", "1.19.0", "1.19.1", "1.20.0"];
 
     public function getGuideIndex(Request $request): Response
     {
@@ -133,13 +133,19 @@ class GuideController
             $faqSets[] = "bmbfDowngrade";
             $faqSets[] = "downgrade";
         } else if ($version->greaterThan($absoluteMaxVersion)) {
-            $resultText = "Sorry, that version is just too new! Multiplayer mods are not (yet) available for Beat Saber {$version} on any platform.";
-            $resultInstruction = "If you want to use multiplayer mods, you should downgrade your game for now. On {$platformName}, we recommend Beat Saber {$platformVersion}.";
+            $resultText = "Sorry, that version is too new. It's not supported yet. There are no multiplayer mods for Beat Saber {$version} on any platform.";
+            $resultInstruction = "If you want to use multiplayer mods on {$platformName}, you should downgrade your game to Beat Saber {$platformVersion}.";
             $resultBad = true;
             $resultEyes = "Eyes10";
 
             $faqSets[] = "versions";
             $faqSets[] = "downgrade";
+        } else {
+            $resultText = "You can use multiplayer mods on this game version.";
+            $resultInstruction = "You'll need to install BeatTogether and MultiplayerCore. Check out the instructions below.";
+            $resultBad = false;
+
+            $faqSets[] = "install";
         }
 
         // -------------------------------------------------------------------------------------------------------------
