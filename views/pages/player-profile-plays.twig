@@ -20,9 +20,30 @@
         </div>
     {% else %}
         {% for level in levelHistory %}
-            <div class="level-history">
-                Played {{ level.songName }} by {{ level.songAuthor }} for a score of {{ level.modifiedScore }}.
-                {# TODO #}
+            <div class="level-history" style="{% if level.coverUrl %}background-image: url('{{ level.coverUrl }}');{% endif %}">
+                <div class="inner">
+                    {% if level.coverUrl %}
+                        <img class="cover-art" src="{{ level.coverUrl }}" alt="{{ level.levelName }}" loading="lazy"/>
+                    {% else %}
+                        <div class="cover-art dummy-cover-art">
+                            <i class="mdi mdi-music"></i>
+                        </div>
+                    {% endif %}
+                    <div class="text">
+                        <div class="placement">
+                            {% if level.placement == 1 and level.finishedPlayerCount == 1 %}
+                                <i class="mdi mdi-medal"></i>
+                                <span class="special">Played alone</span>
+                            {% else %}
+                                <i class="mdi mdi-medal"></i>
+                                <span class="special">{{ level.placement }} of {{ level.finishedPlayerCount }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="song">
+                            {{ level.songName }} <span class="by">by {{ level.songAuthor }}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         {% endfor %}
     {% endif %}

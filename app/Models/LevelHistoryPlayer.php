@@ -44,7 +44,7 @@ class LevelHistoryPlayer extends Model
     /**
      * Level completion results: the player's rank for the score they achieved, relative to the maximum possible score
      */
-    public ?PlayerScoreRank $rank;
+    public ?PlayerScoreRank $scoreRank;
     /**
      * Level completion results: amount of good block cuts
      */
@@ -81,7 +81,7 @@ class LevelHistoryPlayer extends Model
      */
     public ?string $badgeSubtitle;
     /**
-     * The calculated rank of the player (i.e. 1 = 1st place), relative to the match
+     * The calculated placement rank of the player (i.e. 1 = 1st place), relative to the match
      */
-    public ?int $rankNumber;
+    public ?int $placement;
 }

@@ -1,0 +1,20 @@
+.cover-art {
+  border-radius: 6px;
+  height: 64px;
+  width: 64px;
+  margin-right: 1.5rem;
+  background: #333;
+  flex-shrink: 0;
+  flex-grow: 0;
+}
+.dummy-cover-art {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(125deg, #e70f01 0%, #0067e6 100%);
+  color: #fff;
+  font-size: 22px;
+  flex-shrink: 0;
+  flex-grow: 0;
+}

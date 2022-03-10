@@ -131,5 +131,53 @@
 }
 
 .level-history {
-  margin-bottom: 1.5rem;
+  position: relative;
+  margin-top: 1.5rem;
+  display: flex;
+  background-color: var(--col-bg-darkest);
+  background-position: center center;
+  background-size: cover;
+  border-radius: 6px;
+  overflow: hidden;
+
+  > .inner {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 1rem;
+    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 5, .666);
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, .1);
+  }
+
+  .text {
+    font-size: 1.4rem;
+
+    .placement {
+      display: inline-flex;
+      align-items: center;
+      background: #000;
+      padding: .5rem 1rem;
+      border-radius: 6px;
+
+      i {
+        color: #FFD700;
+        margin-right: .5rem;
+      }
+    }
+    .song {
+      display: flex;
+      align-items: flex-end;
+      margin: 1rem 0 .25rem 0;
+      font-size: 1.6rem;
+      font-weight: var(--font-weight-bold);
+
+      .by {
+        font-size: 1.4rem;
+        font-weight: var(--font-weight-medium);
+        color: var(--col-txt-muted-light);
+        margin-left: .5rem;
+      }
+    }
+  }
 }

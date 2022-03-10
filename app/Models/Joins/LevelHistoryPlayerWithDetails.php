@@ -13,6 +13,7 @@ class LevelHistoryPlayerWithDetails extends LevelHistoryPlayer implements IReadO
     public string $sessionGameId;
     public \DateTime $startedAt;
     public ?\DateTime $endedAt;
+    public ?int $finishedPlayerCount;
 
     // level_records
     public string $levelId;

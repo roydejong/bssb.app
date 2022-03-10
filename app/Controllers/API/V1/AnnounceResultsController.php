@@ -17,6 +17,8 @@ class AnnounceResultsController
 {
     public function announceResults(Request $request): Response
     {
+        global $bssbConfig;
+
         // -------------------------------------------------------------------------------------------------------------
         // Input
 
@@ -53,7 +55,7 @@ class AnnounceResultsController
             return new NotFoundResponse();
         }
 
-        if ($levelHistory->endedAt) {
+        if ($levelHistory->endedAt && !($bssbConfig['allow_multiple_results'] ?? false)) {
             return new Response(200, "lmao ignored 👎");
         }
 
@@ -87,6 +89,7 @@ class AnnounceResultsController
             }
 
             $rankedHistoryPlayers = [];
+            $finishedPlayerCount = 0;
 
             // Fill history players from the submitted results
             foreach ($results as $resultItem) {
@@ -103,7 +106,7 @@ class AnnounceResultsController
                 $historyPlayer->endState = isset($resultItem['LevelEndState']) ? PlayerLevelEndState::tryFrom(intval($resultItem['LevelEndState'])) : null;
                 $historyPlayer->rawScore = intval($resultItem['RawScore'] ?? 0);
                 $historyPlayer->modifiedScore = intval($resultItem['ModifiedScore'] ?? 0);
-                $historyPlayer->rank = isset($resultItem['Rank']) ? PlayerScoreRank::tryFrom(intval($resultItem['Rank'])) : null;
+                $historyPlayer->scoreRank = isset($resultItem['Rank']) ? PlayerScoreRank::tryFrom(intval($resultItem['Rank'])) : null;
                 $historyPlayer->goodCuts = intval($resultItem['GoodCuts'] ?? 0);
                 $historyPlayer->badCuts = intval($resultItem['BadCuts'] ?? 0);
                 $historyPlayer->missCount = intval($resultItem['MissCount'] ?? 0);
@@ -118,20 +121,25 @@ class AnnounceResultsController
                 }
 
                 $rankedHistoryPlayers[$historyPlayer->modifiedScore] = $historyPlayer;
+                $finishedPlayerCount++;
             }
 
             // Order by achieved score, assign ranks, save final history players
             krsort($rankedHistoryPlayers);
-            $rankNumber = 1;
+            $placement = 1;
             foreach ($rankedHistoryPlayers as $player) {
                 if ($player->endState === PlayerLevelEndState::SongFinished) {
-                    $player->rankNumber = $rankNumber;
-                    $rankNumber++;
+                    $player->placement = $placement;
+                    $placement++;
                 } else {
-                    $player->rankNumber = null; // did not finish level, do not rank
+                    $player->placement = null; // did not finish level, do not rank
                 }
                 $player->save();
             }
+
+            // Set finished player count on game record
+            $levelHistory->finishedPlayerCount = $finishedPlayerCount;
+            $levelHistory->save();
         }
 
         return new Response(200, "👍 very nice");

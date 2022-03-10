@@ -24,11 +24,13 @@
                 <div class="settings-form">
                     <div class="block">
                         <div class="title">
-                            <i class="mdi mdi-text-account"></i>
+                            <i class="mdi mdi-account-edit"></i>
                             <h3>Profile bio</h3>
                         </div>
-                        <div class="inner -textarea-fill">
-                            <textarea name="profileBio" placeholder="Enter optional text to show on your profile">{{ formData.profileBio }}</textarea>
+                        <div class="inner -textarea">
+                            <label for="profileBio">Optional text to show on your profile:</label>
+                            <textarea name="profileBio" id="profileBio"
+                                      placeholder="Optional bio">{{ formData.profileBio }}</textarea>
                         </div>
                     </div>
                     <div class="block">
@@ -52,7 +54,7 @@
                             <div class="check-switch">
                                 <input type="checkbox" name="showHistory" id="showHistory"
                                        {% if formData.showHistory %}checked{% endif %} value="1"/>
-                                <label for="showHistory">Show game history</label>
+                                <label for="showHistory">Enable game history</label>
                                 <p class="help">Show your public game history on your profile.</p>
                             </div>
                         </div>

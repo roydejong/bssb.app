@@ -53,6 +53,36 @@
       }
     }
 
+    &.-textarea {
+      display: flex;
+      flex-direction: column;
+
+      label {
+        font-weight: var(--font-weight-bold);
+        cursor: pointer;
+        margin-bottom: 1.5rem;
+      }
+
+      textarea {
+        appearance: none;
+        font: inherit;
+        background: var(--col-bg-darkest);
+        color: var(--col-txt-main);
+        border-radius: 6px;
+        padding: 1.5rem;
+        box-shadow: inset 0 0 1px 1px rgba(0, 0, 0, .1);
+        border: 1px solid var(--col-bg-darker);
+        resize: none;
+        min-height: 180px;
+        resize: none;
+        outline: none;
+
+        &:active, &:focus {
+          border: 1px solid var(--col-saber-left);
+        }
+      }
+    }
+
     &.-no-shadow {
       &, * {
         box-shadow: none !important;

@@ -36,6 +36,12 @@ $bssbConfig['hashids_salt'] = "🧂";
 $bssbConfig['master_server_blacklist'] = [];
 
 /**
+ * allow_multiple_results, boolean
+ *  → If enabled, AnnounceResultsController will not ignore duplicate or late results and process them like new
+ */
+$bssbConfig['allow_multiple_results'] = false;
+
+/**
  * Instarecord configuration
  */
 $dbConfig = Instarecord::config();
