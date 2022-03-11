@@ -29,6 +29,13 @@ class LevelHistory extends Model
      */
     public ?\DateTime $endedAt;
     /**
+     * The calculated amount of players that started the level and were included in results
+     * This is only set once level has ended
+     *
+     * @see AnnounceResultsController::announceResults()
+     */
+    public ?int $playedPlayerCount;
+    /**
      * The calculated amount of players that cleared the level and submitted valid results
      * This is only set once level has ended
      *

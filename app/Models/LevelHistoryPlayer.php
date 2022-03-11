@@ -84,4 +84,11 @@ class LevelHistoryPlayer extends Model
      * The calculated placement rank of the player (i.e. 1 = 1st place), relative to the match
      */
     public ?int $placement;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    public function getHasFinished()
+    {
+        return $this->endState && $this->endState == PlayerLevelEndState::SongFinished;
+    }
 }

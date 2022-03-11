@@ -89,7 +89,6 @@ class AnnounceResultsController
             }
 
             $rankedHistoryPlayers = [];
-            $finishedPlayerCount = 0;
 
             // Fill history players from the submitted results
             foreach ($results as $resultItem) {
@@ -121,23 +120,29 @@ class AnnounceResultsController
                 }
 
                 $rankedHistoryPlayers[$historyPlayer->modifiedScore] = $historyPlayer;
-                $finishedPlayerCount++;
             }
 
-            // Order by achieved score, assign ranks, save final history players
+            // Determine player placement, and calculate final player counts
+            $playedPlayerCount = 0;
+            $finishedPlayerCount = 0;
+
             krsort($rankedHistoryPlayers);
             $placement = 1;
             foreach ($rankedHistoryPlayers as $player) {
+                if ($player->endState !== PlayerLevelEndState::NotStarted) {
+                    $playedPlayerCount++;
+                }
                 if ($player->endState === PlayerLevelEndState::SongFinished) {
                     $player->placement = $placement;
                     $placement++;
+                    $finishedPlayerCount++;
                 } else {
                     $player->placement = null; // did not finish level, do not rank
                 }
                 $player->save();
             }
 
-            // Set finished player count on game record
+            $levelHistory->playedPlayerCount = $playedPlayerCount;
             $levelHistory->finishedPlayerCount = $finishedPlayerCount;
             $levelHistory->save();
         }

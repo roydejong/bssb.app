@@ -246,11 +246,13 @@ final class AnnounceProcessor
                 $this->serverLevel = new LevelHistory();
                 $this->serverLevel->hostedGameId = $game->id;
                 $this->serverLevel->sessionGameId = $this->sessionGameId;
-                $this->serverLevel->levelRecordId = $this->tempLevelData->id;
                 $this->serverLevel->startedAt = $now;
                 $this->serverLevel->endedAt = null;
                 $this->serverLevel->save();
             }
+
+            $this->serverLevel->levelRecordId = $this->tempLevelData->id;
+            $this->serverLevel->save();
         }
     }
 

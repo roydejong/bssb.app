@@ -25,7 +25,11 @@ class ViewRenderer
 
         $this->twig->addFilter(new TwigFilter('timeago', function ($input): string {
             try {
-                $dt = new \DateTime($input);
+                if ($input instanceof \DateTime) {
+                    $dt = $input;
+                } else {
+                    $dt = new \DateTime($input);
+                }
                 return TimeAgo::format($dt);
             } catch (\Exception) {
                 return "unknown";
@@ -34,9 +38,15 @@ class ViewRenderer
 
         $this->twig->addFilter(new TwigFilter('timeago_html', function ($input): string {
             try {
-                $dt = new \DateTime($input);
+                if ($input instanceof \DateTime) {
+                    $dt = $input;
+                    $inputText = $dt->format('r');
+                } else {
+                    $dt = new \DateTime($input);
+                    $inputText = $input;
+                }
                 $timeAgo = TimeAgo::format($dt);
-                return "<abbr title='{$input}'>{$timeAgo}</abbr>";
+                return "<abbr title='{$inputText}'>{$timeAgo}</abbr>";
             } catch (\Exception) {
                 return "unknown";
             }
