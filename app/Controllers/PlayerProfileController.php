@@ -35,6 +35,7 @@ class PlayerProfileController
         $titleSuffix = "Profile";
         $loadStats = true;
         $loadHistory = false;
+        $loadCurrent = true;
 
         if ($profileSection) {
             switch ($profileSection) {
@@ -44,6 +45,7 @@ class PlayerProfileController
                     $titleSuffix = "Play history";
                     $loadStats = false;
                     $loadHistory = true;
+                    $loadCurrent = false;
                     break;
                 default:
                     return new NotFoundResponse();
@@ -90,6 +92,7 @@ class PlayerProfileController
         // Player data
 
         $stats = [];
+        $currentGame = null;
         $avatarData = null;
 
         if ($loadStats) {
@@ -111,8 +114,20 @@ class PlayerProfileController
                 ->querySingleModel();
         }
 
+        if ($loadCurrent) {
+            $currentGame = HostedGame::query()
+                ->from("hosted_games hg")
+                ->innerJoin("hosted_game_players hgp ON (hgp.hosted_game_id = hg.id AND hgp.user_id = ?)",
+                    $userId)
+                ->where("last_update >= ?", HostedGame::getStaleGameCutoff())
+                ->andWhere("ended_at IS NULL")
+                ->andWhere('hgp.is_connected = 1')
+                ->orderBy('last_update DESC, hg.id')
+                ->querySingleModel();
+        }
+
         $timeSinceActive = time() - $player->lastSeen->getTimestamp();
-        $activeNow = ($timeSinceActive <= (HostedGame::STALE_GAME_AFTER_MINUTES * 60));
+        $activeNow = $currentGame || ($timeSinceActive <= (HostedGame::STALE_GAME_AFTER_MINUTES * 60));
 
         // -------------------------------------------------------------------------------------------------------------
         // History data
@@ -133,6 +148,7 @@ class PlayerProfileController
         $view->set('pageTitle', "{$player->getDisplayName()}'s {$titleSuffix}");
         $view->set('pageDescr', "{$player->getDisplayName()} is a Beat Saber multiplayer {$player->describeType(true)}. View their {$titleSuffix} here.");
         $view->set('activeNow', $activeNow);
+        $view->set('currentGame', $currentGame);
         $view->set('avatarData', $avatarData?->jsonSerialize());
         $view->set('privacyMode', $enablePrivacyShield);
         $view->set('stats', $stats);

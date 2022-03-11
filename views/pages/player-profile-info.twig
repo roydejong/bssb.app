@@ -37,7 +37,10 @@
                     <tr>
                         <th scope="row">Last seen</th>
                         {% if activeNow %}
-                            <td><div class="active-lamp -on"></div> Active now</td>
+                            <td>
+                                <div class="active-lamp -on"></div>
+                                <span>Active now {% if currentGame %}in <a href="{{ currentGame.getWebDetailUrl() }}">{{ currentGame.gameName }}</a>{% endif %}</span>
+                            </td>
                         {% else %}
                             <td>{{ player.lastSeen.format('r')|timeago_html|raw }}</td>
                         {% endif %}
