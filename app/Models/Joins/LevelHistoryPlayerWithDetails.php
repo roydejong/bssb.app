@@ -3,6 +3,7 @@
 namespace app\Models\Joins;
 
 use app\BeatSaber\Enums\PlayerLevelEndState;
+use app\BeatSaber\LevelDifficulty;
 use app\Models\HostedGame;
 use app\Models\LevelHistoryPlayer;
 use SoftwarePunt\Instarecord\Models\IReadOnlyModel;
@@ -10,9 +11,11 @@ use SoftwarePunt\Instarecord\Models\IReadOnlyModel;
 class LevelHistoryPlayerWithDetails extends LevelHistoryPlayer implements IReadOnlyModel
 {
     // level_histories
+    public string $sessionGameId;
     public int $hostedGameId;
     public int $levelRecordId;
-    public string $sessionGameId;
+    public int $difficulty;
+    public ?string $characteristic;
     public \DateTime $startedAt;
     public ?\DateTime $endedAt;
     public ?int $playedPlayerCount;
@@ -58,5 +61,10 @@ class LevelHistoryPlayerWithDetails extends LevelHistoryPlayer implements IReadO
     public function getServerUrl(): string
     {
         return "/game/" . HostedGame::id2hash($this->hostedGameId);
+    }
+
+    public function describeDifficulty(): string
+    {
+        return LevelDifficulty::describe($this->difficulty);
     }
 }

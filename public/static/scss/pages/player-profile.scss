@@ -168,7 +168,7 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        color: #cd7f32;
+        color: #595243;
         margin-right: .5rem;
       }
 
@@ -195,7 +195,7 @@
       }
       &.-place-3 {
         i {
-          color: #cd7f32;
+          color: #a05e17;
         }
       }
       &.-alone {
@@ -206,16 +206,47 @@
     }
     .song {
       display: flex;
-      align-items: flex-end;
-      margin: 1rem 0 .25rem 0;
+      flex-direction: column;
+      margin: 0;
       font-size: 1.6rem;
       font-weight: var(--font-weight-bold);
+
+      > div {
+        display: flex;
+        align-items: flex-end;
+        margin-top: .5rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
 
       .by {
         font-size: 1.4rem;
         font-weight: var(--font-weight-medium);
         color: var(--col-txt-muted-mediumlight);
         margin-left: .5rem;
+
+        &:first-child {
+          margin-left: 0;
+        }
+      }
+      .characteristic {
+        font-size: 1.4rem;
+        color: var(--col-txt-muted);
+        font-weight: var(--font-weight-regular);
+      }
+      .difficulty {
+        font-size: 1.4rem;
+        color: var(--col-txt-muted);
+        font-weight: var(--font-weight-medium);
+        margin-right: .3rem;
+
+        &.-diff-0 { color: MediumSeaGreen; }
+        &.-diff-1 { color: #59b0f4; }
+        &.-diff-2 { color: tomato; }
+        &.-diff-3 { color: #bf2a42; }
+        &.-diff-4 { color: #8f48db; }
       }
     }
   }

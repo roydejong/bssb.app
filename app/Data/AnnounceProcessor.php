@@ -244,14 +244,16 @@ final class AnnounceProcessor
 
             if (!$this->serverLevel) {
                 $this->serverLevel = new LevelHistory();
-                $this->serverLevel->hostedGameId = $game->id;
                 $this->serverLevel->sessionGameId = $this->sessionGameId;
+                $this->serverLevel->hostedGameId = $game->id;
                 $this->serverLevel->startedAt = $now;
                 $this->serverLevel->endedAt = null;
-                $this->serverLevel->save();
             }
-
-            $this->serverLevel->levelRecordId = $this->tempLevelData->id;
+            if ($this->serverLevel->endedAt === null) {
+                $this->serverLevel->levelRecordId = $this->tempLevelData->id;
+                $this->serverLevel->difficulty = $game->difficulty;
+                $this->serverLevel->characteristic = $game->characteristic;
+            }
             $this->serverLevel->save();
         }
     }

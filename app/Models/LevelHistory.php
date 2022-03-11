@@ -9,12 +9,20 @@ use SoftwarePunt\Instarecord\Model;
 class LevelHistory extends Model
 {
     public int $id;
-    public int $hostedGameId;
-    public int $levelRecordId;
     /**
      * The server-assigned GUID for the specific level play.
      */
     public string $sessionGameId;
+    public int $hostedGameId;
+    public int $levelRecordId;
+    /**
+     * Difficulty for the level that was played.
+     */
+    public int $difficulty;
+    /**
+     * Characteristic for the level that was played.
+     */
+    public ?string $characteristic;
     /**
      * When the start of the level was reported (regular announce)
      *

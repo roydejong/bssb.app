@@ -46,8 +46,8 @@
                                 <span class="special">Did not finish</span>
                             </div>
                         {% elseif historyItem.placement == 1 and historyItem.playedPlayerCount <= 1 %}
-                            <div class="placement -place-1 -alone">
-                                <i class="mdi mdi-medal"></i>
+                            <div class="placement -alone">
+                                <i class="mdi mdi-timer-sand"></i>
                                 <span class="special">Played alone</span>
                             </div>
                         {% else %}
@@ -57,7 +57,15 @@
                             </div>
                         {% endif %}
                         <div class="song">
-                            {{ historyItem.songName }} <span class="by">by {{ historyItem.songAuthor }}</span>
+                            <div class="title">
+                                <span>{{ historyItem.songName }}</span> <span class="by">by {{ historyItem.songAuthor }}</span>
+                            </div>
+                            <div class="details">
+                                <span class="difficulty -diff-{{ historyItem.difficulty }}">{{ historyItem.describeDifficulty() }}</span>
+                                {% if historyItem.characteristic %}
+                                    <span class="characteristic">({{ historyItem.characteristic }})</span>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                     {% if historyItem.modifiedScore is not null %}
