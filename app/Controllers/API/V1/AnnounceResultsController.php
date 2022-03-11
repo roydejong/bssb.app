@@ -119,14 +119,20 @@ class AnnounceResultsController
                     $historyPlayer->badgeSubtitle = $badgeData['Subtitle'] ?? null;
                 }
 
-                $rankedHistoryPlayers[$historyPlayer->modifiedScore] = $historyPlayer;
+                $rankedHistoryPlayers[] = $historyPlayer;
             }
 
             // Determine player placement, and calculate final player counts
             $playedPlayerCount = 0;
             $finishedPlayerCount = 0;
 
-            krsort($rankedHistoryPlayers);
+            usort($rankedHistoryPlayers, function (LevelHistoryPlayer $a, LevelHistoryPlayer $b): int {
+                $aVal = $a->modifiedScore;
+                $bVal = $b->modifiedScore;
+                if ($aVal === $bVal) return 0;
+                return $aVal > $bVal ? -1 : +1;
+            });
+
             $placement = 1;
             foreach ($rankedHistoryPlayers as $player) {
                 if ($player->endState !== PlayerLevelEndState::NotStarted) {
