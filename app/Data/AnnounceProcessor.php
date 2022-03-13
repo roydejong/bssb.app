@@ -287,15 +287,18 @@ final class AnnounceProcessor
 
         // Iterate announced players; add or replace player records
         foreach ($announcePlayers as $player) {
-            $sortIndex = intval($player['SortIndex'] ?? -999);
+            // BssbPlayer
             $userId = $player['UserId'] ?? null;
             $userName = $player['UserName'] ?? null;
             $platformType = $player['PlatformType'] ?? null;
             $platformUserId = $player['PlatformUserId'] ?? null;
-            $isHost = intval($player['IsHost'] ?? 0) === 1;
-            $isAnnouncer = intval($player['IsAnnouncer'] ?? 0) === 1;
-            $latency = floatval($player['Latency'] ?? 0);
             $avatarData = $player['AvatarData'] ?? null;
+            // BssbServerPlayer
+            $sortIndex = intval($player['SortIndex'] ?? -999);
+            $isMe = intval($player['IsMe'] ?? 0) === 1;
+            $isHost = intval($player['IsHost'] ?? 0) === 1;
+            $isAnnouncer = $isMe || intval($player['IsAnnouncer'] ?? 0) === 1;
+            $latency = floatval($player['Latency'] ?? 0);
 
             if ($sortIndex === -1) {
                 // -1 slot is used for dedicated servers only

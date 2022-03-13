@@ -99,11 +99,11 @@ class PlayerProfileController
             $stats['hostCount'] = HostedGame::query()
                 ->select('COUNT(id)')
                 ->where('owner_id = ? OR manager_id = ?', $player->userId, $player->userId)
-                ->querySingleValue();
+                ->querySingleValue() ?? 0;
             $stats['joinCount'] = HostedGamePlayer::query()
                 ->select('COUNT(id)')
                 ->where('user_id = ? AND is_host = 0', $player->userId)
-                ->querySingleValue();
+                ->querySingleValue() ?? 0;
             $stats['playCount'] = 0; // TODO LevelHistoryPlayer count
 
             /**
