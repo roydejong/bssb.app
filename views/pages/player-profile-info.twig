@@ -57,6 +57,14 @@
                         <th scope="row">Levels played</th>
                         <td>{{ stats.playCount }}</td>
                     </tr>
+                    <tr>
+                        <th scope="row">Total score</th>
+                        <td>{{ stats.totalScore|number_format(0, '', ',') }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Total good cuts</th>
+                        <td>{{ stats.goodCuts|number_format(0, '', ',') }} ({{ (stats.hitCountPercentage * 100)|number_format(2, '.', '') }}%)</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
