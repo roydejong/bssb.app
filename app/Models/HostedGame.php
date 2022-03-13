@@ -541,6 +541,9 @@ class HostedGame extends Model implements \JsonSerializable
         $sz = [];
 
         foreach ($this->fetchPlayers() as $player) {
+            if (!$player->isConnected)
+                continue;
+
             $sz[] = [
                 'userId' => $player->userId,
                 'userName' => $player->userName,
