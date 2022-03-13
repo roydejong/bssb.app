@@ -112,6 +112,10 @@ class AnnounceResultsController
                 $historyPlayer->fullCombo = intval($resultItem['FullCombo'] ?? 0) === 1;
                 $historyPlayer->maxCombo = intval($resultItem['MaxCombo'] ?? 0);
 
+                if ($historyPlayer->maxCombo <= 0 || $historyPlayer->endState != PlayerLevelEndState::SongFinished)
+                    // Full combo flag gets set incorrectly sometimes it seems, guard against this
+                    $historyPlayer->fullCombo = false;
+
                 $badgeData = $resultItem['Badge'] ?? null;
                 if ($badgeData && is_array($badgeData)) {
                     $historyPlayer->badgeKey = $badgeData['Key'] ?? null;
