@@ -36,7 +36,7 @@ class LevelHistoryPlayer extends Model
      * Level completion results: final score, without factoring in modifiers
      * Also known as "multiplied score" (as of 1.20)
      */
-    public ?int $rawScore;
+    public ?int $multipliedScore;
     /**
      * Level completion results: final score, factoring in modifiers
      */

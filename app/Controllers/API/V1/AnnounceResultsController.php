@@ -103,7 +103,7 @@ class AnnounceResultsController
 
                 $historyPlayer->endReason = isset($resultItem['LevelEndReason']) ? PlayerLevelEndReason::tryFrom(intval($resultItem['LevelEndReason'])) : null;
                 $historyPlayer->endState = isset($resultItem['LevelEndState']) ? PlayerLevelEndState::tryFrom(intval($resultItem['LevelEndState'])) : null;
-                $historyPlayer->rawScore = intval($resultItem['RawScore'] ?? 0);
+                $historyPlayer->multipliedScore = intval($resultItem['MultipliedScore'] ?? 0);
                 $historyPlayer->modifiedScore = intval($resultItem['ModifiedScore'] ?? 0);
                 $historyPlayer->scoreRank = isset($resultItem['Rank']) ? PlayerScoreRank::tryFrom(intval($resultItem['Rank'])) : null;
                 $historyPlayer->goodCuts = intval($resultItem['GoodCuts'] ?? 0);
