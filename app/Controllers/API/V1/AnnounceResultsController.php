@@ -72,7 +72,7 @@ class AnnounceResultsController
             ->where('level_history_id = ?', $levelHistory->id)
             ->queryAllModelsIndexed('playerId');
 
-        if (!empty($historyPlayers) || !is_array($results)) {
+        if (!empty($historyPlayers) && is_array($results)) {
             $playerIds = array_keys($historyPlayers);
 
             /**
@@ -150,6 +150,10 @@ class AnnounceResultsController
 
             $levelHistory->playedPlayerCount = $playedPlayerCount;
             $levelHistory->finishedPlayerCount = $finishedPlayerCount;
+            $levelHistory->save();
+        } else {
+            $levelHistory->playedPlayerCount = 0;
+            $levelHistory->finishedPlayerCount = 0;
             $levelHistory->save();
         }
 
