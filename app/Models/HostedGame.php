@@ -257,6 +257,20 @@ class HostedGame extends Model implements \JsonSerializable
             || strpos($this->masterServerHost, ".mp.beatsaber.com") !== false;
     }
 
+    public function getIsPeerToPeer(): bool
+    {
+        if ($this->gameVersion && $this->gameVersion->greaterThanOrEquals(new CVersion("1.16.3")))
+            // Game version is too new to be P2P
+            return false;
+
+        if ($this->serverType === self::SERVER_TYPE_PLAYER_HOST)
+            // Server type is specifically marked as P2P
+            return true;
+
+        // Default mode: old game version, every non-quickplay game should be P2P
+        return !$this->getIsQuickplay();
+    }
+
     public function getIsGameLiftServer(): bool
     {
         return str_starts_with($this->ownerId, "arn:aws:gamelift:");

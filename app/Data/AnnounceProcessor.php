@@ -411,8 +411,13 @@ final class AnnounceProcessor
 
     private function setModInfo(HostedGame &$game): void
     {
-        $game->mpCoreVersion = $this->getVersionText('MpCoreVersion');
-        $game->mpExVersion = $this->getVersionText('MpExVersion');
+        if (!$game->getIsOfficial() || $game->getIsPeerToPeer()) {
+            $game->mpCoreVersion = $this->getVersionText('MpCoreVersion');
+            $game->mpExVersion = $this->getVersionText('MpExVersion');
+        } else {
+            $game->mpCoreVersion = null;
+            $game->mpExVersion = null;
+        }
     }
 
     private function setLevelInfo(HostedGame &$game): void
