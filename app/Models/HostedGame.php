@@ -399,9 +399,18 @@ class HostedGame extends Model implements \JsonSerializable
             $stateNormal === MultiplayerLobbyState::Error;
     }
 
-    public function getIsPlayingLevel(): bool
+    public function getIsPlayingLevel(bool $mustBeInGameplayScene = false): bool
     {
-        return !empty($this->levelId) && !$this->getIsInLobby();
+        if (empty($this->levelId))
+            return false;
+
+        if ($this->getIsInLobby())
+            return false;
+
+        if ($mustBeInGameplayScene)
+            return $this->getAdjustedState() == MultiplayerLobbyState::GameRunning;
+        else
+            return true;
     }
 
     public function getMinPlayerCount(): int

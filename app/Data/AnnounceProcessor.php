@@ -222,7 +222,7 @@ final class AnnounceProcessor
     {
         $this->serverLevel = null;
 
-        if (!$this->tempLevelData || !$game->getIsPlayingLevel())
+        if (!$this->tempLevelData || !$game->getIsPlayingLevel(mustBeInGameplayScene: true))
             return;
 
         $this->tempLevelData = LevelRecord::syncFromAnnounce($this->tempLevelData->levelId,
