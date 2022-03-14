@@ -37,7 +37,7 @@ class AnnounceResultsController
         $sessionGameId = $input['SessionGameId'] ?? null;
         $results = $input['Results'] ?? null;
 
-        if (empty($sessionGameId) || empty($results)) {
+        if (empty($sessionGameId)) {
             return new BadRequestResponse();
         }
 
@@ -72,7 +72,7 @@ class AnnounceResultsController
             ->where('level_history_id = ?', $levelHistory->id)
             ->queryAllModelsIndexed('playerId');
 
-        if (!empty($historyPlayers) && is_array($results)) {
+        if (!empty($historyPlayers) && $results && is_array($results)) {
             $playerIds = array_keys($historyPlayers);
 
             /**
