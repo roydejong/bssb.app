@@ -43,7 +43,7 @@
                         {% if not historyItem.placement or not historyItem.getHasFinished() %}
                             <div class="placement -alone">
                                 <i class="mdi mdi-emoticon-sad"></i>
-                                <span class="special">Did not finish</span>
+                                <span class="special">{{ historyItem.describeFailReason() }}</span>
                             </div>
                         {% elseif historyItem.placement == 1 and historyItem.playedPlayerCount <= 1 %}
                             <div class="placement -alone">
