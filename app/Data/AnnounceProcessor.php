@@ -2,6 +2,7 @@
 
 namespace app\Data;
 
+use app\BeatSaber\GameplayModifiers;
 use app\BeatSaber\LevelDifficulty;
 use app\BeatSaber\LevelId;
 use app\BeatSaber\MasterServer;
@@ -21,6 +22,7 @@ final class AnnounceProcessor
     private ModClientInfo $clientInfo;
     private array $data;
     private ?LevelRecord $tempLevelData;
+    private ?GameplayModifiers $gameplayModifiers;
     private ?string $sessionGameId;
     private bool $legacyLevelStarted;
     private ?LevelHistory $serverLevel;
@@ -39,6 +41,7 @@ final class AnnounceProcessor
             $this->data[strtolower($key)] = $value;
         }
         $this->tempLevelData = null;
+        $this->gameplayModifiers = null;
         $this->sessionGameId = null;
         $this->legacyLevelStarted = false;
     }
@@ -249,11 +252,14 @@ final class AnnounceProcessor
                 $this->serverLevel->startedAt = $now;
                 $this->serverLevel->endedAt = null;
             }
+
             if ($this->serverLevel->endedAt === null) {
                 $this->serverLevel->levelRecordId = $this->tempLevelData->id;
                 $this->serverLevel->difficulty = $game->difficulty;
                 $this->serverLevel->characteristic = $game->characteristic;
+                $this->serverLevel->modifiers = $this->gameplayModifiers;
             }
+
             $this->serverLevel->save();
         }
     }
@@ -437,6 +443,12 @@ final class AnnounceProcessor
             $difficulty = intval($levelData['Difficulty']) ?? null;
             $characteristic = $levelData['Characteristic'] ?? null;
             $sessionGameId = $levelData['SessionGameId'] ?? null;
+
+            if (isset($levelData['Modifiers']) && is_array($levelData['Modifiers'])) {
+                $gameplayModifiers = GameplayModifiers::fromArray($levelData['Modifiers']);
+            } else {
+                $gameplayModifiers = null;
+            }
         } else {
             // Legacy announce format: separate fields
             $levelId = $this->getString('LevelId');
@@ -447,6 +459,7 @@ final class AnnounceProcessor
             $difficulty = $this->getInt('Difficulty');
             $characteristic = null; // not supported yet <v1
             $sessionGameId = null; // not supported yet <v1
+            $gameplayModifiers = null; // not supported yet <v1
         }
 
         if ($levelId) {
@@ -464,9 +477,11 @@ final class AnnounceProcessor
             $this->tempLevelData->songAuthor = $songAuthorName;
             $this->tempLevelData->levelAuthor = $levelAuthorName;
 
+            $this->gameplayModifiers = $gameplayModifiers;
             $this->sessionGameId = $sessionGameId;
         } else {
             $this->tempLevelData = null;
+            $this->gameplayModifiers = null;
             $this->sessionGameId = null;
         }
 

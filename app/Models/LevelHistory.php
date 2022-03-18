@@ -2,6 +2,7 @@
 
 namespace app\Models;
 
+use app\BeatSaber\GameplayModifiers;
 use app\Controllers\API\V1\AnnounceResultsController;
 use app\Data\AnnounceProcessor;
 use app\Models\Traits\HasBeatmapCharacteristic;
@@ -21,6 +22,10 @@ class LevelHistory extends Model
      */
     public int $difficulty;
     use HasBeatmapCharacteristic;
+    /**
+     * Gameplay modifiers data for this level play.
+     */
+    public ?GameplayModifiers $modifiers;
     /**
      * When the start of the level was reported (regular announce)
      *
