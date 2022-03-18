@@ -70,6 +70,18 @@
                                             <img src="{{ iconUrl }}" alt="{{ descr }}"/>
                                         {% endif %}
                                         <span>{{ descr }}</span>
+                                    </span>
+                                {% endif %}
+                                <div class="space"></div>
+                                {% if historyItem.badgeKey %}
+                                    <span class="tag badge badge-{{ historyItem.badgeKey }}">
+                                        {% set descr = historyItem.describeBadge() %}
+                                        {% set iconUrl = historyItem.getBadgeIcon() %}
+                                        {% if iconUrl %}
+                                            <img src="{{ iconUrl }}" alt="{{ descr }}"/>
+                                        {% endif %}
+                                        <span>{{ descr }}</span>
+                                    </span>
                                 {% endif %}
                             </div>
                         </div>

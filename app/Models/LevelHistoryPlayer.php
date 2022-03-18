@@ -2,6 +2,7 @@
 
 namespace app\Models;
 
+use app\BeatSaber\Enums\MultiplayerBadge;
 use app\BeatSaber\Enums\PlayerLevelEndReason;
 use app\BeatSaber\Enums\PlayerLevelEndState;
 use app\BeatSaber\Enums\PlayerScoreRank;
@@ -86,9 +87,37 @@ class LevelHistoryPlayer extends Model
     public ?int $placement;
 
     // -----------------------------------------------------------------------------------------------------------------
+    // Result data
 
     public function getHasFinished()
     {
         return $this->endState && $this->endState == PlayerLevelEndState::SongFinished;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Results badge data
+
+    public function tryParseBadge(): ?MultiplayerBadge
+    {
+        if (!$this->badgeKey)
+            return null;
+
+        return MultiplayerBadge::tryFrom($this->badgeKey);
+    }
+
+    public function describeBadge(): string
+    {
+        if (!$this->badgeKey)
+            return "Unknown";
+
+        return self::tryParseBadge()?->describe() ?? $this->badgeKey;
+    }
+
+    public function getBadgeIcon(): ?string
+    {
+        if (!$this->badgeKey)
+            return null;
+
+        return self::tryParseBadge()?->getIconUrl();
     }
 }
