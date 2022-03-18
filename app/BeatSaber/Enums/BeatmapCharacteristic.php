@@ -29,7 +29,7 @@ enum BeatmapCharacteristic : string
             self::Degrees360 => "/static/bsassets/360Degrees.png",
             self::Degrees90 => "/static/bsassets/90Degrees.png",
             self::NoArrows => "/static/bsassets/NoArrows.png",
-            self::OneColor => "/static/bsassets/OneColor.png",
+            self::OneColor => "/static/bsassets/SingleSaber.png",
             default => null
         };
     }
