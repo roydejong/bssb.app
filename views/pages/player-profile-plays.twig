@@ -74,7 +74,7 @@
                                 {% endif %}
                                 <div class="space"></div>
                                 {% if historyItem.badgeKey %}
-                                    <span class="tag badge badge-{{ historyItem.badgeKey }}">
+                                    <span class="tag -with-tooltip badge badge-{{ historyItem.badgeKey }}" title="{{ historyItem.badgeSubtitle }}">
                                         {% set descr = historyItem.describeBadge() %}
                                         {% set iconUrl = historyItem.getBadgeIcon() %}
                                         {% if iconUrl %}

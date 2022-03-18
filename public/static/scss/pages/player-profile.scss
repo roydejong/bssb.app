@@ -264,6 +264,14 @@
             margin-right: 0;
           }
 
+          &.-with-tooltip {
+            cursor: help;
+
+            span {
+              border-bottom: 1px dotted #fff;
+            }
+          }
+
           > img {
             width: auto;
             height: auto;
