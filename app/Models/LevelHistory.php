@@ -4,6 +4,7 @@ namespace app\Models;
 
 use app\Controllers\API\V1\AnnounceResultsController;
 use app\Data\AnnounceProcessor;
+use app\Models\Traits\HasBeatmapCharacteristic;
 use SoftwarePunt\Instarecord\Model;
 
 class LevelHistory extends Model
@@ -19,10 +20,7 @@ class LevelHistory extends Model
      * Difficulty for the level that was played.
      */
     public int $difficulty;
-    /**
-     * Characteristic for the level that was played.
-     */
-    public ?string $characteristic;
+    use HasBeatmapCharacteristic;
     /**
      * When the start of the level was reported (regular announce)
      *

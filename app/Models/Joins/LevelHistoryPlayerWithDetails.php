@@ -7,6 +7,7 @@ use app\BeatSaber\Enums\PlayerLevelEndState;
 use app\BeatSaber\LevelDifficulty;
 use app\Models\HostedGame;
 use app\Models\LevelHistoryPlayer;
+use app\Models\Traits\HasBeatmapCharacteristic;
 use SoftwarePunt\Instarecord\Models\IReadOnlyModel;
 
 class LevelHistoryPlayerWithDetails extends LevelHistoryPlayer implements IReadOnlyModel
@@ -16,7 +17,7 @@ class LevelHistoryPlayerWithDetails extends LevelHistoryPlayer implements IReadO
     public int $hostedGameId;
     public int $levelRecordId;
     public int $difficulty;
-    public ?string $characteristic;
+    use HasBeatmapCharacteristic;
     public \DateTime $startedAt;
     public ?\DateTime $endedAt;
     public ?int $playedPlayerCount;

@@ -60,10 +60,16 @@
                             <div class="title">
                                 <span>{{ historyItem.songName }}</span> <span class="by">by {{ historyItem.songAuthor }}</span>
                             </div>
-                            <div class="details">
-                                <span class="difficulty -diff-{{ historyItem.difficulty }}">{{ historyItem.describeDifficulty() }}</span>
+                            <div class="tags">
+                                <span class="tag difficulty -diff-{{ historyItem.difficulty }}">{{ historyItem.describeDifficulty() }}</span>
                                 {% if historyItem.characteristic %}
-                                    <span class="characteristic">({{ historyItem.characteristic }})</span>
+                                    <span class="tag characteristic characteristic-{{ historyItem.characteristic }}">
+                                        {% set descr = historyItem.describeCharacteristic() %}
+                                        {% set iconUrl = historyItem.getCharacteristicIcon() %}
+                                        {% if iconUrl %}
+                                            <img src="{{ iconUrl }}" alt="{{ descr }}"/>
+                                        {% endif %}
+                                        <span>{{ descr }}</span>
                                 {% endif %}
                             </div>
                         </div>
