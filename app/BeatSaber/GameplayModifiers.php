@@ -61,6 +61,9 @@ class GameplayModifiers implements IDatabaseSerializable
         if ($this->noBombs)
             $results[] = GameplayModifier::NoBombs;
 
+        if ($this->noFailOn0Energy)
+            $results[] = GameplayModifier::NoFailOn0Energy;
+
         if ($this->enabledObstacleType === GameplayEnabledObstacleType::NoObstacles)
             $results[] = GameplayModifier::NoObstacles;
 
@@ -82,8 +85,14 @@ class GameplayModifiers implements IDatabaseSerializable
         if ($this->fastNotes)
             $results[] = GameplayModifier::SuperFastNotes;
 
+        if ($this->songSpeed === GameplaySongSpeed::SuperFast)
+            $results[] = GameplayModifier::SuperFastSong;
+
         if ($this->zenMode)
             $results[] = GameplayModifier::ZenMode;
+
+        if ($this->ghostNotes)
+            $results[] = GameplayModifier::GhostNotes;
 
         return $results;
     }

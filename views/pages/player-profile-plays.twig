@@ -72,6 +72,14 @@
                                         <span>{{ descr }}</span>
                                     </span>
                                 {% endif %}
+                                {% for modifierTag in historyItem.getModifierTags() %}
+                                    <span class="tag modifier modifier-{{ modifierTag.key }}">
+                                        {% if modifierTag.icon %}
+                                            <img src="{{ modifierTag.icon }}" alt="{{ modifierTag.text }}"/>
+                                        {% endif %}
+                                        <span>{{ modifierTag.text }}</span>
+                                    </span>
+                                {% endfor %}
                                 <div class="space"></div>
                                 {% if historyItem.badgeKey %}
                                     <span class="tag -with-tooltip badge badge-{{ historyItem.badgeKey }}" title="{{ historyItem.badgeSubtitle }}">
