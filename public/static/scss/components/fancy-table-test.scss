@@ -126,4 +126,27 @@
     &.-silver { color: silver; }
     &.-bronze { color: #a05e17; }
   }
+
+  .badge {
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 1.3rem;
+    padding: 3px 5px;
+    border-radius: 6px;
+    background: #273c75;
+    color: #fff;
+
+    i, img {
+      margin-right: 5px;
+    }
+
+    &.-with-tooltip {
+      cursor: help;
+
+      span {
+        border-bottom: 1px dotted #fff;
+      }
+    }
+  }
 }

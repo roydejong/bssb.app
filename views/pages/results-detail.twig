@@ -92,7 +92,7 @@
                                 </td>
                                 <td class="-center">
                                     {% if result.badgeKey %}
-                                        <div class="badge">
+                                        <div class="badge {% if result.badgeSubtitle %}-with-tooltip{% endif %}" title="{{ result.badgeSubtitle }}">
                                             {% set descr = result.describeBadge() %}
                                             {% set iconUrl = result.getBadgeIcon() %}
                                             {% if iconUrl %}
