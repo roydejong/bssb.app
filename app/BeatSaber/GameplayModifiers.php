@@ -126,7 +126,7 @@ class GameplayModifiers implements IDatabaseSerializable
         $this->disappearingArrows = $getBool('disappearingArrows');
         $this->ghostNotes = $getBool('ghostNotes');
         $this->noBombs = $getBool('noBombs');
-        $this->songSpeed = GameplaySongSpeed::tryFrom($getBool('songSpeed'));
+        $this->songSpeed = GameplaySongSpeed::tryFrom($getInt('songSpeed'));
         $this->noArrows = $getBool('noArrows');
         $this->proMode = $getBool('proMode');
         $this->zenMode = $getBool('zenMode');
