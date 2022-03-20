@@ -117,4 +117,13 @@
     text-overflow: ellipsis;
     max-width: 420px;
   }
+
+  i.trophy {
+    font-size: 18px;
+    padding: 0 0 0 15px;
+
+    &.-gold { color: #FFD700; }
+    &.-silver { color: silver; }
+    &.-bronze { color: #a05e17; }
+  }
 }
