@@ -84,7 +84,7 @@
                                 </td>
                                 <td>{{ result.describeState() }}</td>
                                 <td class="-center">{{ result.scoreRank ? result.scoreRank.name : '-' }}</td>
-                                <td class="-center">{{ result.modifiedScore ? result.modifiedScore : 0 }}</td>
+                                <td class="-center">{{ result.modifiedScore ? result.modifiedScore|number_format(0, '', ',') : 0 }}</td>
                                 <td class="-center">{{ result.goodCuts ? result.goodCuts : 0 }} / {{ result.badCuts ? result.badCuts : 0 }} / {{ result.missCount ? result.missCount : 0 }}</td>
                                 <td class="-center">
                                     {{ result.maxCombo ? result.maxCombo : 0 }}
