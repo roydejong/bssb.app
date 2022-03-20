@@ -87,11 +87,19 @@ class LevelHistoryPlayer extends Model
     public ?int $placement;
 
     // -----------------------------------------------------------------------------------------------------------------
-    // Result data
+    // Result state
 
-    public function getHasFinished()
+    public function getHasFinished(): bool
     {
         return $this->endState && $this->endState == PlayerLevelEndState::SongFinished;
+    }
+
+    public function describeState(): string
+    {
+        if ($this->endReason)
+            return $this->endReason->describe();
+        else
+            return "Did not finish";
     }
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -4,6 +4,9 @@ namespace app\Models\Traits;
 
 use app\BeatSaber\Enums\BeatmapCharacteristic;
 use app\BeatSaber\GameplayModifiers;
+use app\BeatSaber\LevelDifficulty;
+use app\Models\HostedGame;
+use app\Models\LevelRecord;
 
 trait HasLevelHistoryData
 {
@@ -54,6 +57,14 @@ trait HasLevelHistoryData
     public ?int $finishedPlayerCount;
 
     // -----------------------------------------------------------------------------------------------------------------
+    // Difficulty
+
+    public function describeDifficulty(): string
+    {
+        return LevelDifficulty::describe($this->difficulty);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     // Characteristic
 
     public function tryParseCharacteristic(): ?BeatmapCharacteristic
@@ -98,5 +109,28 @@ trait HasLevelHistoryData
         }
 
         return $results;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Relationships
+
+    public function getDetailUrl(): string
+    {
+        return "/results/" . $this->sessionGameId;
+    }
+
+    public function fetchHostedGame(): ?HostedGame
+    {
+        return HostedGame::fetch($this->hostedGameId);
+    }
+
+    public function getServerUrl(): string
+    {
+        return "/game/" . HostedGame::id2hash($this->hostedGameId);
+    }
+
+    public function fetchLevelRecord(): ?LevelRecord
+    {
+        return LevelRecord::fetch($this->levelRecordId);
     }
 }

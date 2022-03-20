@@ -18,6 +18,7 @@ use app\Controllers\MasterServersController;
 use app\Controllers\MeController;
 use app\Controllers\PlayerProfileController;
 use app\Controllers\PrivacyController;
+use app\Controllers\ResultsController;
 use app\Controllers\StatsController;
 use app\Controllers\UserSettingsController;
 use app\HTTP\Request;
@@ -42,6 +43,7 @@ $router->register('/player/$userId/$profileSection', PlayerProfileController::cl
 $router->register('/privacy', PrivacyController::class, 'getPrivacy');
 $router->register('/master-servers', MasterServersController::class, 'getServerList');
 $router->register('/dedicated-servers', DedicatedServersController::class, 'getServerList');
+$router->register('/results/$guid', ResultsController::class, 'getResultsDetail');
 
 // Auth + user
 $router->register('/me', MeController::class, 'getMe');

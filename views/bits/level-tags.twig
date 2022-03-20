@@ -1,0 +1,32 @@
+<div class="level-tags">
+    <span class="tag difficulty -diff-{{ levelHistory.difficulty }}">{{ levelHistory.describeDifficulty() }}</span>
+    {% if levelHistory.characteristic %}
+        <span class="tag characteristic characteristic-{{ levelHistory.characteristic }}">
+            {% set descr = levelHistory.describeCharacteristic() %}
+            {% set iconUrl = levelHistory.getCharacteristicIcon() %}
+            {% if iconUrl %}
+                <img src="{{ iconUrl }}" alt="{{ descr }}"/>
+            {% endif %}
+            <span>{{ descr }}</span>
+        </span>
+    {% endif %}
+    {% for modifierTag in levelHistory.getModifierTags() %}
+        <span class="tag modifier modifier-{{ modifierTag.key }}">
+            {% if modifierTag.icon %}
+                <img src="{{ modifierTag.icon }}" alt="{{ modifierTag.text }}"/>
+            {% endif %}
+            <span>{{ modifierTag.text }}</span>
+        </span>
+    {% endfor %}
+    <div class="space"></div>
+    {% if levelHistory.badgeKey %}
+        <span class="tag -with-tooltip badge badge-{{ levelHistory.badgeKey }}" title="{{ levelHistory.badgeSubtitle }}">
+            {% set descr = levelHistory.describeBadge() %}
+            {% set iconUrl = levelHistory.getBadgeIcon() %}
+            {% if iconUrl %}
+                <img src="{{ iconUrl }}" alt="{{ descr }}"/>
+            {% endif %}
+            <span>{{ descr }}</span>
+        </span>
+    {% endif %}
+</div>

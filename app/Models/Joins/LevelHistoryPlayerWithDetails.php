@@ -4,8 +4,6 @@ namespace app\Models\Joins;
 
 use app\BeatSaber\Enums\PlayerLevelEndReason;
 use app\BeatSaber\Enums\PlayerLevelEndState;
-use app\BeatSaber\LevelDifficulty;
-use app\Models\HostedGame;
 use app\Models\LevelHistoryPlayer;
 use app\Models\Traits\HasBeatmapCharacteristic;
 use app\Models\Traits\HasLevelHistoryData;
@@ -55,29 +53,10 @@ class LevelHistoryPlayerWithDetails extends LevelHistoryPlayer implements IReadO
             ->queryAllModels();
     }
 
-    public function getServerUrl(): string
-    {
-        return "/game/" . HostedGame::id2hash($this->hostedGameId);
-    }
-
-    public function describeDifficulty(): string
-    {
-        return LevelDifficulty::describe($this->difficulty);
-    }
-
     public function describeFailReason(): string
     {
         if ($this->endReason) {
-            return match ($this->endReason) {
-                PlayerLevelEndReason::ConnectedAfterLevelEnded => "Connected after level ended",
-                PlayerLevelEndReason::GivenUp => "Gave up",
-                PlayerLevelEndReason::HostEndedLevel => "Host ended level",
-                PlayerLevelEndReason::Quit => "Player quit",
-                PlayerLevelEndReason::StartupFailed => "Startup failed",
-                PlayerLevelEndReason::WasInactive => "Player was inactive",
-                PlayerLevelEndReason::Failed => "Level failed",
-                PlayerLevelEndReason::Cleared => "Level cleared"
-            };
+            return $this->endReason->describe();
         }
 
         return match ($this->endState) {

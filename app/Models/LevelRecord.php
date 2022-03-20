@@ -44,6 +44,15 @@ class LevelRecord extends Model implements \JsonSerializable
         return implode(' - ', $parts);
     }
 
+    public function describeSongName(): string
+    {
+        $parts = [];
+        $parts[] = $this->songName;
+        $parts[] = $this->songSubName;
+        $parts = array_filter($parts);
+        return implode(' - ', $parts);
+    }
+
     public function describeDuration(): string
     {
         if ($this->duration === null || $this->duration <= 0) {

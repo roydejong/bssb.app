@@ -1,0 +1,115 @@
+{% extends "_base.twig" %}
+
+{% block content %}
+    <main class="results-detail">
+        <div class="container">
+
+            <h1>Match results</h1>
+
+            <div class="results-title"
+                 style="background-image: url('{{ level.coverUrl ? level.coverUrl : "http://bssb.wsl.local/static/stuff/beat-saber-multiplayer-1024x576.jpg" }}');"
+            >
+                {% if level.coverUrl %}
+                    <img class="cover-art" src="{{ level.coverUrl }}" alt="{{ level.describeSongName() }}"/>
+                {% else %}
+                    <div class="cover-art dummy-cover-art">
+                        <i class="mdi mdi-music"></i>
+                    </div>
+                {% endif %}
+                <div class="title">
+                    <div class="inner">
+                        <div class="info-line">
+                            <i class="mdi mdi-music"></i>
+                            <span>{{ level.describeSongName() }}</span> <span class="by">by {{ level.songAuthor }}</span>
+                        </div>
+                        <div class="info-line">
+                            <i class="mdi mdi-gamepad"></i>
+                            <a href="{{ game.getWebDetailUrl() }}">{{ game.gameName }}</a>
+                        </div>
+                        <div class="info-line">
+                            <i class="mdi mdi-clock-outline"></i>
+                            {% if levelHistory.endedAt %}
+                                Played {{ levelHistory.endedAt|timeago_html|raw }}
+                            {% else %}
+                                Started {{ levelHistory.startedAt|timeago_html|raw }}
+                            {% endif %}
+                        </div>
+                        {% include "bits/level-tags.twig" %}
+                    </div>
+                </div>
+            </div>
+
+            {% if playerResults %}
+                <table class="fancy-table-test players-table">
+                    <thead class="small">
+                        <tr>
+                            <th width="5"></th>
+                            <th width="5"></th>
+                            <th width="10"></th>
+                            <th></th>
+                            <th>State</th>
+                            <th class="-center">Rank</th>
+                            <th class="-center">Score</th>
+                            <th class="-center">Good / Bad / Miss</th>
+                            <th class="-center">Max Combo</th>
+                            <th class="-center">Badge</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for result in playerResults %}
+                            <tr>
+                                <td class="-center">
+                                    {% if result.placement == 1 %}
+                                        <i class="mdi mdi-trophy-variant -gold"></i>
+                                    {% elseif result.placement == 2 %}
+                                        <i class="mdi mdi-trophy-variant -silver"></i>
+                                    {% elseif result.placement == 3 %}
+                                        <i class="mdi mdi-trophy-variant -bronze"></i>
+                                    {% endif %}
+                                </td>
+                                <td class="-center">
+                                    {% if result.placement %}
+                                        #{{ result.placement }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td class="-center">
+                                    {% include "bits/face.twig" with {skinColorId: result.skinColorId, eyesId: result.eyesId} %}
+                                </td>
+                                <td>
+                                    <a href="{{ result.getProfileUrl() }}">
+                                        <strong>{{ result.userName }}</strong>
+                                    </a>
+                                </td>
+                                <td>{{ result.describeState() }}</td>
+                                <td class="-center">{{ result.scoreRank ? result.scoreRank.name : '-' }}</td>
+                                <td class="-center">{{ result.modifiedScore ? result.modifiedScore : 0 }}</td>
+                                <td class="-center">{{ result.goodCuts ? result.goodCuts : 0 }} / {{ result.badCuts ? result.badCuts : 0 }} / {{ result.missCount ? result.missCount : 0 }}</td>
+                                <td class="-center">
+                                    {{ result.maxCombo ? result.maxCombo : 0 }}
+                                    {% if result.fullCombo %}(Full){% endif %}
+                                </td>
+                                <td class="-center">
+                                    {% if result.badgeKey %}
+                                        <div class="badge">
+                                            {% set descr = result.describeBadge() %}
+                                            {% set iconUrl = result.getBadgeIcon() %}
+                                            {% if iconUrl %}
+                                                <img src="{{ iconUrl }}" alt="{{ descr }}" height="16"/>
+                                            {% endif %}
+                                            <span>{{ descr }}</span>
+                                        </div>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+
+        </div>
+    </main>
+{% endblock %}

@@ -16,12 +16,29 @@
       display: flex;
       align-items: center;
     }
+
+    &.-right {
+      text-align: right;
+    }
+    &.-center {
+      text-align: center;
+    }
   }
 
   th {
     padding-bottom: 1.5rem;
     color: var(--col-txt-muted-light);
     font-weight: var(--font-weight-medium);
+  }
+
+  thead.small {
+    th {
+      font-size: 1.2rem;
+      font-weight: var(--font-weight-regular);
+      color: var(--col-txt-muted-medium);
+      padding-bottom: .5rem;
+      padding-top: 0;
+    }
   }
 
   tbody tr {
