@@ -4,8 +4,8 @@
             <th></th>
             <th>Players</th>
             <th>Version</th>
-            <th>Location</th>
             <th>Platform</th>
+            <th>Location</th>
             <th>Code</th>
         </tr>
     </thead>
@@ -46,10 +46,6 @@
                     {{ game.gameVersion }}
                 </td>
                 <td>
-                    <img src="/static/flags/us.png"/>
-                    New York, US
-                </td>
-                <td>
                     <div class="inner">
                         <div class="stacked-text -smaller">
                             <span>{{ game.describeServerType() }}</span>
@@ -60,6 +56,17 @@
                             {% endif %}
                         </div>
                     </div>
+                </td>
+                <td>
+                    {% set geo = geoData[game.endpoint.__toString()] %}
+                    {% if geo and geo.text %}
+                        {% if geo.countryCode %}
+                            <img src="/static/flags/{{ geo.countryCode|lower }}.png" alt="{{ geo.countryCode }}"/>
+                        {% endif %}
+                        <span class="geo-text">{{ geo.text }}</span>
+                    {% else %}
+                        <span>-</span>
+                    {% endif %}
                 </td>
                 <td>
                     <code>{{ game.serverCode }}</code>

@@ -108,7 +108,7 @@
     color: var(--col-saber-left);
     letter-spacing: 1px;
     font-feature-settings: "lnum" 1;
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-bold);
   }
 
   .level-limit {
@@ -148,5 +148,9 @@
         border-bottom: 1px dotted #fff;
       }
     }
+  }
+
+  .geo-text {
+    font-size: 1.2rem;
   }
 }

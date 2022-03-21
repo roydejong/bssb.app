@@ -48,20 +48,22 @@ final class GeoIp
         return null;
     }
 
-    public function describeLocation(string $ipOrEndpoint): ?string
+    public function describeLocation(string $ipOrEndpoint, bool $includeSubdivisons = true, bool $includeCountry = true): ?string
     {
         if ($record = $this->lookupRecord($ipOrEndpoint)) {
             $parts = [];
 
             // Subdivision (state)
-            if (isset($record['subdivisions'])) {
+            if ($includeSubdivisons && isset($record['subdivisions'])) {
                 foreach ($record['subdivisions'] as $subdivision) {
                     $parts[] = $subdivision['names']['en'];
                 }
             }
 
             // Country name
-            $parts[] = $record['country']['names']['en'];
+            if ($includeCountry) {
+                $parts[] = $record['country']['names']['en'];
+            }
 
             return implode(', ', $parts);
         }
