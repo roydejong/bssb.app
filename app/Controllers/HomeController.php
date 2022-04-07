@@ -9,7 +9,10 @@ use app\Data\GameQuery;
 use app\External\GeoIp;
 use app\Frontend\ResponseCache;
 use app\Frontend\View;
+use app\HTTP\QueryParamTransform;
 use app\HTTP\Request;
+use app\HTTP\Response;
+use app\HTTP\Responses\RedirectResponse;
 use app\Models\SystemConfig;
 
 class HomeController
@@ -17,8 +20,11 @@ class HomeController
     const CACHE_KEY = "home_page";
     const CACHE_TTL = 60;
 
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
+        // -------------------------------------------------------------------------------------------------------------
+        // Frontpage Cache
+
         $enableCache = empty($request->queryParams);
 
         if ($enableCache) {
@@ -30,6 +36,18 @@ class HomeController
         }
 
         // -------------------------------------------------------------------------------------------------------------
+        // Input
+
+        $currentUrlNoPagination = QueryParamTransform::fromRequest($request)
+            ->unset("page")
+            ->toUrl();
+
+        $pageIndex = intval($request->queryParams['page'] ?? 1) - 1;
+
+        if ($pageIndex < 0)
+            return new RedirectResponse($currentUrlNoPagination);
+
+        // -------------------------------------------------------------------------------------------------------------
         // Query
 
         $gameQuery = new GameQuery();
@@ -37,9 +55,15 @@ class HomeController
         $gameQuery->addFilter(new GameVersionFilter());
         $gameQuery->addFilter(new ServerTypeFilter());
         $gameQuery->addFilter(new ModdedLobbyFilter());
-
         $gameQuery->applyFiltersFromRequest($request);
-        $queryResult = $gameQuery->execute();
+
+        $gameQuery->setPageSize(GameQuery::DefaultPageSize);
+        $gameQuery->setPageIndex($pageIndex);
+
+        $queryResult = $gameQuery->executeQuery();
+
+        if (!$queryResult->isValidPage && $pageIndex > 1)
+            return new RedirectResponse($currentUrlNoPagination);
 
         // -------------------------------------------------------------------------------------------------------------
         // GeoIP
@@ -66,12 +90,14 @@ class HomeController
         $view = new View('pages/home.twig');
         $view->set('serverMessage', (SystemConfig::fetchInstance())
             ->getCleanServerMessage());
+        $view->set('queryResult', $queryResult);
         $view->set('games', $queryResult->games);
         $view->set('filters', $queryResult->filters);
         $view->set('filterOptions', $queryResult->filterOptions);
         $view->set('filterValues', $queryResult->filterValues);
         $view->set('isFiltered', $queryResult->getIsFiltered());
         $view->set('geoData', $geoData);
+        $view->set('paginationBaseUrl', $currentUrlNoPagination);
 
         $response = $view->asResponse();
 

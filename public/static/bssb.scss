@@ -117,14 +117,16 @@ abbr {
 @import "scss/components/content-head";
 @import "scss/components/cover-art";
 @import "scss/components/face";
-@import "scss/components/fancy-table-test";
 @import "scss/components/hero";
 @import "scss/components/level-tags";
+@import "scss/components/paginator";
+@import "scss/components/rounded-table";
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Page imports
 
 @import "scss/pages/download-page";
+@import "scss/pages/frontpage-servers";
 @import "scss/pages/guide-page";
 @import "scss/pages/player-profile";
 @import "scss/pages/results-detail";

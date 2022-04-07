@@ -20,9 +20,10 @@
         </div>
     </div>
 
-    <main>
+    <main class="frontpage-servers">
         <div class="container">
             {% include "tables/hosted_games_table.twig" %}
+            {% include "bits/paginator.twig" with {paginator: queryResult} %}
         </div>
     </main>
 

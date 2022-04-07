@@ -10,14 +10,20 @@ use SoftwarePunt\Instarecord\Database\ModelQuery;
 
 final class GameQuery
 {
+    const DefaultPageSize = 128;
+
     /**
      * @var BaseFilter[]
      */
     private array $filters;
+
     /**
      * @var string[]
      */
     private array $filterValues;
+
+    private int $pageSize = self::DefaultPageSize;
+    private int $pageIndex = 0;
 
     public bool $hideStaleGames = true;
     public bool $hideEndedGames = true;
@@ -29,8 +35,21 @@ final class GameQuery
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    // Pagination
 
-    public function execute(): GameQueryResult
+    public function setPageSize(int $pageSize)
+    {
+        $this->pageSize = $pageSize;
+    }
+
+    public function setPageIndex(int $pageIndex)
+    {
+        $this->pageIndex = $pageIndex;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    public function executeQuery(): GameQueryResult
     {
         $result = new GameQueryResult();
         $result->filters = $this->filters;
@@ -45,8 +64,18 @@ final class GameQuery
 
         // Execute main query for games, with all filters applied
         $query = $this->buildFilteredQuery();
-        $result->games = $query->queryAllModels();
 
+        $paginator = $query->paginate();
+        $paginator->setPageIndex($this->pageIndex);
+        $paginator->setQueryPageSize($this->pageSize);
+
+        $result->games = $paginator->getPaginatedQuery()->queryAllModels();
+        $result->pageIndex = $this->pageIndex;
+        $result->pageSize = $this->pageSize;
+        $result->pageCount = $paginator->getPageCount();
+        $result->isFirstPage = $paginator->getIsFirstPage();
+        $result->isLastPage = $paginator->getIsLastPage();
+        $result->isValidPage = $paginator->getIsValidPage();
         return $result;
     }
 

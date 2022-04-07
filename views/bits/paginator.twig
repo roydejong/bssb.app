@@ -1,0 +1,22 @@
+{% if paginationBaseUrl and paginator and paginator.pageCount > 0 %}
+    <div class="paginator">
+
+        {% if paginator.pageIndex > 0 %}
+            <a class="page page-back" href="{{ paginationBaseUrl|with_query_param("page", paginator.pageIndex) }}">
+                <i class="mdi mdi-chevron-left"></i>
+            </a>
+        {% endif %}
+        {% for i in 0..(paginator.pageCount - 1) %}
+            <a class="page page-numbered {% if paginator.pageIndex == i %}-active{% endif %}"
+               href="{{ paginationBaseUrl|with_query_param("page", i + 1) }}">
+                <span>{{ i + 1 }}</span>
+            </a>
+        {% endfor %}
+        {% if paginator.pageCount > i %}
+            <a class="page page-back" href="{{ paginationBaseUrl|with_query_param("page", paginator.pageIndex + 2) }}">
+                <i class="mdi mdi-chevron-right"></i>
+            </a>
+        {% endif %}
+
+    </div>
+{% endif %}

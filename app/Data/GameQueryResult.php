@@ -12,6 +12,13 @@ class GameQueryResult
      */
     public array $games;
 
+    public int $pageIndex = 0;
+    public int $pageSize = GameQuery::DefaultPageSize;
+    public int $pageCount = 1;
+    public bool $isFirstPage = false;
+    public bool $isLastPage = false;
+    public bool $isValidPage = false;
+
     /**
      * @var BaseFilter[]
      */

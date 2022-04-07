@@ -2,6 +2,7 @@
 
 namespace app\Frontend;
 
+use app\HTTP\QueryParamTransform;
 use app\Session\Session;
 use app\Utils\TimeAgo;
 use Twig\Environment;
@@ -50,6 +51,12 @@ class ViewRenderer
             } catch (\Exception) {
                 return "unknown";
             }
+        }));
+
+        $this->twig->addFilter(new TwigFilter('with_query_param', function ($input, $key, $value): string {
+            return QueryParamTransform::fromUrl($input)
+                ->set($key, $value)
+                ->toUrl();
         }));
     }
 
