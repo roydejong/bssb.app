@@ -12,9 +12,13 @@
             </div>
 
             <div class="page-tabs">
-                <a href="#" class="-active">
+                <a href="{{ baseUrl }}" class="{% if gameDetailTab == "info" %}-active{% endif %}">
                     <i class="mdi mdi-information"></i>
-                    <span>Server Info</span>
+                    <span>Server info</span>
+                </a>
+                <a href="{{ baseUrl }}/plays" class="{% if gameDetailTab == "plays" %}-active{% endif %}">
+                    <i class="mdi mdi-play"></i>
+                    <span>Levels played</span>
                 </a>
             </div>
 

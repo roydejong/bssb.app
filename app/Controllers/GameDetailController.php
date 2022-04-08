@@ -9,6 +9,7 @@ use app\HTTP\Request;
 use app\HTTP\Responses\BadRequestResponse;
 use app\HTTP\Responses\RedirectResponse;
 use app\Models\HostedGame;
+use app\Models\Joins\LevelHistoryWithDetails;
 use app\Models\LevelRecord;
 
 class GameDetailController
@@ -76,7 +77,7 @@ class GameDetailController
         // Response
 
         $view = new View('pages/game-detail-info.twig');
-        $view->set('pageUrl', $game->getWebDetailUrl());
+        $view->set('baseUrl', $game->getWebDetailUrl());
         $view->set('game', $game);
         $view->set('players', $game->fetchPlayers());
         $view->set('level', $level);
@@ -87,6 +88,43 @@ class GameDetailController
         $response = $view->asResponse();
         @$resCache->writeResponse($response);
         return $response;
+    }
+
+    public function getGameDetailPlays(Request $request, string $hashId)
+    {
+        // -------------------------------------------------------------------------------------------------------------
+        // Input
+
+        $id = HostedGame::hash2id($hashId);
+
+        if (!$id) {
+            // Not a valid hash id
+            return new BadRequestResponse();
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        // Game data
+
+        $game = HostedGame::fetch($id);
+
+        if (!$game) {
+            // Not found, 404 redirect
+            return new RedirectResponse('/', 404);
+        }
+
+        $pageIndex = 0;
+        $pageSize = 12;
+
+        $levelHistory = LevelHistoryWithDetails::queryHostedGameHistory($game->id, $pageIndex, $pageSize);
+
+        // -------------------------------------------------------------------------------------------------------------
+        // Response
+
+        $view = new View('pages/game-detail-plays.twig');
+        $view->set('baseUrl', $game->getWebDetailUrl());
+        $view->set('game', $game);
+        $view->set('levelHistory', $levelHistory);
+        return $view->asResponse();
     }
 
     private function generateLdJson(HostedGame $game, ?LevelRecord $level): array

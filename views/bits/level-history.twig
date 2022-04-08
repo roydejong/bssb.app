@@ -9,20 +9,27 @@
             </div>
         {% endif %}
         <div class="text">
-            {% if not historyItem.placement or not historyItem.getHasFinished() %}
-                <div class="placement -alone">
-                    <i class="mdi mdi-emoticon-sad"></i>
-                    <span class="special">{{ historyItem.describeFailReason() }}</span>
-                </div>
-            {% elseif historyItem.placement == 1 and historyItem.playedPlayerCount <= 1 %}
-                <div class="placement -alone">
-                    <i class="mdi mdi-timer-sand"></i>
-                    <span class="special">Played alone</span>
-                </div>
+            {% if historyItem.playerId %}
+                {% if not historyItem.placement or not historyItem.getHasFinished() %}
+                    <div class="placement -alone">
+                        <i class="mdi mdi-emoticon-sad"></i>
+                        <span class="special">{{ historyItem.describeFailReason() }}</span>
+                    </div>
+                {% elseif historyItem.placement == 1 and historyItem.playedPlayerCount <= 1 %}
+                    <div class="placement -alone">
+                        <i class="mdi mdi-timer-sand"></i>
+                        <span class="special">Played alone</span>
+                    </div>
+                {% else %}
+                    <div class="placement -place-{{ historyItem.placement }}">
+                        <i class="mdi mdi-trophy-variant"></i>
+                        <span class="special">Placed #{{ historyItem.placement }} of {{ historyItem.playedPlayerCount }}</span>
+                    </div>
+                {% endif %}
             {% else %}
-                <div class="placement -place-{{ historyItem.placement }}">
-                    <i class="mdi mdi-trophy-variant"></i>
-                    <span class="special">Placed #{{ historyItem.placement }} of {{ historyItem.playedPlayerCount }}</span>
+                <div class="placement -server">
+                    <i class="mdi mdi-clock"></i>
+                    {{ historyItem.startedAt|timeago }}
                 </div>
             {% endif %}
             <div class="song">
