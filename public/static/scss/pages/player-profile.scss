@@ -83,53 +83,6 @@
   }
 }
 
-.profile-tabs {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  border-bottom: 2px solid #333;
-  margin-top: 1rem;
-  margin-bottom: 1.5rem;
-
-  > a {
-    display: inline-flex;
-    align-items: center;
-    font-size: 1.6rem;
-    font-weight: var(--font-weight-medium);
-    padding: .5rem 1rem 1.5rem 1rem;
-    margin-bottom: -2px;
-    text-decoration: none;
-    transition: text, background, box-shadow, color, border .1s ease;
-    color: var(--col-txt-muted-light);
-    border: 2px solid transparent;
-
-    i {
-      color: var(--col-txt-muted-medium);
-      margin-top: 1px;
-      margin-right: 5px;
-      font-size: 18px;
-      transition: color .1s ease;
-    }
-
-    &.-active {
-      font-weight: var(--font-weight-bold);
-      color: var(--col-txt-main);
-      border-bottom: 2px solid var(--col-saber-right);
-
-      i {
-        color: var(--col-saber-right);
-      }
-    }
-    &:hover {
-      color: var(--col-txt-main);
-
-      i {
-        color: var(--col-saber-left);
-      }
-    }
-  }
-}
-
 .level-history {
   position: relative;
   display: flex;

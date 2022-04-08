@@ -389,6 +389,11 @@ class HostedGame extends Model implements \JsonSerializable
         };
     }
 
+    public function describeGameDetail(): string
+    {
+        return "Multiplayer Lobby on {$this->describeServerType()}";
+    }
+
     public function getIsInLobby(): bool
     {
         $stateNormal = $this->getAdjustedState();

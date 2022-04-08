@@ -1,0 +1,39 @@
+.game-detail {
+  > .container {
+    flex-direction: column;
+
+    > div {
+      width: 100%;
+    }
+  }
+
+  .server-name {
+    margin: 1.5rem 0;
+
+    h1 {
+      font-size: 2.8rem;
+      margin: 0;
+    }
+    .descr {
+      font-weight: var(--font-weight-bold);
+      margin: 1rem 0 0 0;
+    }
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+
+    > .block {
+      flex-grow: 2;
+
+      &:first-child {
+        margin-right: 1.5rem;
+      }
+      &:last-child {
+        flex-grow: 1;
+      }
+    }
+  }
+}

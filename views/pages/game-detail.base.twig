@@ -1,0 +1,25 @@
+{% extends "_base.twig" %}
+
+{% block content %}
+    <main class="game-detail">
+        <div class="container">
+
+            <div class="server-name">
+                <div class="text">
+                    <h1>{{ game.gameName }}</h1>
+                    <p class="descr">{{ game.describeGameDetail() }}</p>
+                </div>
+            </div>
+
+            <div class="page-tabs">
+                <a href="#" class="-active">
+                    <i class="mdi mdi-information"></i>
+                    <span>Server Info</span>
+                </a>
+            </div>
+
+            {% block innerContent %}{% endblock %}
+
+        </div>
+    </main>
+{% endblock %}

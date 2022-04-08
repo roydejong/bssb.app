@@ -97,6 +97,11 @@
         text-align: left;
         padding: 5px 0;
       }
+
+      code {
+        color: var(--col-saber-left);
+        font-family: monospace;
+      }
     }
   }
 }
