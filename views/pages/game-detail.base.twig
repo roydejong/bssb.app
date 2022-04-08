@@ -11,10 +11,39 @@
                 </div>
             </div>
 
+            {% if game.getIsPirate() %}
+                <div class="alert alert-warning">
+                    <strong>🏴‍☠️ <span>Ahoy there. This here 'ost be a gentleman o' fortune!</span></strong><br />
+                    <span>It looks like this player is a pirate. Things may not work as expected.</span><br />
+                    <br />
+                    <span><strong>You should <a href="https://store.steampowered.com/app/620980/Beat_Saber/" target="_blank">buy the game</a> if you enjoy it!</strong></span>
+                </div>
+            {% endif %}
+
+            {% if ngame.getIsUninteresting() %}
+                <div class="alert alert-danger">
+                    🤖 Game was hidden automatically (game is not relevant)
+                </div>
+            {% elseif game.endedAt is not null %}
+                <div class="alert alert-danger">
+                    This game has ended and can no longer be joined.
+                </div>
+            {% endif %}
+
+            {% if game.getIsStale() and game.endedAt is null %}
+                <div class="alert alert-danger">
+                    We stopped receiving data for this game, it's probably dead.
+                </div>
+            {% endif %}
+
             <div class="page-tabs">
                 <a href="{{ baseUrl }}" class="{% if gameDetailTab == "info" %}-active{% endif %}">
                     <i class="mdi mdi-information"></i>
                     <span>Server info</span>
+                </a>
+                <a href="{{ baseUrl }}/players" class="{% if gameDetailTab == "players" %}-active{% endif %}">
+                    <i class="mdi mdi-sword-cross"></i>
+                    <span>Player list</span>
                 </a>
                 <a href="{{ baseUrl }}/plays" class="{% if gameDetailTab == "plays" %}-active{% endif %}">
                     <i class="mdi mdi-play"></i>

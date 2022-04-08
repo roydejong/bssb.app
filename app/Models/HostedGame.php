@@ -391,7 +391,8 @@ class HostedGame extends Model implements \JsonSerializable
 
     public function describeGameDetail(): string
     {
-        return "Multiplayer Lobby on {$this->describeServerType()}";
+        $parts = array_filter([$this->gameVersion, "Multiplayer Lobby", "on {$this->describeServerType()}"]);
+        return implode(' ', $parts);
     }
 
     public function getIsInLobby(): bool

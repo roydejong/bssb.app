@@ -29,12 +29,6 @@
                         </td>
                     </tr>
                 {% endif %}
-                {% if game.modVersion %}
-                    <tr>
-                        <th scope="row">Browser version</th>
-                        <td>{{ game.modName }} {{ game.modVersion }}</td>
-                    </tr>
-                {% endif %}
                 {% if game.getIsDedicatedServer() %}
                     <tr>
                         <th scope="row"><abbr title="The time the current lobby was created on this server.">Lobby
@@ -88,7 +82,7 @@
                         <th scope="row">Core mod</th>
                         <td>
                             <span class="mp-core-version">
-                                MultiplayerCore v{{ game.mpCoreVersion }}
+                                MultiplayerCore {{ game.mpCoreVersion }}
                             </span>
                         </td>
                     </tr>
@@ -98,9 +92,15 @@
                         <th scope="row">Extensions mod</th>
                         <td>
                             <span class="mp-ex-version">
-                                MultiplayerExtensions v{{ game.mpExVersion }}
+                                MultiplayerExtensions {{ game.mpExVersion }}
                             </span>
                         </td>
+                    </tr>
+                {% endif %}
+                {% if game.modVersion %}
+                    <tr>
+                        <th scope="row">Browser mod</th>
+                        <td>{{ game.modName }} {{ game.modVersion }}</td>
                     </tr>
                 {% endif %}
                 </tbody>
