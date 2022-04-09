@@ -43,7 +43,16 @@
                     <div class="player-count">{{ game.playerCount }} / {{ game.playerLimit }}</div>
                 </td>
                 <td>
-                    {{ game.gameVersion }}
+                    <div class="stacked-text -smaller">
+                        <span>{{ game.gameVersion }}</span>
+                        {% if game.mpCoreVersion %}
+                            <span class="version-marker mp-core-version">MpCore {{ game.mpCoreVersion }}</span>
+                        {% elseif game.mpExVersion %}
+                            <span class="version-marker mp-ex-version">Extensions {{ game.mpExVersion }}</span>
+                        {% else %}
+                            <span class="version-marker vanilla-version">Vanilla</span>
+                        {% endif %}
+                    </div>
                 </td>
                 <td>
                     <div class="inner">

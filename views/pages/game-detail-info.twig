@@ -122,8 +122,17 @@
                 <div class="instructions">
                     <label>How to connect</label>
                     <p>With the Server Browser mod in game, select the lobby, and click Connect.</p>
-                    <div class="or"></div>
-                    <p>With the BeatTogether mod, select the {{ game.describeMasterServerSelection() }} server and enter the code under Join Via Code.</p>
+                    {% if game.getIsOfficial() %}
+                        {% if game.getIsQuickPlay() %}
+                            <p class="extra">(You can't use the code to connect to Official Quick Play lobbies, you must use the mod - PC only.)</p>
+                        {% else %}
+                            <div class="or"></div>
+                            <p>On PC, when using Official Servers, enter the code under Join Via Code.</p>
+                        {% endif %}
+                    {% else %}
+                        <div class="or"></div>
+                        <p>With the BeatTogether mod, select the {{ game.describeMasterServerSelection() }} server and enter the code under Join Via Code.</p>
+                    {% endif %}
                 </div>
             </div>
             <section class="block">

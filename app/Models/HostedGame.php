@@ -319,7 +319,7 @@ class HostedGame extends Model implements \JsonSerializable
 
     public function describeMasterServerSelection(): string
     {
-        if ($this->getIsOfficial() || $this->getIsGameLiftServer())
+        if ($this->getIsOfficial())
             return "Official";
 
         if ($this->getIsBeatTogether())
