@@ -10,7 +10,7 @@ use SoftwarePunt\Instarecord\Database\ModelQuery;
 
 final class GameQuery
 {
-    const DefaultPageSize = 128;
+    const DefaultPageSize = 32;
 
     /**
      * @var BaseFilter[]

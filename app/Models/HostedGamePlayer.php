@@ -27,6 +27,8 @@ class HostedGamePlayer extends Model
 
     public function describeLatency(): string
     {
+        if ($this->latency <= 0)
+            return "?ms";
         return ($this->latency * 1000) . "ms";
     }
 

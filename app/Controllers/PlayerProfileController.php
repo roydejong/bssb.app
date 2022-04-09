@@ -110,6 +110,7 @@ class PlayerProfileController
 
         if ($loadCurrent) {
             $currentGame = HostedGame::query()
+                ->select("hg.*")
                 ->from("hosted_games hg")
                 ->innerJoin("hosted_game_players hgp ON (hgp.hosted_game_id = hg.id AND hgp.user_id = ?)",
                     $userId)

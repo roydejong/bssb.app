@@ -7,7 +7,13 @@
             <div class="name-tag">
                 {{ player.renderFaceHtml('md')|raw }}
                 <div class="text">
-                    <h1>{{ player.userName }}</h1>
+                    {% if player.userName %}
+                        <h1>{{ player.userName }}</h1>
+                    {% elseif player.getIsDedicatedServer() %}
+                        <h1>Dedicated Server</h1>
+                    {% else %}
+                        <h1>Anonymous Beater</h1>
+                    {% endif %}
                     <p class="descr">{{ player.describeType() }}</p>
                 </div>
                 <div class="buttons">

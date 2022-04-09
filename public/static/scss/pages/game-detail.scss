@@ -1,4 +1,7 @@
 .game-detail {
+  // -------------------------------------------------------------------------------------------------------------------
+  // Shared
+
   > .container {
     flex-direction: column;
 
@@ -8,32 +11,168 @@
   }
 
   .server-name {
+    display: flex;
     margin: 1.5rem 0;
 
-    h1 {
-      font-size: 2.8rem;
-      margin: 0;
+    .faceplate {
+
     }
-    .descr {
-      font-weight: var(--font-weight-bold);
-      margin: 1rem 0 0 0;
+    .text {
+      h1 {
+        font-size: 2.8rem;
+        margin: 0;
+      }
+      .descr {
+        font-weight: var(--font-weight-bold);
+        margin: .8rem 0 0 0;
+      }
     }
   }
 
-  .row {
+  // -------------------------------------------------------------------------------------------------------------------
+  // 1. Server info
+
+  .server-info {
     display: flex;
-    flex-wrap: wrap;
     width: 100%;
 
-    > .block {
-      flex-grow: 2;
+    .col-left {
+      flex-grow: 6;
+      margin-right: .75rem;
+    }
+    .col-right {
+      flex-grow: 4;
+      margin-left: .75rem;
+      max-width: 460px;
+    }
 
-      &:first-child {
-        margin-right: 1.5rem;
-      }
-      &:last-child {
-        flex-grow: 1;
+    .card-table {
+      width: 100%;
+
+      tr {
+        th {
+          width: 170px;
+        }
       }
     }
+  }
+
+  .server-code {
+    border-radius: 6px;
+    margin: 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: var(--col-bg-darkest);
+    overflow: hidden;
+
+    label {
+      font-size: 1.6rem;
+      font-weight: var(--font-weight-medium);
+    }
+
+    .inner {
+      padding: 2rem 3rem;
+      width: 100%;
+
+      .code-value {
+        font-family: monospace;
+        font-size: 3.4rem;
+        letter-spacing: 4px;
+        user-select: all;
+        color: var(--col-saber-left);
+      }
+    }
+
+    .instructions {
+      width: 100%;
+      border-bottom-left-radius: 6px;
+      border-bottom-right-radius: 6px;
+      background: var(--col-bg-darker);
+      padding: 2rem 3rem;
+      font-size: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      p {
+        color: var(--col-txt-muted-light);
+        line-height: 1.4;
+        max-width: 280px;
+      }
+
+      .or {
+        position: relative;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: .75rem auto;
+        height: 1px;
+        background: #fff;
+        opacity: .1;
+        pointer-events: none;
+        user-select: none;
+        width: 100%;
+        max-width: 80%;
+
+        &:after {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          content: "or";
+          background: var(--col-bg-darker);
+          padding: 0 15px;
+          font-size: 1.2rem;
+        }
+      }
+    }
+  }
+
+  // -------------------------------------------------------------------------------------------------------------------
+  // 2. Players list
+
+  .players-table {
+    margin-top: 1rem;
+  }
+
+  tr.player-row {
+    &.-disconnected {
+      &, td {
+        opacity: .75;
+      }
+    }
+
+    .badge {
+      height: auto;
+      font-size: 1.4rem;
+      font-weight: var(--font-weight-medium);
+      margin-right: 5px;
+      padding: 2px 8px;
+
+      &.bg-primary { background: #007bff; }
+      &.bg-secondary { background: #6c757d; }
+      &.bg-success { background: #28a745; }
+      &.bg-dark { background: #0a3d62; }
+
+      &:last-right {
+        margin-right: 0;
+      }
+    }
+  }
+
+  .server-face {
+    height: 32px;
+    width: 32px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 15px;
+    font-size: 20px;
+    color: var(--col-saber-left);
+    background: var(--col-bg-darkest);
   }
 }

@@ -9,8 +9,8 @@
             <thead class="small">
             <tr>
                 <th width="5"></th>
-                <th width="5">#</th>
-                <th class="-center" width="10">Face</th>
+                <th width="5"></th>
+                <th class="-center" width="10"></th>
                 <th>Name</th>
                 <th>Tags</th>
                 <th>Latency</th>
@@ -18,64 +18,79 @@
             </thead>
             <tbody>
             {% for player in players %}
-                <tr>
+                {% set isDedicatedServer = player.isHost and player.sortIndex == -1 %}
+                <tr class="player-row {% if not player.isConnected %}-disconnected{% endif %}" onclick="document.location = '{{ player.getProfileUrl() }}'; return false;">
                     <td></td>
                     <td>
                         {{ player.sortIndex }}
                     </td>
                     <td class="-center">
-                        {% include "bits/face.twig" with {skinColorId: player.skinColorId, eyesId: player.eyesId} %}
+                        {% if isDedicatedServer %}
+                            <div class="server-face">
+                                <i class="mdi mdi-server"></i>
+                            </div>
+                        {% else %}
+                            {% include "bits/face.twig" with {skinColorId: player.skinColorId, eyesId: player.eyesId} %}
+                        {% endif %}
                     </td>
                     <td>
                         <a href="{{ player.getProfileUrl() }}">
-                            <strong>{{ player.userName }}</strong>
+                            {% if player.userName %}
+                                <strong>{{ player.userName }}</strong>
+                            {% elseif isDedicatedServer %}
+                                <strong>Dedicated Server</strong>
+                            {% else %}
+                                <strong>Anonymous Beater</strong>
+                            {% endif %}
                         </a>
                     </td>
                     <td>
-                        {% if player.isHost %}
-                            <span class="badge bg-primary" data-toggle="tooltip"
-                                  data-placement="bottom"
-                                  title="This player is hosting the game server">
-                                                        🔌 Host</span>
-                        {% endif %}
-                        {% if player.userId == game.managerId %}
-                            <span class="badge bg-primary" data-toggle="tooltip"
-                                  data-placement="bottom"
-                                  title="This player is in control of the lobby">
-                                                        👑 Party Leader</span>
-                        {% endif %}
-                        {% if player.getIsPirate() %}
-                            <span class="badge bg-dark" data-toggle="tooltip"
-                                  data-placement="bottom"
-                                  title="This player is (most likely) a dirty stinking pirate and they aren't really trying to hide it">
-                                                        ☠ Pirate</span>
-                        {% endif %}
-                        {% if player.getIsBot() %}
-                            <span class="badge bg-success" data-toggle="tooltip"
-                                  data-placement="bottom"
-                                  title="This is a robot, not a real player">
-                                                        🤖 Bot</span>
-                        {% endif %}
-                        {% if player.sortIndex < 0 %}
-                            <span class="badge bg-secondary" data-toggle="tooltip"
-                                  data-placement="bottom"
-                                  title="This player slot is not visible in the lobby">
-                                                        👻 Ghost</span>
-                        {% endif %}
-                        {% if player.isAnnouncer %}
-                            <span class="badge bg-success" data-toggle="tooltip"
-                                  data-placement="bottom"
-                                  title="This player is announcing the lobby to the Server Browser">
-                                                        📢 Announcer</span>
+                        {% if player.isConnected %}
+                            {% if player.isHost %}
+                                <span class="badge bg-primary" data-toggle="tooltip"
+                                      data-placement="bottom"
+                                      title="This player is hosting the game server">
+                                                            🔌 Host</span>
+                            {% endif %}
+                            {% if player.userId == game.managerId %}
+                                <span class="badge bg-primary" data-toggle="tooltip"
+                                      data-placement="bottom"
+                                      title="This player is in control of the lobby">
+                                                            👑 Party Leader</span>
+                            {% endif %}
+                            {% if player.getIsPirate() %}
+                                <span class="badge bg-dark" data-toggle="tooltip"
+                                      data-placement="bottom"
+                                      title="This player is (most likely) a dirty stinking pirate and they aren't really trying to hide it">
+                                                            ☠ Pirate</span>
+                            {% endif %}
+                            {% if player.getIsBot() %}
+                                <span class="badge bg-success" data-toggle="tooltip"
+                                      data-placement="bottom"
+                                      title="This is a robot, not a real player">
+                                                            🤖 Bot</span>
+                            {% endif %}
+                            {% if player.sortIndex < 0 %}
+                                <span class="badge bg-secondary" data-toggle="tooltip"
+                                      data-placement="bottom"
+                                      title="This player slot is not visible in the lobby">
+                                                            👻 Ghost</span>
+                            {% endif %}
+                            {% if player.isAnnouncer %}
+                                <span class="badge bg-success" data-toggle="tooltip"
+                                      data-placement="bottom"
+                                      title="This player is announcing the lobby to the Server Browser">
+                                                            📢 Announcer</span>
+                            {% endif %}
+                        {% else %}
+                            <span>Disconnected</span>
                         {% endif %}
                     </td>
                     <td>
                         {% if player.isHost %}
-                            <span>Local</span>
+                            <span>-</span>
                         {% elseif not player.isConnected %}
-                            <span>Disconnected</span>
-                        {% elseif not player.latency %}
-                            <span>Just joined</span>
+                            <span>-</span>
                         {% else %}
                             {{ player.describeLatency() }}
                         {% endif %}

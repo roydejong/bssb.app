@@ -47,19 +47,7 @@ class GameDetailController
             return new RedirectResponse('/', 404);
         }
 
-        // -------------------------------------------------------------------------------------------------------------
-        // Level data
-
-        $level = null;
-
-        if ($game->levelId) {
-            /**
-             * @var $level LevelRecord
-             */
-            $level = LevelRecord::query()
-                ->where('level_id = ?', $game->levelId)
-                ->querySingleModel();
-        }
+        $level = $game->fetchLevel();
 
         // -------------------------------------------------------------------------------------------------------------
         // GeoIP info
@@ -112,6 +100,7 @@ class GameDetailController
             return new RedirectResponse('/', 404);
         }
 
+        $level = $game->fetchLevel();
         $players = HostedGamePlayerWithPlayerDetails::queryAllForHostedGame($game->id);
 
         // -------------------------------------------------------------------------------------------------------------
@@ -120,6 +109,7 @@ class GameDetailController
         $view = new View('pages/game-detail-players.twig');
         $view->set('baseUrl', $game->getWebDetailUrl());
         $view->set('game', $game);
+        $view->set('level', $level);
         $view->set('players', $players);
         return $view->asResponse();
     }
@@ -146,6 +136,8 @@ class GameDetailController
             return new RedirectResponse('/', 404);
         }
 
+        $level = $game->fetchLevel();
+
         $pageIndex = 0;
         $pageSize = 12;
 
@@ -157,6 +149,7 @@ class GameDetailController
         $view = new View('pages/game-detail-plays.twig');
         $view->set('baseUrl', $game->getWebDetailUrl());
         $view->set('game', $game);
+        $view->set('level', $level);
         $view->set('levelHistory', $levelHistory);
         return $view->asResponse();
     }

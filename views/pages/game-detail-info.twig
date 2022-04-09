@@ -3,175 +3,185 @@
 {% set gameDetailTab = "info" %}
 
 {% block innerContent %}
-
-    <section class="block">
-        <div class="title">
-            <i class="mdi mdi-gamepad"></i>
-            <h3>Lobby</h3>
-        </div>
-        <div class="inner">
-            <table class="card-table -fully-rounded table table-bordered">
-                <tbody>
-                {% if game.ownerName and (players is not defined or players|length == 0) and not game.getIsQuickplay() %}
-                    <tr>
-                        <th scope="row">Host player</th>
-                        <td>{{ game.ownerName ? game.ownerName : "Unknown" }}</td>
-                    </tr>
-                {% endif %}
-                <tr>
-                    <th scope="row">{{ game.getIsStale() or game.endedAt is not null ? 'Last status' : 'Current status' }}</th>
-                    <td>{{ game.describeState() }} ({{ game.playerCount }} of {{ game.playerLimit }} players)</td>
-                </tr>
-                {% if game.difficulty is not null %}
-                    <tr>
-                        <th scope="row">{{ game.getIsPlayingLevel() ? "Current difficulty" : "Last difficulty" }}</th>
-                        <td><span class="difficulty-txt -d{{ game.difficulty }}">{{ game.describeDifficulty() }}</span>
-                        </td>
-                    </tr>
-                {% endif %}
-                {% if game.getIsDedicatedServer() %}
-                    <tr>
-                        <th scope="row"><abbr title="The time the current lobby was created on this server.">Lobby
-                                created</abbr></th>
-                        <td>{{ game.firstSeen.format('r')|timeago_html|raw }}</td>
-                    </tr>
-                {% endif %}
-                <tr>
-                    <th scope="row">Last update</th>
-                    <td>{{ game.lastUpdate.format('r')|timeago_html|raw }}</td>
-                </tr>
-                {% if game.endedAt is not null %}
-                    <tr>
-                        <th scope="row">Ended at</th>
-                        <td>{{ game.endedAt.format('r')|timeago_html|raw }}</td>
-                    </tr>
-                {% endif %}
-                </tbody>
-            </table>
-        </div>
-    </section>
-
-    <section class="block">
-        <div class="title">
-            <i class="mdi mdi-gamepad-circle"></i>
-            <h3>Game and mods</h3>
-        </div>
-        <div class="inner">
-            <table class="card-table -fully-rounded table table-bordered">
-                <tbody>
-                {% if game.gameVersion %}
-                    <tr>
-                        <th scope="row">Game version</th>
-                        <td>Beat Saber {{ game.gameVersion }}</td>
-                    </tr>
-                {% endif %}
-                <tr>
-                    <th scope="row">Modded</th>
-                    <td>
-                        {% if game.isModded %}
-                            <i class="mdi mdi-check-circle"></i>
-                            Modded (custom songs enabled)
-                        {% else %}
-                            <i class="mdi mdi-lock"></i>
-                            Vanilla (custom songs off)
-                        {% endif %}
-                    </td>
-                </tr>
-                {% if game.mpCoreVersion %}
-                    <tr>
-                        <th scope="row">Core mod</th>
-                        <td>
-                            <span class="mp-core-version">
-                                MultiplayerCore {{ game.mpCoreVersion }}
-                            </span>
-                        </td>
-                    </tr>
-                {% endif %}
-                {% if game.mpExVersion %}
-                    <tr>
-                        <th scope="row">Extensions mod</th>
-                        <td>
-                            <span class="mp-ex-version">
-                                MultiplayerExtensions {{ game.mpExVersion }}
-                            </span>
-                        </td>
-                    </tr>
-                {% endif %}
-                {% if game.modVersion %}
-                    <tr>
-                        <th scope="row">Browser mod</th>
-                        <td>{{ game.modName }} {{ game.modVersion }}</td>
-                    </tr>
-                {% endif %}
-                </tbody>
-            </table>
-        </div>
-    </section>
-
-    <section class="block">
-        <div class="title">
-            <i class="mdi mdi-server"></i>
-            <h3>Server</h3>
-        </div>
-        <div class="inner">
-            <table class="card-table -fully-rounded table table-bordered">
-                <tbody>
-                <tr>
-                    <th scope="row">Type</th>
-                    <td>{{ game.describeServerType() }}</td>
-                </tr>
-                {% if game.endpoint and game.getIsDedicatedServer()
-                    and (game.getIsGameLiftServer() or game.masterServerHost) %}
-                    <tr>
-                        <th scope="row">Endpoint</th>
-                        <td><code>{{ game.endpoint }}</code></td>
-                    </tr>
-                    {% if geoText %}
+    <div class="server-info">
+        <div class="col-left">
+            <section class="block">
+                <div class="title">
+                    <i class="mdi mdi-gamepad"></i>
+                    <h3>Lobby</h3>
+                </div>
+                <div class="inner">
+                    <table class="card-table -fully-rounded table table-bordered">
+                        <tbody>
                         <tr>
-                            <th scope="row" width="220">Location (GeoIP)</th>
+                            <th scope="row">{{ game.getIsStale() or game.endedAt is not null ? 'Last status' : 'Current status' }}</th>
                             <td>
-                                {% if geoCountry %}
-                                    <img src="/static/flags/{{ geoCountry|lower }}.png" alt="{{ geoCountry }}"/>
-                                {% endif %}
-                                <span>{{ geoText }}</span>
+                                <strong>{{ game.describeState() }} ({{ game.playerCount }} of {{ game.playerLimit }} players)</strong>
                             </td>
                         </tr>
-                    {% endif %}
-                {% endif %}
-                <tr>
-                    <th scope="row"><abbr title="The first time this server's endpoint was seen by the Server Browser.">First
-                            seen</abbr></th>
-                    <td>{{ game.determineTrueFirstSeen().format('r')|timeago_html|raw }}</td>
-                </tr>
-                <tr>
-                    <th scope="row">Master server</th>
-                    <td>
-                        {% if game.getIsGameLiftServer() %}
-                            <i class="mdi mdi-aws"></i>
-                            <span>GameLift {{ game.tryGetGameLiftRegion() }}</span>
-                        {% elseif not game.masterServerHost and game.endpoint %}
-                            Direct connection (<code>{{ game.endpoint }}</code>)
-                        {% else %}
-                            {% if game.getIsOfficial() %}
-                                {% if game.platform == "steam" %}
-                                    <i class="mdi mdi-steam"></i> Steam
-                                {% elseif game.platform == "oculus" %}
-                                    {% include "oculus_icon.twig" %} Oculus
-                                {% else %}
-                                    <i class="mdi mdi-head-question"></i> Unknown
-                                {% endif %}
-                            {% else %}
-                                <i class="mdi mdi-connection"></i> Unofficial server
-                            {% endif %}
-                            {% if game.masterServerHost %}
-                                (<code>{{ game.masterServerHost }}:{{ game.masterServerPort ? game.masterServerPort : 2328 }}</code>)
+                        {% if game.difficulty is not null %}
+                            <tr>
+                                <th scope="row">{{ game.getIsPlayingLevel() ? "Current difficulty" : "Last difficulty" }}</th>
+                                <td><span class="difficulty-txt -d{{ game.difficulty }}">{{ game.describeDifficulty() }}</span>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if game.getIsDedicatedServer() %}
+                            <tr>
+                                <th scope="row"><abbr title="The time the current lobby was created on this server.">Lobby
+                                        created</abbr></th>
+                                <td>{{ game.firstSeen.format('r')|timeago_html|raw }}</td>
+                            </tr>
+                        {% endif %}
+                        <tr>
+                            <th scope="row">Last update</th>
+                            <td>{{ game.lastUpdate.format('r')|timeago_html|raw }}</td>
+                        </tr>
+                        {% if game.endedAt is not null %}
+                            <tr>
+                                <th scope="row">Ended at</th>
+                                <td>{{ game.endedAt.format('r')|timeago_html|raw }}</td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <section class="block">
+                <div class="title">
+                    <i class="mdi mdi-server"></i>
+                    <h3>Server</h3>
+                </div>
+                <div class="inner">
+                    <table class="card-table -fully-rounded table table-bordered">
+                        <tbody>
+                        <tr>
+                            <th scope="row">Type</th>
+                            <td>{{ game.describeServerType() }}</td>
+                        </tr>
+                        {% if game.endpoint and game.getIsDedicatedServer()
+                            and (game.getIsGameLiftServer() or game.masterServerHost) %}
+                            <tr>
+                                <th scope="row">Endpoint</th>
+                                <td><code>{{ game.endpoint }}</code></td>
+                            </tr>
+                            {% if geoText %}
+                                <tr>
+                                    <th scope="row" width="220">Location (GeoIP)</th>
+                                    <td>
+                                        {% if geoCountry %}
+                                            <img src="/static/flags/{{ geoCountry|lower }}.png" alt="{{ geoCountry }}"/>
+                                        {% endif %}
+                                        <span>{{ geoText }}</span>
+                                    </td>
+                                </tr>
                             {% endif %}
                         {% endif %}
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+                        <tr>
+                            <th scope="row"><abbr title="The first time this server's endpoint was seen by the Server Browser.">First
+                                    seen</abbr></th>
+                            <td>{{ game.determineTrueFirstSeen().format('r')|timeago_html|raw }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Master server</th>
+                            <td>
+                                {% if game.getIsGameLiftServer() %}
+                                    <i class="mdi mdi-aws"></i>
+                                    <span>GameLift {{ game.tryGetGameLiftRegion() }}</span>
+                                {% elseif not game.masterServerHost and game.endpoint %}
+                                    Direct connection (<code>{{ game.endpoint }}</code>)
+                                {% else %}
+                                    {% if game.getIsOfficial() %}
+                                        {% if game.platform == "steam" %}
+                                            <i class="mdi mdi-steam"></i> Steam
+                                        {% elseif game.platform == "oculus" %}
+                                            {% include "oculus_icon.twig" %} Oculus
+                                        {% else %}
+                                            <i class="mdi mdi-head-question"></i> Unknown
+                                        {% endif %}
+                                    {% else %}
+                                        <i class="mdi mdi-connection"></i> Unofficial server
+                                    {% endif %}
+                                    {% if game.masterServerHost %}
+                                        (<code>{{ game.masterServerHost }}:{{ game.masterServerPort ? game.masterServerPort : 2328 }}</code>)
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
         </div>
-    </section>
-
+        <div class="col-right">
+            <div class="server-code">
+                <div class="inner">
+                    <label>Server Code</label>
+                    <div class="code-value">{{ game.serverCode }}</div>
+                </div>
+                <div class="instructions">
+                    <label>How to connect</label>
+                    <p>With the Server Browser mod in game, select the lobby, and click Connect.</p>
+                    <div class="or"></div>
+                    <p>With the BeatTogether mod, select the {{ game.describeMasterServerSelection() }} server and enter the code under Join Via Code.</p>
+                </div>
+            </div>
+            <section class="block">
+                <div class="title">
+                    <i class="mdi mdi-gamepad-circle"></i>
+                    <h3>Game and mods</h3>
+                </div>
+                <div class="inner">
+                    <table class="card-table -fully-rounded table table-bordered">
+                        <tbody>
+                        {% if game.gameVersion %}
+                            <tr>
+                                <th scope="row">Game version</th>
+                                <td>Beat Saber {{ game.gameVersion }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if game.mpCoreVersion %}
+                            <tr>
+                                <th scope="row">Core mod</th>
+                                <td>
+                                    <span class="mp-core-version">
+                                        MultiplayerCore {{ game.mpCoreVersion }}
+                                    </span>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if game.mpExVersion %}
+                            <tr>
+                                <th scope="row">Extensions mod</th>
+                                <td>
+                                    <span class="mp-ex-version">
+                                        MultiplayerExtensions {{ game.mpExVersion }}
+                                    </span>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if game.modVersion %}
+                            <tr>
+                                <th scope="row">Browser mod</th>
+                                <td>{{ game.modName }} {{ game.modVersion }}</td>
+                            </tr>
+                        {% endif %}
+                        <tr>
+                            <th scope="row">Modded</th>
+                            <td>
+                                {% if game.isModded %}
+                                    <i class="mdi mdi-check-circle"></i>
+                                    Custom songs enabled
+                                {% else %}
+                                    <i class="mdi mdi-lock"></i>
+                                    Custom songs disabled
+                                {% endif %}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
 {% endblock %}

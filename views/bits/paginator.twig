@@ -12,7 +12,7 @@
                 <span>{{ i + 1 }}</span>
             </a>
         {% endfor %}
-        {% if paginator.pageCount > i %}
+        {% if paginator.pageCount > (paginator.pageIndex + 1) %}
             <a class="page page-back" href="{{ paginationBaseUrl|with_query_param("page", paginator.pageIndex + 2) }}">
                 <i class="mdi mdi-chevron-right"></i>
             </a>

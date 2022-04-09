@@ -317,6 +317,17 @@ class HostedGame extends Model implements \JsonSerializable
         }
     }
 
+    public function describeMasterServerSelection(): string
+    {
+        if ($this->getIsOfficial() || $this->getIsGameLiftServer())
+            return "Official";
+
+        if ($this->getIsBeatTogether())
+            return "BeatTogether";
+
+        return $this->masterServerHost;
+    }
+
     public function describeSong(): ?string
     {
         $parts = [];
@@ -391,7 +402,22 @@ class HostedGame extends Model implements \JsonSerializable
 
     public function describeGameDetail(): string
     {
-        $parts = array_filter([$this->gameVersion, "Multiplayer Lobby", "on {$this->describeServerType()}"]);
+        if ($this->getIsQuickplay()) {
+            // e.g. "Official Quickplay 1.21.0 Multiplayer Lobby"
+            $parts = [
+                $this->describeServerType(),
+                $this->gameVersion,
+                "Multiplayer Lobby"
+            ];
+        } else {
+            // e.g. "Custom 1.21.0 Multiplayer Lobby on BeatTogether Dedicated"
+            $parts = array_filter([
+                "Custom",
+                $this->gameVersion,
+                "Multiplayer Lobby",
+                "on {$this->describeServerType()}"
+            ]);
+        }
         return implode(' ', $parts);
     }
 

@@ -5,6 +5,19 @@
         <div class="container">
 
             <div class="server-name">
+                <div class="faceplate">
+                    {% if level and level.coverUrl %}
+                        <img class="cover-art" src="{{ level.coverUrl }}" alt="{{ level.describeSong() }}" loading="lazy"/>
+                    {% else %}
+                        <div class="cover-art dummy-cover-art">
+                            {% if game.getIsPlayingLevel() %}
+                                <i class="mdi mdi-music"></i>
+                            {% else %}
+                                <i class="mdi mdi-new-box"></i>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
                 <div class="text">
                     <h1>{{ game.gameName }}</h1>
                     <p class="descr">{{ game.describeGameDetail() }}</p>
@@ -20,7 +33,7 @@
                 </div>
             {% endif %}
 
-            {% if ngame.getIsUninteresting() %}
+            {% if game.getIsUninteresting() %}
                 <div class="alert alert-danger">
                     🤖 Game was hidden automatically (game is not relevant)
                 </div>
