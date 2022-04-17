@@ -39,9 +39,10 @@
       background: rgba(0, 120, 212, 0.25);
       color: var(--col-txt-main);
     }
-    &.-disabled {
-      opacity: .5;
+    &.-disabled, &.-dummy {
+      opacity: .25;
       pointer-events: none;
+      color: var(--col-txt-muted) !important;
     }
   }
 }

@@ -10,7 +10,7 @@ use app\HTTP\Responses\BadRequestResponse;
 use app\HTTP\Responses\RedirectResponse;
 use app\Models\HostedGame;
 use app\Models\Joins\HostedGamePlayerWithPlayerDetails;
-use app\Models\Joins\LevelHistoryWithDetails;
+use app\Models\Joins\LevelHistoryPlayerWithDetails;
 use app\Models\LevelRecord;
 
 class GameDetailController
@@ -126,6 +126,8 @@ class GameDetailController
             return new BadRequestResponse();
         }
 
+        $pageIndex = intval($request->queryParams['page'] ?? 1) - 1;
+
         // -------------------------------------------------------------------------------------------------------------
         // Game data
 
@@ -138,10 +140,28 @@ class GameDetailController
 
         $level = $game->fetchLevel();
 
-        $pageIndex = 0;
-        $pageSize = 12;
+        $baseUrl = $game->getWebDetailUrl();
+        $paginationBaseUrl = $baseUrl . "/plays";
 
-        $levelHistory = LevelHistoryWithDetails::queryHostedGameHistory($game->id, $pageIndex, $pageSize);
+        // -------------------------------------------------------------------------------------------------------------
+        // Level history query
+
+        $levelHistoryQuery = LevelHistoryPlayerWithDetails::query()
+            ->select('lh.*, lr.*, hg.game_name, hg.first_seen, lh.id AS id')
+            ->from('level_histories lh')
+            ->innerJoin('level_records lr ON (lr.id = lh.level_record_id)')
+            ->innerJoin('hosted_games hg ON (hg.id = lh.hosted_game_id)')
+            ->where('lh.hosted_game_id = ?', $id)
+            ->orderBy('lh.ended_at IS NULL DESC, lh.ended_at DESC');
+
+        $levelHistoryPaginator = $levelHistoryQuery
+            ->paginate()
+            ->setPageIndex($pageIndex)
+            ->setQueryPageSize(self::LevelHistoryPageSize);
+
+        $levelHistory = $levelHistoryPaginator
+            ->getPaginatedQuery()
+            ->queryAllModels();
 
         $isNowPlaying = false;
         foreach ($levelHistory as $item) {
@@ -155,11 +175,13 @@ class GameDetailController
         // Response
 
         $view = new View('pages/game-detail-plays.twig');
-        $view->set('baseUrl', $game->getWebDetailUrl());
+        $view->set('baseUrl', $baseUrl);
         $view->set('game', $game);
         $view->set('level', $level);
         $view->set('levelHistory', $levelHistory);
         $view->set('isNowPlaying', $isNowPlaying);
+        $view->set('paginator', $levelHistoryPaginator);
+        $view->set('paginationBaseUrl', $paginationBaseUrl);
         return $view->asResponse();
     }
 
@@ -192,4 +214,6 @@ class GameDetailController
             'image' => $level?->coverUrl ?? null
         ];
     }
+
+    private const LevelHistoryPageSize = 12;
 }

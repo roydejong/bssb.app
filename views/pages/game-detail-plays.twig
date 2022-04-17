@@ -4,8 +4,8 @@
 
 {% block innerContent %}
 
-    {% if not isNowPlaying %}
-        {# We don't have a history record for the current level (yet): fallback rendering for current level #}
+    {% if not isNowPlaying and paginator.pageIndex == 0 %}
+        {# No history record for active level; render current level from game data on 1st page #}
         {% if level and game.getIsPlayingLevel() %}
             {% set isNowPlaying = 1 %}
             {% include "bits/level-history.twig" %}
@@ -15,12 +15,14 @@
     {% for historyItem in levelHistory %}
         {% include "bits/level-history.twig" with {level: historyItem} %}
     {% else %}
-        {% if not isNowPlaying %}
+        {% if not isNowPlaying and paginator.pageIndex == 0 %}
             <div class="alert -minor">
                 <i class="mdi mdi-motion-play-outline"></i>
                 <strong>No levels played yet.</strong>
             </div>
         {% endif %}
     {% endfor %}
+
+    {% include "bits/paginator.twig" %}
 
 {% endblock %}
