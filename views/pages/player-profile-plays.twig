@@ -1,6 +1,7 @@
 {% extends "pages/player-profile.base.twig" %}
 
 {% block innerContent %}
+
     {% if privacyMode %}
         {% if not player.showHistory %}
             <div class="alert">
@@ -13,7 +14,7 @@
                 <strong>This player has never used the Server Browser mod, so their game history is hidden by default.</strong>
             </div>
         {% endif %}
-    {% elseif not levelHistory or levelHistory|length == 0 %}
+    {% elseif (not levelHistory or levelHistory|length == 0) and paginator.pageIndex == 0 %}
         <div class="alert -minor">
             <i class="mdi mdi-motion-play-outline"></i>
             <strong>No level history found for this user. Check back later.</strong>
@@ -32,4 +33,7 @@
             {% include "bits/level-history.twig" with {levelHistory: historyItem, level: historyItem} %}
         {% endfor %}
     {% endif %}
+
+    {% include "bits/paginator.twig" %}
+
 {% endblock %}

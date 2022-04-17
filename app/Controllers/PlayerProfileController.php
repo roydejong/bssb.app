@@ -2,11 +2,13 @@
 
 namespace app\Controllers;
 
+use app\BeatSaber\Enums\PlayerLevelEndReason;
 use app\BeatSaber\Enums\PlayerLevelEndState;
 use app\Frontend\ResponseCache;
 use app\Frontend\View;
 use app\HTTP\Request;
 use app\HTTP\Responses\NotFoundResponse;
+use app\HTTP\Responses\RedirectResponse;
 use app\Models\Enums\PlayerType;
 use app\Models\HostedGame;
 use app\Models\HostedGamePlayer;
@@ -20,6 +22,8 @@ class PlayerProfileController
 {
     const CACHE_KEY_PREFIX = "player_detail_page_";
     const CACHE_TTL = 300;
+
+    private const LevelHistoryPageSize = 12;
 
     public function getPlayerProfile(Request $request, string $userId, ?string $profileSection = null)
     {
@@ -90,6 +94,9 @@ class PlayerProfileController
 
         $enablePrivacyShield = $player->type === PlayerType::PlayerObserved || !$player->showHistory;
 
+        $baseUrl = $player->getWebDetailUrl();
+        $paginationBaseUrl = $tabId !== "info" ? ($baseUrl . "/{$tabId}") : null;
+
         // -------------------------------------------------------------------------------------------------------------
         // Player data
 
@@ -129,10 +136,31 @@ class PlayerProfileController
 
         $levelHistory = [];
         if (!$enablePrivacyShield && $loadHistory) {
-            $pageIndex = 0;
-            $pageSize = 12;
+            $pageIndex = intval($request->queryParams['page'] ?? 1) - 1;
 
-            $levelHistory = LevelHistoryPlayerWithDetails::queryPlayerHistory($player->id, $pageIndex, $pageSize);
+            $levelHistoryQuery = LevelHistoryPlayerWithDetails::query()
+                ->select('lh.*, lhp.*, lr.*, hg.game_name, hg.first_seen, lhp.id AS id')
+                ->from('level_history_players lhp')
+                ->innerJoin('level_histories lh ON (lh.id = lhp.level_history_id)')
+                ->innerJoin('level_records lr ON (lr.id = lh.level_record_id)')
+                ->innerJoin('hosted_games hg ON (hg.id = lh.hosted_game_id)')
+                ->where('lhp.player_id = ?', $player->id)
+                ->andWhere('lhp.end_state != ?', PlayerLevelEndState::NotStarted->value)
+                ->andWhere('lhp.end_reason NOT IN (?)', [PlayerLevelEndReason::ConnectedAfterLevelEnded->value,
+                    PlayerLevelEndReason::StartupFailed->value, PlayerLevelEndReason::WasInactive->value])
+                ->orderBy('lh.ended_at DESC');
+
+            $levelHistoryPaginator = $levelHistoryQuery
+                ->paginate()
+                ->setPageIndex($pageIndex)
+                ->setQueryPageSize(self::LevelHistoryPageSize);
+
+            if (!$levelHistoryPaginator->getIsValidPage())
+                return new RedirectResponse($paginationBaseUrl);
+
+            $levelHistory = $levelHistoryPaginator
+                ->getPaginatedQuery()
+                ->queryAllModels();
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -148,8 +176,10 @@ class PlayerProfileController
         $view->set('privacyMode', $enablePrivacyShield);
         $view->set('stats', $stats);
         $view->set('levelHistory', $levelHistory);
+        $view->set('paginator', $levelHistoryPaginator ?? null);
+        $view->set('profileBaseUrl', $baseUrl);
+        $view->set('paginationBaseUrl', $paginationBaseUrl);
         $view->set('isMe', $isMe);
-        $view->set('profileBaseUrl', $player->getWebDetailUrl());
         $view->set('profileTab', $tabId);
 
         $response = $view->asResponse();

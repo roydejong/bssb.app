@@ -159,6 +159,9 @@ class GameDetailController
             ->setPageIndex($pageIndex)
             ->setQueryPageSize(self::LevelHistoryPageSize);
 
+        if (!$levelHistoryPaginator->getIsValidPage())
+            return new RedirectResponse($paginationBaseUrl);
+
         $levelHistory = $levelHistoryPaginator
             ->getPaginatedQuery()
             ->queryAllModels();

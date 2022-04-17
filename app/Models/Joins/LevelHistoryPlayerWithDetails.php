@@ -2,10 +2,8 @@
 
 namespace app\Models\Joins;
 
-use app\BeatSaber\Enums\PlayerLevelEndReason;
 use app\BeatSaber\Enums\PlayerLevelEndState;
 use app\Models\LevelHistoryPlayer;
-use app\Models\Traits\HasBeatmapCharacteristic;
 use app\Models\Traits\HasLevelHistoryData;
 use SoftwarePunt\Instarecord\Models\IReadOnlyModel;
 
@@ -31,27 +29,6 @@ class LevelHistoryPlayerWithDetails extends LevelHistoryPlayer implements IReadO
     // hosted_games
     public string $gameName;
     public \DateTime $firstSeen;
-
-    /**
-     * @return LevelHistoryPlayerWithDetails[]
-     */
-    public static function queryPlayerHistory(int $playerId, int $pageIndex = 0, int $pageSize = 16): array
-    {
-        return LevelHistoryPlayerWithDetails::query()
-            ->select('lh.*, lhp.*, lr.*, hg.game_name, hg.first_seen, lhp.id AS id')
-            ->from('level_history_players lhp')
-            ->innerJoin('level_histories lh ON (lh.id = lhp.level_history_id)')
-            ->innerJoin('level_records lr ON (lr.id = lh.level_record_id)')
-            ->innerJoin('hosted_games hg ON (hg.id = lh.hosted_game_id)')
-            ->where('lhp.player_id = ?', $playerId)
-            ->andWhere('lhp.end_state != ?', PlayerLevelEndState::NotStarted->value)
-            ->andWhere('lhp.end_reason NOT IN (?)', [PlayerLevelEndReason::ConnectedAfterLevelEnded->value,
-                PlayerLevelEndReason::StartupFailed->value, PlayerLevelEndReason::WasInactive->value])
-            ->orderBy('lh.ended_at DESC')
-            ->offset($pageIndex * $pageSize)
-            ->limit($pageSize)
-            ->queryAllModels();
-    }
 
     public function describeFailReason(): string
     {
