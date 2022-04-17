@@ -2,6 +2,8 @@
 
 namespace app\Models;
 
+use app\AWS\GameSessionArn;
+use app\AWS\GameSessionArnParser;
 use app\BeatSaber\ModPlatformId;
 use app\BeatSaber\MultiplayerUserId;
 use app\Frontend\View;
@@ -53,13 +55,15 @@ class Player extends Model
             $playerRecord->firstSeen = $now;
         }
 
-        if ($serverPlayer->isHost && !$serverPlayer->isAnnouncer && empty($serverPlayer->userName)) {
-            // This is a dedicated server bot, try to figure out what kind
+        if ($serverPlayer->isHost && $serverPlayer->sortIndex === -1) {
             if ($playerRecord->userId === self::BeatTogetherUserId) {
+                // User ID matches the fixed value for all BeatTogether-based servers
                 $playerRecord->type = PlayerType::DedicatedServerBeatTogether;
             } else if (str_starts_with($playerRecord->userId, "arn:aws:gamelift")) {
+                // User ID matches the fixed value for all Official GameLift servers
                 $playerRecord->type = PlayerType::DedicatedServerGameLift;
             } else {
+                // No specific identifying marks, but host + negative index indicates dedicated server
                 $playerRecord->type = PlayerType::DedicatedServer;
             }
         } else if ($playerRecord->type === PlayerType::PlayerObserved && $serverPlayer->isAnnouncer) {
@@ -147,11 +151,20 @@ class Player extends Model
 
     public function describeType(bool $shorten = false): string
     {
+        if ($this->type === PlayerType::DedicatedServerGameLift) {
+            $gameLiftRegion = $this->tryGetGameLiftRegion();
+
+            if ($gameLiftRegion) {
+                return "GameLift Server ({$gameLiftRegion})";
+            } else {
+                return "GameLift Server";
+            }
+        }
+
         $result = match ($this->type) {
             PlayerType::PlayerObserved => "Player",
             PlayerType::PlayerModUser => $shorten ? "Player" : "Player with Server Browser",
             PlayerType::DedicatedServer => "Dedicated Server",
-            PlayerType::DedicatedServerGameLift => "GameLift Server",
             PlayerType::DedicatedServerBeatTogether => "BeatTogether Server",
             default => "Unknown",
         };
@@ -159,6 +172,28 @@ class Player extends Model
             $result = strtolower($result);
         }
         return $result;
+    }
+
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Gamelift
+
+    public function getIsGameLiftServer(): bool
+    {
+        return str_starts_with($this->userId, "arn:aws:gamelift:");
+    }
+
+    public function tryGetGameLiftInfo(): ?GameSessionArn
+    {
+        if (!$this->getIsGameLiftServer())
+            return null;
+
+        return GameSessionArnParser::tryParse($this->userId);
+    }
+
+    public function tryGetGameLiftRegion(): ?string
+    {
+        return $this->tryGetGameLiftInfo()?->fleetRegion;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
