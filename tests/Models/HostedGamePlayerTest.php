@@ -16,8 +16,12 @@ class HostedGamePlayerTest extends TestCase
             (new HostedGamePlayer(["latency" => 0.001]))->describeLatency()
         );
         $this->assertSame(
-            "0ms",
+            "?ms",
             (new HostedGamePlayer(["latency" => 0]))->describeLatency()
+        );
+        $this->assertSame(
+            "?ms",
+            (new HostedGamePlayer(["latency" => null]))->describeLatency()
         );
     }
 

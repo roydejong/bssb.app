@@ -34,7 +34,7 @@
                                 Started {{ levelHistory.startedAt|timeago_html|raw }}
                             {% endif %}
                         </div>
-                        {% include "bits/level-tags.twig" %}
+                        {% include "bits/level-tags.twig" with {historyItem: levelHistory} %}
                     </div>
                 </div>
             </div>

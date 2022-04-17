@@ -1,4 +1,6 @@
 .game-detail {
+  position: relative;
+
   // -------------------------------------------------------------------------------------------------------------------
   // Shared
 
@@ -7,6 +9,32 @@
 
     > div {
       width: 100%;
+    }
+  }
+
+  .special-bg {
+    opacity: .5;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+
+    &, &:after {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: auto;
+      left: 0;
+      width: 100vw;
+      height: 220px;
+      pointer-events: none;
+      z-index: -1;
+    }
+    &:after {
+      content: "";
+      backdrop-filter: blur(12px);
+      background: rgb(32,33,36);
+      background: linear-gradient(180deg, rgba(32,33,36,0.55) 0%, rgba(32,33,36,1) 80%);
     }
   }
 
@@ -55,6 +83,12 @@
         }
       }
     }
+  }
+
+  .modded-warning {
+    color: var(--col-saber-left);
+    margin: 0 0 1rem 0;
+    font-weight: var(--font-weight-bold);
   }
 
   .server-code {

@@ -1,3 +1,15 @@
+{% if not historyItem %}
+    {% set historyItem = level %}
+{% endif %}
+
+{% if not level %}
+    {% set level = historyItem %}
+{% endif %}
+
+{% if historyItem.startedAt and historyItem.endedAt is null %}
+    {% set isNowPlaying = 1 %}
+{% endif %}
+
 <a href="{{ historyItem.getDetailUrl() }}" class="level-history"
    style="{% if historyItem.coverUrl %}background-image: url('{{ historyItem.coverUrl }}');{% endif %}">
     <div class="inner">
@@ -27,9 +39,14 @@
                     </div>
                 {% endif %}
             {% else %}
-                <div class="placement -server">
-                    <i class="mdi mdi-clock"></i>
-                    {{ historyItem.startedAt|timeago }}
+                <div class="placement -server {% if isNowPlaying %}-now-playing{% endif %}">
+                    {% if isNowPlaying %}
+                        <i class="mdi mdi-sword-cross"></i>
+                        Now playing
+                    {% else %}
+                        <i class="mdi mdi-clock"></i>
+                        {{ historyItem.startedAt|timeago }}
+                    {% endif %}
                 </div>
             {% endif %}
             <div class="song">

@@ -10,6 +10,7 @@ use app\BeatSaber\MultiplayerLobbyState;
 use app\BSSB;
 use app\Common\CVersion;
 use app\Common\IPEndPoint;
+use app\Models\Traits\HasBeatmapCharacteristic;
 use app\Utils\PirateDetect;
 use DateTime;
 use Hashids\Hashids;
@@ -17,6 +18,8 @@ use SoftwarePunt\Instarecord\Model;
 
 class HostedGame extends Model implements \JsonSerializable
 {
+    use HasBeatmapCharacteristic;
+
     // -----------------------------------------------------------------------------------------------------------------
     // Consts
 
@@ -102,11 +105,6 @@ class HostedGame extends Model implements \JsonSerializable
      * Difficulty of the current or most recent song, or the locked difficulty of the lobby (for Quick Play).
      */
     public ?int $difficulty;
-    /**
-     * Characteristic of the level being played.
-     * Only available in ServerBrowser v1.0+.
-     */
-    public ?string $characteristic;
     /**
      * Announcer's platform (e.g. "steam", "oculus")
      */
@@ -499,6 +497,22 @@ class HostedGame extends Model implements \JsonSerializable
 
         // Fallback or Player host (old P2P) - use regular first seen value
         return $this->firstSeen;
+    }
+
+    public function describeRequiredMods(): ?string
+    {
+        $modNames = [];
+
+        if ($this->mpCoreVersion)
+            $modNames[] = "MultiplayerCore {$this->mpCoreVersion}";
+
+        if ($this->mpExVersion)
+            $modNames[] = "MultiplayerExtensions {$this->mpExVersion}";
+
+        if (empty($modNames))
+            return null;
+
+        return implode(" and ", $modNames);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -2,11 +2,16 @@
 
 {% block content %}
     <main class="game-detail">
+
+        {% if level.coverUrl %}
+            <div class="special-bg" style="background-image: url('{{ level.coverUrl }}');"></div>
+        {% endif %}
+
         <div class="container">
 
             <div class="server-name">
                 <div class="faceplate">
-                    {% if level and level.coverUrl %}
+                    {% if level.coverUrl %}
                         <img class="cover-art" src="{{ level.coverUrl }}" alt="{{ level.describeSong() }}" loading="lazy"/>
                     {% else %}
                         <div class="cover-art dummy-cover-art">

@@ -1,16 +1,35 @@
 <div class="level-tags">
-    <span class="tag difficulty -diff-{{ levelHistory.difficulty }}">{{ levelHistory.describeDifficulty() }}</span>
-    {% if levelHistory.characteristic %}
-        <span class="tag characteristic characteristic-{{ levelHistory.characteristic }}">
-            {% set descr = levelHistory.describeCharacteristic() %}
-            {% set iconUrl = levelHistory.getCharacteristicIcon() %}
+
+    {# Difficulty #}
+    {% if historyItem.difficulty is not null %}
+        <span class="tag difficulty -diff-{{ historyItem.difficulty }}">{{ historyItem.describeDifficulty() }}</span>
+    {% elseif game.difficulty is not null %}
+        <span class="tag difficulty -diff-{{ game.difficulty }}">{{ game.describeDifficulty() }}</span>
+    {% endif %}
+
+    {# Characteristic #}
+    {% if historyItem.characteristic is not null %}
+        <span class="tag characteristic characteristic-{{ historyItem.characteristic }}">
+            {% set descr = historyItem.describeCharacteristic() %}
+            {% set iconUrl = historyItem.getCharacteristicIcon() %}
+            {% if iconUrl %}
+                <img src="{{ iconUrl }}" alt="{{ descr }}"/>
+            {% endif %}
+            <span>{{ descr }}</span>
+        </span>
+    {% elseif game.characteristic is not null %}
+        <span class="tag characteristic characteristic-{{ game.characteristic }}">
+            {% set descr = game.describeCharacteristic() %}
+            {% set iconUrl = game.getCharacteristicIcon() %}
             {% if iconUrl %}
                 <img src="{{ iconUrl }}" alt="{{ descr }}"/>
             {% endif %}
             <span>{{ descr }}</span>
         </span>
     {% endif %}
-    {% for modifierTag in levelHistory.getModifierTags() %}
+
+    {# Modifiers #}
+    {% for modifierTag in historyItem.getModifierTags() %}
         <span class="tag modifier modifier-{{ modifierTag.key }}">
             {% if modifierTag.icon %}
                 <img src="{{ modifierTag.icon }}" alt="{{ modifierTag.text }}"/>
@@ -18,15 +37,19 @@
             <span>{{ modifierTag.text }}</span>
         </span>
     {% endfor %}
+
     <div class="space"></div>
-    {% if levelHistory.badgeKey %}
-        <span class="tag -with-tooltip badge badge-{{ levelHistory.badgeKey }}" title="{{ levelHistory.badgeSubtitle }}">
-            {% set descr = levelHistory.describeBadge() %}
-            {% set iconUrl = levelHistory.getBadgeIcon() %}
+
+    {# Player result badge #}
+    {% if historyItem.badgeKey %}
+        <span class="tag -with-tooltip badge badge-{{ historyItem.badgeKey }}" title="{{ historyItem.badgeSubtitle }}">
+            {% set descr = historyItem.describeBadge() %}
+            {% set iconUrl = historyItem.getBadgeIcon() %}
             {% if iconUrl %}
                 <img src="{{ iconUrl }}" alt="{{ descr }}"/>
             {% endif %}
             <span>{{ descr }}</span>
         </span>
     {% endif %}
+
 </div>

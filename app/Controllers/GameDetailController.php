@@ -143,6 +143,14 @@ class GameDetailController
 
         $levelHistory = LevelHistoryWithDetails::queryHostedGameHistory($game->id, $pageIndex, $pageSize);
 
+        $isNowPlaying = false;
+        foreach ($levelHistory as $item) {
+            if (!$item->endedAt) {
+                $isNowPlaying = true;
+                break;
+            }
+        }
+
         // -------------------------------------------------------------------------------------------------------------
         // Response
 
@@ -151,6 +159,7 @@ class GameDetailController
         $view->set('game', $game);
         $view->set('level', $level);
         $view->set('levelHistory', $levelHistory);
+        $view->set('isNowPlaying', $isNowPlaying);
         return $view->asResponse();
     }
 

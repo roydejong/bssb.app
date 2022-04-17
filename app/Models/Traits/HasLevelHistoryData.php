@@ -2,7 +2,6 @@
 
 namespace app\Models\Traits;
 
-use app\BeatSaber\Enums\BeatmapCharacteristic;
 use app\BeatSaber\GameplayModifiers;
 use app\BeatSaber\LevelDifficulty;
 use app\Models\HostedGame;
@@ -10,6 +9,8 @@ use app\Models\LevelRecord;
 
 trait HasLevelHistoryData
 {
+    use HasBeatmapCharacteristic;
+
     /**
      * The server-assigned GUID for the specific level play.
      */
@@ -20,10 +21,6 @@ trait HasLevelHistoryData
      * Difficulty for the level that was played.
      */
     public int $difficulty;
-    /**
-     * The raw name of the beatmap characteristic that was played.
-     */
-    public ?string $characteristic;
     /**
      * Gameplay modifiers data for this level play.
      */
@@ -62,33 +59,6 @@ trait HasLevelHistoryData
     public function describeDifficulty(): string
     {
         return LevelDifficulty::describe($this->difficulty);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    // Characteristic
-
-    public function tryParseCharacteristic(): ?BeatmapCharacteristic
-    {
-        if (!$this->characteristic)
-            return null;
-
-        return BeatmapCharacteristic::tryFrom($this->characteristic);
-    }
-
-    public function describeCharacteristic(): string
-    {
-        if (!$this->characteristic)
-            return "Unknown";
-
-        return self::tryParseCharacteristic()?->describe() ?? $this->characteristic;
-    }
-
-    public function getCharacteristicIcon(): ?string
-    {
-        if (!$this->characteristic)
-            return null;
-
-        return self::tryParseCharacteristic()?->getIconUrl();
     }
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -21,8 +21,17 @@
                         </tr>
                         {% if game.difficulty is not null %}
                             <tr>
-                                <th scope="row">{{ game.getIsPlayingLevel() ? "Current difficulty" : "Last difficulty" }}</th>
-                                <td><span class="difficulty-txt -d{{ game.difficulty }}">{{ game.describeDifficulty() }}</span>
+                                <th scope="row">
+                                    {% if game.getIsQuickPlay() %}
+                                        Lobby difficulty
+                                    {% elseif game.getIsPlayingLevel() %}
+                                        Current difficulty
+                                    {% else %}
+                                        Last difficulty
+                                    {% endif %}
+                                </th>
+                                <td>
+                                    <span class="difficulty-txt -d{{ game.difficulty }}">{{ game.describeDifficulty() }}</span>
                                 </td>
                             </tr>
                         {% endif %}
@@ -120,8 +129,8 @@
                     <div class="code-value">{{ game.serverCode }}</div>
                 </div>
                 <div class="instructions">
-                    <label>How to connect</label>
-                    <p>With the Server Browser mod in game, select the lobby, and click Connect.</p>
+                    <label><i class="mdi mdi-information-outline"></i> How to connect</label>
+                    <p>With the Server Browser mod in game, find and select the lobby, then click Connect.</p>
                     {% if game.getIsOfficial() %}
                         {% if game.getIsQuickPlay() %}
                             <p class="extra">(You can't use the code to connect to Official Quick Play lobbies, you must use the mod - PC only.)</p>
@@ -141,6 +150,14 @@
                     <h3>Game and mods</h3>
                 </div>
                 <div class="inner">
+                    {% set requiredModsText = game.describeRequiredMods() %}
+                    {% if requiredModsText %}
+                        <div class="modded-warning">
+                            <i class="mdi mdi-alert-outline"></i>
+                            You must have {{ requiredModsText }} installed to play on this server.
+                        </div>
+                    {% endif %}
+
                     <table class="card-table -fully-rounded table table-bordered">
                         <tbody>
                         {% if game.gameVersion %}

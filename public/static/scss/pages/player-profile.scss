@@ -136,6 +136,12 @@
 
       &.-server {
         color: #666;
+
+        &.-now-playing {
+          i, & {
+            color: var(--col-saber-left) !important;
+          }
+        }
       }
       &.-place-1 {
         i {
