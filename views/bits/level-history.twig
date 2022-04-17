@@ -1,13 +1,12 @@
 {% if not historyItem %}
     {% set historyItem = level %}
 {% endif %}
-
 {% if not level %}
     {% set level = historyItem %}
 {% endif %}
 
-{% if historyItem.startedAt and historyItem.endedAt is null %}
-    {% set isNowPlaying = 1 %}
+{% if historyItem.startedAt is not null and historyItem.endedAt is null %}
+    {% set isNowPlayingLvlHistory = 1 %}
 {% endif %}
 
 <a href="{{ historyItem.getDetailUrl() }}" class="level-history"
@@ -39,8 +38,8 @@
                     </div>
                 {% endif %}
             {% else %}
-                <div class="placement -server {% if isNowPlaying %}-now-playing{% endif %}">
-                    {% if isNowPlaying %}
+                <div class="placement -server {% if isNowPlayingLvlHistory %}-now-playing{% endif %}">
+                    {% if isNowPlayingLvlHistory %}
                         <i class="mdi mdi-sword-cross"></i>
                         Now playing
                     {% else %}
