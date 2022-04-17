@@ -55,6 +55,11 @@ class HostedGamePlayer extends Model
         return "/player/{$this->getUrlSafeUserId()}";
     }
 
+    public function getIsDedicatedServer(): bool
+    {
+        return $this->isHost && $this->sortIndex === -1;
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     // Player connection
 

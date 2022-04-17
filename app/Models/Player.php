@@ -152,9 +152,7 @@ class Player extends Model
     public function describeType(bool $shorten = false): string
     {
         if ($this->type === PlayerType::DedicatedServerGameLift) {
-            $gameLiftRegion = $this->tryGetGameLiftRegion();
-
-            if ($gameLiftRegion) {
+            if (!$shorten && $gameLiftRegion = $this->tryGetGameLiftRegion()) {
                 return "GameLift Server ({$gameLiftRegion})";
             } else {
                 return "GameLift Server";
@@ -233,6 +231,7 @@ class Player extends Model
         $view->set('size', $size);
         $view->set('skinColorId', $skinColorId);
         $view->set('eyesId', $eyesId);
+        $view->set('isDedicatedServer', $this->getIsDedicatedServer());
         return $view->render();
     }
 }

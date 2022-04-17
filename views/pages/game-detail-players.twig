@@ -25,13 +25,7 @@
                         {{ player.sortIndex }}
                     </td>
                     <td class="-center">
-                        {% if isDedicatedServer %}
-                            <div class="server-face">
-                                <i class="mdi mdi-server"></i>
-                            </div>
-                        {% else %}
-                            {% include "bits/face.twig" with {skinColorId: player.skinColorId, eyesId: player.eyesId} %}
-                        {% endif %}
+                        {% include "bits/face.twig" with {isDedicatedServer: player.getIsDedicatedServer(), skinColorId: player.skinColorId, eyesId: player.eyesId} %}
                     </td>
                     <td>
                         <a href="{{ player.getProfileUrl() }}">

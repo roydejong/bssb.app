@@ -50,10 +50,12 @@
                     <i class="mdi mdi-account"></i>
                     <span>Info</span>
                 </a>
-                <a href="{{ profileBaseUrl }}/plays" class="{% if profileTab == "plays" %}-active{% endif %}">
-                    <i class="mdi mdi-play"></i>
-                    <span>Play history</span>
-                </a>
+                {% if not isDedicatedServer %}
+                    <a href="{{ profileBaseUrl }}/plays" class="{% if profileTab == "plays" %}-active{% endif %}">
+                        <i class="mdi mdi-play"></i>
+                        <span>Play history</span>
+                    </a>
+                {% endif %}
             </div>
 
             {% block innerContent %}{% endblock %}

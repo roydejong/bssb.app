@@ -91,6 +91,7 @@ class PlayerProfileController
         }
 
         $isMe = $viewerPlayer->id === $player->id;
+        $isDedicatedServer = $player->getIsDedicatedServer();
 
         $enablePrivacyShield = $player->type === PlayerType::PlayerObserved || !$player->showHistory;
 
@@ -180,6 +181,7 @@ class PlayerProfileController
         $view->set('profileBaseUrl', $baseUrl);
         $view->set('paginationBaseUrl', $paginationBaseUrl);
         $view->set('isMe', $isMe);
+        $view->set('isDedicatedServer', $isDedicatedServer);
         $view->set('profileTab', $tabId);
 
         $response = $view->asResponse();

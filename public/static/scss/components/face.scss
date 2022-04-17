@@ -15,6 +15,16 @@
   border-radius: 32px;
   box-shadow: 0 0 24px rgba(0, 0, 0, .5), inset 0 0 12px 12px rgba(200, 200, 255, .25);
 
+  &.-server {
+    color: var(--col-saber-left) !important;
+    background: var(--col-bg-darkest) !important;
+    box-shadow: none !important;
+
+    &, i {
+      font-size: 20px !important;
+    }
+  }
+
   &.-size-xl { }
   &.-size-lg {
     height: 128px;
