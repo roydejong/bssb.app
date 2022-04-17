@@ -117,7 +117,7 @@ class PlayerProfileController
                 ->where("last_update >= ?", HostedGame::getStaleGameCutoff())
                 ->andWhere("ended_at IS NULL")
                 ->andWhere('hgp.is_connected = 1')
-                ->orderBy('last_update DESC, hg.id')
+                ->orderBy('last_update DESC, hg.id DESC')
                 ->querySingleModel();
         }
 

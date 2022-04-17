@@ -1,5 +1,9 @@
 {% extends "_base.twig" %}
 
+{% if levelHistory.startedAt and levelHistory.endedAt is null %}
+    {% set isNowPlaying = 1 %}
+{% endif %}
+
 {% block content %}
     <main class="results-detail">
         <div class="container">
@@ -38,6 +42,13 @@
                     </div>
                 </div>
             </div>
+
+            {% if isNowPlaying %}
+                <div class="alert">
+                    <i class="mdi mdi-sword-cross"></i>
+                    <strong>Results incomplete, this match did not finish</strong>
+                </div>
+            {% endif %}
 
             {% if playerResults %}
                 <table class="rounded-table players-table">
