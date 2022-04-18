@@ -1,0 +1,24 @@
+{% extends "pages/stats.base.twig" %}
+
+{% set statsTab = urlSection %}
+
+{% block innerContent %}
+    <h1>
+        <i class="mdi mdi-trophy"></i>
+        <span>{{ pageTitle }}</span>
+    </h1>
+
+    <p class="lead">{{ pageDescr }}</p>
+    <p class="stats-disclaim"><i class="mdi mdi-clock-outline"></i> These statistics are based on play count seen in public server browser games since January 2021.</p>
+
+    {% if urlSection == "custom-levels" %}
+        <a class="btn btn-playlist" href="/stats/top/{{ urlSection }}/playlist" target="_self">
+            <i class="mdi mdi-download"></i>
+            <span>Download as Playlist (bplist)</span>
+        </a>
+    {% endif %}
+
+    <section>
+        {% include "tables/top_levels_table.twig" %}
+    </section>
+{% endblock %}

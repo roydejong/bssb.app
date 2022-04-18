@@ -19,6 +19,18 @@
                                 <strong>{{ game.describeState() }} ({{ game.playerCount }} of {{ game.playerLimit }} players)</strong>
                             </td>
                         </tr>
+                        {% if level %}
+                            <tr>
+                                <th scope="row">
+                                    {% if game.getIsPlayingLevel() %}
+                                        Current level
+                                    {% else %}
+                                        Last level
+                                    {% endif %}
+                                </th>
+                                <td>{{ level.describeSong() }}</td>
+                            </tr>
+                        {% endif %}
                         {% if game.difficulty is not null %}
                             <tr>
                                 <th scope="row">

@@ -1,17 +1,20 @@
 {% set levelIndex = 0  %}
-<table class="table table-bordered table-striped">
-    <thead class="thead-dark">
-    <tr>
-        <th width="64"></th>
-        <th></th>
-        <th>Name</th>
-        <th>Author</th>
-        <th>Plays</th>
-    </tr>
+<table class="rounded-table">
+    <thead>
+        <tr>
+            <th></th>
+            <th width="64">#</th>
+            <th>Cover</th>
+            <th>Level</th>
+            <th>Author</th>
+            <th>Plays</th>
+            <th></th>
+        </tr>
     </thead>
     <tbody>
     {% for level in levels %}
         <tr>
+            <td></td>
             <td>
                 {% set levelIndex = levelIndex + 1 %}
                 #{{ levelIndex }}
@@ -42,6 +45,7 @@
                 {% endif %}
             </td>
             <td>{{ level.statPlayCount|number_format(0, ',') }}</td>
+            <td></td>
         </tr>
     {% endfor %}
     </tbody>

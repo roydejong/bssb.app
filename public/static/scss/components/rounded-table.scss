@@ -118,13 +118,18 @@
     max-width: 420px;
   }
 
-  i.trophy {
+  i.trophy, .rank-trophy {
     font-size: 18px;
     padding: 0 0 0 15px;
 
-    &.-gold { color: #FFD700; }
-    &.-silver { color: silver; }
-    &.-bronze { color: #a05e17; }
+    &.rank-trophy {
+      padding-left: 0;
+      font-size: 14px;
+    }
+
+    &.-gold, &.rank-trophy-1 { color: #FFD700; }
+    &.-silver, &.rank-trophy-2 { color: silver; }
+    &.-bronze, &.rank-trophy-3 { color: #a05e17; }
   }
 
   .badge {

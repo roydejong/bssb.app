@@ -1,0 +1,49 @@
+{% extends "pages/stats.base.twig" %}
+
+{% set statsTab = "overview" %}
+
+{% block innerContent %}
+    <h1>Stats</h1>
+    <p class="lead">The Server Browser tracks statistics for public games that were announced to it.</p>
+    <div class="stats-cards">
+        <div class="card">
+            <div class="label"><i class="mdi mdi-sword-cross"></i> Levels played</div>
+            <div class="metric">{{ stats.totalPlayCount|number_format(0, ',') }}</div>
+            <div class="details">Total levels played in a public lobbies</div>
+        </div>
+        <div class="card">
+            <div class="label"><i class="mdi mdi-earth"></i> Lobbies hosted</div>
+            <div class="metric">{{ stats.totalLobbyCount|number_format(0, ',') }}</div>
+            <div class="details">Total lobbies announced to the server browser</div>
+        </div>
+        <div class="card">
+            <div class="label"><i class="mdi mdi-emoticon-cool"></i> Players seen</div>
+            <div class="metric">{{ stats.totalPlayerCount|number_format(0, ',') }}</div>
+            <div class="details">The total amount of unique players we've seen</div>
+        </div>
+    </div>
+    <section>
+        <h2>
+            <i class="mdi mdi-trophy"></i>
+            <span>Top 10 custom levels</span>
+        </h2>
+        <p class="lite">Based on total play count seen by the server browser.</p>
+        {% include "tables/top_levels_table.twig" with {levels: stats.topLevelsCustom} %}
+        <a href="/stats/top/custom-levels" class="btn btn-primary" target="_self" title="Top 100 Custom Levels">
+            <i class="mdi mdi-view-list"></i>
+            <span>View Top 100 &raquo;</span>
+        </a>
+    </section>
+    <section>
+        <h2>
+            <i class="mdi mdi-trophy"></i>
+            <span>Top 10 official levels</span>
+        </h2>
+        <p class="lite">Based on total play count seen by the server browser.</p>
+        {% include "tables/top_levels_table.twig" with {levels: stats.topLevelsOfficial} %}
+        <a href="/stats/top/official-levels" class="btn btn-primary" target="_self" title="Top 100 Official Levels">
+            <i class="mdi mdi-view-list"></i>
+            <span>View Top 100 &raquo;</span>
+        </a>
+    </section>
+{% endblock %}

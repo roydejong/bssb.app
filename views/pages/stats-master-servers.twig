@@ -1,0 +1,68 @@
+{% extends "pages/stats.base.twig" %}
+
+{% set statsTab = "master-servers" %}
+
+{% block innerContent %}
+    <h1>Master Server List</h1>
+    <p class="lead">This is an overview of all known master servers that were active in the past 3 months. Master servers handle authentication and matchmaking for multiplayer lobbies. All servers in this list are provided by the modding community.</p>
+
+    <table class="rounded-table">
+        <thead>
+        <tr>
+            <th>Server</th>
+            <th>Location (GeoIP)</th>
+            <th>Last seen</th>
+            <th width="111">Games (7d)</th>
+            <th width="111">Games (all)</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for server in servers %}
+            <tr>
+                {% set sevenDayCount = 0 %}
+                {% set seenThisWeek = false %}
+                {% if sevenDayGameCounts[server.master_server_host] %}
+                    {% set sevenDayCount = sevenDayGameCounts[server.master_server_host]|number_format(0, ',') %}
+                    {% set seenThisWeek = true %}
+                {% endif %}
+                <td>
+                    <div class="stacked-text -smaller">
+                        <span>
+                            {% if loop.index <= 3 %}
+                                <i class="mdi mdi-trophy rank-trophy rank-trophy-{{ loop.index }}"></i>
+                            {% endif %}
+                            <strong>{{ server.master_server_host }}</strong>
+                            {% if server.is_official %}
+                                <i class="mdi mdi-check-decagram is-official" data-toggle="tooltip"
+                                   data-placement="bottom" title="Official Server"></i>
+                            {% endif %}
+                        </span>
+                        <span><code>{{ server.ip_address }}:{{ server.master_server_port }}</code></span>
+                    </div>
+                </td>
+                <td>
+                    {% set geo = geoData[server.ip_address] %}
+                    {% if geo and geo.text %}
+                        {% if geo.countryCode %}
+                            <img src="/static/flags/{{ geo.countryCode|lower }}.png" alt="{{ geo.countryCode }}"/>
+                        {% endif %}
+                        <span class="geo-text">{{ geo.text }}</span>
+                    {% else %}
+                        <span class="geo-text">-</span>
+                    {% endif %}
+                </td>
+                <td class="{% if not seenThisWeek %}-stale{% else %}-success{% endif %}">
+                    {{ server.max_last_update|timeago_html|raw }}
+                </td>
+                <td>{{ sevenDayCount }}</td>
+                <td>{{ server.game_count|number_format(0, ',') }}</td>
+            </tr>
+        {% else %}
+            <div class="alert -minor">
+                <i class="mdi mdi-server-off"></i>
+                <strong>No servers found</strong>
+            </div>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

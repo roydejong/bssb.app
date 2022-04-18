@@ -7,30 +7,52 @@ use app\Frontend\ResponseCache;
 use app\Frontend\View;
 use app\HTTP\Request;
 use app\HTTP\Response;
+use app\HTTP\Responses\RedirectResponse;
 use app\Models\HostedGame;
 use DateTime;
 
 class DedicatedServersController
 {
-    const CACHE_KEY = "dedicated_servers";
+    const CACHE_KEY_PREFIX = "dedicated_servers_";
     const CACHE_TTL = 30;
 
     const CUTOFF_DAYS = 3;
 
+    const PageSize = 100;
+
     public function getServerList(Request $request): Response
     {
-        $resCache = new ResponseCache(self::CACHE_KEY, self::CACHE_TTL);
+        $baseUrl = "/dedicated-servers";
 
-        if ($resCache->getIsAvailable()) {
-            return $resCache->readAsResponse();
+        // -------------------------------------------------------------------------------------------------------------
+        // Input
+
+        $pageIndex = intval($request->queryParams['page'] ?? 1) - 1;
+
+        // -------------------------------------------------------------------------------------------------------------
+        // Cache
+
+        $cacheEnabled = false;
+        $resCache = null;
+
+        if ($pageIndex > 0) {
+            $cacheKey = self::CACHE_KEY_PREFIX . $pageIndex;
+            $resCache = new ResponseCache($cacheKey, self::CACHE_TTL);
+
+            if ($resCache->getIsAvailable()) {
+                return $resCache->readAsResponse();
+            }
+
+            $cacheEnabled = true;
         }
 
         // -------------------------------------------------------------------------------------------------------------
+        // Query
 
         $cutoffDays = self::CUTOFF_DAYS;
         $activityCutoff = new DateTime("-{$cutoffDays} days");
 
-        $dedicatedServers = HostedGame::query()
+        $dedicatedServersQuery = HostedGame::query()
             ->select('*')
             ->from('hosted_games hg1')
             ->innerJoin('(SELECT MAX(last_update) max_last_update, endpoint FROM hosted_games WHERE endpoint IS NOT NULL AND server_type IS NOT NULL AND server_type != ? GROUP BY endpoint) hg2 ON (hg1.endpoint = hg2.endpoint AND hg1.last_update = hg2.max_last_update)',
@@ -40,9 +62,24 @@ class DedicatedServersController
             ->andWhere('hg1.endpoint NOT LIKE ?', "127.%")
             ->andWhere('hg1.endpoint NOT LIKE ?', "192.%")
             ->andWhere('last_update >= ?', $activityCutoff)
-            ->orderBy('last_update DESC')
-            ->limit(999)
+            ->groupBy('hg1.endpoint')
+            ->orderBy('last_update DESC');
+
+        $paginator = $dedicatedServersQuery
+            ->paginate()
+            ->setQueryPageSize(self::PageSize)
+            ->setPageIndex($pageIndex);
+
+        if (!$paginator->getIsValidPage()) {
+            return new RedirectResponse($baseUrl);
+        }
+
+        $dedicatedServers = $paginator
+            ->getPaginatedQuery()
             ->queryAllModels();
+
+        // -------------------------------------------------------------------------------------------------------------
+        // GeoIP
 
         $geoIp = new GeoIp();
         $geoData = [];
@@ -61,15 +98,18 @@ class DedicatedServersController
         }
 
         // -------------------------------------------------------------------------------------------------------------
+        // Response
 
-        $view = new View('dedicated-servers.twig');
+        $view = new View('pages/stats-dedicated-servers.twig');
         $view->set('servers', $dedicatedServers);
         $view->set('geoData', $geoData);
         $view->set('cutoffDays', $cutoffDays);
+        $view->set('paginationBaseUrl', $baseUrl);
+        $view->set('paginator', $paginator);
+        $view->set('pageTitle', "Dedicated Servers - Statistics");
 
         $response = $view->asResponse();
-        $resCache->writeResponse($response);
-
+        $resCache?->writeResponse($response);
         return $response;
     }
 }

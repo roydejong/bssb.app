@@ -32,6 +32,7 @@ class MasterServersController
             ->andWhere('master_server_host NOT IN (?)', ["127.0.0.1", "localhost", "secret.dont.announce",
                 "sekr.it"])
             ->andWhere('master_server_host NOT LIKE ?', "192.%")
+            ->andWhere('master_server_host NOT LIKE ?', "%.beatsaber.com") // Official Master servers are offline and no longer resolve their DNS
             ->groupBy('master_server_host')
             ->orderBy('game_count DESC')
             ->queryAllRows();
@@ -87,10 +88,11 @@ class MasterServersController
 
         // -------------------------------------------------------------------------------------------------------------
 
-        $view = new View('master-servers.twig');
+        $view = new View('pages/stats-master-servers.twig');
         $view->set('servers', $masterServerHosts);
         $view->set('sevenDayGameCounts', $sevenDayGameCounts);
         $view->set('geoData', $geoData);
+        $view->set('pageTitle', "Master Servers - Statistics");
 
         $response = $view->asResponse();
         $resCache->writeResponse($response);
