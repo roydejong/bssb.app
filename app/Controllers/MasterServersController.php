@@ -26,6 +26,8 @@ class MasterServersController
 
         // -------------------------------------------------------------------------------------------------------------
 
+        $oneWeekAgo = new DateTime('-1 week');
+
         $masterServerHosts = HostedGame::query()
             ->select('DISTINCT master_server_host, master_server_port, MIN(first_seen) AS min_first_seen, MAX(last_update) AS max_last_update, COUNT(*) as game_count')
             ->where('master_server_host IS NOT NULL')
@@ -37,7 +39,8 @@ class MasterServersController
             ->orderBy('game_count DESC')
             ->queryAllRows();
 
-        $oneWeekAgo = new DateTime('-1 week');
+        // -------------------------------------------------------------------------------------------------------------
+        // 7 day count; hide servers without recent games & sort remaining servers
 
         $sevenDayGameCounts = HostedGame::query()
             ->select(' master_server_host, COUNT(*) game_count')
@@ -45,8 +48,15 @@ class MasterServersController
             ->andWhere('last_update >= ?', $oneWeekAgo)
             ->queryKeyValueArray();
 
-        // -------------------------------------------------------------------------------------------------------------
-        // Sort by 7 day
+        $masterServerHostsFinal = [];
+        foreach ($masterServerHosts as $masterServerHost) {
+            $masterServerHostUrl = $masterServerHost['master_server_host'];
+            $sevenDayCount = $sevenDayGameCounts[$masterServerHostUrl] ?? 0;
+            if ($sevenDayCount <= 0)
+                continue;
+            $masterServerHostsFinal[] = $masterServerHost;
+        }
+        $masterServerHosts = $masterServerHostsFinal;
 
         usort($masterServerHosts, function (array $a, array $b) use ($sevenDayGameCounts): int {
             $sevenDayCountA = $sevenDayGameCounts[$a['master_server_host']] ?? 0;
