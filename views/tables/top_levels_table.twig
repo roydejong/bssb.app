@@ -1,20 +1,17 @@
 {% set levelIndex = 0  %}
-<table class="rounded-table">
+<table class="rounded-table -extra-spacing-h">
     <thead>
         <tr>
-            <th></th>
-            <th width="64">#</th>
+            <th width="75">#</th>
             <th>Cover</th>
             <th>Level</th>
             <th>Author</th>
             <th>Plays</th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
     {% for level in levels %}
         <tr>
-            <td></td>
             <td>
                 {% set levelIndex = levelIndex + 1 %}
                 #{{ levelIndex }}
@@ -45,7 +42,6 @@
                 {% endif %}
             </td>
             <td>{{ level.statPlayCount|number_format(0, ',') }}</td>
-            <td></td>
         </tr>
     {% endfor %}
     </tbody>

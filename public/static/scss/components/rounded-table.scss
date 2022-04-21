@@ -65,6 +65,34 @@
     }
   }
 
+  // -------------------------------------------------------------------------------------------------------------------
+
+  &.-extra-spacing-h {
+    tbody, thead {
+      tr {
+        td:first-child, th:first-child {
+          padding-left: 3rem;
+        }
+        td:last-child, th:last-child {
+          padding-right: 3rem;
+        }
+      }
+    }
+  }
+
+  &.-extra-spacing-v {
+    tbody {
+      tr {
+        td {
+          padding-top: 1rem;
+          padding-bottom: 1rem;
+        }
+      }
+    }
+  }
+
+  // -------------------------------------------------------------------------------------------------------------------
+
   .stacked-text {
     display: flex;
     flex-direction: column;
