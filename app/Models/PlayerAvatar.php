@@ -42,11 +42,11 @@ class PlayerAvatar extends Model implements \JsonSerializable
         $this->facialHairColor = $this->convertUnityColorToHex($avatarData['facialHairColor'] ?? null);
         $this->handsId = $avatarData['handsId'] ?? "BareHands";
         $this->handsColor = $this->convertUnityColorToHex($avatarData['handsColor'] ?? null);
-        $this->clothesId = $avatarData['clothesId'] ?? "Tracksuit";
+        $this->clothesId = $avatarData['clothesId'] ?? "None";
         $this->clothesPrimaryColor = $this->convertUnityColorToHex($avatarData['clothesPrimaryColor'] ?? null);
         $this->clothesSecondaryColor = $this->convertUnityColorToHex($avatarData['clothesSecondaryColor'] ?? null);
         $this->clothesDetailColor = $this->convertUnityColorToHex($avatarData['clothesDetailColor'] ?? null);
-        $this->skinColorId = $avatarData['skinColorId'] ?? "Default";
+        $this->skinColorId = $avatarData['skinColorId'] ?? "Alien";
         $this->eyesId = $avatarData['eyesId'] ?? "QuestionMark";
         $this->mouthId = $avatarData['mouthId'] ?? "None";
     }

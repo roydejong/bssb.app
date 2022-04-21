@@ -2,31 +2,19 @@
     {% set size = "sm" %}
 {% endif %}
 
+{% if not skinColorId %}
+    {% set skinColorId = "Alien" %}
+{% endif %}
+
+{% if not eyesId %}
+    {% set eyesId = "QuestionMark" %}
+{% endif %}
+
 {% if not isDedicatedServer %}
-    {% if size is not defined %}
-        {% set size = "sm" %}
-    {% endif %}
-
-    {% if skinColorId is not defined %}
-        {% set skinColorId = "Alien" %}
-    {% endif %}
-
-    {% if eyesId is not defined %}
-        {% set eyesId = "QuestionMark" %}
-    {% endif %}
-
     <div class="face -size-{{ size }} -skin-{{ skinColorId }}">
         <div class="eyes -{{ eyesId }}"></div>
     </div>
 {% else %}
-    {% if skinColorId is not defined %}
-        {% set skinColorId = "Alien" %}
-    {% endif %}
-
-    {% if eyesId is not defined %}
-        {% set eyesId = "QuestionMark" %}
-    {% endif %}
-
     <div class="face -server -size-{{ size }}">
         <i class="mdi mdi-server"></i>
     </div>
