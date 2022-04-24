@@ -103,7 +103,7 @@ class StatsController
                 break;
             case self::TopNonBeatSaverLevels:
                 $pageTitle = "Top 100 Non-Beat Saver Levels";
-                $pageDescr = "These are the most played custom levels in modded Beat Saber multiplayer that are NOT available for download on Beat Saver.";
+                $pageDescr = "These are the most played custom levels in modded Beat Saber multiplayer that aren't available on Beat Saver.";
                 break;
             default:
                 return new NotFoundResponse();
