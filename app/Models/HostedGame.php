@@ -585,7 +585,7 @@ class HostedGame extends Model implements \JsonSerializable
         $sz['masterServerText'] = $this->describeMasterServer();
 
         if ($includeLevelHistory) {
-            $sz['level_history'] = LevelHistoryWithLevelRecord::queryHistoryForGame($this->id, 5);
+            $sz['levelHistory'] = LevelHistoryWithLevelRecord::queryHistoryForGame($this->id, 5);
         }
 
         return $sz;
