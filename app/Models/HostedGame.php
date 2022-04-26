@@ -10,6 +10,7 @@ use app\BeatSaber\MultiplayerLobbyState;
 use app\BSSB;
 use app\Common\CVersion;
 use app\Common\IPEndPoint;
+use app\Models\Joins\LevelHistoryWithLevelRecord;
 use app\Models\Traits\HasBeatmapCharacteristic;
 use app\Utils\PirateDetect;
 use DateTime;
@@ -558,7 +559,7 @@ class HostedGame extends Model implements \JsonSerializable
     // -----------------------------------------------------------------------------------------------------------------
     // Serialize
 
-    public function jsonSerialize(bool $includeDetails = false, bool $includeLevelObject = false): array
+    public function jsonSerialize(bool $includeDetails = false, bool $includeLevelObject = false, bool $includeLevelHistory = false): array
     {
         $sz = $this->getPropertyValues();
         $sz['key'] = $this->getHashId();
@@ -582,6 +583,10 @@ class HostedGame extends Model implements \JsonSerializable
 
         $sz['serverTypeText'] = $this->describeServerType();
         $sz['masterServerText'] = $this->describeMasterServer();
+
+        if ($includeLevelHistory) {
+            $sz['level_history'] = LevelHistoryWithLevelRecord::queryHistoryForGame($this->id, 5);
+        }
 
         return $sz;
     }

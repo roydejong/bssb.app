@@ -153,17 +153,14 @@ final class AnnounceProcessor
                 ->querySingleModel();
         }
 
-        if ($game) {
-            // Game found: update record
-            $wasInLobby = $game->getIsInLobby();
-        } else {
+        if (!$game) {
             // Game not found: create new base record
             $game = new HostedGame();
             $game->ownerId = $ownerId;
             $game->hostSecret = $hostSecret;
-
-            $wasInLobby = true;
         }
+
+        $wasInLobby = $game->getIsInLobby();
 
         // Set or update core game data
         $game->ownerName = $ownerName;
