@@ -22,6 +22,12 @@
 
     <main class="frontpage-servers">
         <div class="container">
+            {% if serverMessage %}
+                <div class="alert" title="Service message">
+                    <i class="mdi mdi-bullhorn-variant"></i>
+                    <span>{{ serverMessage }}</span>
+                </div>
+            {% endif %}
             {% include "tables/hosted_games_table.twig" %}
             {% include "bits/paginator.twig" with {paginator: queryResult} %}
         </div>
