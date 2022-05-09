@@ -406,6 +406,9 @@ final class AnnounceProcessor
                 $game->platform = ModPlatformId::STEAM;
             }
         }
+
+        // Status URL (as of BSSB 1.0+)
+        $game->masterStatusUrl = $this->getString('MasterStatusUrl');
     }
 
     private function setClientInfo(HostedGame &$game): void

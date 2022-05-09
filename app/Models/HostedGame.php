@@ -119,6 +119,10 @@ class HostedGame extends Model implements \JsonSerializable
      */
     public ?int $masterServerPort;
     /**
+     * The multiplayer status check URL associated with the master server.
+     */
+    public ?string $masterStatusUrl;
+    /**
      * Indicates when the announcement was cancelled, or NULL if it was not explicitly cancelled.
      */
     public ?\DateTime $endedAt;
