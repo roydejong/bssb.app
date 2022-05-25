@@ -112,7 +112,7 @@ class GameplayModifiers implements IDatabaseSerializable
         $getInt = function (string $key) use ($data, $getMixed): int {
             return intval($getMixed($key));
         };
-        $getFloat = function (string $key) use ($data, $getMixed): int {
+        $getFloat = function (string $key) use ($data, $getMixed): float {
             return floatval($getMixed($key));
         };
 
