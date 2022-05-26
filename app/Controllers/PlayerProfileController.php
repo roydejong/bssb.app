@@ -183,6 +183,7 @@ class PlayerProfileController
         $view->set('isMe', $isMe);
         $view->set('isDedicatedServer', $isDedicatedServer);
         $view->set('profileTab', $tabId);
+        $view->set('siteRole', $player->getSiteRole());
 
         $response = $view->asResponse();
 

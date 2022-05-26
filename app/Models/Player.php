@@ -22,6 +22,7 @@ class Player extends Model
     public string $userId;
     public string $userName;
     public PlayerType $type;
+    public ?int $siteRoleId = null;
     public ?string $platformType;
     public ?string $platformUserId;
     public \DateTime $firstSeen;
@@ -155,6 +156,9 @@ class Player extends Model
 
     public function describeType(bool $shorten = false): string
     {
+        if ($siteRole = $this->getSiteRole())
+            return $siteRole->name;
+
         if ($this->type === PlayerType::DedicatedServerGameLift) {
             if (!$shorten && $gameLiftRegion = $this->tryGetGameLiftRegion()) {
                 return "GameLift Server ({$gameLiftRegion})";
@@ -237,5 +241,18 @@ class Player extends Model
         $view->set('eyesId', $eyesId);
         $view->set('isDedicatedServer', $this->getIsDedicatedServer());
         return $view->render();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Role
+
+    public function getSiteRole(): ?SiteRole
+    {
+        return SiteRole::fetchCached($this->siteRoleId);
+    }
+
+    public function getIsSiteAdmin(): bool
+    {
+        return $this->getSiteRole()?->isAdmin;
     }
 }
