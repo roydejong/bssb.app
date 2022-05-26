@@ -90,7 +90,7 @@ class PlayerProfileController
             return $view->asResponse(404);
         }
 
-        $isMe = $viewerPlayer->id === $player->id;
+        $isMe = $viewerPlayer?->id === $player->id;
         $isDedicatedServer = $player->getIsDedicatedServer();
 
         $enablePrivacyShield = $player->type === PlayerType::PlayerObserved || !$player->showHistory;
