@@ -95,6 +95,12 @@
       <excludeFolder url="file://$MODULE_DIR$/storage/response_cache" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/laravel/serializable-closure" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/xpaw/steam-openid" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/cakephp/utility" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/cakephp/core" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/cakephp/database" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/cakephp/datasource" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/robmorgan/phinx" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/simple-cache" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
