@@ -1,86 +1,93 @@
-<table class="rounded-table">
-    <thead>
-        <tr>
-            <th></th>
-            <th>Players</th>
-            <th>Version</th>
-            <th>Platform</th>
-            <th>Location</th>
-            <th>Code</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for game in games %}
-            <tr style="cursor: pointer;" onclick="document.location = '{{ game.webDetailUrl }}'; return false;">
-                <td>
-                    <div class="inner">
-                        {% if game.coverUrl %}
-                            <img class="cover-art" src="{{ game.coverUrl }}" alt="{{ game.levelName }}" loading="lazy"/>
-                        {% else %}
-                            <div class="cover-art dummy-cover-art">
-                                {% if game.getIsPlayingLevel() %}
-                                    <i class="mdi mdi-music"></i>
-                                {% else %}
-                                    <i class="mdi mdi-new-box"></i>
-                                {% endif %}
-                            </div>
-                        {% endif %}
-                        <div class="stacked-text">
-                            <a href="{{ game.webDetailUrl }}">{{ game.gameName }}</a>
-                            <div>
-                                {% if game.getIsPlayingLevel() %}
-                                    <i class="mdi mdi-gamepad"></i>
-                                    <span class="level-limit" title="{{ game.levelName }} on {{ game.describeDifficulty }}">Playing {{ game.levelName }} ({{ game.describeDifficulty() }})</span>
-                                {% else %}
-                                    <i class="mdi mdi-account-group"></i>
-                                    <span class="level-limit">{{ game.describeState() }}</span>
-                                {% endif %}
+{% if games|length > 0 %}
+    <table class="rounded-table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Players</th>
+                <th>Version</th>
+                <th>Platform</th>
+                <th>Location</th>
+                <th>Code</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for game in games %}
+                <tr style="cursor: pointer;" onclick="document.location = '{{ game.webDetailUrl }}'; return false;">
+                    <td>
+                        <div class="inner">
+                            {% if game.coverUrl %}
+                                <img class="cover-art" src="{{ game.coverUrl }}" alt="{{ game.levelName }}" loading="lazy"/>
+                            {% else %}
+                                <div class="cover-art dummy-cover-art">
+                                    {% if game.getIsPlayingLevel() %}
+                                        <i class="mdi mdi-music"></i>
+                                    {% else %}
+                                        <i class="mdi mdi-new-box"></i>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                            <div class="stacked-text">
+                                <a href="{{ game.webDetailUrl }}">{{ game.gameName }}</a>
+                                <div>
+                                    {% if game.getIsPlayingLevel() %}
+                                        <i class="mdi mdi-gamepad"></i>
+                                        <span class="level-limit" title="{{ game.levelName }} on {{ game.describeDifficulty }}">Playing {{ game.levelName }} ({{ game.describeDifficulty() }})</span>
+                                    {% else %}
+                                        <i class="mdi mdi-account-group"></i>
+                                        <span class="level-limit">{{ game.describeState() }}</span>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="player-count">{{ game.playerCount }} / {{ game.playerLimit }}</div>
-                </td>
-                <td>
-                    <div class="stacked-text -smaller">
-                        <span>{{ game.gameVersion }}</span>
-                        {% if game.mpCoreVersion %}
-                            <span class="version-marker mp-core-version">MpCore {{ game.mpCoreVersion }}</span>
-                        {% elseif game.mpExVersion %}
-                            <span class="version-marker mp-ex-version">Extensions {{ game.mpExVersion }}</span>
-                        {% else %}
-                            <span class="version-marker vanilla-version">Vanilla</span>
-                        {% endif %}
-                    </div>
-                </td>
-                <td>
-                    <div class="inner">
+                    </td>
+                    <td>
+                        <div class="player-count">{{ game.playerCount }} / {{ game.playerLimit }}</div>
+                    </td>
+                    <td>
                         <div class="stacked-text -smaller">
-                            <span>{{ game.describeServerType() }}</span>
-                            {% if game.getIsGameLiftServer() %}
-                                <span>GameLift ({{ game.tryGetGameLiftRegion() }})</span>
+                            <span>{{ game.gameVersion }}</span>
+                            {% if game.mpCoreVersion %}
+                                <span class="version-marker mp-core-version">MpCore {{ game.mpCoreVersion }}</span>
+                            {% elseif game.mpExVersion %}
+                                <span class="version-marker mp-ex-version">Extensions {{ game.mpExVersion }}</span>
                             {% else %}
-                                <span>{{ game.masterServerHost }}</span>
+                                <span class="version-marker vanilla-version">Vanilla</span>
                             {% endif %}
                         </div>
-                    </div>
-                </td>
-                <td>
-                    {% set geo = geoData[game.endpoint.__toString()] %}
-                    {% if geo and geo.text %}
-                        {% if geo.countryCode %}
-                            <img src="/static/flags/{{ geo.countryCode|lower }}.png" alt="{{ geo.countryCode }}"/>
+                    </td>
+                    <td>
+                        <div class="inner">
+                            <div class="stacked-text -smaller">
+                                <span>{{ game.describeServerType() }}</span>
+                                {% if game.getIsGameLiftServer() %}
+                                    <span>GameLift ({{ game.tryGetGameLiftRegion() }})</span>
+                                {% else %}
+                                    <span>{{ game.masterServerHost }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        {% set geo = geoData[game.endpoint.__toString()] %}
+                        {% if geo and geo.text %}
+                            {% if geo.countryCode %}
+                                <img src="/static/flags/{{ geo.countryCode|lower }}.png" alt="{{ geo.countryCode }}"/>
+                            {% endif %}
+                            <span class="geo-text">{{ geo.text }}</span>
+                        {% else %}
+                            <span>-</span>
                         {% endif %}
-                        <span class="geo-text">{{ geo.text }}</span>
-                    {% else %}
-                        <span>-</span>
-                    {% endif %}
-                </td>
-                <td>
-                    <code>{{ game.serverCode }}</code>
-                </td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+                    </td>
+                    <td>
+                        <code>{{ game.serverCode }}</code>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="no-servers-active">
+        <i class="mdi mdi-emoticon-sad-outline"></i>
+        <p><strong>There are no servers active right now</strong></p>
+    </div>
+{% endif %}
