@@ -77,7 +77,7 @@ class Player extends Model
         return $playerRecord;
     }
 
-    public static function fromSteamId(string $steamId): Player
+    public static function fromSteamId(string $steamId, ?string $steamUserName = null): Player
     {
         $hashedUserId = MultiplayerUserId::hash("Steam", $steamId);
 
@@ -93,6 +93,10 @@ class Player extends Model
             $player->userId = $hashedUserId;
             $player->userName = "Steam User";
             $player->firstSeen = $now;
+        }
+
+        if ($steamUserName && $player->userName === "Steam User") {
+            $player->userName = $steamUserName;
         }
 
         $player->type = PlayerType::PlayerModUser;

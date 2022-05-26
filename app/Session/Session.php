@@ -85,14 +85,16 @@ class Session
     // -----------------------------------------------------------------------------------------------------------------
     // Steam auth
 
-    public function setSteamAuth(?string $steamUserId): void
+    public function setSteamAuth(?string $steamUserId, ?string $steamUserName): void
     {
         if ($steamUserId) {
             $this->set('steam_authed', true);
             $this->set('steam_uid', $steamUserId);
+            $this->set('steam_username', $steamUserName);
         } else {
             $this->set('steam_authed', false);
             $this->set('steam_uid', null);
+            $this->set('steam_username', null);
         }
     }
 
@@ -105,6 +107,13 @@ class Session
     {
         if ($this->getIsSteamAuthed())
             return $this->get('steam_uid');
+        return null;
+    }
+
+    public function getSteamUserName(): ?string
+    {
+        if ($this->getIsSteamAuthed())
+            return $this->get('steam_username');
         return null;
     }
 

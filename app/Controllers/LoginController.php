@@ -60,10 +60,41 @@ class LoginController
             // Validation failed, try again
             return new RedirectResponse('/login');
 
+        // Try to get profile for username retrieval
+        $steamUserName = self::tryGetSteamUsername($userSteamId);
+
         // Auth success
         $session->forceStart();
-        $session->setSteamAuth($userSteamId);
+        $session->setSteamAuth($userSteamId, $steamUserName);
 
+        // Redirect to profile
         return new RedirectResponse('/me');
+    }
+
+    private static function tryGetSteamUsername(string $userSteamId): ?string
+    {
+        global $bssbConfig;
+        $steamWebApiKey = $bssbConfig["steam_web_api_key"] ?? null;
+
+        if (!$steamWebApiKey)
+            // No API key configured
+            return null;
+
+        $rawResponse = @file_get_contents(
+            "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={$steamWebApiKey}&steamids={$userSteamId}&format=json");
+
+        if (!$rawResponse)
+            // No response
+            return null;
+
+        $jsonParsed = @json_decode($rawResponse, true);
+
+        if (!$jsonParsed || !is_array($jsonParsed) || empty($jsonParsed['response'])
+            || empty($jsonParsed['response']['players']))
+            // Invalid JSON / empty response
+            return null;
+
+        $playerObject = $jsonParsed['response']['players'][0];
+        return $playerObject['personaname'] ?? null;
     }
 }

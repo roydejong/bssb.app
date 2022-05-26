@@ -17,7 +17,7 @@ class MeController
             // Not authed!
             return new RedirectResponse('/login');
 
-        $player = Player::fromSteamId($session->getSteamUserId64());
+        $player = Player::fromSteamId($session->getSteamUserId64(), $session->getSteamUserName());
         $session->setPlayerInfo($player);
         return new RedirectResponse($player->getWebDetailUrl());
     }
