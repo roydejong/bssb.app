@@ -51,6 +51,12 @@
                     <i class="mdi mdi-book-open-variant"></i>
                     <span>Multiplayer Guide</span>
                 </a>
+                {% if self_is_admin %}
+                    <a href="/admin" class="-admin {% if tab == "admin" %}-active{% endif %}" title="Admin">
+                        <i class="mdi mdi-shield-crown"></i>
+                        <span>Admin</span>
+                    </a>
+                {% endif %}
             </nav>
             <div class="auth">
                 {% if not steam_authed %}

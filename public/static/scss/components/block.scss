@@ -81,6 +81,10 @@
         &:active, &:focus {
           border: 1px solid var(--col-saber-left);
         }
+
+        &.-smol {
+          min-height: 80px;
+        }
       }
     }
 
