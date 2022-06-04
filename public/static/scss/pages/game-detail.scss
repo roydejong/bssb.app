@@ -83,6 +83,22 @@
         }
       }
     }
+
+    @media all and (max-width: 999px) {
+      flex-direction: column-reverse;
+
+      .col-left {
+        margin: 0;
+      }
+      .col-right {
+        margin: 0;
+      }
+      .col-left, .col-right {
+        .block {
+          margin-top: 0;
+        }
+      }
+    }
   }
 
   .modded-warning {
