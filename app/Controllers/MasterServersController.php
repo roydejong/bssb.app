@@ -2,13 +2,12 @@
 
 namespace app\Controllers;
 
-use app\BeatSaber\MasterServer;
-use app\External\GeoIp;
 use app\Frontend\ResponseCache;
 use app\Frontend\View;
 use app\HTTP\Request;
 use app\HTTP\Response;
 use app\Models\HostedGame;
+use app\Models\MasterServerInfo;
 use DateTime;
 
 class MasterServersController
@@ -67,33 +66,15 @@ class MasterServersController
 
         // -------------------------------------------------------------------------------------------------------------
 
-        $geoIp = new GeoIp();
+        /**
+         * @var $masterServerInfo MasterServerInfo[]
+         */
+        $masterServerInfo = MasterServerInfo::all();
+        $masterServerInfoIndexed = [];
 
-        $geoData = [];
-        $resolvedHosts = [];
-
-        foreach ($masterServerHosts as &$masterServer) {
-            $hostName = $masterServer['master_server_host'];
-
-            // Resolve hostname to IP
-            if (isset($resolvedHosts[$hostName])) {
-                $ipAddress = $resolvedHosts[$hostName];
-            } else {
-                $ipAddress = gethostbyname($hostName);
-                $resolvedHosts[$hostName] = $ipAddress;
-            }
-
-            // Enrich master server data
-            $masterServer['ip_address'] = $ipAddress;
-            $masterServer['is_official'] = str_ends_with($hostName, MasterServer::OFFICIAL_HOSTNAME_SUFFIX);
-
-            // Add GeoIP info for each IP
-            if (isset($geoData[$ipAddress]))
-                continue;
-            $geoData[$ipAddress] = [
-                'countryCode' => $geoIp->getCountryCode($ipAddress),
-                'text' => $geoIp->describeLocation($ipAddress)
-            ];
+        foreach ($masterServerInfo as $info) {
+            $key = "{$info->host}:{$info->port}";
+            $masterServerInfoIndexed[$key] = $info;
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -101,7 +82,7 @@ class MasterServersController
         $view = new View('pages/stats-master-servers.twig');
         $view->set('servers', $masterServerHosts);
         $view->set('sevenDayGameCounts', $sevenDayGameCounts);
-        $view->set('geoData', $geoData);
+        $view->set('masterServerInfo', $masterServerInfoIndexed);
         $view->set('pageTitle', "Master Servers - Statistics");
 
         $response = $view->asResponse();

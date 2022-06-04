@@ -8,6 +8,7 @@ require_once __DIR__ . "/geoip2/geoip2.phar";
 
 final class GeoIp
 {
+    private static ?GeoIp $instance = null;
     private ?Reader $reader;
 
     public function __construct()
@@ -17,6 +18,13 @@ final class GeoIp
         } catch (\Exception) {
             $this->reader = null;
         }
+
+        self::$instance = $this;
+    }
+
+    public static function instance(): GeoIp
+    {
+        return self::$instance ?? new GeoIp();
     }
 
     public function lookupRecord(string $ipOrEndpoint): ?array

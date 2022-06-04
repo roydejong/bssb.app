@@ -16,6 +16,7 @@ use app\Models\HostedGamePlayer;
 use app\Models\LevelHistory;
 use app\Models\LevelHistoryPlayer;
 use app\Models\LevelRecord;
+use app\Models\MasterServerInfo;
 
 final class AnnounceProcessor
 {
@@ -51,6 +52,7 @@ final class AnnounceProcessor
         $game = $this->syncGameData();
         $this->syncLevelData($game);
         $this->syncPlayerData($game);
+        $this->syncServerData($game);
         return $game;
     }
 
@@ -264,6 +266,10 @@ final class AnnounceProcessor
     // -----------------------------------------------------------------------------------------------------------------
     // Player data sync
 
+    /**
+     * @throws \SoftwarePunt\Instarecord\Database\DatabaseException
+     * @throws \SoftwarePunt\Instarecord\Database\QueryBuilderException
+     */
     public function syncPlayerData(HostedGame $game): void
     {
         $announcePlayers = $this->get('Players');
@@ -360,6 +366,14 @@ final class AnnounceProcessor
                 ->andWhere('sort_index IN (?)', array_keys($pendingPlayerIndexes))
                 ->execute();
         }
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Server data sync
+
+    public function syncServerData(HostedGame $game): void
+    {
+        MasterServerInfo::syncFromGame($game);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

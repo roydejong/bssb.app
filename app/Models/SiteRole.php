@@ -21,7 +21,7 @@ class SiteRole extends Model
      */
     private static array $roles = [];
 
-    public static function fetchCached(int $roleId): ?SiteRole
+    public static function fetchCached(?int $roleId): ?SiteRole
     {
         if ($roleId <= 0)
             return null;

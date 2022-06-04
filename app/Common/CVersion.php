@@ -81,6 +81,11 @@ final class CVersion implements IDatabaseSerializable, \JsonSerializable
         return $b->equals($this) || $b->greaterThan($this);
     }
 
+    public function getIsEmpty(): bool
+    {
+        return $this->major === null;
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     // Serialization
 
@@ -153,5 +158,21 @@ final class CVersion implements IDatabaseSerializable, \JsonSerializable
     public static function min(CVersion $a, CVersion $b): CVersion
     {
         return $a->lessThan($b) ? $a : $b;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Static parse
+
+    public static function tryParse(?string $input): ?CVersion
+    {
+        if (empty($input))
+            return null;
+
+        $version = new CVersion($input);
+
+        if ($version->getIsEmpty())
+            return null;
+
+        return $version;
     }
 }

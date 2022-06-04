@@ -248,11 +248,14 @@ class Player extends Model
 
     public function getSiteRole(): ?SiteRole
     {
+        if (!$this->siteRoleId)
+            return null;
+
         return SiteRole::fetchCached($this->siteRoleId);
     }
 
     public function getIsSiteAdmin(): bool
     {
-        return $this->getSiteRole()?->isAdmin;
+        return $this->getSiteRole()?->isAdmin ?? false;
     }
 }
