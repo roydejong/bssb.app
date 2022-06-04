@@ -29,7 +29,7 @@
         <div class="container">
             <a class="brand" href="/">
                 <img src="/android-chrome-192x192.png" height="48" width="48" alt="BSSB Icon"/>
-                <div class="text">
+                <div class="text desktop-text">
                     <span>Beat Saber</span>
                     <span>Server Browser</span>
                 </div>
@@ -64,7 +64,8 @@
                 {% if not steam_authed %}
                     <a class="steam-login" href="/login" title="Log in to access your profile and game history">
                         <i class="mdi mdi-steam"></i>
-                        <span>Log in with Steam</span>
+                        <span class="text text-desktop">Log in with Steam</span>
+                        <span class="text text-mobile">Log in</span>
                     </a>
                 {% else %}
                     <a class="profile-link" href="/me" title="My profile">
