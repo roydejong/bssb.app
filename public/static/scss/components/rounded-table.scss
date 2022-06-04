@@ -220,5 +220,19 @@
     display: block;
     overflow-x: auto;
     white-space: nowrap;
+    min-width: 100%;
+    flex-grow: 1;
+
+    &:after {
+      content: "";
+      display: table-caption;
+      caption-side: bottom;
+      min-width: 100%;
+      width: calc(100vw - 3rem);
+    }
+
+    thead, tbody, tr {
+      min-width: 100%;
+    }
   }
 }

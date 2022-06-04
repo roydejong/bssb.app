@@ -246,6 +246,39 @@
       }
     }
   }
+
+  @media all and (max-width: 999px) {
+    .score {
+      display: none;
+    }
+    .tag.badge {
+      display: none;
+    }
+    .tag.modifier {
+      display: none;
+    }
+    .text {
+      .song {
+        .title {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+
+          span {
+            margin: 0;
+
+            &.by {
+              font-size: 12px;
+              margin-top: .25rem;
+            }
+          }
+        }
+      }
+    }
+    .level-tags {
+      margin-top: 1rem !important;
+    }
+  }
 }
 
 .server-group-header {
