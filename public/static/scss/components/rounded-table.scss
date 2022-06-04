@@ -212,3 +212,13 @@
     margin: 1rem 0;
   }
 }
+
+
+
+@media all and (max-width: 999px) {
+  .rounded-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}

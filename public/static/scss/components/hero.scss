@@ -71,4 +71,21 @@
       }
     }
   }
+
+  @media all and (max-width: 999px) {
+    height: 360px;
+    margin-bottom: 0;
+
+    > .container {
+      h1 {
+        font-size: 2.2rem;
+      }
+      p {
+        font-size: 1.6rem;
+      }
+      p.lead {
+        font-size: 1.6rem;
+      }
+    }
+  }
 }

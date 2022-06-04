@@ -37,7 +37,7 @@ header {
     }
 
     .brand {
-      flex-grow: 1;
+      flex-shrink: 1;
       display: flex;
       align-items: center;
       text-decoration: none;
@@ -78,7 +78,11 @@ header {
       }
     }
     .nav {
-      flex-grow: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 1;
+      flex-grow: 1;
       margin: 0 1.5rem;
 
       > a {
@@ -138,7 +142,7 @@ header {
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      flex-grow: 1;
+      flex-shrink: 1;
 
       a.profile-link {
         display: inline-flex;

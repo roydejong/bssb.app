@@ -16,7 +16,7 @@
       margin: 0 0 1.5rem 0;
 
       @media all and (max-width: 999px) {
-        font-size: 2rem;
+        font-size: 2.2rem;
       }
     }
     p {
@@ -75,6 +75,7 @@
 
       > .btn {
         margin-bottom: 1.5rem;
+        width: auto;
       }
       > .secondary-link {
         color: var(--col-txt-muted-light);
