@@ -48,6 +48,12 @@ $bssbConfig['master_server_blacklist'] = [];
 $bssbConfig['allow_multiple_results'] = false;
 
 /**
+ * enable_guide, boolean
+ *  → If enabled, enable multiplayer guide page/feature
+ */
+$bssbConfig['enable_guide'] = false;
+
+/**
  * Instarecord configuration
  */
 $dbConfig = Instarecord::config();

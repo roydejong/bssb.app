@@ -13,9 +13,11 @@
                 <a href="/download" class="btn -download" title="Download the Server Browser mod for Beat Saber">
                     <i class="mdi mdi-tray-arrow-down"></i> Download the mod
                 </a>
-                <a href="/guide" class="btn -guide" title="Interactive guide for modded Beat Saber multiplayer">
-                    <i class="mdi mdi-book-open-variant"></i> Multiplayer modding guide
-                </a>
+                {% if config.enableGuide %}
+                    <a href="/guide" class="btn -guide" title="Interactive guide for modded Beat Saber multiplayer">
+                        <i class="mdi mdi-book-open-variant"></i> Multiplayer modding guide
+                    </a>
+                {% endif %}
             </div>
         </div>
     </div>

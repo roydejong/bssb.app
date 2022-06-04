@@ -84,6 +84,11 @@ class ViewRenderer
             $userContext['self_is_admin'] = $player?->getIsSiteAdmin();
         }
 
+        // Config data
+        global $bssbConfig;
+        $userContext['config'] = [
+            'enable_guide' => !!$bssbConfig['enable_guide']
+        ];
 
         return $userContext;
     }
