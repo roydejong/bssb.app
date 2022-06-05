@@ -32,6 +32,11 @@ jobs:
         coverage: xdebug
         tools: none
 
+    - name: Install MySQL client
+      run: |
+        mysql --version
+        sudo apt update && sudo apt install mysql-client mysql-client-8.0 -y 
+
     - name: Validate composer.json and composer.lock
       run: composer validate
 
@@ -50,12 +55,6 @@ jobs:
 
     - name: Copy config file
       run: cp config.github.php config.php
-
-    - name: MySQL check / create database
-      run: |
-        mysql --version
-        sudo apt update && sudo apt install mysql-client mysql-client-8.0 -y 
-        mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -uuser -psecret test_db -e "CREATE DATABASE test_db CHARSET utf8mb4;"
 
     - name: Seed / migrate database
       run: vendor/bin/phinx migrate
