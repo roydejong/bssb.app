@@ -7,6 +7,18 @@
     }
   }
 
+  .oculus-icon {
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+    float: left;
+    margin-right: 5px;
+
+    path {
+      fill: #fff;
+    }
+  }
+
   .name-tag {
     display: flex;
     flex-direction: row;
