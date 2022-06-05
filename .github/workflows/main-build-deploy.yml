@@ -57,7 +57,9 @@ jobs:
       run: cp config.github.php config.php
 
     - name: Seed / migrate database
-      run: vendor/bin/phinx migrate --configuration=phinx.github.yml
+      run: vendor/bin/phinx migrate --configuration=phinx.php
+      env:
+        DB_PORT: ${{ job.services.mysql.ports[3306] }}
 
     - name: PHPUnit
       env:
