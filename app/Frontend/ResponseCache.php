@@ -3,6 +3,7 @@
 namespace app\Frontend;
 
 use app\HTTP\Response;
+use app\Session\Session;
 
 class ResponseCache
 {
@@ -32,6 +33,10 @@ class ResponseCache
             // Response cache is disabled, force unavailable status
             return false;
         }
+
+        if ($this->getIsUserLoggedIn())
+            // User is authed - does not participate in response cache
+            return false;
 
         $filePath = $this->getFilePath();
 
@@ -66,11 +71,24 @@ class ResponseCache
 
     public function write(string $value): bool
     {
+        if ($this->getIsUserLoggedIn())
+            // User is authed - does not participate in response cache
+            return false;
+
         return file_put_contents($this->getFilePath(), $value) > 0;
     }
 
     public function writeResponse(Response $response): bool
     {
+        if ($this->getIsUserLoggedIn())
+            // User is authed - does not participate in response cache
+            return false;
+
         return $this->write($response->body);
+    }
+
+    public function getIsUserLoggedIn(): bool
+    {
+        return Session::getInstance()->getIsSteamAuthed();
     }
 }
