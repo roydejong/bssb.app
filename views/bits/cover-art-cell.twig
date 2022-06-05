@@ -3,13 +3,13 @@
         <img src="{{ coverUrl }}" alt="{{ altText }}" title="{{ altText }}" height="25" class="cover-art" loading="lazy"/>
     {% else %}
         {% if levelId %}
-            <span class="unknown-song" title="{{ altText }}">
+            <div class="cover-art dummy-cover-art">
                 <i class="mdi mdi-music"></i>
-            </span>
+            </div>
         {% else %}
-            <span class="no-song" title="{{ altText }}">
+            <div class="cover-art dummy-cover-art">
                 <i class="mdi mdi-new-box"></i>
-            </span>
+            </div>
         {% endif %}
     {% endif %}
 </td>

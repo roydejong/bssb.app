@@ -32,7 +32,7 @@ class BrowseServerCodeController
         ];
 
         foreach ($matchingGames as $game) {
-            $response['results'][] = $game->jsonSerialize(false);
+            $response['results'][] = $game->jsonSerialize(false, false);
         }
 
         return new JsonResponse($response);

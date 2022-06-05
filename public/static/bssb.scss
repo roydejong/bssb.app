@@ -1,198 +1,82 @@
-body {
-  padding-top: 5rem;
-}
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
-small.muted {
-  opacity: .555;
-}
-abbr[data-original-title], abbr[title] {
-  text-decoration: none;
-  border: none;
-  border-bottom: 1px dotted rgba(0, 0, 0, .5);
-}
+// ---------------------------------------------------------------------------------------------------------------------
+// Reset
 
-.vanilla-version {
-  opacity: .5;
-}
-.mp-core-version {
-  color: #2ecc71;
-}
-.mp-ex-version {
-  color: #9b59b6;
-}
-
-.break-word {
-  overflow-wrap: break-word;
-  word-break: break-all;
-}
-
-.main-page {
-  padding: 0 1.5rem;
-
-  .card {
-    margin-bottom: 1.5rem;
-
-    .close {
-      position: absolute;
-      color: #fff;
-      top: 15px;
-      right: 15px;
-      cursor: pointer;
-    }
-  }
-}
-.content-page {
-  padding: 0 1.5rem;
-
-  h1 {
-    font-size: 1.75rem;
-  }
-  h2 {
-    font-size: 1.6rem;
-  }
-}
-
-table small {
-  font-size: 13px;
-  opacity: .75;
-}
-
-.navbar.bg-dark {
-  background-color: #343A40 !important;
-}
-
-.navbar .custom-switch {
-  color: #fff;
-  user-select: none;
-}
-
-.navbar-brand {
-  font-weight: 700;
-  margin-top: -2px;
-
-  span:first-child {
-    color: #e5a300;
-  }
-  span:last-child {
-    color: #cf0389;
-  }
-}
-
-td.cover-art-cell {
-  padding: 0;
-  position: relative;
-  user-select: none;
-  overflow: hidden;
-
-  &, > img, > span {
-    background-color: #ddd;
-    height: 48px;
-    min-height: 48px;
-    max-height: 48px;
-    width: 48px;
-    min-width: 48px;
-    max-width: 48px;
-  }
-  > img, > span {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
-  > span {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: #666;
-    font-weight: 600;
-    font-size: 16px;
-    opacity: .5;
-
-    &.unknown-song {
-      background: linear-gradient(125deg, rgba(231,15,1,1) 0%, rgb(0 103 230) 100%);
-      color: #fff;
-      opacity: 1.0;
-    }
-    &.no-song {
-
-    }
-  }
-  > img {
-    text-indent: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-}
-
-td.no-results-cell {
-  text-align: center;
-  vertical-align: middle;
-  padding: 30px 0;
-  font-size: 110%;
-  opacity: .75;
-  font-weight: 500;
-}
-
-td.-stale * {
-  opacity: .666;
-}
-td.-success {
-  color: #3cb371 !important;
-}
-
-.quickplay-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  position: relative;
-  font-weight: bold;
-  font-size: 20px;
-  width: 100%;
-  min-width: 42px;
-  cursor: help;
-
-  i {
-    display: inline-flex;
-    line-height: 10px;
-    margin-top: 1px;
-
-    &:first-child {
-      color: #e5a300;
-    }
-    &:last-child {
-      color: #cf0389;
-    }
-  }
-}
-h5 > .quickplay-icon {
-  display: inline-flex;
-  min-width: 0;
-  width: auto;
-  margin-right: 5px;
-}
-
-i.is-official {
-  color: #1C99E6;
-}
-
-i.rank-trophy {
-  text-shadow: 0 0 5px rgba(255, 255, 255, .15);
-}
-i.rank-trophy-1 {
-  color: #D6CC00;
-}
-i.rank-trophy-2 {
-  color: #CCCCCC;
-}
-i.rank-trophy-3 {
-  color: #C3792F;
+*, *:after {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-// Common components
+// Variables
+
+:root {
+  --col-bg-main: #202124;
+  --col-bg-darker: #19191a;
+  --col-bg-darkest: #131314;
+  --col-txt-main: #fff;
+  --col-txt-muted: #666;
+  --col-txt-muted-medium: #888;
+  --col-txt-muted-mediumlight: #ccd0d0;
+  --col-txt-muted-light: #ececec;
+  --col-saber-left: #e5a300;
+  --col-saber-right: #cf0389;
+  --col-blue: #0078d4;
+  --col-blue-dark: #0984e3;
+  --col-green: #2ecc71;
+  --col-green-dark: #27ae60;
+  --col-red: #e74c3c;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Page
+
+html, body {
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-anchor: none;
+}
+html {
+  font-size: 10px;
+}
+body {
+  font-size: 1.6rem;
+  font-family: 'Roboto', sans-serif;
+  font-weight: var(--font-weight-regular);
+  background: var(--col-bg-main);
+  color: var(--col-txt-main);
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Typography core
+
+::selection {
+  background: var(--col-saber-left);
+  color: var(--col-txt-main);
+}
+
+a {
+  color: var(--col-blue-dark);
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+abbr {
+  text-decoration: none;
+  border-bottom: 1px dotted #444;
+  cursor: help;
+}
 
 .difficulty-txt {
   &.-d0 {
@@ -215,392 +99,71 @@ i.rank-trophy-3 {
   }
 }
 
-.card-table {
-  margin: 0 !important;
-  border: none !important;
-
-  tr {
-    th {
-      border-top: none;
-    }
-    th:first-child, td:first-child {
-      border-left: none;
-    }
-    th:last-child, td:last-child {
-      border-right: none;
-    }
-  }
+.vanilla-version {
+  opacity: .5 !important;
+}
+.mp-core-version {
+  color: #2ecc71 !important;
+}
+.mp-ex-version {
+  color: #9b59b6 !important;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-// Game detail
+// Layout core
 
-.game-detail {
-  .server-code {
-    font-size: 1.75rem;
-    font-family: monospace;
-    user-select: all;
-    letter-spacing: 5px;
-  }
-
-  tr.disconnected-player {
-    td {
-      color: #e74c3c;
-      opacity: .75;
-    }
-    td:first-child {
-      text-decoration: line-through;
-    }
-  }
+.turbo-progress-bar {
+  height: 3px;
+  background-color: var(--col-saber-right);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, .1);
 }
 
-// ---------------------------------------------------------------------------------------------------------------------
-// Stats page
-
-.stats-page {
-  h1 {
-    font-size: 2rem;
-  }
-
-  .card .stat-value {
-    display: flex;
-    margin: 0 0 0 0;
-    font-size: 1.6rem;
-    font-weight: 600;
-    line-height: 1.0;
-  }
-  .card .help {
-    position: absolute;
-    right: 15px;
-    top: 15px;
-    cursor: help;
-    color: #e5a300;
-  }
-
-  p.lead {
-    margin-top: 10px;
-  }
-  p.stats-disclaim {
-    opacity: .75;
-    font-size: 14px;
-  }
-
-  section {
-    margin-top: 1.5rem;
-
-    .lite {
-      font-size: 1rem;
-      color: #666;
-    }
-  }
+#content-inner {
+  min-height: calc(100vh - 328px);
 }
 
-body[data-theme="dark"] .card.-level {
-  .card-body {
-    overflow: hidden;
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, .5);
-
-    &, > * {
-      position: relative;
-      z-index: 1;
-    }
-
-    img {
-      box-shadow: 0 0 3px 3px rgba(0, 0, 0, .25);
-    }
-
-    .bg {
-      display: block;
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 0;
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center center;
-      opacity: .5;
-      filter: blur(8px);
-      -webkit-filter: blur(8px);
-    }
-  }
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-// Footer
-
-footer {
-  margin-top: 3rem;
-  border-top: 1px solid #efefef;
-}
-.footer-actual {
-  padding: 1.5rem;
-  font-size: 90%;
+.container {
+  position: relative;
   display: flex;
-  flex-direction: column;
-  color: #666;
-
-  > div {
-    margin-bottom: 1rem;
-
-    &:first-child {
-      opacity: 1.0;
-    }
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-// Filters
-
-.filters {
-  display: flex;
+  flex-direction: row;
   align-items: center;
-  background: rgba(0, 0, 0, .25);
-  border: 1px solid rgba(255, 255, 255, .1);
-  margin-bottom: 6px;
-  border-radius: 4px;
-
-  > div {
-    display: flex;
-    align-items: center;
-    height: 80px;
-    border-right: 1px solid rgba(255, 255, 255, .1);
-    padding: 0 16px;
-  }
-  .title {
-    font-weight: bold;
-
-    i {
-      margin-right: 6px;
-    }
-  }
-  .filter {
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-
-    label {
-      padding: 0;
-      display: inline-flex;
-      margin: 0 0 4px 0;
-      flex-grow: 0;
-      flex-shrink: 0;
-      opacity: .666;
-      font-size: 14px;
-    }
-  }
+  margin: 0 auto;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 1300px;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-// Dark mode
+// Layout core - imports
 
-.badge {
-  color: #fff;
-}
-
-body[data-theme="dark"] {
-  background: #36393F;
-  color: #eee;
-
-  abbr[data-original-title], abbr[title] {
-    border-bottom: 1px dotted rgba(255, 255, 255, .5);
-  }
-
-  .navbar-dark {
-    background-color: #202225 !important;
-  }
-
-  .card {
-    background-color: #303030;
-    border-color: #375a7f !important;
-    color: #eee;
-  }
-  .card-header {
-    background-color: #444;
-  }
-
-  .alert {
-    background-color: #375a7f;
-    color: #eee;
-    border-color:  rgba(0, 0, 0, .35);
-  }
-
-  .breadcrumb {
-    background-color: #444;
-
-    a {
-      color: #fff;
-    }
-  }
-  .breadcrumb-item.active {
-    color: #888;
-  }
-
-  hr {
-    border-color: #333 !important;
-    background: #333 !important;
-  }
-
-  table {
-    thead {
-      tr {
-        th {
-          background-color: #1D1D1D !important;
-          border-color: #444444 !important;
-          color: #fff;
-        }
-      }
-    }
-    tbody {
-      tr {
-        th {
-          background-color: #1D1D1D !important;
-          border-color: #444444 !important;
-          color: #fff;
-        }
-        td {
-          background: #222222;
-          border-color: #444444 !important;
-          color: #fff;
-
-          code {
-            color: #f39c12 !important;
-            font-size: 15px;
-            margin-top: -1px;
-          }
-        }
-      }
-    }
-  }
-
-  a {
-    color: #3498DB;
-  }
-  button, .btn {
-    color: #fff;
-  }
-  .btn-primary {
-    color: #fff;
-    background-color: #375a7f;
-    border-color: #375a7f;
-  }
-  .btn-success {
-    color: #fff;
-    background-color: #008966;
-    border-color: #007c5d;
-  }
-
-  footer {
-    border-color: #444;
-
-    &, .footer-actual {
-      color: rgb(142, 146, 151);
-    }
-  }
-
-  .media-body table {
-    td, th {
-      background: transparent !important;
-    }
-  }
-
-  .dropdown-menu {
-    background-color: #222;
-    border: 1px solid #444;
-  }
-  .dropdown-item {
-    color: #fff;
-
-    &.active, &:focus, &:hover {
-      background-color: #375a7f;
-    }
-  }
-}
-
-.oculus-icon {
-  height: 21px;
-  width: 16px;
-  margin-right: -1px;
-  margin-left: -1px;
-}
-body[data-theme="dark"] .oculus-icon {
-  .st0{fill:#fff;}
-}
+@import "scss/header";
+@import "scss/footer";
 
 // ---------------------------------------------------------------------------------------------------------------------
-// Responsive tweaks
+// Component imports
 
-@media all and (max-width: 1000px) {
-  .navbar .container-fluid {
-    padding-left: 0;
-    padding-right: 0;
-  }
-  .main-page {
-    padding: 0;
+@import "scss/components/alert";
+@import "scss/components/block";
+@import "scss/components/btn";
+@import "scss/components/check-switch";
+@import "scss/components/content-head";
+@import "scss/components/cover-art";
+@import "scss/components/face";
+@import "scss/components/hero";
+@import "scss/components/level-tags";
+@import "scss/components/page-tabs";
+@import "scss/components/paginator";
+@import "scss/components/rounded-table";
 
-    h1 {
-      font-size: 22px;
-    }
-    p.lead {
-      font-size: 18px;
-    }
-    .card {
-      display: none;
-    }
-    .alert {
-      padding: 10px 15px;
+// ---------------------------------------------------------------------------------------------------------------------
+// Page imports
 
-      h6 {
-        margin-bottom: 2px;
-      }
-    }
-
-    table {
-      // Make table 100% of page width no margins
-      width: 100vw;
-      margin-left: -15px;
-      border-left: 0;
-      border-right: 0;
-
-      th:first-child, td:first-child {
-        // Hide art column
-        display: none;
-      }
-      th, td {
-        font-size: 14px;
-      }
-    }
-  }
-
-  .content-page {
-    padding: 0;
-  }
-
-  footer, .footer-actual {
-    text-align: center;
-  }
-}
-
-@media all and (max-width: 600px) {
-  .main-page {
-    table {
-      // Make table horizontally scrollable
-      display: block;
-      overflow-x: auto;
-      white-space: nowrap;
-
-      th:nth-child(4), td:nth-child(4) {
-        // Hide level column
-        display: none;
-      }
-      th:nth-child(5), td:nth-child(5) {
-        // Hide difficulty column
-        display: none;
-      }
-    }
-  }
-}
+@import "scss/pages/download-page";
+@import "scss/pages/frontpage-servers";
+@import "scss/pages/game-detail";
+@import "scss/pages/guide-page";
+@import "scss/pages/player-profile";
+@import "scss/pages/results-detail";
+@import "scss/pages/stats-page";
+@import "scss/pages/text-page";
+@import "scss/pages/user-settings";

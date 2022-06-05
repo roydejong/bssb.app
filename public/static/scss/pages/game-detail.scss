@@ -1,0 +1,213 @@
+.game-detail {
+  position: relative;
+
+  // -------------------------------------------------------------------------------------------------------------------
+  // Shared
+
+  > .container {
+    flex-direction: column;
+
+    > div {
+      width: 100%;
+    }
+  }
+
+  .special-bg {
+    opacity: .5;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+
+    &, &:after {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: auto;
+      left: 0;
+      width: 100vw;
+      height: 220px;
+      pointer-events: none;
+      z-index: -1;
+    }
+    &:after {
+      content: "";
+      backdrop-filter: blur(12px);
+      background: rgb(32,33,36);
+      background: linear-gradient(180deg, rgba(32,33,36,0.55) 0%, rgba(32,33,36,1) 80%);
+    }
+  }
+
+  .server-name {
+    display: flex;
+    margin: 1.5rem 0;
+
+    .faceplate {
+
+    }
+    .text {
+      h1 {
+        font-size: 2.8rem;
+        margin: 0;
+      }
+      .descr {
+        font-weight: var(--font-weight-bold);
+        margin: .8rem 0 0 0;
+      }
+    }
+  }
+
+  // -------------------------------------------------------------------------------------------------------------------
+  // 1. Server info
+
+  .server-info {
+    display: flex;
+    width: 100%;
+
+    .col-left {
+      flex-grow: 6;
+      margin-right: .75rem;
+    }
+    .col-right {
+      flex-grow: 4;
+      margin-left: .75rem;
+      max-width: 460px;
+    }
+
+    .card-table {
+      width: 100%;
+
+      tr {
+        th {
+          width: 170px;
+        }
+      }
+    }
+
+    @media all and (max-width: 999px) {
+      flex-direction: column-reverse;
+
+      .col-left {
+        margin: 0;
+      }
+      .col-right {
+        margin: 0;
+      }
+    }
+  }
+
+  .modded-warning {
+    color: var(--col-saber-left);
+    margin: 0 0 1rem 0;
+    font-weight: var(--font-weight-bold);
+  }
+
+  .server-code {
+    border-radius: 6px;
+    margin: 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: var(--col-bg-darkest);
+    overflow: hidden;
+
+    label {
+      font-size: 1.6rem;
+      font-weight: var(--font-weight-medium);
+    }
+
+    .inner {
+      padding: 2rem 3rem;
+      width: 100%;
+
+      .code-value {
+        font-family: monospace;
+        font-size: 3.4rem;
+        letter-spacing: 4px;
+        user-select: all;
+        color: var(--col-saber-left);
+      }
+    }
+
+    .instructions {
+      width: 100%;
+      border-bottom-left-radius: 6px;
+      border-bottom-right-radius: 6px;
+      background: var(--col-bg-darker);
+      padding: 2rem 3rem;
+      font-size: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      p {
+        color: var(--col-txt-muted-light);
+        line-height: 1.4;
+        max-width: 280px;
+      }
+      .extra {
+        color: var(--col-txt-muted);
+        margin-top: 0;
+      }
+
+      .or {
+        position: relative;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: .75rem auto;
+        height: 1px;
+        background: #fff;
+        opacity: .1;
+        pointer-events: none;
+        user-select: none;
+        width: 100%;
+        max-width: 80%;
+
+        &:after {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          content: "or";
+          background: var(--col-bg-darker);
+          padding: 0 15px;
+          font-size: 1.2rem;
+        }
+      }
+    }
+  }
+
+  // -------------------------------------------------------------------------------------------------------------------
+  // 2. Players list
+
+  .players-table {
+    margin-top: 1rem;
+  }
+
+  tr.player-row {
+    &.-disconnected {
+      &, td {
+        opacity: .75;
+      }
+    }
+
+    .badge {
+      height: auto;
+      font-size: 1.4rem;
+      font-weight: var(--font-weight-medium);
+      margin-right: 5px;
+      padding: 2px 8px;
+
+      &.bg-primary { background: #007bff; }
+      &.bg-secondary { background: #6c757d; }
+      &.bg-success { background: #28a745; }
+      &.bg-dark { background: #0a3d62; }
+
+      &:last-right {
+        margin-right: 0;
+      }
+    }
+  }
+}

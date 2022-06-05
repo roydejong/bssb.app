@@ -1,0 +1,102 @@
+{% extends "pages/stats.base.twig" %}
+
+{% set statsTab = "master-servers" %}
+
+{% block innerContent %}
+    <h1>Master Server List</h1>
+    <p class="lead">This is an overview of all master servers that were seen in the past week. Master servers handle authentication and matchmaking for multiplayer lobbies. All servers in this list are provided by the modding community; they are no longer used by official multiplayer.</p>
+
+    <table class="rounded-table -extra-spacing-h -extra-spacing-v">
+        <thead>
+        <tr>
+            <th>Server</th>
+            <th>Location (GeoIP)</th>
+            <th>Status</th>
+            <th width="111">Games (7d)</th>
+            <th width="111">Games (all)</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for server in servers %}
+            {% set key = server.master_server_host ~ ':' ~ server.master_server_port %}
+            {% set info = masterServerInfo[key] %}
+            {% if info %}
+                <tr>
+                    {% set sevenDayCount = 0 %}
+                    {% set seenThisWeek = false %}
+                    {% if sevenDayGameCounts[server.master_server_host] %}
+                        {% set sevenDayCount = sevenDayGameCounts[server.master_server_host]|number_format(0, ',') %}
+                        {% set seenThisWeek = true %}
+                    {% endif %}
+                    <td>
+                        <div class="stacked-text -smaller">
+                            <span>
+                                {% if loop.index <= 3 %}
+                                    <i class="mdi mdi-trophy rank-trophy rank-trophy-{{ loop.index }}"></i>
+                                {% endif %}
+                                <strong>{{ server.master_server_host }}</strong>
+                                {% if server.is_official %}
+                                    <i class="mdi mdi-check-decagram is-official" data-toggle="tooltip"
+                                       data-placement="bottom" title="Official Server"></i>
+                                {% endif %}
+                            </span>
+                            {% if info.resolvedIp %}
+                                <span><code>{{ info.resolvedIp }}:{{ server.master_server_port }}</code></span>
+                            {% else %}
+                                <span><code>{{ server.master_server_host }}:{{ server.master_server_port }}</code></span>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td>
+                        {% if info.geoipText %}
+                            {% if info.geoipCountry %}
+                                <img src="/static/flags/{{ info.geoipCountry|lower }}.png" alt="{{ info.geoipCountry }}"/>
+                            {% endif %}
+                            <span class="geo-text">{{ info.geoipText }}</span>
+                        {% else %}
+                            <span class="geo-text">-</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% set status = info.getLastStatus() %}
+                        {% if status is null or status.status is null %}
+                            <div class="master-status -offline">
+                                Status check failed
+                            </div>
+                        {% elseif status.status.value == 1 or status.maintenanceStartTime %}
+                            <div class="master-status -maintenance">
+                                Maintenance upcoming
+                            </div>
+                            {% if status.maintenanceStartTime %}
+                                <div class="master-status-extra">
+                                    Maintenance: {{ status.maintenanceStartTime|timeago_html|raw }}
+                                </div>
+                            {% endif %}
+                        {% elseif status.status.value == 0 %}
+                            <div class="master-status -online">
+                                Online
+                            </div>
+                        {% elseif status.status.value == 2 %}
+                            <div class="master-status -offline">
+                                Offline
+                            </div>
+                        {% endif %}
+                        {% if status.minimumAppVersion %}
+                            <div class="master-status-extra">
+                                Minimum version: {{ status.minimumAppVersion }}
+                            </div>
+                        {% endif %}
+                    </td>
+                    <td>{{ sevenDayCount }}</td>
+                    <td>{{ server.game_count|number_format(0, ',') }}</td>
+                </tr>
+            {% endif %}
+        {% else %}
+            <div class="alert -minor">
+                <i class="mdi mdi-server-off"></i>
+                <strong>No servers found</strong>
+            </div>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends "_base.twig" %}
+
+{% block content %}
+    <main class="game-detail">
+
+        {% if level.coverUrl %}
+            <div class="special-bg" style="background-image: url('{{ level.coverUrl }}');"></div>
+        {% endif %}
+
+        <div class="container">
+
+            <div class="server-name">
+                <div class="faceplate">
+                    {% if level.coverUrl %}
+                        <img class="cover-art" src="{{ level.coverUrl }}" alt="{{ level.describeSong() }}" loading="lazy"/>
+                    {% else %}
+                        <div class="cover-art dummy-cover-art">
+                            {% if game.getIsPlayingLevel() %}
+                                <i class="mdi mdi-music"></i>
+                            {% else %}
+                                <i class="mdi mdi-new-box"></i>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="text">
+                    <h1>{{ game.gameName }}</h1>
+                    <p class="descr">{{ game.describeGameDetail() }}</p>
+                </div>
+            </div>
+
+            {% if game.getIsPirate() %}
+                <div class="alert alert-warning">
+                    <strong>🏴‍☠️ <span>Ahoy there. This here 'ost be a gentleman o' fortune!</span></strong><br />
+                    <span>It looks like this player is a pirate. Things may not work as expected.</span><br />
+                    <br />
+                    <span><strong>You should <a href="https://store.steampowered.com/app/620980/Beat_Saber/" target="_blank">buy the game</a> if you enjoy it!</strong></span>
+                </div>
+            {% endif %}
+
+            {% if game.getIsUninteresting() %}
+                <div class="alert alert-danger">
+                    🤖 Game was hidden automatically (game is not relevant)
+                </div>
+            {% elseif game.endedAt is not null %}
+                <div class="alert alert-danger">
+                    This game has ended and can no longer be joined.
+                </div>
+            {% endif %}
+
+            {% if game.getIsStale() and game.endedAt is null %}
+                <div class="alert alert-danger">
+                    We stopped receiving data for this game, it's probably dead.
+                </div>
+            {% endif %}
+
+            <div class="page-tabs">
+                <a href="{{ baseUrl }}" class="{% if gameDetailTab == "info" %}-active{% endif %}">
+                    <i class="mdi mdi-information"></i>
+                    <span>Server</span>
+                </a>
+                <a href="{{ baseUrl }}/players" class="{% if gameDetailTab == "players" %}-active{% endif %}">
+                    <i class="mdi mdi-sword-cross"></i>
+                    <span>Players</span>
+                </a>
+                <a href="{{ baseUrl }}/plays" class="{% if gameDetailTab == "plays" %}-active{% endif %}">
+                    <i class="mdi mdi-play"></i>
+                    <span>Plays</span>
+                </a>
+            </div>
+
+            {% block innerContent %}{% endblock %}
+
+        </div>
+    </main>
+{% endblock %}

@@ -1,0 +1,238 @@
+.rounded-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 5px;
+
+  td, th {
+    text-align: left;
+    vertical-align: middle;
+    font-size: 1.4rem;
+    border-spacing: 50px;
+    padding: 6px 8px;
+    border: none!important;
+    border-style: solid none;
+
+    > .inner {
+      display: flex;
+      align-items: center;
+    }
+
+    &.-right {
+      text-align: right;
+    }
+    &.-center {
+      text-align: center;
+    }
+  }
+
+  th {
+    padding-bottom: 1.5rem;
+    color: var(--col-txt-muted-light);
+    font-weight: var(--font-weight-medium);
+  }
+
+  thead.small {
+    th {
+      font-size: 1.2rem;
+      font-weight: var(--font-weight-regular);
+      color: var(--col-txt-muted-medium);
+      padding-bottom: .5rem;
+      padding-top: 0;
+    }
+  }
+
+  tbody tr {
+    border-radius: 6px;
+    overflow: hidden;
+
+    td {
+      transition: box-shadow .05s linear;
+      background: var(--col-bg-darker);
+      overflow: hidden;
+    }
+    td:first-child {
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 8px;
+    }
+    td:last-child {
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
+    }
+  }
+  tbody tr:hover {
+    td {
+      box-shadow: inset 999px 999px 999px rgba(255, 255, 255, .0666);
+    }
+  }
+
+  // -------------------------------------------------------------------------------------------------------------------
+
+  &.-extra-spacing-h {
+    tbody, thead {
+      tr {
+        td:first-child, th:first-child {
+          padding-left: 3rem;
+        }
+        td:last-child, th:last-child {
+          padding-right: 3rem;
+        }
+      }
+    }
+  }
+
+  &.-extra-spacing-v {
+    tbody {
+      tr {
+        td {
+          padding-top: 1rem;
+          padding-bottom: 1rem;
+        }
+      }
+    }
+  }
+
+  // -------------------------------------------------------------------------------------------------------------------
+
+  .stacked-text {
+    display: flex;
+    flex-direction: column;
+    font-size: 1.6rem;
+
+    > * {
+      display: flex;
+      align-items: center;
+      margin: 4px 0;
+
+      i {
+        margin-right: .5rem;
+      }
+
+      &:first-child {
+        font-weight: var(--font-weight-medium);
+      }
+      &:last-child {
+        font-weight: var(--font-weight-regular);
+        color: var(--col-txt-muted-light);
+        font-size: 1.4rem;
+      }
+    }
+
+    &.-smaller {
+      font-size: 1.4rem;
+
+      > * {
+        &:last-child {
+          font-size: 1.3rem;
+        }
+      }
+    }
+  }
+
+  .player-count {
+    font-feature-settings: "lnum" 1;
+  }
+
+  code {
+    color: var(--col-saber-left);
+    letter-spacing: 1px;
+    font-feature-settings: "lnum" 1;
+    font-weight: var(--font-weight-bold);
+  }
+
+  .level-limit {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 420px;
+  }
+
+  i.trophy, .rank-trophy {
+    font-size: 18px;
+    padding: 0 0 0 15px;
+
+    &.rank-trophy {
+      padding-left: 0;
+      font-size: 14px;
+    }
+
+    &.-gold, &.rank-trophy-1 { color: #FFD700; }
+    &.-silver, &.rank-trophy-2 { color: silver; }
+    &.-bronze, &.rank-trophy-3 { color: #a05e17; }
+  }
+
+  .badge {
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 1.3rem;
+    padding: 3px 5px;
+    border-radius: 6px;
+    background: #273c75;
+    color: #fff;
+
+    i, img {
+      margin-right: 5px;
+    }
+
+    &.-with-tooltip {
+      cursor: help;
+
+      span {
+        border-bottom: 1px dotted #fff;
+      }
+    }
+  }
+
+  .geo-text {
+    font-size: 1.2rem;
+  }
+}
+
+.no-servers-active {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 6rem 1.5rem;
+  margin: 1.5rem 0 0 0;
+  font-size: 1.8rem;
+  color: var(--col-txt-muted-mediumlight);
+  border: 1px solid #333;
+  width: 100%;
+  border-radius: 4px;
+
+  i {
+    margin: 1rem 0;
+    font-size: 4rem;
+    color: #666;
+  }
+
+  p {
+    margin: 1rem 0;
+  }
+}
+
+
+
+@media all and (max-width: 999px) {
+  .rounded-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    min-width: 100%;
+    flex-grow: 1;
+
+    &:after {
+      content: "";
+      display: table-caption;
+      caption-side: bottom;
+      min-width: 100%;
+      width: calc(100vw - 3rem);
+    }
+
+    thead, tbody, tr {
+      min-width: 100%;
+    }
+  }
+}

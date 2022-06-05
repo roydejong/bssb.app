@@ -1,0 +1,152 @@
+.guide-page {
+  > .container {
+    flex-direction: column;
+  }
+
+  .guide-bubble, .guide-filters {
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .guide-bubble {
+    display: flex;
+    align-items: flex-start;
+    border-radius: 6px;
+    background: rgba(200, 200, 255, .1);
+    padding: 3rem;
+    margin: 1.5rem 0;
+
+    .face {
+      margin: 0 3rem 0 0;
+    }
+    .text {
+      display: flex;
+      flex-direction: column;
+
+      p {
+        margin: 0 0 1rem 0;
+        line-height: 1.5;
+
+        &.instruction {
+          color: var(--col-green);
+          font-weight: var(--font-weight-bold);
+
+          &.-bad {
+            color: #e74c3c;
+          }
+        }
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  .guide-filters {
+    margin: 0 0 1.5rem 0;
+
+    .field {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      position: relative;
+      margin-bottom: 1rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      > label:first-child {
+        display: flex;
+        flex-grow: 1;
+      }
+
+      label {
+        font-weight: var(--font-weight-bold);
+      }
+
+      select {
+        position: relative;
+        border: 1px solid #323232;
+        font: inherit;
+        background: var(--col-bg-darkest);
+        color: var(--col-txt-main);
+        padding: 1rem;
+        border-radius: 6px;
+        min-width: 200px;
+        outline: none !important;
+      }
+    }
+
+    .button-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      margin: 3rem 0 0 0;
+
+      button {
+        min-width: 33%;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+    }
+  }
+
+  .disclaimer {
+    font-size: 1.4rem;
+    color: var(--col-txt-muted);
+    margin: 0 0 1.5rem 0;
+  }
+
+  .help-text {
+    width: 100%;
+    text-align: center;
+    max-width: 600px;
+    line-height: 1.6;
+    color: var(--col-txt-muted-medium);
+    font-size: 1.4rem;
+
+    a {
+      display: inline-flex;
+      align-items: center;
+
+      i {
+        color: var(--col-txt-muted-medium);
+        margin-right: 5px;
+      }
+    }
+  }
+
+  .faqs {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1000px;
+    margin: 1.5rem 0;
+
+    h2 {
+      display: block;
+      text-align: center;
+      margin-bottom: 1rem;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid rgba(255, 255, 255, .1);
+    }
+
+    .faq {
+      border-bottom: 1px solid rgba(255, 255, 255, .1);
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      padding-left: 2rem;
+      padding-right: 2rem;
+
+      p, li {
+        line-height: 1.3;
+        font-size: 1.5rem;
+        color: var(--col-txt-muted-light);
+      }
+    }
+  }
+}

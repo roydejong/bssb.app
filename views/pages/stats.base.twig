@@ -1,0 +1,46 @@
+{% extends "_base.twig" %}
+
+{% if not pageTitle %}
+    {% set pageTitle = 'Statistics' %}
+{% endif %}
+
+{% set tab = "stats" %}
+
+{% block content %}
+    <main role="main" class="container stats-page">
+        <nav class="side-nav">
+            <h4>Stats</h4>
+            <a href="/stats" class="{% if statsTab == "overview" %}-active{% endif %}">
+                <i class="mdi mdi-home"></i> Overview
+            </a>
+
+            <div class="separator"></div>
+
+            <h4>Top levels</h4>
+            <a href="/stats/top/custom-levels" class="{% if statsTab == "custom-levels" %}-active{% endif %}">
+                <i class="mdi mdi-trophy"></i> Top 100 Custom Levels
+            </a>
+            <a href="/stats/top/official-levels" class="{% if statsTab == "official-levels" %}-active{% endif %}">
+                <i class="mdi mdi-trophy-outline"></i> Top 100 Official Levels
+            </a>
+            <a href="/stats/top/non-beatsaver-levels" class="{% if statsTab == "non-beatsaver-levels" %}-active{% endif %}">
+                <i class="mdi mdi-trophy-broken"></i> Top 100 Local Levels
+            </a>
+
+            <div class="separator"></div>
+
+            <h4>Servers</h4>
+
+            <a href="/master-servers" class="{% if statsTab == "master-servers" %}-active{% endif %}">
+                <i class="mdi mdi-server-security"></i> Master Servers
+            </a>
+            <a href="/dedicated-servers" class="{% if statsTab == "dedicated-servers" %}-active{% endif %}">
+                <i class="mdi mdi-server"></i> Dedicated Servers
+            </a>
+
+        </nav>
+        <div class="stats-content">
+            {% block innerContent %}{% endblock %}
+        </div>
+    </main>
+{% endblock %}

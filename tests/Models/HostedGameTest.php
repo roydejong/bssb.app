@@ -41,6 +41,31 @@ class HostedGameTest extends TestCase
             "Games with master server should not be recognized as direct connect");
     }
 
+    public function testGetIsPeerToPeer()
+    {
+        $game = new HostedGame();
+
+        $game->serverType = HostedGame::SERVER_TYPE_PLAYER_HOST;
+        $game->gameVersion = null;
+        $this->assertTrue($game->getIsPeerToPeer(),
+            "lobbies explicitly marked as PLAYER_HOST should be detected as P2P");
+
+        $game->serverType = null;
+        $game->gameVersion = new CVersion("1.16.2");
+        $this->assertTrue($game->getIsPeerToPeer(),
+            "1.16.2 and older games should be detected as P2P by default");
+
+        $game->serverType = HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY;
+        $game->gameVersion = new CVersion("1.16.2");
+        $this->assertFalse($game->getIsPeerToPeer(),
+            "1.16.2 and older games on Quick Play should not be detected as P2P");
+
+        $game->serverType = HostedGame::SERVER_TYPE_PLAYER_HOST;
+        $game->gameVersion = new CVersion("1.16.3");
+        $this->assertFalse($game->getIsPeerToPeer(),
+            "1.16.3 and newer games should never be detected as P2P, even if explicitly marked as such");
+    }
+
     public function testGetIsOfficial()
     {
         $game = new HostedGame();

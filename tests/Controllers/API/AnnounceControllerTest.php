@@ -9,6 +9,7 @@ use app\Common\IPEndPoint;
 use app\Controllers\API\V1\AnnounceController;
 use app\Models\HostedGame;
 use app\Models\LevelRecord;
+use app\Models\Player;
 use PHPUnit\Framework\TestCase;
 use tests\Mock\MockJsonRequest;
 
@@ -214,7 +215,7 @@ class AnnounceControllerTest extends TestCase
         self::$minimalAnnounceTestResult = $announce;
 
         $this->assertSame("Untitled Beat Game", $announce->gameName);
-        $this->assertSame("Unknown", $announce->ownerName);
+        $this->assertSame("", $announce->ownerName);
         $this->assertSame(1, $announce->playerCount);
         $this->assertSame(5, $announce->playerLimit);
         $this->assertFalse($announce->isModded);
@@ -225,7 +226,7 @@ class AnnounceControllerTest extends TestCase
         $this->assertNull($announce->difficulty);
         $this->assertSame("unknown", $announce->platform);
         $this->assertNull($announce->masterServerHost);
-        $this->assertNull($announce->masterServerPort);
+        $this->assertSame(2328, $announce->masterServerPort);
         $this->assertNull($announce->endedAt);
         $this->assertEmpty($announce->fetchPlayers());
         $this->assertNull($announce->mpExVersion);
@@ -434,18 +435,6 @@ class AnnounceControllerTest extends TestCase
     /**
      * @depends testMinimalAnnounce
      */
-    public function testRejectsServerMessageOwnerId()
-    {
-        $request = clone self::$minimalAnnounceRequest;
-        $request->json['OwnerId'] = "SERVER_MESSAGE";
-
-        $this->assertSame(400, ((new AnnounceController())->announce($request))->code,
-            "SERVER_MESSAGE as OwnerId should be rejected");
-    }
-
-    /**
-     * @depends testMinimalAnnounce
-     */
     public function testAnnounceCleansLevelId()
     {
         $request = clone self::$minimalAnnounceRequest;
@@ -496,24 +485,6 @@ class AnnounceControllerTest extends TestCase
     /**
      * @depends testMinimalAnnounce
      */
-    public function testRejectsBeatDediGames()
-    {
-        $request = clone self::$minimalAnnounceRequest;
-        $request->json['ServerType'] = HostedGame::SERVER_TYPE_BEATDEDI_CUSTOM;
-        $request->json['Secret'] = 'bla';
-
-        $this->assertSame(400, ((new AnnounceController())->announce($request))->code,
-            "SERVER_TYPE_BEATDEDI_CUSTOM should be rejected for mod client requests");
-
-        $request->json['ServerType'] = HostedGame::SERVER_TYPE_BEATDEDI_QUICKPLAY;
-
-        $this->assertSame(400, ((new AnnounceController())->announce($request))->code,
-            "SERVER_TYPE_BEATDEDI_QUICKPLAY should be rejected for mod client requests");
-    }
-
-    /**
-     * @depends testMinimalAnnounce
-     */
     public function testRejectsQuickplayGamesWithoutHostSecret()
     {
         $request = clone self::$minimalAnnounceRequest;
@@ -542,6 +513,7 @@ class AnnounceControllerTest extends TestCase
 
         $response = (new AnnounceController())->announce($request);
         $json = json_decode($response->body, true);
+        $this->assertTrue($json["success"], "Quick Play announce should succeed");
         $game = HostedGame::fetch(HostedGame::hash2id($json['key']));
 
         $this->assertSame("Official Quick Play - Hard", $game->gameName);
@@ -574,9 +546,12 @@ class AnnounceControllerTest extends TestCase
             'SortIndex' => 0,
             'UserId' => 'testPlayerListSync_0',
             'UserName' => 'Bob',
+            'PlatformType' => 'OculusQuest',
+            'PlatformUserId' => '1234567890',
             'IsHost' => false,
             'IsAnnouncer' => true,
-            'Latency' => 0.1234
+            'Latency' => 0.1234,
+            'AvatarData' => ['skinColorId' => 'Smurf']
         ];
 
         $response = (new AnnounceController())->announce($request);
@@ -606,6 +581,24 @@ class AnnounceControllerTest extends TestCase
         $this->assertSame(false, $firstPlayer->isHost);
         $this->assertSame(true, $firstPlayer->isAnnouncer);
         $this->assertSame(0.1234, $firstPlayer->latency);
+
+        /**
+         * @var $playerProfile Player|null
+         */
+        $playerProfile = Player::query()
+            ->where('user_id = ?', $firstPlayer->userId)
+            ->querySingleModel();
+
+        $this->assertNotNull($playerProfile, "Player profile should be created automatically");
+        $this->assertSame($firstPlayer->userId, $playerProfile->userId);
+        $this->assertSame($firstPlayer->userName, $playerProfile->userName);
+        $this->assertSame(ModPlatformId::OCULUS, $playerProfile->platformType);
+        $this->assertSame("1234567890", $playerProfile->platformUserId);
+
+        $playerAvatar = $playerProfile->fetchAvatar();
+        $this->assertNotNull($playerAvatar,
+            "Player avatar should be created automatically when AvatarData is supplied");
+        $this->assertSame("Smurf", $playerAvatar->skinColorId);
 
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         // Part 2: Adding in new players in the next announce
@@ -720,7 +713,7 @@ class AnnounceControllerTest extends TestCase
         $request->path = "/api/v1/announce";
 
         $response = (new AnnounceController())->announce($request);
-        $this->assertSame(403, $response->code);
+        $this->assertSame(400, $response->code);
     }
 
     /**

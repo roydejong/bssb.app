@@ -534,4 +534,78 @@ class BrowseControllerTest extends TestCase
         $this->assertSame(1234, $vanillaQuickPlay['masterServerPort']);
         $this->assertSame("steam.production.mp.beatsaber.com:1234", $vanillaQuickPlay['masterServerEp']);
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // "includeLevel"
+
+    /**
+     * @depends testBrowseSimple
+     */
+    public function testIncludeLevelOn()
+    {
+        $lobbies = self::executeBrowseRequestAndGetGames(
+            self::createBrowseRequest([
+                "filterFull" => true,
+                "includeLevel" => 1
+            ])
+        );
+
+        $this->assertContainsGameWithName("BoringSteamInProgress", $lobbies);
+
+        $foundFilledGame = false;
+
+        foreach ($lobbies as $lobby) {
+            $this->assertArrayHasKey('level', $lobby);
+
+            if (is_array($lobby['level'])) {
+                $this->assertArrayHasKey('levelId', $lobby['level']);
+                $this->assertArrayHasKey('songName', $lobby['level']);
+                $this->assertArrayHasKey('songSubName', $lobby['level']);
+                $this->assertArrayHasKey('songAuthorName', $lobby['level']);
+                $this->assertArrayHasKey('levelAuthorName', $lobby['level']);
+                $this->assertArrayHasKey('coverUrl', $lobby['level']);
+                $foundFilledGame = true;
+            }
+
+            $this->assertArrayNotHasKey('beatsaverId', $lobby);
+            $this->assertArrayNotHasKey('coverUrl', $lobby);
+            $this->assertArrayNotHasKey('levelName', $lobby);
+            $this->assertArrayNotHasKey('levelId', $lobby);
+            $this->assertArrayNotHasKey('songName', $lobby);
+            $this->assertArrayNotHasKey('songAuthor', $lobby);
+
+            $this->assertArrayHasKey('characteristic', $lobby);
+            $this->assertArrayHasKey('difficulty', $lobby);
+        }
+
+        $this->assertTrue($foundFilledGame, "Sanity check: at least one level entry should be filled during test");
+    }
+
+    /**
+     * @depends testBrowseSimple
+     */
+    public function testIncludeLevelOff()
+    {
+        $lobbies = self::executeBrowseRequestAndGetGames(
+            self::createBrowseRequest([
+                "filterFull" => true
+            ])
+        );
+
+        $this->assertContainsGameWithName("BoringSteamInProgress", $lobbies);
+
+        foreach ($lobbies as $lobby) {
+            $this->assertArrayNotHasKey('level', $lobby);
+
+            $this->assertArrayHasKey('beatsaverId', $lobby);
+            $this->assertArrayHasKey('coverUrl', $lobby);
+            $this->assertArrayHasKey('levelName', $lobby);
+            $this->assertArrayHasKey('levelId', $lobby);
+            $this->assertArrayHasKey('songName', $lobby);
+            $this->assertArrayHasKey('songAuthor', $lobby);
+
+            $this->assertArrayHasKey('characteristic', $lobby);
+            $this->assertArrayHasKey('difficulty', $lobby);
+        }
+    }
 }

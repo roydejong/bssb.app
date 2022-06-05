@@ -1,0 +1,72 @@
+{% extends "_base.twig" %}
+
+{% set tab = "download" %}
+
+{% block content %}
+
+    <main class="download-page">
+        <div class="container">
+            <div class="text-intro">
+                <h1>Download Server Browser Mod</h1>
+                <p>Download the mod to add your games to the server browser and to browse and join lobbies from the game.</p>
+            </div>
+            <div class="download">
+                <img src="/static/stuff/browser_v3.png" class="preview" alt="Server Browser for PCVR"/>
+                <div class="left">
+                    <h2>Server Browser for PC</h2>
+                    <div class="platform">
+                        For Beat Saber 1.22.0<br />
+                        <i class="mdi mdi-steam"></i> Steam + <img src="/static/icons/oculus.svg" alt="Oculus" class="oculus-icon"/> Oculus PC
+                    </div>
+                    <div class="author">
+                        by <a href="https://roydejong.net" target="_blank">LookAtHippo</a>
+                    </div>
+                </div>
+                <div class="right">
+                    <a href="https://github.com/roydejong/BeatSaberServerBrowser/releases/latest" class="btn -download">
+                        <i class="mdi mdi-tray-arrow-down"></i> Download
+                    </a>
+                    <a href="https://github.com/roydejong/BeatSaberServerBrowser#readme" class="secondary-link">
+                        <i class="mdi mdi-book-variant"></i>README
+                    </a>
+                    <a href="https://github.com/roydejong/BeatSaberServerBrowser" class="secondary-link">
+                        <i class="mdi mdi-source-branch"></i>Source code
+                    </a>
+                </div>
+            </div>
+{#            <div class="download">#}
+{#                <img src="/static/stuff/questserverbrowser.png" class="preview" alt="Server Browser Lite for Quest"/>#}
+{#                <div class="left">#}
+{#                    <h2>Server Browser Lite for Quest</h2>#}
+{#                    <div class="platform">#}
+{#                        For Beat Saber 1.22.0<br />#}
+{#                        <img src="/static/icons/oculus.svg" alt="Oculus" class="oculus-icon"/> Oculus Quest#}
+{#                    </div>#}
+{#                    <div class="author">#}
+{#                        by <a href="https://github.com/EnderdracheLP" target="_blank">EnderacheLP</a>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="right">#}
+{#                    <a href="https://github.com/EnderdracheLP/BeatSaberServerBrowserQuest/releases/latest" class="btn -download">#}
+{#                        <i class="mdi mdi-tray-arrow-down"></i> Download#}
+{#                    </a>#}
+{#                    <a href="https://github.com/EnderdracheLP/BeatSaberServerBrowserQuest#readme" class="secondary-link">#}
+{#                        <i class="mdi mdi-book-variant"></i>README#}
+{#                    </a>#}
+{#                    <a href="https://github.com/EnderdracheLP/BeatSaberServerBrowserQuest" class="secondary-link">#}
+{#                        <i class="mdi mdi-source-branch"></i>Source code#}
+{#                    </a>#}
+{#                </div>#}
+{#            </div>#}
+            <div class="help-text">
+                {% if config.enableGuide %}
+                    <p>Need help? Check out our <a href="/guide"><i class="mdi mdi-book-open-variant"></i> Multiplayer Modding Guide</a></p>
+                    <p>You can also ask questions in the <a href="https://discord.com/invite/gezGrFG4tz" target="_blank"><i class="mdi mdi-discord"></i> BeatTogether Community</a> or <a href="https://discord.gg/beatsabermods" target="_blank"><i class="mdi mdi-discord"></i> Beat Saber Modding Group</a></p>
+                {% else %}
+                    <p>If you need help, you can ask questions in the <a href="https://discord.com/invite/gezGrFG4tz" target="_blank"><i class="mdi mdi-discord"></i> BeatTogether Community</a> or <a href="https://discord.gg/beatsabermods" target="_blank"><i class="mdi mdi-discord"></i> Beat Saber Modding Group</a></p>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+
+{% endblock %}

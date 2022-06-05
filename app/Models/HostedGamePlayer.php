@@ -2,6 +2,7 @@
 
 namespace app\Models;
 
+use app\BeatSaber\ModPlatformId;
 use app\Utils\PirateDetect;
 use app\Utils\PlayerBotDetect;
 use SoftwarePunt\Instarecord\Model;
@@ -26,6 +27,8 @@ class HostedGamePlayer extends Model
 
     public function describeLatency(): string
     {
+        if ($this->latency <= 0)
+            return "?ms";
         return ($this->latency * 1000) . "ms";
     }
 
@@ -40,5 +43,40 @@ class HostedGamePlayer extends Model
             return true;
 
         return PlayerBotDetect::detect($this->userId, $this->userName);
+    }
+
+    public function getUrlSafeUserId(): string
+    {
+        return Player::cleanUserIdForUrl($this->userId);
+    }
+
+    public function getProfileUrl(): string
+    {
+        return "/player/{$this->getUrlSafeUserId()}";
+    }
+
+    public function getIsDedicatedServer(): bool
+    {
+        return $this->isHost && $this->sortIndex === -1;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Player connection
+
+    public function syncProfileData(?string $platformType, ?string $platformUserId, ?array $avatarData): Player
+    {
+        $player = Player::fromServerPlayer($this);
+
+        if ($platformType)
+            $player->platformType = ModPlatformId::normalize($platformType);
+
+        if ($platformUserId)
+            $player->platformUserId = $platformUserId;
+
+        if ($avatarData)
+            $player->syncAvatarData($avatarData);
+
+        $player->save();
+        return $player;
     }
 }

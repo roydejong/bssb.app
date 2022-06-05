@@ -81,6 +81,14 @@ final class CVersion implements IDatabaseSerializable, \JsonSerializable
         return $b->equals($this) || $b->greaterThan($this);
     }
 
+    public function getIsEmpty(): bool
+    {
+        return $this->major === null;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Serialization
+
     public function toString(int $maxDepth = PHP_INT_MAX): string
     {
         $parts = [$this->major, $this->minor, $this->build ?? null, $this->revision ?? null];
@@ -105,9 +113,6 @@ final class CVersion implements IDatabaseSerializable, \JsonSerializable
         return $versionStr;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    // Serialization
-
     public function __toString(): string
     {
         return $this->toString(PHP_INT_MAX);
@@ -126,5 +131,48 @@ final class CVersion implements IDatabaseSerializable, \JsonSerializable
     public function jsonSerialize(): mixed
     {
         return $this->dbSerialize();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Static compare
+
+    /**
+     * Returns the highest of two versions.
+     *
+     * @param CVersion $a
+     * @param CVersion $b
+     * @return CVersion
+     */
+    public static function max(CVersion $a, CVersion $b): CVersion
+    {
+        return $a->greaterThan($b) ? $a : $b;
+    }
+
+    /**
+     * Returns the lowest of two versions.
+     *
+     * @param CVersion $a
+     * @param CVersion $b
+     * @return CVersion
+     */
+    public static function min(CVersion $a, CVersion $b): CVersion
+    {
+        return $a->lessThan($b) ? $a : $b;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Static parse
+
+    public static function tryParse(?string $input): ?CVersion
+    {
+        if (empty($input))
+            return null;
+
+        $version = new CVersion($input);
+
+        if ($version->getIsEmpty())
+            return null;
+
+        return $version;
     }
 }

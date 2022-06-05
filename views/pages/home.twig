@@ -1,0 +1,38 @@
+{% extends "_base.twig" %}
+
+{% set tab = "home" %}
+{% set hasHero = 1 %}
+
+{% block content %}
+
+    <div class="hero -pull-up">
+        <div class="container">
+            <h1>Beat Saber Server Browser</h1>
+            <p class="lead">BSSB is a mod for Beat Saber that makes it easy to share and join multiplayer lobbies.</p>
+            <div class="buttons">
+                <a href="/download" class="btn -download" title="Download the Server Browser mod for Beat Saber">
+                    <i class="mdi mdi-tray-arrow-down"></i> Download the mod
+                </a>
+                {% if config.enableGuide %}
+                    <a href="/guide" class="btn -guide" title="Interactive guide for modded Beat Saber multiplayer">
+                        <i class="mdi mdi-book-open-variant"></i> Multiplayer modding guide
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <main class="frontpage-servers">
+        <div class="container">
+            {% if serverMessage %}
+                <div class="alert" title="Service message">
+                    <i class="mdi mdi-bullhorn-variant"></i>
+                    <span>{{ serverMessage }}</span>
+                </div>
+            {% endif %}
+            {% include "tables/hosted_games_table.twig" %}
+            {% include "bits/paginator.twig" with {paginator: queryResult} %}
+        </div>
+    </main>
+
+{% endblock %}

@@ -8,6 +8,7 @@ require_once __DIR__ . "/geoip2/geoip2.phar";
 
 final class GeoIp
 {
+    private static ?GeoIp $instance = null;
     private ?Reader $reader;
 
     public function __construct()
@@ -17,6 +18,13 @@ final class GeoIp
         } catch (\Exception) {
             $this->reader = null;
         }
+
+        self::$instance = $this;
+    }
+
+    public static function instance(): GeoIp
+    {
+        return self::$instance ?? new GeoIp();
     }
 
     public function lookupRecord(string $ipOrEndpoint): ?array
@@ -48,20 +56,22 @@ final class GeoIp
         return null;
     }
 
-    public function describeLocation(string $ipOrEndpoint): ?string
+    public function describeLocation(string $ipOrEndpoint, bool $includeSubdivisons = true, bool $includeCountry = true): ?string
     {
         if ($record = $this->lookupRecord($ipOrEndpoint)) {
             $parts = [];
 
             // Subdivision (state)
-            if (isset($record['subdivisions'])) {
+            if ($includeSubdivisons && isset($record['subdivisions'])) {
                 foreach ($record['subdivisions'] as $subdivision) {
                     $parts[] = $subdivision['names']['en'];
                 }
             }
 
             // Country name
-            $parts[] = $record['country']['names']['en'];
+            if ($includeCountry) {
+                $parts[] = $record['country']['names']['en'];
+            }
 
             return implode(', ', $parts);
         }

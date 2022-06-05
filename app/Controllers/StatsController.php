@@ -10,6 +10,7 @@ use app\HTTP\Response;
 use app\HTTP\Responses\NotFoundResponse;
 use app\Models\HostedGame;
 use app\Models\LevelRecord;
+use app\Models\Player;
 
 class StatsController
 {
@@ -53,29 +54,27 @@ class StatsController
             return $resCache->readAsResponse();
         }
 
-        $uniqueHostCount = intval(HostedGame::query()
-            ->select("COUNT(DISTINCT(owner_id)) AS count")
-            ->where('server_type IS NULL OR server_type IN (?)', [HostedGame::SERVER_TYPE_PLAYER_HOST,
-                HostedGame::SERVER_TYPE_NORMAL_DEDICATED])
+        $totalPlayerCount = intval(Player::query()
+            ->select("COUNT(id) AS count")
             ->querySingleValue());
 
-        $uniqueLevelCount = intval(LevelRecord::query()
-            ->select("COUNT(DISTINCT(id)) AS count")
+        $totalLobbyCount = intval(HostedGame::query()
+            ->select("COUNT(id) AS count")
             ->querySingleValue());
 
-        $totalPlayStat = intval(LevelRecord::query()
+        $totalPlayCount = intval(LevelRecord::query()
             ->select("SUM(stat_play_count) AS count")
             ->querySingleValue());
 
         $topLevelsCustom = $this->queryTopLevels(self::TopCustomLevels, 0, 10);
         $topLevelsOfficial = $this->queryTopLevels(self::TopOfficialLevels, 0, 10);
 
-        $view = new View('stats.twig');
+        $view = new View('pages/stats-overview.twig');
         $view->set('pageUrl', '/stats');
         $view->set('stats', [
-            'uniqueHostCount' => $uniqueHostCount,
-            'uniqueLevelCount' => $uniqueLevelCount,
-            'totalPlayStat' => $totalPlayStat,
+            'totalPlayerCount' => $totalPlayerCount,
+            'totalLobbyCount' => $totalLobbyCount,
+            'totalPlayCount' => $totalPlayCount,
             'topLevelsCustom' => $topLevelsCustom,
             'topLevelsOfficial' => $topLevelsOfficial
         ]);
@@ -104,7 +103,7 @@ class StatsController
                 break;
             case self::TopNonBeatSaverLevels:
                 $pageTitle = "Top 100 Non-Beat Saver Levels";
-                $pageDescr = "These are the most played custom levels in modded Beat Saber multiplayer that are NOT available for download on Beat Saver.";
+                $pageDescr = "These are the most played custom levels in modded Beat Saber multiplayer that aren't available on Beat Saver.";
                 break;
             default:
                 return new NotFoundResponse();
@@ -119,7 +118,7 @@ class StatsController
 
         $topLevels = $this->queryTopLevels($urlSection, 0, 100);
 
-        $view = new View('stats_top_levels.twig');
+        $view = new View('pages/stats-top-levels.twig');
         $view->set('pageUrl', "/stats/top/{$urlSection}");
         $view->set('pageTitle', $pageTitle);
         $view->set('pageDescr', $pageDescr);

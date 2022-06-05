@@ -1,0 +1,66 @@
+{% extends "_base.twig" %}
+
+{% set tab = "guide" %}
+
+{% block content %}
+
+    <main role="main" class="guide-page">
+        <div class="container">
+            <h1>Multiplayer Modding Guide</h1>
+            <div class="disclaimer"><i class="mdi mdi-clock-outline"></i> Last updated {{ lastUpdate|timeago_html|raw }} for Beat Saber {{ currentGameVersion }}</div>
+            <div class="guide-bubble">
+                <div class="face -skin-Smurf -size-md">
+                    <div class="eyes -Eyes6"></div>
+                </div>
+                <div class="text">
+                    <p>This interactive guide will help you set up modded Beat Saber multiplayer, so you can play custom songs.</p>
+                    <p class="instruction">Select your platform and game version below.</p>
+                </div>
+            </div>
+            <div class="guide-filters">
+                <div class="block">
+                    <form class="inner" method="post" action="/guide">
+                        <div class="field">
+                            <label for="platform">Your platform:</label>
+                            <select name="platform" id="platform">
+                                {% for key, label in platformOptions %}
+                                    <option value="{{ key }}" {% if platformValue == key %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="version">Game version:</label>
+                            <select name="version" id="version">
+                                {% for gameVersion in allGameVersions %}
+                                    {% if gameVersion == currentGameVersion %}
+                                        <option value="{{ currentGameVersion }}">{{ currentGameVersion }} (Latest)</option>
+                                    {% else %}
+                                        <option value="{{ gameVersion }}" {% if versionValue == gameVersion %}selected{% endif %}>{{ gameVersion }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                                <option value="other">Other or older version</option>
+                            </select>
+                        </div>
+                        <div class="button-wrap">
+                            <button type="submit" class="btn">
+                                <i class="mdi mdi-book-arrow-right"></i>
+                                <span>Get instructions</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="help-text">
+                <p>
+                    <span>Quick links:</span><br />
+                    <a href="/guide/quest/1.17.1">Multiplayer Modding on Oculus Quest 1.17.1</a><br />
+                    <a href="/guide/steam/1.18.3">Multiplayer Modding on Steam (PC) 1.18.3</a>
+                </p>
+            </div>
+            <div class="help-text">
+                <p>If you can't find what you're looking for here, you can also ask questions in the <a href="https://discord.com/invite/gezGrFG4tz" target="_blank"><i class="mdi mdi-discord"></i> BeatTogether Community</a> or <a href="https://discord.gg/beatsabermods" target="_blank"><i class="mdi mdi-discord"></i> Beat Saber Modding Group</a></p>
+            </div>
+        </div>
+    </main>
+
+{% endblock %}

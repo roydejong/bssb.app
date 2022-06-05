@@ -6,7 +6,7 @@ use app\HTTP\Response;
 
 class JsonResponse extends Response
 {
-    public function __construct($dataToSerialize)
+    public function __construct($dataToSerialize, int $responseCode = 200)
     {
         $_fnProcessArray = function (array $arr) use (&$_fnProcessArray) {
             foreach ($arr as $key => &$value) {
@@ -25,6 +25,6 @@ class JsonResponse extends Response
 
         $body = json_encode($_fnProcessArray($dataToSerialize));
 
-        parent::__construct(200, $body, "application/json");
+        parent::__construct($responseCode, $body, "application/json");
     }
 }

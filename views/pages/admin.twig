@@ -1,0 +1,43 @@
+{% extends "_base.twig" %}
+
+{% block content %}
+    <main class="user-settings">
+        <div class="container">
+
+            <form method="post" action="/admin">
+                <input type="hidden" name="__token" value="{{ __token }}"/>
+
+                <div class="content-head">
+                    <div class="text">
+                        <h1>Admin</h1>
+                        <p class="lead">Site admin options</p>
+                    </div>
+                    <div class="buttons">
+                        <button type="submit" class="btn -save"><i class="mdi mdi-check"></i> Apply</button>
+                    </div>
+                </div>
+
+                {% if formError %}
+                    <div class="alert">Your profile could not be updated. Please check your input and try again.</div>
+                {% endif %}
+
+                <div class="settings-form">
+                    <div class="block">
+                        <div class="title">
+                            <i class="mdi mdi-alert-box"></i>
+                            <h3>Live service message</h3>
+                        </div>
+                        <div class="inner -textarea">
+                            <label for="serverMessage">Set global live service message (in site / in mod):</label>
+                            <textarea name="serverMessage" id="serverMessage"
+                                      rows="2" class="-smol"
+                                      placeholder="(No message)">{{ formData.serverMessage }}</textarea>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+    </main>
+{% endblock %}

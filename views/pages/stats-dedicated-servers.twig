@@ -1,0 +1,53 @@
+{% extends "pages/stats.base.twig" %}
+
+{% set statsTab = "dedicated-servers" %}
+
+{% block innerContent %}
+    <h1>Dedicated Server List</h1>
+    <p class="lead">This is an overview of all dedicated game servers seen in the past {{ cutoffDays }} days. These are the servers that host multiplayer lobbies. Some of these are official servers, but most are provided by the modding community.</p>
+
+    <table class="rounded-table -extra-spacing-h -extra-spacing-v">
+        <thead>
+        <tr>
+            <th>Server</th>
+            <th>Type</th>
+            <th>Location (GeoIP)</th>
+            <th>Last seen
+            <th>Last lobby</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for server in servers %}
+            <tr>
+                <td><code>{{ server.endpoint }}</code></td>
+                <td>{{ server.describeServerType() }}</td>
+                <td>
+                    {% set geo = geoData[server.endpoint.__toString()] %}
+                    {% if geo and geo.text %}
+                        {% if geo.countryCode %}
+                            <img src="/static/flags/{{ geo.countryCode|lower }}.png" alt="{{ geo.countryCode }}"/>
+                        {% endif %}
+                        <span class="geo-text">{{ geo.text }}</span>
+                    {% else %}
+                        <span class="geo-text">-</span>
+                    {% endif %}
+                </td>
+                <td>{{ server.lastUpdate.format('r')|timeago_html|raw }}</td>
+                <td class="{{ server.getIsStale() ? "stale-lobby" : "active-lobby" }}">
+                    <strong>
+                        <a href="{{ server.getWebDetailUrl() }}">{{ server.gameName }}</a>
+                    </strong>
+                </td>
+            </tr>
+        {% else %}
+            <div class="alert -minor">
+                <i class="mdi mdi-server-off"></i>
+                <strong>No servers found</strong>
+            </div>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% include "bits/paginator.twig" %}
+
+{% endblock %}

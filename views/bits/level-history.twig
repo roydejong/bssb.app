@@ -1,0 +1,70 @@
+{% if not historyItem %}
+    {% set historyItem = level %}
+{% endif %}
+{% if not level %}
+    {% set level = historyItem %}
+{% endif %}
+
+{% if historyItem.startedAt is not null and historyItem.endedAt is null %}
+    {% set isNowPlayingLvlHistory = 1 %}
+{% endif %}
+
+<a href="{{ historyItem.getDetailUrl() }}" class="level-history"
+   style="{% if historyItem.coverUrl %}background-image: url('{{ historyItem.coverUrl }}');{% endif %}">
+    <div class="inner">
+        {% if historyItem.coverUrl %}
+            <img class="cover-art" src="{{ historyItem.coverUrl }}" alt="{{ historyItem.historyItemName }}" loading="lazy"/>
+        {% else %}
+            <div class="cover-art dummy-cover-art">
+                <i class="mdi mdi-music"></i>
+            </div>
+        {% endif %}
+        <div class="text">
+            {% if historyItem.playerId %}
+                {% if not historyItem.placement or not historyItem.getHasFinished() %}
+                    <div class="placement -alone">
+                        <i class="mdi mdi-emoticon-sad"></i>
+                        <span class="special">{{ historyItem.describeFailReason() }}</span>
+                    </div>
+                {% elseif historyItem.placement == 1 and historyItem.playedPlayerCount <= 1 %}
+                    <div class="placement -alone">
+                        <i class="mdi mdi-timer-sand"></i>
+                        <span class="special">Played alone</span>
+                    </div>
+                {% else %}
+                    <div class="placement -place-{{ historyItem.placement }}">
+                        <i class="mdi mdi-trophy-variant"></i>
+                        <span class="special">Placed #{{ historyItem.placement }} of {{ historyItem.playedPlayerCount }}</span>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="placement -server {% if isNowPlayingLvlHistory %}-now-playing{% endif %}">
+                    {% if isNowPlayingLvlHistory %}
+                        <i class="mdi mdi-sword-cross"></i>
+                        Now playing
+                    {% else %}
+                        <i class="mdi mdi-clock"></i>
+                        {{ historyItem.startedAt|timeago }}
+                    {% endif %}
+                </div>
+            {% endif %}
+            <div class="song">
+                <div class="title">
+                    <span>{{ historyItem.songName }}</span> <span class="by">by {{ historyItem.songAuthor }}</span>
+                </div>
+                {% include "bits/level-tags.twig" %}
+            </div>
+        </div>
+        {% if historyItem.modifiedScore is not null %}
+            <div class="score">
+                <div class="score-rank -rank-{{ historyItem.scoreRank.name }}">{{ historyItem.scoreRank.name }}</div>
+                <div class="score-value">{{ historyItem.modifiedScore|number_format(0, ',', ',') }}</div>
+                {% if historyItem.fullCombo %}
+                    <div class="score-combo -full">Full Combo</div>
+                {% else %}
+                    <div class="score-combo">Combo × {{ historyItem.maxCombo }}</div>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</a>

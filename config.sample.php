@@ -30,10 +30,28 @@ $bssbConfig['response_cache_enabled'] = true;
 $bssbConfig['hashids_salt'] = "🧂";
 
 /**
+ * steam_web_api_key, string
+ *  → Steam Web API key (optional, for getting steam usernames).
+ */
+$bssbConfig['steam_web_api_key'] = "";
+
+/**
  * master server blacklist, array of strings
  *  → Games with a master server from this list will not be allowed to announce.
  */
 $bssbConfig['master_server_blacklist'] = [];
+
+/**
+ * allow_multiple_results, boolean
+ *  → If enabled, AnnounceResultsController will not ignore duplicate or late results and process them like new
+ */
+$bssbConfig['allow_multiple_results'] = false;
+
+/**
+ * enable_guide, boolean
+ *  → If enabled, enable multiplayer guide page/feature
+ */
+$bssbConfig['enable_guide'] = false;
 
 /**
  * Instarecord configuration

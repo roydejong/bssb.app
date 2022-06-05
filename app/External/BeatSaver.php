@@ -5,7 +5,7 @@ namespace app\External;
 use app\HTTP\Request;
 use function Sentry\captureException;
 
-class BeatSaver
+final class BeatSaver
 {
     public static function fetchMapDataByHash(string $hash): ?array
     {

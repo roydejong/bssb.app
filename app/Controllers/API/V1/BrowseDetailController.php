@@ -30,6 +30,6 @@ class BrowseDetailController
             return new NotFoundResponse();
         }
 
-        return new JsonResponse($game->jsonSerialize(true));
+        return new JsonResponse($game->jsonSerialize(true, true, true));
     }
 }

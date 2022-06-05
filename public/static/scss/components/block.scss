@@ -1,0 +1,120 @@
+.block {
+  background: var(--col-bg-darker);
+  border-radius: 6px;
+  margin: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-size: 1.4rem;
+
+  @media all and (max-width: 999px) {
+    margin-bottom: 0;
+  }
+
+  > .title {
+    display: flex;
+    align-items: center;
+    padding: 2rem 3rem;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    background: var(--col-bg-darkest);
+
+    i {
+      display: inline-block;
+      margin-right: 5px;
+    }
+    h3 {
+      display: inline-block;
+      margin: 0;
+    }
+  }
+  > .inner {
+    padding: 2rem 3rem;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+
+    &.-textarea-fill {
+      padding: 0;
+
+      textarea {
+        display: block;
+        padding: 2rem 3rem;
+        border: none;
+        appearance: none;
+        background: transparent;
+        font: inherit;
+        outline: none !important;
+        color: var(--col-txt-main);
+        width: 100%;
+        min-height: 180px;
+        box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, .45), inset 999px 999px rgba(255, 255, 255, .05);
+        margin: 0;
+        border-spacing: 0;
+        border-bottom-left-radius: 6px;
+        border-bottom-right-radius: 6px;
+        resize: none;
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+    }
+
+    &.-textarea {
+      display: flex;
+      flex-direction: column;
+
+      label {
+        font-weight: var(--font-weight-bold);
+        cursor: pointer;
+        margin-bottom: 1.5rem;
+      }
+
+      textarea {
+        appearance: none;
+        font: inherit;
+        background: var(--col-bg-darkest);
+        color: var(--col-txt-main);
+        border-radius: 6px;
+        padding: 1.5rem;
+        box-shadow: inset 0 0 1px 1px rgba(0, 0, 0, .1);
+        border: 1px solid var(--col-bg-darker);
+        resize: none;
+        min-height: 180px;
+        resize: none;
+        outline: none;
+
+        &:active, &:focus {
+          border: 1px solid var(--col-saber-left);
+        }
+
+        &.-smol {
+          min-height: 80px;
+        }
+      }
+    }
+
+    &.-no-shadow {
+      &, * {
+        box-shadow: none !important;
+      }
+    }
+
+    table {
+      width: 100%;
+
+      td, th {
+        vertical-align: middle;
+        text-align: left;
+        padding: 5px 0;
+      }
+
+      code {
+        color: var(--col-saber-left);
+        font-family: monospace;
+      }
+    }
+  }
+}
+
+.container > .block {
+  width: 100%;
+}

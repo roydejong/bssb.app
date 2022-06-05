@@ -34,6 +34,7 @@ class SystemConfig extends Model
                 self::$instance = new SystemConfig();
                 self::$instance->id = 1;
                 self::$instance->serverMessage = null;
+                self::$instance->create();
             }
         }
 

@@ -10,6 +10,8 @@ use app\BeatSaber\MultiplayerLobbyState;
 use app\BSSB;
 use app\Common\CVersion;
 use app\Common\IPEndPoint;
+use app\Models\Joins\LevelHistoryWithLevelRecord;
+use app\Models\Traits\HasBeatmapCharacteristic;
 use app\Utils\PirateDetect;
 use DateTime;
 use Hashids\Hashids;
@@ -17,6 +19,8 @@ use SoftwarePunt\Instarecord\Model;
 
 class HostedGame extends Model implements \JsonSerializable
 {
+    use HasBeatmapCharacteristic;
+
     // -----------------------------------------------------------------------------------------------------------------
     // Consts
 
@@ -103,11 +107,6 @@ class HostedGame extends Model implements \JsonSerializable
      */
     public ?int $difficulty;
     /**
-     * Characteristic of the level being played.
-     * Only available in ServerBrowser v1.0+.
-     */
-    public ?string $characteristic;
-    /**
      * Announcer's platform (e.g. "steam", "oculus")
      */
     public string $platform = ModPlatformId::UNKNOWN;
@@ -119,6 +118,10 @@ class HostedGame extends Model implements \JsonSerializable
      * Port number for the Master Server this game is hosted on.
      */
     public ?int $masterServerPort;
+    /**
+     * The multiplayer status check URL associated with the master server.
+     */
+    public ?string $masterStatusUrl;
     /**
      * Indicates when the announcement was cancelled, or NULL if it was not explicitly cancelled.
      */
@@ -224,6 +227,11 @@ class HostedGame extends Model implements \JsonSerializable
         return $this->lastUpdate < self::getStaleGameCutoff();
     }
 
+    public function getIsStaleOrEnded(): bool
+    {
+        return $this->getIsStale() || $this->endedAt;
+    }
+
     public static function getStaleGameCutoff(): \DateTime
     {
         $cutoffMinutes = self::STALE_GAME_AFTER_MINUTES;
@@ -250,6 +258,20 @@ class HostedGame extends Model implements \JsonSerializable
 
         return $this->masterServerHost === null
             || strpos($this->masterServerHost, ".mp.beatsaber.com") !== false;
+    }
+
+    public function getIsPeerToPeer(): bool
+    {
+        if ($this->gameVersion && $this->gameVersion->greaterThanOrEquals(new CVersion("1.16.3")))
+            // Game version is too new to be P2P
+            return false;
+
+        if ($this->serverType === self::SERVER_TYPE_PLAYER_HOST)
+            // Server type is specifically marked as P2P
+            return true;
+
+        // Default mode: old game version, every non-quickplay game should be P2P
+        return !$this->getIsQuickplay();
     }
 
     public function getIsGameLiftServer(): bool
@@ -296,6 +318,17 @@ class HostedGame extends Model implements \JsonSerializable
         } else {
             return "Unknown";
         }
+    }
+
+    public function describeMasterServerSelection(): string
+    {
+        if ($this->getIsOfficial())
+            return "Official";
+
+        if ($this->getIsBeatTogether())
+            return "BeatTogether";
+
+        return $this->masterServerHost;
     }
 
     public function describeSong(): ?string
@@ -370,6 +403,27 @@ class HostedGame extends Model implements \JsonSerializable
         };
     }
 
+    public function describeGameDetail(): string
+    {
+        if ($this->getIsQuickplay()) {
+            // e.g. "Official Quickplay 1.21.0 Multiplayer Lobby"
+            $parts = [
+                $this->describeServerType(),
+                $this->gameVersion,
+                "Multiplayer Lobby"
+            ];
+        } else {
+            // e.g. "Custom 1.21.0 Multiplayer Lobby on BeatTogether Dedicated"
+            $parts = array_filter([
+                "Custom",
+                $this->gameVersion,
+                "Multiplayer Lobby",
+                "on {$this->describeServerType()}"
+            ]);
+        }
+        return implode(' ', $parts);
+    }
+
     public function getIsInLobby(): bool
     {
         $stateNormal = $this->getAdjustedState();
@@ -380,9 +434,18 @@ class HostedGame extends Model implements \JsonSerializable
             $stateNormal === MultiplayerLobbyState::Error;
     }
 
-    public function getIsPlayingLevel(): bool
+    public function getIsPlayingLevel(bool $mustBeInGameplayScene = false): bool
     {
-        return !empty($this->levelId) && !$this->getIsInLobby();
+        if (empty($this->levelId))
+            return false;
+
+        if ($this->getIsInLobby())
+            return false;
+
+        if ($mustBeInGameplayScene)
+            return $this->getAdjustedState() == MultiplayerLobbyState::GameRunning;
+        else
+            return true;
     }
 
     public function getMinPlayerCount(): int
@@ -441,6 +504,22 @@ class HostedGame extends Model implements \JsonSerializable
         return $this->firstSeen;
     }
 
+    public function describeRequiredMods(): ?string
+    {
+        $modNames = [];
+
+        if ($this->mpCoreVersion)
+            $modNames[] = "MultiplayerCore {$this->mpCoreVersion}";
+
+        if ($this->mpExVersion)
+            $modNames[] = "MultiplayerExtensions {$this->mpExVersion}";
+
+        if (empty($modNames))
+            return null;
+
+        return implode(" and ", $modNames);
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     // Moderation
 
@@ -484,7 +563,7 @@ class HostedGame extends Model implements \JsonSerializable
     // -----------------------------------------------------------------------------------------------------------------
     // Serialize
 
-    public function jsonSerialize(bool $includeDetails = false): array
+    public function jsonSerialize(bool $includeDetails = false, bool $includeLevelObject = false, bool $includeLevelHistory = false): array
     {
         $sz = $this->getPropertyValues();
         $sz['key'] = $this->getHashId();
@@ -493,12 +572,25 @@ class HostedGame extends Model implements \JsonSerializable
             $sz['masterServerEp'] = "{$this->masterServerHost}:{$this->masterServerPort}";
 
         if ($includeDetails) {
-            $sz['level'] = $this->serializeLevel();
             $sz['players'] = $this->serializePlayers();
+        }
+
+        if ($includeDetails || $includeLevelObject) {
+            $sz['level'] = $this->serializeLevel();
+            unset($sz['beatsaverId']);
+            unset($sz['coverUrl']);
+            unset($sz['levelName']);
+            unset($sz['levelId']);
+            unset($sz['songName']);
+            unset($sz['songAuthor']);
         }
 
         $sz['serverTypeText'] = $this->describeServerType();
         $sz['masterServerText'] = $this->describeMasterServer();
+
+        if ($includeLevelHistory) {
+            $sz['levelHistory'] = LevelHistoryWithLevelRecord::queryHistoryForGame($this->id, 10);
+        }
 
         return $sz;
     }
@@ -513,6 +605,9 @@ class HostedGame extends Model implements \JsonSerializable
         $sz = [];
 
         foreach ($this->fetchPlayers() as $player) {
+            if (!$player->isConnected)
+                continue;
+
             $sz[] = [
                 'userId' => $player->userId,
                 'userName' => $player->userName,

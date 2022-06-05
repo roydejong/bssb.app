@@ -14,11 +14,13 @@
     "php": ">=8.1",
     "ext-json": "*",
     "ext-curl": "*",
-    "twig/twig": "^3.0",
+    "twig/twig": "^3.4",
     "softwarepunt/instarecord": "dev-master@dev",
-    "hashids/hashids": "^4.0",
-    "sentry/sdk": "^3.0",
-    "lavary/crunz": "^3.0"
+    "hashids/hashids": "^4.1",
+    "sentry/sdk": "^3.2",
+    "lavary/crunz": "^3.2",
+    "xpaw/steam-openid": "^2.0",
+    "robmorgan/phinx": "^0.12.10"
   },
   "require-dev": {
     "ext-xdebug": "*",
@@ -28,6 +30,12 @@
     "psr-4": {
       "app\\": "app/",
       "tests\\": "tests/"
+    }
+  },
+  "config": {
+    "preferred-install": {
+      "softwarepunt/*": "source",
+      "*": "dist"
     }
   }
 }

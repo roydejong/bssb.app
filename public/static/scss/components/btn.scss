@@ -1,0 +1,40 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 6px;
+  padding: .75rem 1.5rem;
+  user-select: none;
+  cursor: pointer;
+  text-shadow: 0 0 2px rgba(0, 0, 0, .1);
+  font: inherit;
+  font-weight: var(--font-weight-medium);
+  background: var(--col-blue);
+  color: var(--col-txt-main);
+  text-decoration: none !important;
+  border: none;
+  appearance: none;
+
+  > i {
+    font-size: 1.8rem;
+  }
+  > i:first-child, > img:first-child {
+    margin-right: .75rem;
+  }
+
+  &, * {
+    transition: box-shadow .1s ease-out, color .1s ease-out;
+  }
+
+  &.-green, &.-download, &.-save {
+    background-color: var(--col-green-dark);
+  }
+  &.-blue, &.-guide {
+    background-color: var(--col-blue);
+  }
+}
+.btn:hover {
+  box-shadow: inset 999px 999px 999px rgba(255, 255, 255, .1);
+}
+.btn:active {
+  box-shadow: inset 999px 999px 999px rgba(0, 0, 0, .25);
+}

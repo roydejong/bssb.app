@@ -1,0 +1,134 @@
+.results-detail {
+
+  .container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin: 1.5rem 0;
+  }
+
+  .results-title {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--col-bg-darkest);
+    border-radius: 6px;
+    overflow: hidden;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    padding: 1.5rem;
+
+    &:after {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(90deg, rgba(0,0,0,.9) 20%, rgba(0,0,0,.666) 100%);
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+
+    .cover-art {
+      position: relative;
+      border-radius: 6px;
+      margin: 0 1.5rem 0 0;
+      z-index: 3;
+      flex-grow: 0;
+      flex-shrink: 0;
+      width: 128px;
+      height: 128px;
+    }
+
+    .title {
+      position: relative;
+      z-index: 2;
+      margin-top: -1px;
+
+      &, > .inner {
+        display: flex;
+        flex-grow: 1;
+      }
+
+      > .inner {
+        display: flex;
+        flex-direction: column;
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, .1);
+      }
+    }
+
+    .info-line {
+      display: flex;
+      align-items: center;
+      margin: .5rem 0;
+      font-size: 1.6rem;
+      font-weight: var(--font-weight-medium);
+
+      i {
+        margin-right: 1rem;
+      }
+
+      > span {
+        font-weight: var(--font-weight-bold);
+      }
+
+      .by {
+        font-size: 1.4rem;
+        font-weight: var(--font-weight-medium);
+        color: var(--col-txt-muted-mediumlight);
+        margin-left: .5rem;
+        margin-top: 2px;
+
+        &:first-child {
+          margin-left: 0;
+        }
+      }
+
+      abbr {
+        margin: 2px 5px 0 5px;
+
+        &:first-child {
+          margin-left: 0;
+        }
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+
+    .level-tags {
+      margin-top: 1rem;
+      min-height: 26px;
+
+      &, .tag {
+        font-size: 1.5rem;
+        font-weight: var(--font-weight-medium);
+      }
+      .tag {
+        padding: 0 10px;
+        height: 26px;
+      }
+    }
+
+    @media all and (max-width: 999px) {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+
+      .cover-art {
+        margin-bottom: 1.5rem;
+      }
+    }
+  }
+
+  .players-table {
+    margin-top: 1.5rem;
+  }
+}

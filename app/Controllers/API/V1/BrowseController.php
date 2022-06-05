@@ -35,11 +35,14 @@ class BrowseController
         $searchQuery = $request->queryParams['query'] ?? null;
         $platformConstraint = $request->queryParams['platform'] ?? null;
         $isVanilla = intval($request->queryParams['vanilla'] ?? 0) === 1;
+        $includeLevel = intval($request->queryParams['includeLevel'] ?? 0) === 1;
 
         $filterFull = intval($request->queryParams['filterFull'] ?? 0) === 1;
         $filterInProgress = intval($request->queryParams['filterInProgress'] ?? 0) === 1;
         $filterModded = $isVanilla || intval($request->queryParams['filterModded'] ?? 0) === 1;
+        $filterVanilla = intval($request->queryParams['filterVanilla'] ?? 0) === 1;
         $filterServerType = $request->queryParams['filterServerType'] ?? null;
+        $filterQuickPlay = intval($request->queryParams['filterQuickPlay'] ?? 0) === 1;
 
         // -------------------------------------------------------------------------------------------------------------
         // Query
@@ -103,10 +106,12 @@ class BrowseController
         // Filter: Vanilla mode; hide all modded, MpEx games
         if ($filterModded) {
             $baseQuery->andWhere('is_modded = 0');
+        } else if ($filterVanilla) {
+            $baseQuery->andWhere('is_modded = 1');
         }
 
-        // Hide Quick Play games if unsupported by mod version
-        if (!$mci->getSupportsQuickPlayServers()) {
+        // Hide Quick Play games if unsupported by mod version or requested by filter
+        if (!$mci->getSupportsQuickPlayServers() || $filterQuickPlay) {
             $baseQuery->andWhere('server_type IS NULL OR server_type NOT IN (?)',
                 [HostedGame::SERVER_TYPE_BEATTOGETHER_QUICKPLAY, HostedGame::SERVER_TYPE_BEATDEDI_QUICKPLAY,
                     HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY]);
@@ -131,13 +136,20 @@ class BrowseController
         $totalCount = intval($countQuery->select()->count()->querySingleValue());
 
         // Data
-        $games = [];
+        $gamesSz = [];
 
         if ($totalCount > 0) {
+            /**
+             * @var $games HostedGame[]
+             */
             $games = $baseQuery
                 ->offset($offset)
                 ->limit($limit)
                 ->queryAllModels();
+
+            foreach ($games as $game) {
+                $gamesSz[] = $game->jsonSerialize(false, $includeLevel);
+            }
         }
 
         $sysConfig = SystemConfig::fetchInstance();
@@ -146,7 +158,7 @@ class BrowseController
             "Count" => $totalCount,
             "Offset" => $offset,
             "Limit" => $limit,
-            "Lobbies" => $games,
+            "Lobbies" => $gamesSz,
             "Message" => $sysConfig->serverMessage
         ]);
     }

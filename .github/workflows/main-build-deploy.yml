@@ -24,11 +24,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: MySQL import db_structure.sql
-      run: |
-        mysql --version
-        mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -uuser -psecret test_db < db_structure.sql
-
     - name: Install PHP 8.1
       uses: shivammathur/setup-php@v2
       with:
@@ -55,6 +50,9 @@ jobs:
 
     - name: Copy config file
       run: cp config.github.php config.php
+
+    - name: Seed / migrate database
+      run: vendor/bin/phinx migrate
 
     - name: PHPUnit
       env:

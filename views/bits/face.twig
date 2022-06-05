@@ -1,0 +1,21 @@
+{% if size is not defined %}
+    {% set size = "sm" %}
+{% endif %}
+
+{% if not skinColorId %}
+    {% set skinColorId = "Alien" %}
+{% endif %}
+
+{% if not eyesId %}
+    {% set eyesId = "QuestionMark" %}
+{% endif %}
+
+{% if not isDedicatedServer %}
+    <div class="face -size-{{ size }} -skin-{{ skinColorId }}">
+        <div class="eyes -{{ eyesId }}"></div>
+    </div>
+{% else %}
+    <div class="face -server -size-{{ size }}">
+        <i class="mdi mdi-server"></i>
+    </div>
+{% endif %}

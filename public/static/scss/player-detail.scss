@@ -1,0 +1,156 @@
+.player-detail {
+  .profile-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    > * {
+      margin: 20px 5px;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+.active-lamp {
+  display: inline-flex;
+  height: 8px;
+  width: 8px;
+  background: #2ecc71;
+  border-radius: 50%;
+  flex-grow: 0;
+  flex-shrink: 0;
+  margin-right: 2px;
+  margin-bottom: 2px;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+.server-card {
+  margin: 15px 0;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  padding: 15px;
+  overflow: hidden;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, .5);
+
+  &:after {
+    content: "";
+    background: rgba(0, 0, 0, .25);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  &.-alive {
+    border-color: #1e7e34 !important;
+  }
+
+  .bg {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 0;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    opacity: .5;
+    filter: blur(8px);
+    -webkit-filter: blur(8px);
+  }
+
+  .col-cover {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    max-width: 100px;
+
+    img {
+      background: #666;
+      border-radius: 6px;
+      margin-right: 15px;
+      height: 48px;
+      width: 48px;
+      object-fit: cover;
+      overflow: hidden;
+      box-shadow: 0 0 5px rgba(0, 0, 0, .5);
+    }
+  }
+  .col-details {
+    position: relative;
+    z-index: 1;
+    display: block;
+    flex-grow: 1;
+    margin: 0;
+
+    p {
+      margin: 0;
+      color: #ccc;
+      font-size: 14px;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+.avatar-render-wrap {
+  position: relative;
+  overflow: hidden;
+
+  > div {
+    overflow: hidden;
+    border-radius: 0.25rem;
+    border: 1px solid #375a7f;
+  }
+}
+
+#avatar-render {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0;
+  width: 100%;
+  min-height: 500px;
+  overflow: hidden;
+  background-image: url('/static/bsavatar/avatar-stage-bg.jpg');
+  background-position: center center;
+  background-size: cover;
+
+  canvas {
+    position: relative;
+    z-index: 2;
+  }
+}
+
+.avatar-render-warning {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, .75);
+  overflow: hidden;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  padding: 50px;
+  font-size: 16px;
+  font-weight: bold;
+  pointer-events: none;
+  user-select: none;
+  text-shadow: 0 0 3px rgba(0, 0, 0, .1);
+}

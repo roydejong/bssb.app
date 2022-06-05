@@ -1,0 +1,39 @@
+{% extends "pages/player-profile.base.twig" %}
+
+{% block innerContent %}
+
+    {% if privacyMode %}
+        {% if not player.showHistory %}
+            <div class="alert">
+                <i class="mdi mdi-eye-off"></i>
+                <strong>This player has disabled their game history.</strong>
+            </div>
+        {% else %}
+            <div class="alert">
+                <i class="mdi mdi-eye-off"></i>
+                <strong>This player has never used the Server Browser mod, so their game history is hidden by default.</strong>
+            </div>
+        {% endif %}
+    {% elseif (not levelHistory or levelHistory|length == 0) and paginator.pageIndex == 0 %}
+        <div class="alert -minor">
+            <i class="mdi mdi-motion-play-outline"></i>
+            <strong>No level history found for this user. Check back later.</strong>
+        </div>
+    {% else %}
+        {% set lastHostedGameId = 0 %}
+        {% for historyItem in levelHistory %}
+            {% set hostedGameId = historyItem.hostedGameId %}
+            {% if lastHostedGameId != hostedGameId %}
+                <h3 class="server-group-header {% if lastHostedGameId == 0 %}-first{% endif %}">
+                    <a href="{{ historyItem.getServerUrl() }}">{{ historyItem.gameName }}</a>
+                    <span class="when"><i class="mdi mdi-clock-outline"></i> {{ historyItem.firstSeen|timeago_html|raw }}</span>
+                </h3>
+                {% set lastHostedGameId = hostedGameId %}
+            {% endif %}
+            {% include "bits/level-history.twig" with {levelHistory: historyItem, level: historyItem} %}
+        {% endfor %}
+    {% endif %}
+
+    {% include "bits/paginator.twig" %}
+
+{% endblock %}
