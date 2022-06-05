@@ -28,14 +28,17 @@ final class MasterServerStatus
         return [
             'minimum_app_version' => $this->minimumAppVersion,
             'status' => $this->status?->value ?? 0,
-            'maintenance_start_time' => $this->maintenanceStartTime->getTimestamp(),
-            'maintenance_end_time' => $this->maintenanceEndTime->getTimestamp(),
+            'maintenance_start_time' => $this->maintenanceStartTime?->getTimestamp() ?? null,
+            'maintenance_end_time' => $this->maintenanceEndTime?->getTimestamp() ?? null,
             'use_gamelift' => $this->useGamelift
         ];
     }
 
     public function asJson(): string
     {
+        if ($this->originalJson)
+            return $this->originalJson;
+
         return json_encode($this->asArray());
     }
 

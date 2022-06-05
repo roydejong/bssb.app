@@ -87,7 +87,7 @@ class ViewRenderer
         // Config data
         global $bssbConfig;
         $userContext['config'] = [
-            'enable_guide' => !!$bssbConfig['enable_guide']
+            'enable_guide' => !!($bssbConfig['enable_guide'] ?? false)
         ];
 
         return $userContext;
