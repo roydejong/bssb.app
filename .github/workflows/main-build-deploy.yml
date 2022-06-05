@@ -32,11 +32,6 @@ jobs:
         coverage: xdebug
         tools: none
 
-    - name: Install MySQL client
-      run: |
-        mysql --version
-        sudo apt update && sudo apt install mysql-client mysql-client-8.0 -y 
-
     - name: Validate composer.json and composer.lock
       run: composer validate
 
