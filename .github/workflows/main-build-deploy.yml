@@ -57,7 +57,7 @@ jobs:
       run: cp config.github.php config.php
 
     - name: Seed / migrate database
-      run: vendor/bin/phinx migrate
+      run: vendor/bin/phinx migrate --configuration=phinx.github.yml
 
     - name: PHPUnit
       env:
