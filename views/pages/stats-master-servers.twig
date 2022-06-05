@@ -63,7 +63,11 @@
                             <div class="master-status -offline">
                                 Status check failed
                             </div>
-                        {% elseif status.status.value == 1 or status.maintenanceStartTime %}
+                        {% elseif status.status.value == 0 %}
+                            <div class="master-status -online">
+                                Online
+                            </div>
+                        {% elseif status.status.value == 1 %}
                             <div class="master-status -maintenance">
                                 Maintenance upcoming
                             </div>
@@ -72,10 +76,6 @@
                                     Maintenance: {{ status.maintenanceStartTime|timeago_html|raw }}
                                 </div>
                             {% endif %}
-                        {% elseif status.status.value == 0 %}
-                            <div class="master-status -online">
-                                Online
-                            </div>
                         {% elseif status.status.value == 2 %}
                             <div class="master-status -offline">
                                 Offline
