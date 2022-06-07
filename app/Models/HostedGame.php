@@ -525,9 +525,21 @@ class HostedGame extends Model implements \JsonSerializable
 
     public function getIsUninteresting(): bool
     {
-        if ($this->masterServerHost === "127.0.0.1" || $this->masterServerHost === "localhost") {
-            return true;
+        $badHostPrefixes = [
+            "localhost",
+            "192.",
+            "127.",
+        ];
+
+        foreach ($badHostPrefixes as $badPrefix) {
+            if (str_starts_with($this->masterServerHost, $badPrefix)) {
+                return true;
+            }
+            if (str_starts_with($this->endpoint, $badPrefix)) {
+                return true;
+            }
         }
+
         return false;
     }
 
