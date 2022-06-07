@@ -33,6 +33,8 @@ class PlayerProfileController
         $isAuthed = $session->getIsSteamAuthed();
         $viewerPlayer = $isAuthed ? $session->getPlayer() : null;
 
+        $pageIndex = intval($request->queryParams['page'] ?? 1) - 1;
+
         // -------------------------------------------------------------------------------------------------------------
         // Tabs
 
@@ -61,15 +63,11 @@ class PlayerProfileController
         // -------------------------------------------------------------------------------------------------------------
         // Cache
 
-        $resCache = null;
+        $resCacheKey = self::CACHE_KEY_PREFIX . "{$tabId}_{$pageIndex}_" . md5($userId); // hash to prevent key manipulation
+        $resCache = new ResponseCache($resCacheKey, self::CACHE_TTL);
 
-        if (!$isAuthed) {
-            $resCacheKey = self::CACHE_KEY_PREFIX . $tabId . "_" . md5($userId); // hash to prevent key manipulation
-            $resCache = new ResponseCache($resCacheKey, self::CACHE_TTL);
-
-            if ($resCache->getIsAvailable()) {
-                return $resCache->readAsResponse();
-            }
+        if ($resCache->getIsAvailable()) {
+            return $resCache->readAsResponse();
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -137,8 +135,6 @@ class PlayerProfileController
 
         $levelHistory = [];
         if (!$enablePrivacyShield && $loadHistory) {
-            $pageIndex = intval($request->queryParams['page'] ?? 1) - 1;
-
             $levelHistoryQuery = LevelHistoryPlayerWithDetails::query()
                 ->select('lh.*, lhp.*, lr.*, hg.game_name, hg.first_seen, lhp.id AS id')
                 ->from('level_history_players lhp')
@@ -186,11 +182,7 @@ class PlayerProfileController
         $view->set('siteRole', $player->getSiteRole());
 
         $response = $view->asResponse();
-
-        if ($resCache) {
-            @$resCache->writeResponse($response);
-        }
-
+        $resCache->writeResponse($response);
         return $response;
     }
 
