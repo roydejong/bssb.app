@@ -66,6 +66,7 @@ class GameDetailController
         // Response
 
         $view = new View('pages/game-detail-info.twig');
+        $view->set('pageTitle', $game->gameName);
         $view->set('baseUrl', $game->getWebDetailUrl());
         $view->set('game', $game);
         $view->set('level', $level);
