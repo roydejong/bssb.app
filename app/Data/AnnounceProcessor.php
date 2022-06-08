@@ -238,8 +238,7 @@ final class AnnounceProcessor
         if ($this->sessionGameId) {
             // Modern level history
             $this->serverLevel = LevelHistory::query()
-                ->where('hosted_game_id = ?', $game->id)
-                ->andWhere('session_game_id = ?', $this->sessionGameId)
+                ->where('session_game_id = ?', $this->sessionGameId)
                 ->querySingleModel();
 
             $now = new \DateTime('now');
@@ -252,7 +251,7 @@ final class AnnounceProcessor
                 $this->serverLevel->endedAt = null;
             }
 
-            if ($this->serverLevel->endedAt === null) {
+            if ($this->serverLevel->hostedGameId === $game->id && $this->serverLevel->endedAt === null) {
                 $this->serverLevel->levelRecordId = $this->tempLevelData->id;
                 $this->serverLevel->difficulty = $game->difficulty;
                 $this->serverLevel->characteristic = $game->characteristic;
