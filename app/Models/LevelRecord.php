@@ -224,6 +224,27 @@ class LevelRecord extends Model implements \JsonSerializable
         return $levelRecord;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function create(): bool
+    {
+        if ($this->beatsaverId) {
+            $previousRecordWithKey = LevelRecord::query()
+                ->where('beatsaver_id = ?', $this->beatsaverId)
+                ->querySingleModel();
+
+            if ($previousRecordWithKey) {
+                // Overwrite existing record!
+                $this->id = $previousRecordWithKey->id;
+                $this->markAllPropertiesDirty();
+                return $this->update();
+            }
+        }
+
+        return parent::create();
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     // Stats
 
