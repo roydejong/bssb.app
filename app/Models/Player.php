@@ -17,6 +17,7 @@ use SoftwarePunt\Instarecord\Model;
 class Player extends Model
 {
     public const BeatTogetherUserId = "ziuMSceapEuNN7wRGQXrZg";
+    public const BeatUpServerUserId = "dtxJlHm56k6ZXcnxhbyfiA";
 
     public int $id;
     public string $userId;
@@ -60,6 +61,8 @@ class Player extends Model
             if ($playerRecord->userId === self::BeatTogetherUserId) {
                 // User ID matches the fixed value for all BeatTogether-based servers
                 $playerRecord->type = PlayerType::DedicatedServerBeatTogether;
+            } else if ($playerRecord->userId === self::BeatUpServerUserId) {
+                $playerRecord->type = PlayerType::DedicatedServerBeatUpServer;
             } else if (str_starts_with($playerRecord->userId, "arn:aws:gamelift")) {
                 // User ID matches the fixed value for all Official GameLift servers
                 $playerRecord->type = PlayerType::DedicatedServerGameLift;
@@ -150,8 +153,10 @@ class Player extends Model
 
     public function getIsDedicatedServer(): bool
     {
-        return ($this->type === PlayerType::DedicatedServer || $this->type === PlayerType::DedicatedServerGameLift
-            || $this->type === PlayerType::DedicatedServerBeatTogether);
+        return ($this->type === PlayerType::DedicatedServer
+            || $this->type === PlayerType::DedicatedServerGameLift
+            || $this->type === PlayerType::DedicatedServerBeatTogether
+            || $this->type === PlayerType::DedicatedServerBeatUpServer);
     }
 
     public function describeType(bool $shorten = false): string
@@ -172,6 +177,7 @@ class Player extends Model
             PlayerType::PlayerModUser => $shorten ? "Player" : "Player with Server Browser",
             PlayerType::DedicatedServer => "Dedicated Server",
             PlayerType::DedicatedServerBeatTogether => "BeatTogether Server",
+            PlayerType::DedicatedServerBeatUpServer => "BeatUpServer",
             default => "Unknown",
         };
         if ($shorten) {
