@@ -538,12 +538,13 @@ final class AnnounceProcessor
     private function validateServerCode(?string $serverCode, bool $isQuickPlay): bool
     {
         if ($isQuickPlay && empty($serverCode))
-            // In theory, we're okay with empty server codes for Quick Play
-            // In reality, Quick Play servers all have a useless server code anyway
+            // Official servers have with empty server codes for Quick Play
+            // BeatTogether Quick Play servers do have a server code anyway which is fine
             return true;
 
-        // Normally speaking, we want a 5-character alphanumeric server code, always
-        return !empty($serverCode) && strlen($serverCode) === 5 && ctype_alnum($serverCode);
+        // Normally speaking, we want a 5-character alphanumeric server code
+        // Exception: BeatUpServer may use < 5 length server codes
+        return !empty($serverCode) && strlen($serverCode) <= 5 && ctype_alnum($serverCode);
     }
 
     private function validateMasterServer(?string $masterServerHost): bool

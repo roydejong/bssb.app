@@ -422,12 +422,22 @@ class AnnounceControllerTest extends TestCase
             return $request;
         };
 
+
         $this->assertSame(200, ((new AnnounceController())->announce($fnCreateRequest("12345")))->code,
-            "5 digit server code should be accepted");
-        $this->assertSame(400, ((new AnnounceController())->announce($fnCreateRequest("1234")))->code,
-            "4 digit server code should be rejected");
+            "5 char server code should be accepted");
+        $this->assertSame(200, ((new AnnounceController())->announce($fnCreateRequest("1234")))->code,
+            "4 char server code should be accepted");
+        $this->assertSame(200, ((new AnnounceController())->announce($fnCreateRequest("123")))->code,
+            "3 char server code should be accepted");
+        $this->assertSame(200, ((new AnnounceController())->announce($fnCreateRequest("12")))->code,
+            "2 char server code should be accepted");
+        $this->assertSame(200, ((new AnnounceController())->announce($fnCreateRequest("1")))->code,
+            "1 char server code should be accepted");
+
+        $this->assertSame(400, ((new AnnounceController())->announce($fnCreateRequest("")))->code,
+            "0 char server code should be rejected");
         $this->assertSame(400, ((new AnnounceController())->announce($fnCreateRequest("123456")))->code,
-            "6 digit server code should be rejected");
+            "6 char server code should be rejected");
         $this->assertSame(400, ((new AnnounceController())->announce($fnCreateRequest("áéáóç")))->code,
             "non-alphanumeric server code should be rejected");
     }
