@@ -806,4 +806,33 @@ class AnnounceControllerTest extends TestCase
         $this->assertSame("2001:db8:3333:4444:5555:6666:7777:8888", $game->endpoint->host);
         $this->assertSame(1234, $game->endpoint->port);
     }
+
+    /**
+     * @depends testMinimalAnnounce
+     */
+    public function testGameLiftAnnounce()
+    {
+        $request = new MockJsonRequest([
+            'ServerCode' => '', // may be empty for GL quickplay
+            'OwnerId' => 'arn:aws:gamelift:us-west-2::gamesession/fleet-74bf89ba-3702-4b24-907c-9f29969d86a6/us-east-1/9473d9cc-5dfe-47d7-874f-c60daeca7570',
+            'HostSecret' => 'arn:aws:gamelift:us-west-2::gamesession/fleet-74bf89ba-3702-4b24-907c-9f29969d86a6/us-east-1/9473d9cc-5dfe-47d7-874f-c60daeca7570',
+            'MasterServerHost' => null,
+            'Endpoint' => "54.208.127.212:8116",
+            'ServerType' => "vanilla_quickplay"
+        ]);
+        $request->method = "POST";
+        $request->path = "/api/v1/announce";
+        $request->headers["user-agent"] = "ServerBrowser/1.0.0 (BeatSaber/1.22.1) (steam)";
+
+        $response = (new AnnounceController())->announce($request);
+        $json = json_decode($response->body, true);
+        $game = HostedGame::fetch(HostedGame::hash2id($json['key']));
+
+        $this->assertSame("graph.oculus.com", $game->masterServerHost);
+        $this->assertSame($game->ownerId, $game->hostSecret);
+        $this->assertTrue($game->getIsGameLiftServer());
+        $this->assertSame("us-east-1", $game->tryGetGameLiftRegion());
+        $this->assertEmpty($game->serverCode);
+        $this->assertTrue($game->getIsQuickplay());
+    }
 }

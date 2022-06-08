@@ -421,6 +421,11 @@ final class AnnounceProcessor
             }
         }
 
+        // If GameLift host, set master server info manually for display in stats
+        if ($game->getIsGameLiftServer() && empty($game->masterServerHost)) {
+            $game->masterServerHost = "graph.oculus.com";
+        }
+
         // Status URL (as of BSSB 1.0+)
         $game->masterStatusUrl = $this->getString('MasterStatusUrl');
     }
