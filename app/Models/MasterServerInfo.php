@@ -110,7 +110,10 @@ class MasterServerInfo extends Model
             return null;
 
         $masterServerInfo = self::fetchOrCreate($game->masterServerHost, $game->masterServerPort);
-        $masterServerInfo->statusUrl = $game->masterStatusUrl;
+
+        if ($game->masterStatusUrl)
+            $masterServerInfo->statusUrl = $game->masterStatusUrl;
+
         $masterServerInfo->isOfficial = MasterServer::getHostnameIsOfficial($masterServerInfo->host);
 
         if ($game->firstSeen >= $masterServerInfo->firstSeen)
