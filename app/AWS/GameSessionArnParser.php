@@ -62,7 +62,14 @@ class GameSessionArnParser
             return null;
 
         $result->fleetId = $resourceIdParts[$i++] ?? null;
-        $result->fleetRegion = $resourceIdParts[$i++] ?? null;
+
+        // Fleet region isn't always included for some reason; assume this means it's in the same region as AWS base
+        if (count($resourceIdParts) > $i + 1) {
+            $result->fleetRegion = $resourceIdParts[$i++] ?? null;
+        } else {
+            $result->fleetRegion = $result->awsRegion;
+        }
+
         $result->gameSessionId = $resourceIdParts[$i++] ?? null;
 
         return $result;
