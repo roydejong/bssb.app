@@ -76,21 +76,31 @@
                             <div class="master-status -maintenance">
                                 Maintenance upcoming
                             </div>
-                            {% if status.maintenanceStartTime %}
-                                <div class="master-status-extra">
-                                    Maintenance: {{ status.maintenanceStartTime|timeago_html|raw }}
-                                </div>
-                            {% endif %}
                         {% elseif status.status.value == 2 %}
                             <div class="master-status -offline">
                                 Offline
                             </div>
                         {% endif %}
-                        {% if status.minimumAppVersion %}
+
+                        {% if status.status.value > 0 %}
+                            {% if status.maintenanceStartTime %}
+                                <div class="master-status-extra">
+                                    Maintenance start: {{ status.maintenanceStartTime|timeago_html|raw }}
+                                </div>
+                            {% endif %}
+                            {% if status.maintenanceEndTime %}
+                                <div class="master-status-extra">
+                                    Maintenance end: {{ status.maintenanceEndTime|timeago_html|raw }}
+                                </div>
+                            {% endif %}
+                        {% endif %}
+
+                        {% if status.status.value == 0 and status.minimumAppVersion %}
                             <div class="master-status-extra">
                                 Minimum version: {{ status.minimumAppVersion }}
                             </div>
                         {% endif %}
+
                     </td>
                     <td>{{ sevenDayCount }}</td>
                     <td>{{ server.game_count|number_format(0, ',') }}</td>
