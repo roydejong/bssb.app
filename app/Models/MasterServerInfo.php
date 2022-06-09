@@ -26,6 +26,7 @@ class MasterServerInfo extends Model
     public \DateTime $lastSeen;
     public ?string $lastStatusJson;
     public ?\DateTime $lastUpdated;
+    public bool $hide;
 
     // -----------------------------------------------------------------------------------------------------------------
     // Table

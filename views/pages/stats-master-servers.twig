@@ -20,7 +20,7 @@
         {% for server in servers %}
             {% set key = server.master_server_host ~ ':' ~ server.master_server_port %}
             {% set info = masterServerInfo[key] %}
-            {% if info %}
+            {% if info and not info.hide %}
                 <tr>
                     {% set sevenDayCount = 0 %}
                     {% set seenThisWeek = false %}
