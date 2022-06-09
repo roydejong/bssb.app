@@ -155,7 +155,7 @@ class AnnounceControllerTest extends TestCase
             'PlayerCount' => 2,
             'PlayerLimit' => 5,
             'IsModded' => true,
-            'LobbyState' => MultiplayerLobbyState::LobbySetup,
+            'LobbyState' => MultiplayerLobbyState::LobbyCountdown,
             'Difficulty' => LevelDifficulty::Easy,
             'Platform' => ModPlatformId::STEAM,
             'MasterServerHost' => MasterServer::OFFICIAL_HOSTNAME_STEAM,
@@ -181,6 +181,8 @@ class AnnounceControllerTest extends TestCase
             "Game data should update when replacing the announce");
         $this->assertSame(self::$fullAnnounceTestResult->levelId, $updatedResult->levelId,
             "Extra data like level id should not be removed on update, even if NULL in update request");
+        $this->assertSame(MultiplayerLobbyState::LobbyCountdown, $updatedResult->lobbyState,
+            "Lobby state should have been updated");
         $this->assertNull($updatedResult->endedAt);
     }
 

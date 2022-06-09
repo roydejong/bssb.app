@@ -171,7 +171,10 @@ final class AnnounceProcessor
         $game->managerId = $managerId;
         $game->playerCount = $this->clampPlayerCount($playerCount, false);
         $game->playerLimit = $this->clampPlayerLimit($playerLimit);
-        $game->lobbyState = $lobbyState;
+
+        if (empty($game->lobbyState) || $lobbyState !== MultiplayerLobbyState::None)
+            $game->lobbyState = $lobbyState;
+
         $game->platform = $modPlatform;
         $game->endpoint = $endpoint;
 
