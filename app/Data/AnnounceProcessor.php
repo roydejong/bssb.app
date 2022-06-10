@@ -36,7 +36,7 @@ final class AnnounceProcessor
         $this->clientInfo = $clientInfo;
         $this->data = [];
         foreach ($data as $key => $value) {
-            if (empty($key) || empty($value))
+            if (empty($key) || $value === null || $value === "")
                 continue;
 
             $this->data[strtolower($key)] = $value;
@@ -90,6 +90,16 @@ final class AnnounceProcessor
     private function getInt(string $key, int $defaultValue = 0): int
     {
         return intval($this->get($key, $defaultValue));
+    }
+
+    private function getIntNullable(string $key): ?int
+    {
+        $val = $this->get($key, null);
+
+        if ($val === null)
+            return null;
+
+        return intval($val);
     }
 
     private function getBool(string $key): bool
@@ -461,7 +471,7 @@ final class AnnounceProcessor
             $songSubName = $levelData['SongSubName'] ?? null;
             $songAuthorName = $levelData['SongAuthorName'] ?? null;
             $levelAuthorName = $levelData['LevelAuthorName'] ?? null;
-            $difficulty = intval($levelData['Difficulty']) ?? null;
+            $difficulty = isset($levelData['Difficulty']) ? intval($levelData['Difficulty']) : null;
             $characteristic = $levelData['Characteristic'] ?? null;
             $sessionGameId = $levelData['SessionGameId'] ?? null;
 
@@ -477,10 +487,15 @@ final class AnnounceProcessor
             $songSubName = null; // not supported yet <v1
             $songAuthorName = $this->getString('SongAuthor');
             $levelAuthorName = null; // not supported yet <v1
-            $difficulty = $this->getInt('Difficulty');
+            $difficulty = $this->getIntNullable('Difficulty');
             $characteristic = null; // not supported yet <v1
             $sessionGameId = null; // not supported yet <v1
             $gameplayModifiers = null; // not supported yet <v1
+        }
+
+        if ($difficulty === null && $game->getIsQuickplay()) {
+            // Quick Play lobbies announced with "null" difficulty are actually "All" difficulty
+            $difficulty = LevelDifficulty::All;
         }
 
         if ($levelId) {

@@ -4,6 +4,7 @@ namespace app\BeatSaber;
 
 class LevelDifficulty
 {
+    const All = -1;
     const Easy = 0;
     const Normal = 1;
     const Hard = 2;
@@ -12,13 +13,14 @@ class LevelDifficulty
 
     public static function describe(?int $difficulty): string
     {
-        if ($difficulty === null) {
+        if ($difficulty === null)
             return "Unknown";
-        }
 
         switch ($difficulty) {
             default:
                 return "Unknown";
+            case self::All:
+                return "All";
             case self::Easy:
                 return "Easy";
             case self::Normal:

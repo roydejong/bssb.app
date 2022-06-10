@@ -111,7 +111,7 @@ class AnnounceControllerTest extends TestCase
         $this->assertSame('"It\'s a me, Mario!" - Super Mario 64', $announce->songName);
         $this->assertSame("GilvaSunner", $announce->songAuthor);
         $this->assertTrue($announce->isModded);
-        $this->assertSame(0, $announce->difficulty);
+        $this->assertSame(LevelDifficulty::Easy, $announce->difficulty);
         $this->assertSame("steam", $announce->platform);
         $this->assertSame("custom-server.com", $announce->masterServerHost);
         $this->assertSame(2328, $announce->masterServerPort);
@@ -531,6 +531,25 @@ class AnnounceControllerTest extends TestCase
         $this->assertSame("Official Quick Play - Hard", $game->gameName);
     }
 
+    /**
+     * @depends testSetsQuickPlayName
+     */
+    public function testSetsQuickPlayName_BT_All()
+    {
+        $request = clone self::$minimalAnnounceRequest;
+        $request->json['ServerType'] = HostedGame::SERVER_TYPE_BEATTOGETHER_QUICKPLAY;
+        $request->json['HostSecret'] = 'bla4321';
+        $request->json['Difficulty'] = null;
+        $request->json['GameName'] = '💩';
+
+        $response = (new AnnounceController())->announce($request);
+        $json = json_decode($response->body, true);
+        $this->assertTrue($json["success"], "Quick Play announce should succeed");
+        $game = HostedGame::fetch(HostedGame::hash2id($json['key']));
+
+        $this->assertSame("BeatTogether Quick Play - All", $game->gameName);
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     // Player list sync
 
@@ -812,7 +831,7 @@ class AnnounceControllerTest extends TestCase
     /**
      * @depends testMinimalAnnounce
      */
-    public function testGameLiftAnnounce()
+    public function testGameLiftQuickPlayAnnounce()
     {
         $request = new MockJsonRequest([
             'ServerCode' => '', // may be empty for GL quickplay
