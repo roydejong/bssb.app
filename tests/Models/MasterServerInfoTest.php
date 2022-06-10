@@ -43,5 +43,29 @@ class MasterServerInfoTest extends TestCase
            "First seen should equal game first seen");
        $this->assertGreaterThanOrEqual($testDateTimeLast, $syncedInfo->lastSeen,
            "Last seen should equal game last seen");
+
+       // Try to remove status URL
+       $hostedGame->masterStatusUrl = null;
+
+       $syncedInfo2 = MasterServerInfo::syncFromGame($hostedGame);
+
+       $this->assertSame($syncedInfo->statusUrl, $syncedInfo2->statusUrl,
+           "Status URL should remain unchanged if hosted game has none set");
+
+       // Try to update status URL - to BeatTogether
+       $hostedGame->masterStatusUrl = "https://master.beattogether.systems/status";
+
+       $syncedInfo3 = MasterServerInfo::syncFromGame($hostedGame);
+
+       $this->assertSame($syncedInfo->statusUrl, $syncedInfo3->statusUrl,
+           "Status URL should remain unchanged if hosted game has it set to BeatTogether");
+
+       // Try to update status URL - to new value
+       $hostedGame->masterStatusUrl = "https://special.server/status";
+
+       $syncedInfo3 = MasterServerInfo::syncFromGame($hostedGame);
+
+       $this->assertSame($hostedGame->masterStatusUrl , $syncedInfo3->statusUrl,
+           "Status URL should be updated if hosted game has it set to a custom value");
    }
 }

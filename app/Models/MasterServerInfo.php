@@ -112,19 +112,38 @@ class MasterServerInfo extends Model
 
         $masterServerInfo = self::fetchOrCreate($game->masterServerHost, $game->masterServerPort);
 
-        if ($game->masterStatusUrl)
-            $masterServerInfo->statusUrl = $game->masterStatusUrl;
+        $masterServerInfo->setStatusUrlIfBetter($game->masterStatusUrl);
 
         $masterServerInfo->isOfficial = MasterServer::getHostnameIsOfficial($masterServerInfo->host);
 
-        if ($game->firstSeen >= $masterServerInfo->firstSeen)
+        if ($game->firstSeen < $masterServerInfo->firstSeen)
             $masterServerInfo->firstSeen = $game->firstSeen;
 
-        if ($game->lastUpdate >= $masterServerInfo->lastSeen)
+        if ($game->lastUpdate > $masterServerInfo->lastSeen)
             $masterServerInfo->lastSeen = $game->lastUpdate;
 
         $masterServerInfo->save();
 
         return $masterServerInfo;
+    }
+
+    /**
+     * Updates the Multiplayer Status URL, but only if it does not appear to be or a "downgrade".
+     * Context: Users don't always configure this correctly, so we have to filter out the noise.
+     *
+     * @param string|null $statusUrl
+     * @return void
+     */
+    private function setStatusUrlIfBetter(?string $statusUrl): void
+    {
+        if (empty($statusUrl))
+            // Do not allow status URLs to ever be removed
+            return;
+
+        if ($this->statusUrl && str_ends_with($statusUrl, "://master.beattogether.systems/status"))
+            // Do not allow re-use of BeatTogether status URL if we already have a status URL
+            return;
+
+        $this->statusUrl = $statusUrl;
     }
 }
