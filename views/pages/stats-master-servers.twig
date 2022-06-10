@@ -45,7 +45,9 @@
                                        data-placement="bottom" title="Official Server"></i>
                                 {% endif %}
                             </span>
-                            {% if info.resolvedIp %}
+                            {% if info.isOfficial %}
+                                <span><code>{{ server.master_server_host }}</code></span>
+                            {% elseif info.resolvedIp %}
                                 <span><code>{{ info.resolvedIp }}:{{ server.master_server_port }}</code></span>
                             {% else %}
                                 <span><code>{{ server.master_server_host }}:{{ server.master_server_port }}</code></span>
