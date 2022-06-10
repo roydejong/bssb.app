@@ -511,9 +511,6 @@ class HostedGame extends Model implements \JsonSerializable
         if ($this->mpCoreVersion)
             $modNames[] = "MultiplayerCore {$this->mpCoreVersion}";
 
-        if ($this->mpExVersion)
-            $modNames[] = "MultiplayerExtensions {$this->mpExVersion}";
-
         if (empty($modNames))
             return null;
 
