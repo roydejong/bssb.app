@@ -2075,12 +2075,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/SoftwarePunt/instarecord.git",
-                "reference": "060cbb80ff59b9dce31b405bada0cdc8dec8fc80"
+                "reference": "fb3a2e85bf1e0e58f1755ae47464fa8a312417ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SoftwarePunt/instarecord/zipball/060cbb80ff59b9dce31b405bada0cdc8dec8fc80",
-                "reference": "060cbb80ff59b9dce31b405bada0cdc8dec8fc80",
+                "url": "https://api.github.com/repos/SoftwarePunt/instarecord/zipball/fb3a2e85bf1e0e58f1755ae47464fa8a312417ad",
+                "reference": "fb3a2e85bf1e0e58f1755ae47464fa8a312417ad",
                 "shasum": ""
             },
             "require": {
@@ -2116,7 +2116,7 @@
                 "issues": "https://github.com/SoftwarePunt/instarecord/issues",
                 "source": "https://github.com/SoftwarePunt/instarecord/tree/master"
             },
-            "time": "2022-06-11T14:21:56+00:00"
+            "time": "2022-06-11T14:43:14+00:00"
         },
         {
             "name": "symfony/config",
