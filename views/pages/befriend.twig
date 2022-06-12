@@ -1,0 +1,47 @@
+{% extends "_base.twig" %}
+
+{% block content %}
+    <main class="befriend">
+        <div class="container">
+
+            <h1>
+                <i class="mdi mdi-account-group"></i>
+                <span>Add friends</span>
+            </h1>
+            <p class="lead">You can search for Server Browser users by their name here.</p>
+
+            <a href="{{ self_profile_url }}/friends">Back to friends list</a>
+
+            <form method="get">
+                <div class="search-form">
+                    <input required minlength="1" type="text" name="query" id="query" placeholder="Search by name or ID" value="{{ queryValue }}"/>
+                    <button type="submit" class="btn -download">Search</button>
+                </div>
+            </form>
+
+            <form method="post">
+                <div class="results">
+                    {% if resultMessage %}
+                        <div class="alert">
+                            <i class="mdi mdi-account-cog"></i>
+                            <span>{{ resultMessage }}</span>
+                        </div>
+                    {% endif %}
+                    {% if results is not null %}
+                        {% for friendship in results %}
+                            {% include "bits/friend-result.twig" %}
+                        {% else %}
+                            <div class="no-servers-active">
+                                <p><strong>No players found</strong></p>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                {% include "bits/paginator.twig" %}
+
+            </form>
+
+        </div>
+    </main>
+{% endblock %}

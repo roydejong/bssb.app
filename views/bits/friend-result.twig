@@ -1,0 +1,38 @@
+<div class="friend-result">
+    {% include "bits/face.twig" with {size: "sm", skinColorId: friendship.skinColorId, eyesId: friendship.eyesId} %}
+    <div class="text">
+        <a href="{{ friendship.getWebDetailUrl() }}"><h4>{{ friendship.userName }}</h4></a>
+        <p class="player-type">{{ friendship.describeType() }}</p>
+    </div>
+    <div class="controls">
+        {% if friendship.hasFriendship %}
+            {% if friendship.isFriendshipPending %}
+                {% if friendship.friendRequesterId == self_player_id %}
+                    <a class="btn -disabled">
+                        <i class="mdi mdi-check"></i>
+                        <span>Request sent</span>
+                    </a>
+                {% else %}
+                    <button class="btn -download" name="action-accept" value="{{ friendship.friendshipId }}">
+                        <i class="mdi mdi-check"></i>
+                        <span>Accept Friend</span>
+                    </button>
+                    <button class="btn -danger" name="action-remove" value="{{ friendship.friendshipId }}">
+                        <i class="mdi mdi-cancel"></i>
+                        <span>Deny</span>
+                    </button>
+                {% endif %}
+            {% else %}
+                <button class="btn -ultralite" name="action-remove" value="{{ friendship.friendshipId }}">
+                    <i class="mdi mdi-trash-can-outline"></i>
+                    Remove friend
+                </button>
+            {% endif %}
+        {% else %}
+            <button class="btn" name="action-add" value="{{ friendship.id }}">
+                <i class="mdi mdi-account-plus"></i>
+                Add as Friend
+            </button>
+        {% endif %}
+    </div>
+</div>

@@ -9,6 +9,7 @@ use app\Controllers\API\V1\BrowseServerCodeController;
 use app\Controllers\API\V1\StatusController;
 use app\Controllers\API\V1\UnAnnounceController;
 use app\Controllers\API\V2\UnAnnounceControllerV2;
+use app\Controllers\BefriendController;
 use app\Controllers\DedicatedServersController;
 use app\Controllers\DownloadController;
 use app\Controllers\GameDetailController;
@@ -49,6 +50,7 @@ $router->register('/game/$hashId/players', GameDetailController::class, 'getGame
 $router->register('/game/$hashId/plays', GameDetailController::class, 'getGameDetailPlays');
 $router->register('/player/$userId', PlayerProfileController::class, 'getPlayerProfile');
 $router->register('/player/$userId/$profileSection', PlayerProfileController::class, 'getPlayerProfile');
+$router->register('/befriend', BefriendController::class, 'getBefriend');
 $router->register('/privacy', PrivacyController::class, 'getPrivacy');
 $router->register('/master-servers', MasterServersController::class, 'getServerList');
 $router->register('/dedicated-servers', DedicatedServersController::class, 'getServerList');

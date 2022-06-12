@@ -324,3 +324,135 @@
     }
   }
 }
+
+.privacy-only-you {
+  display: block;
+  width: 100%;
+  text-align: right;
+  color: #666;
+  font-size: 1.4rem;
+  margin: 0 0 1.5rem 0;
+}
+
+.friend-list-controls {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 1.5rem;
+
+  .btn {
+    flex-shrink: 0;
+  }
+  .privacy-only-you  {
+    margin: 0;
+  }
+}
+
+.befriend {
+  .container {
+    align-items: flex-start;
+    flex-direction: column;
+
+    h1 {
+      margin: 1.5rem 0;
+    }
+    p.lead {
+      margin: 0 0 1.5rem 0;
+    }
+
+    form {
+      display: block;
+      width: 100%;
+    }
+
+    .search-form {
+      display: flex;
+      align-items: center;
+      margin-top: 2rem;
+      width: 425px;
+
+      input {
+        flex-grow: 1;
+        display: block;
+        appearance: none;
+        background: transparent;
+        font: inherit;
+        margin: 0 1rem 0 0;
+        border-spacing: 0;
+        resize: none;
+        overflow-x: hidden;
+        overflow-y: auto;
+        appearance: none;
+        font: inherit;
+        background: var(--col-bg-darkest);
+        color: var(--col-txt-main);
+        border-radius: 6px;
+        padding: 0 1rem;
+        box-shadow: inset 0 0 1px 1px rgba(0, 0, 0, .1);
+        border: 1px solid #666;
+        outline: none;
+        height: 34px;
+
+        &:active, &:focus {
+          border: 1px solid var(--col-saber-left);
+        }
+      }
+    }
+
+    .results {
+      width: 100%;
+      border-top: 2px solid #333;
+      margin-top: 3rem;
+      padding-top: 3rem;
+
+      .alert {
+        margin-top: 0;
+        margin-bottom: 3rem;
+      }
+    }
+  }
+}
+
+.friend-list {
+  width: 100%;
+}
+
+.friend-result {
+  border: 1px solid #333;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  display: flex;
+  padding: 1.5rem;
+
+  .face {
+    margin: 0 1.5rem 0 0;
+  }
+  .text {
+    display: flex;
+    flex-direction: column;
+
+    h4 {
+      margin: 0 0 .5rem 0;
+      font-size: 1.6rem;
+    }
+    p {
+      margin: 0;
+      font-size: 1.4rem;
+      color: var(--col-txt-muted-light);
+    }
+  }
+  .controls {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    justify-content: flex-end;
+
+    .btn {
+      margin-right: 1rem;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}

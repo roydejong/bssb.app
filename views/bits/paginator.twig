@@ -12,7 +12,7 @@
         {% endif %}
 
         {% for i in 0..(paginator.pageCount - 1) %}
-            <a class="page page-numbered {% if paginator.pageIndex == i %}-active{% endif %}"
+            <a class="page page-numbered {% if paginator.pageIndex == i or (i == 0 and paginator.pageIndex <= 0) %}-active{% endif %}"
                href="{{ paginationBaseUrl|with_query_param("page", i + 1) }}">
                 <span>{{ i + 1 }}</span>
             </a>

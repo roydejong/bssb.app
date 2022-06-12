@@ -79,9 +79,11 @@ class ViewRenderer
             $player = $session->getPlayer();
 
             $userContext['steam_authed'] = true;
+            $userContext['self_player_id'] = $player?->id ?? null;
             $userContext['self_player_name'] = $player?->userName ?? "Steam User";
             $userContext['self_face_render'] = $player?->renderFaceHtml();
             $userContext['self_is_admin'] = $player?->getIsSiteAdmin();
+            $userContext['self_profile_url'] = $player->getWebDetailUrl();
         }
 
         // Config data

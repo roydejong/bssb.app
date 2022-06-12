@@ -1,0 +1,28 @@
+{% extends "pages/player-profile.base.twig" %}
+
+{% block innerContent %}
+    <div class="row {% if isDedicatedServer %}-is-server{% endif %}">
+        <div class="friend-list-controls">
+            <a class="btn -download" href="/befriend">
+                <i class="mdi mdi-account-plus"></i>
+                <span>Add a friend</span>
+            </a>
+            <div class="privacy-only-you">
+                <i class="mdi mdi-lock"></i>
+                <span>Only you can see this page - your friends list is private</span>
+            </div>
+        </div>
+        <form method="post" class="friend-list" action="/befriend?source=friends_list">
+            {% if friendsData and friendsData|length > 0 %}
+                {% for friendship in friendsData %}
+                    {% include "bits/friend-result.twig" %}
+                {% endfor %}
+            {% else %}
+                <div class="no-servers-active">
+                    <i class="mdi mdi-emoticon-sad-outline"></i>
+                    <p><strong>You haven't added any friends yet</strong></p>
+                </div>
+            {% endif %}
+        </form>
+    </div>
+{% endblock %}

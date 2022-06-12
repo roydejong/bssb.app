@@ -31,6 +31,19 @@
   &.-blue, &.-guide {
     background-color: var(--col-blue);
   }
+  &.-disabled {
+    background-color: #364556;
+    color: var(--col-txt-muted-mediumlight);
+
+    &, &:hover, &:active {
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+  }
+  &.-ultralite {
+    background: transparent;
+    color: var(--col-blue);
+  }
 }
 .btn:hover {
   box-shadow: inset 999px 999px 999px rgba(255, 255, 255, .1);

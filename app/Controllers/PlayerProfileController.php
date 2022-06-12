@@ -13,6 +13,7 @@ use app\Models\Enums\PlayerType;
 use app\Models\HostedGame;
 use app\Models\HostedGamePlayer;
 use app\Models\Joins\LevelHistoryPlayerWithDetails;
+use app\Models\Joins\PlayerRelationshipJoin;
 use app\Models\LevelHistoryPlayer;
 use app\Models\Player;
 use app\Models\PlayerAvatar;
@@ -36,41 +37,6 @@ class PlayerProfileController
         $pageIndex = intval($request->queryParams['page'] ?? 1) - 1;
 
         // -------------------------------------------------------------------------------------------------------------
-        // Tabs
-
-        $tabId = "info";
-        $templateName = "player-profile-info";
-        $titleSuffix = "Profile";
-        $loadStats = true;
-        $loadHistory = false;
-        $loadCurrent = true;
-
-        if ($profileSection) {
-            switch ($profileSection) {
-                case "plays":
-                    $tabId = "plays";
-                    $templateName = "player-profile-plays";
-                    $titleSuffix = "Play history";
-                    $loadStats = false;
-                    $loadHistory = true;
-                    $loadCurrent = false;
-                    break;
-                default:
-                    return new NotFoundResponse();
-            }
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
-        // Cache
-
-        $resCacheKey = self::CACHE_KEY_PREFIX . "{$tabId}_{$pageIndex}_" . md5($userId); // hash to prevent key manipulation
-        $resCache = new ResponseCache($resCacheKey, self::CACHE_TTL);
-
-        if ($resCache->getIsAvailable()) {
-            return $resCache->readAsResponse();
-        }
-
-        // -------------------------------------------------------------------------------------------------------------
         // Player lookup
 
         /**
@@ -91,13 +57,61 @@ class PlayerProfileController
         $isMe = $viewerPlayer?->id === $player->id;
         $isDedicatedServer = $player->getIsDedicatedServer();
 
+        // -------------------------------------------------------------------------------------------------------------
+        // Tabs
+
+        $tabId = "info";
+        $templateName = "player-profile-info";
+        $titleSuffix = "Profile";
+        $loadStats = true;
+        $loadHistory = false;
+        $loadCurrent = true;
+        $loadFriends = false;
+
+        if ($profileSection) {
+            switch ($profileSection) {
+                case "plays":
+                    $tabId = "plays";
+                    $templateName = "player-profile-plays";
+                    $titleSuffix = "Play history";
+                    $loadStats = false;
+                    $loadHistory = true;
+                    $loadCurrent = false;
+                    break;
+                case "friends":
+                    $tabId = "friends";
+                    $templateName = "player-profile-friends";
+                    $titleSuffix = "Friends";
+                    $loadStats = false;
+                    $loadCurrent = false;
+                    $loadFriends = true;
+                    if (!$isMe) {
+                        // Friends list is visible to self only
+                        return new RedirectResponse('/me');
+                    }
+                    break;
+                default:
+                    return new NotFoundResponse();
+            }
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        // Cache
+
+        $resCacheKey = self::CACHE_KEY_PREFIX . "{$tabId}_{$pageIndex}_" . md5($userId); // hash to prevent key manipulation
+        $resCache = new ResponseCache($resCacheKey, self::CACHE_TTL);
+
+        if ($resCache->getIsAvailable()) {
+            return $resCache->readAsResponse();
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        // Player data
+
         $enablePrivacyShield = $player->type === PlayerType::PlayerObserved || !$player->showHistory;
 
         $baseUrl = $player->getWebDetailUrl();
         $paginationBaseUrl = $tabId !== "info" ? ($baseUrl . "/{$tabId}") : null;
-
-        // -------------------------------------------------------------------------------------------------------------
-        // Player data
 
         $stats = [];
         $currentGame = null;
@@ -161,6 +175,15 @@ class PlayerProfileController
         }
 
         // -------------------------------------------------------------------------------------------------------------
+        // Friends data
+
+        $friendsData = null;
+
+        if ($loadFriends) {
+            $friendsData = $this->loadFriendsData($player);
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
         // Response
 
         $view = new View("pages/{$templateName}.twig");
@@ -180,6 +203,7 @@ class PlayerProfileController
         $view->set('isDedicatedServer', $isDedicatedServer);
         $view->set('profileTab', $tabId);
         $view->set('siteRole', $player->getSiteRole());
+        $view->set('friendsData', $friendsData);
 
         $response = $view->asResponse();
         $resCache->writeResponse($response);
@@ -219,5 +243,12 @@ class PlayerProfileController
         $stats['hitCountPercentage'] = $maxHitCount > 0 ? ($stats['goodCuts'] / $maxHitCount) : 0;
 
         return $stats;
+    }
+
+    private function loadFriendsData(Player $player)
+    {
+        return PlayerRelationshipJoin::queryFriendships($player)
+            ->getPaginatedQuery()
+            ->queryAllModels();
     }
 }
