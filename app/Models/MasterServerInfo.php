@@ -49,12 +49,17 @@ class MasterServerInfo extends Model
 
     public function refreshStatus(): void
     {
-        // DNS Resolve
-        $this->resolvedIp = gethostbyname($this->host);
+        if (filter_var($this->host, FILTER_VALIDATE_IP) !== false) {
+            // Hostname is valid IP
+            $this->resolvedIp = $this->host;
+        } else {
+            // DNS Resolve
+            $this->resolvedIp = gethostbyname($this->host);
 
-        if ($this->resolvedIp === $this->host) {
-            // If gethostbyname() fails it seems to just return the hostname itself
-            $this->resolvedIp = null;
+            if ($this->resolvedIp === $this->host) {
+                // If gethostbyname() fails it seems to just return the hostname itself
+                $this->resolvedIp = null;
+            }
         }
 
         // GeoIP
