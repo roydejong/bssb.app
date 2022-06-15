@@ -28,4 +28,19 @@ class PlayerAvatarTest extends TestCase
         $this->assertNotEmpty($avatar->eyesId);
         $this->assertNotEmpty($avatar->mouthId);
     }
+
+    public function testFillAvatarData_WithAvatarExtras()
+    {
+        $avatar = new PlayerAvatar();
+
+        $avatar->fillAvatarData([
+            'skinColorId' => 'Alien',
+            'glassesId' => 'Alien', // game has a bug where skin color is sent under glasses
+            'facialHairId' => '#Glasses01$Moustache02' // BeatSaberAvatarExtras packs facial hair with its custom parts
+        ]);
+
+        $this->assertSame('Alien', $avatar->skinColorId);
+        $this->assertSame('Glasses01', $avatar->glassesId);
+        $this->assertSame('Moustache02', $avatar->facialHairId);
+    }
 }

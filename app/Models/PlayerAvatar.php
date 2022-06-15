@@ -49,6 +49,16 @@ class PlayerAvatar extends Model implements \JsonSerializable
         $this->skinColorId = $avatarData['skinColorId'] ?? "Alien";
         $this->eyesId = $avatarData['eyesId'] ?? "QuestionMark";
         $this->mouthId = $avatarData['mouthId'] ?? "None";
+
+        // Process BeatSaberAvatarExtras
+        if (str_starts_with($this->facialHairId, '#')) {
+            $extraParts = explode('$', substr($this->facialHairId, 1));
+
+            if (count($extraParts) >= 2) {
+                $this->glassesId = $extraParts[0] ?? null;
+                $this->facialHairId = $extraParts[1] ?? null;
+            }
+        }
     }
 
     private function convertUnityColorToHex(?array $unityColorData): string
