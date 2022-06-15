@@ -138,14 +138,22 @@
             <div class="server-code">
                 <div class="inner">
                     <label>Server Code</label>
-                    <div class="code-value">{{ game.serverCode }}</div>
+                    {% if game.serverCode %}
+                        <div class="code-value">{{ game.serverCode }}</div>
+                    {% endif %}
                 </div>
                 <div class="instructions">
                     <label><i class="mdi mdi-information-outline"></i> How to connect</label>
                     <p>With the Server Browser mod in game, find and select the lobby, then click Connect.</p>
                     {% if game.getIsOfficial() %}
                         {% if game.getIsQuickPlay() %}
-                            <p class="extra">(You can't use the code to connect to Official Quick Play lobbies, you must use the mod - PC only.)</p>
+                            {% if game.serverCode %}
+                                <p class="extra">(You can't use the code to connect to Official Quick Play lobbies, you must use the mod - PC only.)</p>
+                            {% elseif game.ownerId != game.hostSecret %}
+                                <p class="extra">(This lobby doesn't have a server code, so you must use the mod to connect directly - PC only.)</p>
+                            {% else %}
+                                <p class="extra-broken">NOTICE: Due to changes on official servers, you cannot join these quick play lobbies directly. We won't show them in the ingame browser for now.</p>
+                            {% endif %}
                         {% else %}
                             <div class="or"></div>
                             <p>On PC, when using Official Servers, enter the code under Join Via Code.</p>
