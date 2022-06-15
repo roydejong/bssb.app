@@ -42,6 +42,10 @@ class BrowseControllerTest extends TestCase
 
         self::createSampleGame(10, "1.18.1", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, true, customGameVersion: new CVersion("1.18.1"));
 
+        self::createSampleGame(11, "1.19.1_Vanilla", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, true, customGameVersion: new CVersion("1.19.1"), serverType: HostedGame::SERVER_TYPE_NORMAL_DEDICATED);
+        self::createSampleGame(12, "1.19.1_QuickPlay_BadSecret", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, true, customGameVersion: new CVersion("1.19.1"), serverType: HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY, hostSecret: "arn:aws:gamelift:us-west-2::gamesession/fleet-5bfdb18f-8f71-4bf4-9eaa-f78e7a1d41d7/eu-central-1/b6f03183-6a6c-4148-b7ef-dba793eb6fc0", ownerId: "arn:aws:gamelift:us-west-2::gamesession/fleet-5bfdb18f-8f71-4bf4-9eaa-f78e7a1d41d7/eu-central-1/b6f03183-6a6c-4148-b7ef-dba793eb6fc0");
+        self::createSampleGame(13, "1.19.1_QuickPlay_GoodSecret", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, true, customGameVersion: new CVersion("1.19.1"), serverType: HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY, hostSecret: "eHKfkIsz2UWazA/cet/AQQ");
+
         self::createSampleGame(0, "BadGameVersion", customGameVersion: new CVersion("1.2.3"));
 
         self::createSampleGame(null, "VanillaQuickPlay", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 3, false, hostSecret: "abc123", serverType: HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY, endpoint: new IPEndPoint("1.2.3.4", "1234"));
@@ -53,7 +57,7 @@ class BrowseControllerTest extends TestCase
 
         HostedGame::query()
             ->delete()
-            ->where('owner_id LIKE "unit_test_%"')
+            ->where('owner_id LIKE "unit_test_%" OR manager_id LIKE "unit_test%"')
             ->execute();
     }
 
@@ -67,7 +71,8 @@ class BrowseControllerTest extends TestCase
                                              ?string   $masterServer = null, ?string $platform = null,
                                              ?int      $playerCount = null, bool $inProgress = false,
                                              ?CVersion $customGameVersion = null, ?string $hostSecret = null,
-                                             ?string   $serverType = null, ?IPEndPoint $endpoint = null): HostedGame
+                                             ?string   $serverType = null, ?IPEndPoint $endpoint = null,
+                                             ?string   $ownerId = null): HostedGame
     {
         $hg = new HostedGame();
 
@@ -79,7 +84,7 @@ class BrowseControllerTest extends TestCase
 
         $hg->playerLimit = 5;
         $hg->playerCount = $playerCount !== null ? $playerCount : 5;
-        $hg->ownerId = "unit_test_{$number}";
+        $hg->ownerId = $ownerId ?? "unit_test_{$number}";
         $hg->isModded = $isModded;
         $hg->gameName = $name;
         $hg->firstSeen = new \DateTime('now');
@@ -115,6 +120,8 @@ class BrowseControllerTest extends TestCase
         $hg->serverType = $serverType;
         $hg->hostSecret = $hostSecret;
         $hg->endpoint = $endpoint;
+
+        $hg->managerId = "unit_test";
 
         $hg->save();
 
@@ -243,8 +250,8 @@ class BrowseControllerTest extends TestCase
 
         $this->assertNotSame($pageOne, $pageTwo);
 
-        // NB: -1 for OldSteam, -1 for EndedSteam, -1 for BadGameVersion, -1 for 1.18.1
-        $expectedTotalItems = self::$createdSampleGameCount - 4;
+        // NB: -1 for OldSteam, -1 for EndedSteam, -1 for BadGameVersion, -1 for 1.18.1, -3 for 1.19.1
+        $expectedTotalItems = self::$createdSampleGameCount - 7;
 
         $this->assertGreaterThanOrEqual($expectedTotalItems, count($pageOne) + count($pageTwo),
             "Pages one and two should make up the sample game count together");
@@ -502,6 +509,19 @@ class BrowseControllerTest extends TestCase
             "ServerBrowserQuest should NOT return Vanilla Dedicated (official) games");
         $this->assertContainsGameWithName("ModdedSteamCrossplayX", $lobbies,
             "ServerBrowserQuest SHOULD return Player Hosted Cross-play games for the current version");
+    }
+
+    public function testModernBrowserFiltersGameLiftQuickPlayServers()
+    {
+        $request = self::createBrowseRequest(['platform' => 'steam']);
+        $request->headers["user-agent"] = "ServerBrowser/1.0.0 (BeatSaber/1.19.1) (steam)";
+        $lobbies = self::executeBrowseRequestAndGetGames($request);
+        $this->assertNotContainsGameWithName("1.19.1_QuickPlay_BadSecret", $lobbies,
+            "ServerBrowser should NOT return Vanilla Quick Play (official/GameLift) games on 1.19.1+ if they have a GameLift secret");
+        $this->assertContainsGameWithName("1.19.1_QuickPlay_GoodSecret", $lobbies,
+            "ServerBrowser SHOULD return Vanilla Quick Play (official/GameLift) games on 1.19.1+ if they have a distinct secret");
+        $this->assertContainsGameWithName("1.19.1_Vanilla", $lobbies,
+            "ServerBrowser SHOULD return Vanilla Dedicated (official) games on 1.19.1+");
     }
 
     public function testExplicitServerTypeFilter()

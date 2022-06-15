@@ -5,6 +5,7 @@ namespace app\Controllers\API\V1;
 use app\BeatSaber\GameVersionAliases;
 use app\BeatSaber\MasterServer;
 use app\BeatSaber\MultiplayerLobbyState;
+use app\Common\CVersion;
 use app\HTTP\Request;
 use app\HTTP\Response;
 use app\HTTP\Responses\BadRequestResponse;
@@ -126,6 +127,12 @@ class BrowseController
         // Server type filter (0.7.0+)
         if ($filterServerType) {
             $baseQuery->andWhere('server_type = ?', $filterServerType);
+        }
+
+        // Hide official (gamelift) quick play lobbies without a distinct host secret for all clients >=1.19.1
+        if ($mci->beatSaberVersion->greaterThanOrEquals(new CVersion("1.19.1"))) {
+            $baseQuery->andWhere('server_type != ? OR host_secret != owner_id',
+                HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY);
         }
 
         // -------------------------------------------------------------------------------------------------------------
