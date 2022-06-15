@@ -39,10 +39,12 @@ class AnnounceController
          * @var $gameResult HostedGame|null
          */
         $gameResult = null;
+        $userMessage = null;
 
         try {
             $processor = new AnnounceProcessor($modClientInfo, $input);
             $gameResult = $processor->process();
+            $userMessage = $processor->getUserMessage();
         } catch (AnnounceException $ex) {
             return new JsonResponse([
                 "success" => false,
@@ -56,12 +58,13 @@ class AnnounceController
         if ($gameResult) {
             return new JsonResponse([
                 "success" => true,
-                "key" => $gameResult->getHashId()
+                "key" => $gameResult->getHashId(),
+                "message" => $userMessage
             ], responseCode: 200);
         } else {
             return new JsonResponse([
                 "success" => false,
-                "error" => "Game not created due to temporary problem, please try again"
+                "message" => "Game not created due to temporary problem, please try again"
             ], responseCode: 500);
         }
     }

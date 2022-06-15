@@ -27,6 +27,7 @@ final class AnnounceProcessor
     private ?string $sessionGameId;
     private bool $legacyLevelStarted;
     private ?LevelHistory $serverLevel;
+    private ?string $userMessage;
 
     // -----------------------------------------------------------------------------------------------------------------
     // Public API
@@ -45,15 +46,29 @@ final class AnnounceProcessor
         $this->gameplayModifiers = null;
         $this->sessionGameId = null;
         $this->legacyLevelStarted = false;
+        $this->userMessage = null;
     }
 
     public function process(): ?HostedGame
     {
         $game = $this->syncGameData();
+
         $this->syncLevelData($game);
         $this->syncPlayerData($game);
         $this->syncServerData($game);
+
+        if ($game->getIsGameLiftServer() && $game->getIsQuickplay()) {
+            $this->userMessage = "Other players can't join Official Quick Play lobbies right now, sorry";
+        } else {
+            $this->userMessage = null;
+        }
+
         return $game;
+    }
+
+    public function getUserMessage(): ?string
+    {
+        return $this->userMessage;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
