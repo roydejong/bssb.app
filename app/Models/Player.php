@@ -17,7 +17,6 @@ use SoftwarePunt\Instarecord\Model;
 class Player extends Model
 {
     public const BeatTogetherUserId = "ziuMSceapEuNN7wRGQXrZg";
-    public const BeatUpServerUserId = "dtxJlHm56k6ZXcnxhbyfiA";
 
     public int $id;
     public string $userId;
@@ -61,7 +60,7 @@ class Player extends Model
             if ($playerRecord->userId === self::BeatTogetherUserId) {
                 // User ID matches the fixed value for all BeatTogether-based servers
                 $playerRecord->type = PlayerType::DedicatedServerBeatTogether;
-            } else if ($playerRecord->userId === self::BeatUpServerUserId) {
+            } else if (str_starts_with($playerRecord->userId, "beatupserver:")) {
                 $playerRecord->type = PlayerType::DedicatedServerBeatUpServer;
             } else if (str_starts_with($playerRecord->userId, "arn:aws:gamelift")) {
                 // User ID matches the fixed value for all Official GameLift servers
