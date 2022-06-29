@@ -61,6 +61,8 @@
                                 <span>{{ game.describeServerType() }}</span>
                                 {% if game.getIsGameLiftServer() %}
                                     <span>GameLift ({{ game.tryGetGameLiftRegion() }})</span>
+                                {% elseif game.getIsDirectConnect() %}
+                                    <span>Direct connection</span>
                                 {% else %}
                                     <span>{{ game.masterServerHost }}</span>
                                 {% endif %}

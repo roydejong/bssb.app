@@ -328,6 +328,9 @@ class HostedGame extends Model implements \JsonSerializable
         if ($this->getIsBeatTogether())
             return "BeatTogether";
 
+        if ($this->getIsDirectConnect())
+            return "Direct Connection";
+
         return $this->masterServerHost;
     }
 

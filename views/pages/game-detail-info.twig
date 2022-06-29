@@ -159,8 +159,10 @@
                             <p>On PC, when using Official Servers, enter the code under Join Via Code.</p>
                         {% endif %}
                     {% else %}
-                        <div class="or"></div>
-                        <p>With the BeatTogether mod, select the {{ game.describeMasterServerSelection() }} server and enter the code under Join Via Code.</p>
+                        {% if game.serverCode %}
+                            <div class="or"></div>
+                            <p>With the BeatTogether mod, select the {{ game.describeMasterServerSelection() }} server and enter the code under Join Via Code.</p>
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>
