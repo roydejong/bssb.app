@@ -17,6 +17,7 @@ class MasterServerInfo extends Model
     public string $host;
     public int $port;
     public ?string $statusUrl;
+    public bool $lockStatusUrl;
     public ?string $resolvedIp;
     public ?string $geoipCountry;
     public ?string $geoipText;
@@ -141,6 +142,10 @@ class MasterServerInfo extends Model
      */
     private function setStatusUrlIfBetter(?string $statusUrl): void
     {
+        if ($this->lockStatusUrl)
+            // Locked
+            return;
+
         if (empty($statusUrl))
             // Do not allow status URLs to ever be removed
             return;
