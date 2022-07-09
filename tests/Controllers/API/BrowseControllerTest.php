@@ -23,7 +23,7 @@ class BrowseControllerTest extends TestCase
 
         self::createSampleGame(1, "BoringSteam", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, false, serverType: HostedGame::SERVER_TYPE_NORMAL_DEDICATED);
         self::createSampleGame(2, "BoringOculus", false, MasterServer::OFFICIAL_HOSTNAME_OCULUS, ModPlatformId::OCULUS, 1, false, serverType: HostedGame::SERVER_TYPE_NORMAL_DEDICATED);
-        self::createSampleGame(3, "BoringUnknown", false, null, ModPlatformId::UNKNOWN, 1, false, serverType: HostedGame::SERVER_TYPE_NORMAL_DEDICATED);
+        self::createSampleGame(3, "BoringUnknown", false, "un.known.host", ModPlatformId::UNKNOWN, 1, false, serverType: HostedGame::SERVER_TYPE_NORMAL_DEDICATED);
         self::createSampleGame(4, "ModdedSteam", true, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, false, serverType: HostedGame::SERVER_TYPE_PLAYER_HOST);
         self::createSampleGame(5, "ModdedSteamCrossplayX", true, "beat.with.me", ModPlatformId::STEAM, 1, false, serverType: HostedGame::SERVER_TYPE_PLAYER_HOST);
 
@@ -46,9 +46,11 @@ class BrowseControllerTest extends TestCase
         self::createSampleGame(12, "1.19.1_QuickPlay_BadSecret", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, true, customGameVersion: new CVersion("1.19.1"), serverType: HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY, hostSecret: "arn:aws:gamelift:us-west-2::gamesession/fleet-5bfdb18f-8f71-4bf4-9eaa-f78e7a1d41d7/eu-central-1/b6f03183-6a6c-4148-b7ef-dba793eb6fc0", ownerId: "arn:aws:gamelift:us-west-2::gamesession/fleet-5bfdb18f-8f71-4bf4-9eaa-f78e7a1d41d7/eu-central-1/b6f03183-6a6c-4148-b7ef-dba793eb6fc0");
         self::createSampleGame(13, "1.19.1_QuickPlay_GoodSecret", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, true, customGameVersion: new CVersion("1.19.1"), serverType: HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY, hostSecret: "eHKfkIsz2UWazA/cet/AQQ");
 
-        self::createSampleGame(0, "BadGameVersion", customGameVersion: new CVersion("1.2.3"));
+        self::createSampleGame(0, "BadGameVersion", masterServer: "some.master.server", customGameVersion: new CVersion("1.2.3"));
 
         self::createSampleGame(null, "VanillaQuickPlay", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 3, false, hostSecret: "abc123", serverType: HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY, endpoint: new IPEndPoint("1.2.3.4", "1234"));
+
+        self::createSampleGame(null, "DirectConnect", true, null, ModPlatformId::STEAM, 0, customGameVersion: new CVersion("1.23.0"), serverType: HostedGame::SERVER_TYPE_BEATDEDI_CUSTOM, endpoint: new IPEndPoint("1.2.3.4", "1234"));
     }
 
     public static function tearDownAfterClass(): void
@@ -140,7 +142,7 @@ class BrowseControllerTest extends TestCase
         $request->host = "test.wssl.app";
         $request->path = "/api/v1/browse";
         $request->method = "GET";
-        $request->headers["user-agent"] = "ServerBrowser/0.7.0 (BeatSaber/1.12.2) (steam)";
+        $request->headers["user-agent"] = "ServerBrowser/1.1.0 (BeatSaber/1.12.2) (steam)";
         $request->headers["x-bssb"] = "1";
         $request->queryParams = $queryParams;
         return $request;
@@ -250,8 +252,8 @@ class BrowseControllerTest extends TestCase
 
         $this->assertNotSame($pageOne, $pageTwo);
 
-        // NB: -1 for OldSteam, -1 for EndedSteam, -1 for BadGameVersion, -1 for 1.18.1, -3 for 1.19.1
-        $expectedTotalItems = self::$createdSampleGameCount - 7;
+        // NB: -1 for OldSteam, -1 for EndedSteam, -1 for BadGameVersion, -1 for 1.18.1, -3 for 1.19.1, -1 for 1.23.0
+        $expectedTotalItems = self::$createdSampleGameCount - 8;
 
         $this->assertGreaterThanOrEqual($expectedTotalItems, count($pageOne) + count($pageTwo),
             "Pages one and two should make up the sample game count together");
@@ -364,10 +366,11 @@ class BrowseControllerTest extends TestCase
 
         $this->assertContainsGameWithName("BoringSteam", $lobbies);
         $this->assertContainsGameWithName("BoringOculus", $lobbies);
-        $this->assertContainsGameWithName("BoringUnknown", $lobbies);
+        $this->assertNotContainsGameWithName("BoringUnknown", $lobbies,
+            "When using mod version <0.2, custom master servers should be hidden");
         $this->assertContainsGameWithName("ModdedSteam", $lobbies);
         $this->assertNotContainsGameWithName("ModdedSteamCrossplayX", $lobbies,
-            "When using mod version <0.2, cross play servers should be hidden");
+            "When using mod version <0.2, custom master servers should be hidden");
     }
 
     /**
@@ -522,6 +525,24 @@ class BrowseControllerTest extends TestCase
             "ServerBrowser SHOULD return Vanilla Quick Play (official/GameLift) games on 1.19.1+ if they have a distinct secret");
         $this->assertContainsGameWithName("1.19.1_Vanilla", $lobbies,
             "ServerBrowser SHOULD return Vanilla Dedicated (official) games on 1.19.1+");
+    }
+
+    public function testOlderBrowserFiltersDirectConnectServers()
+    {
+        $request = self::createBrowseRequest([]);
+        $request->headers["user-agent"] = "ServerBrowser/1.0.0 (BeatSaber/1.23.0) (steam)";
+        $lobbies = self::executeBrowseRequestAndGetGames($request);
+        $this->assertNotContainsGameWithName("DirectConnect", $lobbies,
+            "ServerBrowser should NOT return Direct Connect games on mod < 1.1.0");
+    }
+
+    public function testNewerBrowserIncludesDirectConnectServers()
+    {
+        $request = self::createBrowseRequest([]);
+        $request->headers["user-agent"] = "ServerBrowser/1.1.0 (BeatSaber/1.23.0) (steam)";
+        $lobbies = self::executeBrowseRequestAndGetGames($request);
+        $this->assertContainsGameWithName("DirectConnect", $lobbies,
+            "ServerBrowser SHOULD return Direct Connect games on mod >= 1.1.0");
     }
 
     public function testExplicitServerTypeFilter()

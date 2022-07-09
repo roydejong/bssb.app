@@ -102,4 +102,14 @@ class ModClientInfo
         }
         return true;
     }
+
+    public function getSupportsDirectConnect(): bool
+    {
+        // Server Browser PC added this feature properly in v1.1
+        if ($this->getIsServerBrowserPc()) {
+            return $this->assemblyVersion->greaterThanOrEquals(new CVersion("1.1"));
+        }
+        // Quest does not support this currently
+        return false;
+    }
 }
