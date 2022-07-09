@@ -48,7 +48,7 @@ class AnnounceController
         } catch (AnnounceException $ex) {
             return new JsonResponse([
                 "success" => false,
-                "error" => $ex->getMessage()
+                "message" => $ex->getMessage()
             ], responseCode: 400);
         }
 
