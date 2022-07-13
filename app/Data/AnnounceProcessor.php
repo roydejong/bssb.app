@@ -217,7 +217,7 @@ final class AnnounceProcessor
         if (!$this->validateMasterServer($game->masterServerHost))
             throw new AnnounceException("Announce rejected: master server is blacklisted");
 
-        if (!$this->validateServerCode($game->serverCode, $game->getIsQuickplay()))
+        if (!$this->validateServerCode($game->serverCode, $game->getIsQuickplay(), $game->getIsDirectConnect()))
             throw new AnnounceException("Announce rejected: must include valid ServerCode");
 
         if (!$this->validateHostSecret($game->hostSecret, $game->getIsQuickplay()))
@@ -572,11 +572,12 @@ final class AnnounceProcessor
     // -----------------------------------------------------------------------------------------------------------------
     // Validation helpers
 
-    private function validateServerCode(?string $serverCode, bool $isQuickPlay): bool
+    private function validateServerCode(?string $serverCode, bool $isQuickPlay, bool $isDirectConnect): bool
     {
-        if ($isQuickPlay && empty($serverCode))
+        if (empty($serverCode) && ($isQuickPlay || $isDirectConnect))
             // Official servers have with empty server codes for Quick Play
             // BeatTogether Quick Play servers do have a server code anyway which is fine
+            // Direct connect servers also do not have a server code (since there is no master server)
             return true;
 
         // Normally speaking, we want a 5-character alphanumeric server code
