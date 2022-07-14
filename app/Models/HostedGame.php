@@ -523,6 +523,11 @@ class HostedGame extends Model implements \JsonSerializable
     // -----------------------------------------------------------------------------------------------------------------
     // Moderation
 
+    public function getCanBeEmpty(): bool
+    {
+        return $this->getIsBeatDedi();
+    }
+
     public function getIsUninteresting(): bool
     {
         global $bssbConfig;
