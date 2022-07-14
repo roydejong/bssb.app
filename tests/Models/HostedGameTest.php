@@ -98,6 +98,13 @@ class HostedGameTest extends TestCase
 
     public function testGetIsUninteresting()
     {
+        global $bssbConfig;
+
+        if ($bssbConfig['allow_boring'] ?? false) {
+            $this->markTestSkipped('allow_boring is enabled');
+            return;
+        }
+
         $game = new HostedGame();
         $game->masterServerHost = "localhost";
         $this->assertTrue($game->getIsUninteresting(), "Some specific host names are uninteresting");

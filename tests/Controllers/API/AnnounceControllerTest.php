@@ -484,6 +484,13 @@ class AnnounceControllerTest extends TestCase
      */
     public function testAnnounceDiscardsUninteresting()
     {
+        global $bssbConfig;
+
+        if ($bssbConfig['allow_boring'] ?? false) {
+            $this->markTestSkipped('allow_boring is enabled');
+            return;
+        }
+
         $request = clone self::$minimalAnnounceRequest;
         $request->json['MasterServerHost'] = "localhost";
 
