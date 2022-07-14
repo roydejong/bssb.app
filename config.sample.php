@@ -54,6 +54,12 @@ $bssbConfig['allow_multiple_results'] = false;
 $bssbConfig['enable_guide'] = false;
 
 /**
+ * allow_boring, boolean
+ *  → If enabled, allow "boring" games (local/LAN announces that aren't relevant).
+ */
+$bssbConfig['allow_boring'] = false;
+
+/**
  * Instarecord configuration
  */
 $dbConfig = Instarecord::config();

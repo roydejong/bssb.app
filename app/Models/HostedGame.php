@@ -525,6 +525,12 @@ class HostedGame extends Model implements \JsonSerializable
 
     public function getIsUninteresting(): bool
     {
+        global $bssbConfig;
+
+        if ($bssbConfig['allow_boring'] ?? false) {
+            return false;
+        }
+
         $badHostPrefixes = [
             "localhost",
             "192.",
