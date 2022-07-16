@@ -62,6 +62,8 @@ class Player extends Model
                 $playerRecord->type = PlayerType::DedicatedServerBeatTogether;
             } else if (str_starts_with($playerRecord->userId, "beatupserver:")) {
                 $playerRecord->type = PlayerType::DedicatedServerBeatUpServer;
+            } else if (str_starts_with($playerRecord->userId, "beatdedi:")) {
+                $playerRecord->type = PlayerType::DedicatedServerBeatDediServer;
             } else if (str_starts_with($playerRecord->userId, "arn:aws:gamelift")) {
                 // User ID matches the fixed value for all Official GameLift servers
                 $playerRecord->type = PlayerType::DedicatedServerGameLift;
@@ -155,7 +157,8 @@ class Player extends Model
         return ($this->type === PlayerType::DedicatedServer
             || $this->type === PlayerType::DedicatedServerGameLift
             || $this->type === PlayerType::DedicatedServerBeatTogether
-            || $this->type === PlayerType::DedicatedServerBeatUpServer);
+            || $this->type === PlayerType::DedicatedServerBeatUpServer
+            || $this->type === PlayerType::DedicatedServerBeatDediServer);
     }
 
     public function describeType(bool $shorten = false): string
@@ -177,6 +180,7 @@ class Player extends Model
             PlayerType::DedicatedServer => "Dedicated Server",
             PlayerType::DedicatedServerBeatTogether => "BeatTogether Server",
             PlayerType::DedicatedServerBeatUpServer => "BeatUpServer",
+            PlayerType::DedicatedServerBeatDediServer => "BeatDedi",
             default => "Unknown",
         };
         if ($shorten) {

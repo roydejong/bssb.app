@@ -2,6 +2,7 @@
 
 {% block innerContent %}
     <div class="row {% if isDedicatedServer %}-is-server{% endif %}">
+
         <section class="block">
             <div class="title">
                 <i class="mdi mdi-account-circle"></i>
@@ -84,6 +85,36 @@
             </section>
         {% endif %}
 
+        {% if isDedicatedServer %}
+            <section class="block -shrink">
+                <div class="title">
+                    <i class="mdi mdi-server"></i>
+                    <h3>Dedicated server</h3>
+                </div>
+                <div class="inner -limited-width">
+                    {% if player.type.value == "dedicated_server_gamelift" %}
+                        <p><i class="mdi mdi-check-decagram"></i> <strong>This is an official dedicated server provided by Beat Games / Oculus. It only supports vanilla, unmodded content.</strong></p>
+                        <p>They are deployed on-demand via <a href="https://aws.amazon.com/gamelift/" target="_blank">Amazon GameLift</a>.</p>
+                    {% elseif player.type.value == "dedicated_server_beattogether" %}
+                        <p><strong>This is an instance of a BeatTogether dedicated server.</strong></p>
+                        <p>BeatTogether is an open-source project that provides a master server and fleet of dedicated servers to the modding community. Various communities run their own instances.</p>
+                        <p><a href="https://github.com/BeatTogether" target="_blank"><i class="mdi mdi-github"></i> BeatTogether on GitHub</a></p>
+                        <p><a href="https://discord.com/invite/gezGrFG4tz" target="_blank"><i class="mdi mdi-discord"></i> BeatTogether Community on Discord</a></p>
+                    {% elseif player.type.value == "dedicated_server_beatupserver" %}
+                        <p><strong>This is an instance of a BeatUpServer dedicated server.</strong></p>
+                        <p>BeatUpServer is an open-source project that provides a master server and fleet of dedicated servers to the modding community.</p>
+                        <p><a href="https://github.com/rcelyte/BeatUpRcelyte" target="_blank"><i class="mdi mdi-github"></i> BeatUpRcelyte on GitHub</a></p>
+                    {% elseif player.type.value == "dedicated_server_beatdedi" %}
+                        <p><strong>This is an instance of a BeatDedi server.</strong></p>
+                        <p>BeatDedi is a standalone open-source dedicated server that can host lobbies directly on the server browser without a master server.</p>
+                        <p><a href="https://github.com/roydejong/BeatDedi" target="_blank"><i class="mdi mdi-github"></i> BeatDedi on GitHub</a></p>
+                    {% else %}
+                        <p>Hmm. We don't know what kind of server this is yet. It's a mystery!</p>
+                    {% endif %}
+                </div>
+            </section>
+        {% endif %}
+
     </div>
 
     {% if player.profileBio %}
@@ -97,6 +128,7 @@
             </div>
         </section>
     {% endif %}
+
 {% endblock %}
 
 {% block scriptsHead %}

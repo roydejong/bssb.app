@@ -29,4 +29,8 @@ enum PlayerType : string
      * A dedicated server bot used by BeatUpServer instances.
      */
     case DedicatedServerBeatUpServer = 'dedicated_server_beatupserver';
+    /**
+     * A dedicated server bot used by BeatDedi instances.
+     */
+    case DedicatedServerBeatDediServer = 'dedicated_server_beatdedi';
 }
