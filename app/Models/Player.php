@@ -212,12 +212,14 @@ class Player extends Model
 
     public static function cleanUserIdForUrl(string $userId): string
     {
-        return str_replace("/", "_", $userId);
+        $userId = str_replace("/", "_", $userId);
+        return urlencode($userId);
     }
 
     public static function restoreUserIdFromUrl(string $urlUserId): string
     {
-        return str_replace("_", "/", $urlUserId);
+        $urlUserId = str_replace("_", "/", $urlUserId);
+        return urldecode($urlUserId);
     }
 
     public function getUrlSafeUserId(): string
