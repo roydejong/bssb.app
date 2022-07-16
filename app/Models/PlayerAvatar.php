@@ -66,10 +66,31 @@ class PlayerAvatar extends Model implements \JsonSerializable
         if (!$unityColorData) {
             return "#ffffffff";
         }
-        $r = intval($unityColorData['r']) ?? 255;
-        $g = intval($unityColorData['g']) ?? 255;
-        $b = intval($unityColorData['b']) ?? 255;
-        $a = intval($unityColorData['a']) ?? 255;
+
+        $r = 255;
+        $g = 255;
+        $b = 255;
+        $a = 255;
+
+        foreach ($unityColorData as $key => $value)
+        {
+            switch (strtolower($key))
+            {
+                case 'r':
+                    $r = intval($value);
+                    break;
+                case 'g':
+                    $g = intval($value);
+                    break;
+                case 'b':
+                    $b = intval($value);
+                    break;
+                case 'a':
+                    $a = intval($value);
+                    break;
+            }
+        }
+
         return sprintf("#%02x%02x%02x%02x", $r, $g, $b, $a); // #0d00ff
     }
 
