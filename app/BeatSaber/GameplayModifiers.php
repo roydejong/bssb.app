@@ -102,17 +102,21 @@ class GameplayModifiers implements IDatabaseSerializable
 
     public function fillFromArray(array $data): void
     {
-        $getMixed = function (string $key) use ($data): mixed {
-            return $data[$key] ?? null;
+        $dataWithLowerCaseKeys = [];
+        foreach ($data as $key => $value)
+            $dataWithLowerCaseKeys[strtolower($key)] = $value;
+
+        $getMixed = function (string $key) use ($dataWithLowerCaseKeys): mixed {
+            return $dataWithLowerCaseKeys[strtolower($key)] ?? null;
         };
-        $getBool = function (string $key) use ($data, $getMixed): bool {
+        $getBool = function (string $key) use ($dataWithLowerCaseKeys, $getMixed): bool {
             $val = $getMixed($key);
             return ($val === 1 || $val === true || strval($val) === "true");
         };
-        $getInt = function (string $key) use ($data, $getMixed): int {
+        $getInt = function (string $key) use ($dataWithLowerCaseKeys, $getMixed): int {
             return intval($getMixed($key));
         };
-        $getFloat = function (string $key) use ($data, $getMixed): float {
+        $getFloat = function (string $key) use ($dataWithLowerCaseKeys, $getMixed): float {
             return floatval($getMixed($key));
         };
 
