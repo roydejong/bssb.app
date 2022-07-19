@@ -141,13 +141,13 @@ class AnnounceResultsController
             foreach ($rankedHistoryPlayers as $player) {
                 if ($player->endState !== PlayerLevelEndState::NotStarted) {
                     $playedPlayerCount++;
-                }
-                if ($player->endState === PlayerLevelEndState::SongFinished) {
                     $player->placement = $placement;
                     $placement++;
-                    $finishedPlayerCount++;
+                    if ($player->endState === PlayerLevelEndState::SongFinished) {
+                        $finishedPlayerCount++;
+                    }
                 } else {
-                    $player->placement = null; // did not finish level, do not rank
+                    $player->placement = null; // did not start level, do not rank
                 }
                 $player->save();
             }
