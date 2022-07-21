@@ -82,4 +82,10 @@ class CVersionTest extends TestCase
         $this->assertSame($a->toString(), CVersion::min($a, $b)->toString());
         $this->assertSame($a->toString(), CVersion::min($b, $a)->toString());
     }
+
+    public function testVersionWithSuffix()
+    {
+        $this->assertSame("1.2.3+some-special-indicator",
+            (new CVersion("1.2.3+some-special-indicator"))->toString());
+    }
 }

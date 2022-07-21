@@ -10,6 +10,7 @@ final class CVersion implements IDatabaseSerializable, \JsonSerializable
     public ?int $minor = null;
     public ?int $build = null;
     public ?int $revision = null;
+    public ?string $suffix = null;
 
     public function __construct(?string $value = null)
     {
@@ -35,6 +36,16 @@ final class CVersion implements IDatabaseSerializable, \JsonSerializable
             } else {
                 break;
             }
+        }
+
+        if (!$value)
+            return;
+
+        $plusIndex = strpos($value, '+');
+        if ($plusIndex > 0) {
+            $this->suffix = trim(substr($value, $plusIndex));
+        } else {
+            $this->suffix = null;
         }
     }
 
@@ -110,7 +121,7 @@ final class CVersion implements IDatabaseSerializable, \JsonSerializable
             $versionStr .= $part;
         }
 
-        return $versionStr;
+        return $versionStr . $this->suffix;
     }
 
     public function __toString(): string
