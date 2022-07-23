@@ -177,6 +177,7 @@ final class AnnounceProcessor
             $game = HostedGame::query()
                 ->where('owner_id = ?', $ownerId)
                 ->andWhere('host_secret IS NULL')
+                ->andWhere('server_type IS NULL OR server_type = ?', HostedGame::SERVER_TYPE_PLAYER_HOST)
                 ->querySingleModel();
         }
 
