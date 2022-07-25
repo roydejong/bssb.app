@@ -75,6 +75,11 @@ class Player extends Model
             // If player has announced, upgrade type from "observed" to "mod user"
             $playerRecord->type = PlayerType::PlayerModUser;
         }
+        
+        if (!$playerRecord->getIsDedicatedServer()) {
+            // Update name, but only if it's not a dedicated server
+            $playerRecord->userName = $serverPlayer->userName;
+        }
 
         $playerRecord->lastSeen = $now;
         $playerRecord->save();
