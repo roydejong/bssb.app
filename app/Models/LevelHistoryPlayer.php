@@ -96,7 +96,9 @@ class LevelHistoryPlayer extends Model
 
     public function describeState(): string
     {
-        if ($this->endReason)
+        if ($this->endState === PlayerLevelEndState::NotStarted)
+            return "Did not play";
+        else if ($this->endReason)
             return $this->endReason->describe();
         else
             return "Did not finish";
