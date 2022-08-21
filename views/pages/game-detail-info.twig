@@ -34,7 +34,7 @@
                         {% if game.difficulty is not null %}
                             <tr>
                                 <th scope="row">
-                                    {% if game.getIsQuickPlay() %}
+                                    {% if game.getIsQuickPlay() or game.difficulty == -1 %}
                                         Lobby difficulty
                                     {% elseif game.getIsPlayingLevel() %}
                                         Current difficulty

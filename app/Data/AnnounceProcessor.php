@@ -23,6 +23,7 @@ final class AnnounceProcessor
     private ModClientInfo $clientInfo;
     private array $data;
     private ?LevelRecord $tempLevelData;
+    private ?int $levelDifficulty;
     private ?GameplayModifiers $gameplayModifiers;
     private ?string $sessionGameId;
     private bool $legacyLevelStarted;
@@ -282,7 +283,7 @@ final class AnnounceProcessor
 
             if ($this->serverLevel->hostedGameId === $game->id && $this->serverLevel->endedAt === null) {
                 $this->serverLevel->levelRecordId = $this->tempLevelData->id;
-                $this->serverLevel->difficulty = $game->difficulty;
+                $this->serverLevel->difficulty = $this->levelDifficulty ?? $game->difficulty;
                 $this->serverLevel->characteristic = $game->characteristic;
                 $this->serverLevel->modifiers = $this->gameplayModifiers;
             }
@@ -509,11 +510,6 @@ final class AnnounceProcessor
             $gameplayModifiers = null; // not supported yet <v1
         }
 
-        if ($difficulty === null && $game->getIsQuickplay()) {
-            // Quick Play lobbies announced with "null" difficulty are actually "All" difficulty
-            $difficulty = LevelDifficulty::All;
-        }
-
         if ($levelId) {
             $levelId = LevelId::cleanLevelHash($levelId);
 
@@ -529,6 +525,8 @@ final class AnnounceProcessor
             $this->tempLevelData->songAuthor = $songAuthorName;
             $this->tempLevelData->levelAuthor = $levelAuthorName;
 
+            $this->levelDifficulty = $difficulty;
+
             $this->gameplayModifiers = $gameplayModifiers;
             $this->sessionGameId = $sessionGameId;
         } else {
@@ -537,7 +535,12 @@ final class AnnounceProcessor
             $this->sessionGameId = null;
         }
 
-        if ($levelId || $game->getIsQuickplay()) {
+        if ($difficulty === null && $game->getIsQuickplay()) {
+            // Quick Play lobbies announced with "null" difficulty are actually "All" difficulty
+            $difficulty = LevelDifficulty::All;
+        }
+
+        if ($game->difficulty !== LevelDifficulty::All) {
             $game->difficulty = $difficulty;
         }
     }
