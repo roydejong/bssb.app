@@ -68,7 +68,7 @@
                     </thead>
                     <tbody>
                         {% for result in playerResults %}
-                            <tr>
+                            <tr class="{{ result.getDidNotPlay() ? "-did-not-play" : "" }}">
                                 <td class="-center">
                                     {% if result.placement == 1 %}
                                         <i class="trophy mdi mdi-trophy-variant -gold"></i>
@@ -96,7 +96,14 @@
                                 <td>{{ result.describeState() }}</td>
                                 <td class="-center">{{ result.scoreRank ? result.scoreRank.name : '-' }}</td>
                                 <td class="-center">{{ result.modifiedScore ? result.modifiedScore|number_format(0, '', ',') : 0 }}</td>
-                                <td class="-center">{{ result.goodCuts ? result.goodCuts : 0 }} / {{ result.badCuts ? result.badCuts : 0 }} / {{ result.missCount ? result.missCount : 0 }}</td>
+                                <td class="-center -gbm">
+                                    {% set g = result.goodCuts ? result.goodCuts : 0 %}
+                                    {% set b = result.badCuts ? result.badCuts : 0 %}
+                                    {% set m = result.missCount ? result.missCount : 0 %}
+                                    <span {% if g > 0 %}class="g"{% endif %}>{{ g }}</span> /
+                                    <span {% if b > 0 %}class="b"{% endif %}>{{ b }}</span> /
+                                    <span {% if m > 0 %}class="m"{% endif %}>{{ m }}</span>
+                                </td>
                                 <td class="-center">
                                     {{ result.maxCombo ? result.maxCombo : 0 }}
                                     {% if result.fullCombo %}(Full){% endif %}

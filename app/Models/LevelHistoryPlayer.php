@@ -94,9 +94,25 @@ class LevelHistoryPlayer extends Model
         return $this->endState && $this->endState == PlayerLevelEndState::SongFinished;
     }
 
+    public function getDidNotPlay(): bool
+    {
+        if (!$this->endState)
+            // No end state (yet) - indeterminate
+            return false;
+
+        if ($this->endState == PlayerLevelEndState::NotStarted ||
+            $this->endReason == PlayerLevelEndReason::ConnectedAfterLevelEnded ||
+            $this->endReason == PlayerLevelEndReason::StartupFailed ||
+            $this->endReason == PlayerLevelEndReason::WasInactive)
+            // Explicitly sent a state indicating they never started
+            return true;
+
+        return false;
+    }
+
     public function describeState(): string
     {
-        if ($this->endState === PlayerLevelEndState::NotStarted)
+        if ($this->getDidNotPlay())
             return "Did not play";
         else if ($this->endReason)
             return $this->endReason->describe();

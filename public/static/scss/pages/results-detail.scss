@@ -130,5 +130,27 @@
 
   .players-table {
     margin-top: 1.5rem;
+
+    tr.-did-not-play {
+      & {
+        opacity: .75;
+      }
+    }
+
+    td.-gbm {
+      color: #666;
+      span {
+        color: #888;
+      }
+      span.g {
+        color: #2ecc71;
+      }
+      span.b {
+        color: #f1c40f;
+      }
+      span.m {
+        color: #e74c3c;
+      }
+    }
   }
 }
