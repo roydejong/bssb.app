@@ -377,7 +377,7 @@ final class AnnounceProcessor
                     ->andWhere('player_id = ?', $playerProfile->id)
                     ->querySingleModel();
 
-                if (!$historyPlayer) {
+                if (!$historyPlayer && !$this->serverLevel->endedAt) {
                     $historyPlayer = new LevelHistoryPlayer();
                     $historyPlayer->levelHistoryId = $this->serverLevel->id;
                     $historyPlayer->playerId = $playerProfile->id;
