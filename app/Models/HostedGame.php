@@ -543,10 +543,10 @@ class HostedGame extends Model implements \JsonSerializable
         ];
 
         foreach ($badHostPrefixes as $badPrefix) {
-            if (str_starts_with($this->masterServerHost, $badPrefix)) {
+            if ($this->masterServerHost && str_starts_with($this->masterServerHost, $badPrefix)) {
                 return true;
             }
-            if (str_starts_with($this->endpoint, $badPrefix)) {
+            if ($this->endpoint && str_starts_with($this->endpoint, $badPrefix)) {
                 return true;
             }
         }
