@@ -480,6 +480,7 @@ final class AnnounceProcessor
     private function setLevelInfo(HostedGame &$game): void
     {
         $levelData = $this->get('Level');
+        $difficulty = $this->getIntNullable('Difficulty');
 
         if ($levelData && is_array($levelData)) {
             // Modern announce format: Level object
@@ -488,7 +489,7 @@ final class AnnounceProcessor
             $songSubName = $levelData['SongSubName'] ?? null;
             $songAuthorName = $levelData['SongAuthorName'] ?? null;
             $levelAuthorName = $levelData['LevelAuthorName'] ?? null;
-            $difficulty = isset($levelData['Difficulty']) ? intval($levelData['Difficulty']) : null;
+            $difficulty = isset($levelData['Difficulty']) ? intval($levelData['Difficulty']) : $difficulty;
             $characteristic = $levelData['Characteristic'] ?? null;
             $sessionGameId = $levelData['SessionGameId'] ?? null;
 
@@ -504,7 +505,6 @@ final class AnnounceProcessor
             $songSubName = null; // not supported yet <v1
             $songAuthorName = $this->getString('SongAuthor');
             $levelAuthorName = null; // not supported yet <v1
-            $difficulty = $this->getIntNullable('Difficulty');
             $characteristic = null; // not supported yet <v1
             $sessionGameId = null; // not supported yet <v1
             $gameplayModifiers = null; // not supported yet <v1
@@ -535,13 +535,16 @@ final class AnnounceProcessor
             $this->sessionGameId = null;
         }
 
-        if ($difficulty === null && $game->getIsQuickplay()) {
-            // Quick Play lobbies announced with "null" difficulty are actually "All" difficulty
-            $difficulty = LevelDifficulty::All;
-        }
-
-        if ($game->difficulty !== LevelDifficulty::All) {
+        if ($game->getIsQuickplay()) {
+            // Quick play - lobby has a fixed difficulty, should even be sent without a level
+            if ($difficulty === null)
+                // For quick play, server browser will always send difficulty - unless it's an "all" difficulty lobby
+                $difficulty = LevelDifficulty::All;
             $game->difficulty = $difficulty;
+        } else {
+            // Custom - lobby has no difficulty, we just derive it from the level difficulty
+            if ($difficulty !== null && $difficulty !== LevelDifficulty::All)
+                $game->difficulty = $difficulty;
         }
     }
 
