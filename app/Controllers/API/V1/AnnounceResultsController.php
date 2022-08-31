@@ -161,6 +161,18 @@ class AnnounceResultsController
             $levelHistory->save();
         }
 
+        // Mark any players attached to the game but missing from these results as "did not play"
+        LevelHistoryPlayer::query()
+            ->update()
+            ->set([
+                'end_reason' => PlayerLevelEndReason::WasInactive->value,
+                'end_state' => PlayerLevelEndState::NotStarted->value
+            ])
+            ->where('level_history_id = ?', $levelHistory->id)
+            ->andWhere('end_reason IS NULL')
+            ->andWhere('end_state IS NULL')
+            ->execute();
+
         return new Response(200, "👍 very nice");
     }
 }
