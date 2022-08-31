@@ -856,11 +856,15 @@ class AnnounceControllerTest extends TestCase
         $json = json_decode($response->body, true);
         $game = HostedGame::fetch(HostedGame::hash2id($json['key']));
 
-        $this->assertSame("graph.oculus.com", $game->masterServerHost);
-        $this->assertSame($game->ownerId, $game->hostSecret);
-        $this->assertTrue($game->getIsGameLiftServer());
-        $this->assertSame("us-east-1", $game->tryGetGameLiftRegion());
-        $this->assertEmpty($game->serverCode);
-        $this->assertTrue($game->getIsQuickplay());
+        try {
+            $this->assertSame("graph.oculus.com", $game->masterServerHost);
+            $this->assertSame($game->ownerId, $game->hostSecret);
+            $this->assertTrue($game->getIsGameLiftServer());
+            $this->assertSame("us-east-1", $game->tryGetGameLiftRegion());
+            $this->assertEmpty($game->serverCode);
+            $this->assertTrue($game->getIsQuickplay());
+        } finally {
+            @$game->delete();
+        }
     }
 }
