@@ -20,7 +20,8 @@
     "sentry/sdk": "^3.2",
     "lavary/crunz": "^3.2",
     "xpaw/steam-openid": "^2.0",
-    "robmorgan/phinx": "^0.12.10"
+    "robmorgan/phinx": "^0.12.10",
+    "predis/predis": "^2.0"
   },
   "require-dev": {
     "ext-xdebug": "*",

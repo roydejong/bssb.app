@@ -2,11 +2,24 @@
 
 namespace app;
 
+use app\Cache\RedisCache;
 use Hashids\Hashids;
 
 class BSSB
 {
-    private static $hashIds;
+    private static RedisCache $redisCache;
+    private static array $hashIds;
+
+    public static function bootstrap()
+    {
+        self::$redisCache = new RedisCache();
+        self::$hashIds = [];
+    }
+
+    public static function getRedis(): RedisCache
+    {
+        return self::$redisCache;
+    }
 
     public static function getHashids(string $key): Hashids
     {
@@ -19,3 +32,5 @@ class BSSB
         return self::$hashIds[$key];
     }
 }
+
+BSSB::bootstrap();
