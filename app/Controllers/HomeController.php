@@ -13,6 +13,7 @@ use app\HTTP\QueryParamTransform;
 use app\HTTP\Request;
 use app\HTTP\Response;
 use app\HTTP\Responses\RedirectResponse;
+use app\Models\Changelog;
 use app\Models\SystemConfig;
 
 class HomeController
@@ -85,6 +86,14 @@ class HomeController
         }
 
         // -------------------------------------------------------------------------------------------------------------
+        // News
+
+        $changelogs = Changelog::query()
+            ->orderBy('publish_date DESC, id DESC')
+            ->limit(5)
+            ->queryAllModels();
+
+        // -------------------------------------------------------------------------------------------------------------
         // Render
 
         $view = new View('pages/home.twig');
@@ -98,6 +107,7 @@ class HomeController
         $view->set('isFiltered', $queryResult->getIsFiltered());
         $view->set('geoData', $geoData);
         $view->set('paginationBaseUrl', $currentUrlNoPagination);
+        $view->set('changelogs', $changelogs);
 
         $response = $view->asResponse();
 

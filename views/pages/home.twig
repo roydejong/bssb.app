@@ -33,6 +33,26 @@
             {% include "tables/hosted_games_table.twig" %}
             {% include "bits/paginator.twig" with {paginator: queryResult} %}
         </div>
+        <div class="container-aside">
+            <h3>
+                <span>Latest updates</span>
+            </h3>
+            {% if changelogs and changelogs|length %}
+                <ul class="timeline">
+                    {% for changelog in changelogs %}
+                        <li class="{{ changelog.isAlert ? "-alert" : "" }}">
+                            <span class="time">{{ changelog.publishDate|timeago_html|raw }}</span>
+                            <a href="{{ changelog.url }}" target="_blank" title="View Tweet">{{ changelog.title }}</a>
+                            {% if changelog.text %}<p>{{ changelog.text }}</p>{% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+                <a class="timeline-twitter" href="https://twitter.com/BSSBapp" target="_blank" title="@BSSBapp on Twitter">
+                    <i class="mdi mdi-twitter"></i>
+                    <span>View all updates on Twitter</span>
+                </a>
+            {% endif %}
+        </div>
     </main>
 
 {% endblock %}
