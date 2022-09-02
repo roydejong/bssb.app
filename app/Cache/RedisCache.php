@@ -37,14 +37,14 @@ class RedisCache
         return strval($value);
     }
 
-    public function set(string $key, mixed $value, ?int $ttl = null, ?ClientContextInterface $transaction = null): bool
+    public function set(string $key, mixed $value, ?int $ttlSeconds = null, ?ClientContextInterface $transaction = null): bool
     {
         if ($transaction === null)
             $transaction = $this->client;
 
         try {
-            if ($ttl !== null)
-                $statusOrSelf = $transaction->setex(key: $key, seconds: $ttl, value: $value);
+            if ($ttlSeconds !== null)
+                $statusOrSelf = $transaction->setex(key: $key, seconds: $ttlSeconds, value: $value);
             else
                 $statusOrSelf = $transaction->set(key: $key, value: $value);
             $result = !!$statusOrSelf;
@@ -57,15 +57,55 @@ class RedisCache
         return $result;
     }
 
-    public function setMany(array $data, ?int $ttl = null): bool
+    public function setMany(array $data, ?int $ttlSeconds = null): bool
     {
-        $transaction = $this->client->transaction();
+        try {
+            $transaction = $this->client->transaction();
 
-        foreach ($data as $key => $value) {
-            $this->set($key, $value, $ttl, $transaction);
+            foreach ($data as $key => $value) {
+                $this->set($key, $value, $ttlSeconds, $transaction);
+            }
+
+            $transaction->execute();
+            return true;
+        } catch (\Exception $ex) {
+            captureException($ex);
+            return false;
         }
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Array get/set
+
+    public function getArrayHash(string $key): ?array
+    {
+        if (isset($this->localKeyValueStore[$key]) && is_array($this->localKeyValueStore[$key]))
+            return $this->localKeyValueStore[$key];
 
         try {
+            $value = $this->client->hgetall($key);
+            if (is_array($value) && !empty($value))
+                return $value;
+        } catch (\Exception $ex) {
+            captureException($ex);
+        }
+
+        return null;
+    }
+
+    public function setArrayHash(string $key, array $dictionary, ?int $ttlSeconds = 0): bool
+    {
+        try {
+            $transaction = $this->client->transaction();
+
+            foreach ($dictionary as $subKey => $subValue)
+                $transaction->hset($key, $subKey, $subValue);
+
+            $this->localKeyValueStore[$key] = $dictionary;
+
+            if ($ttlSeconds)
+                $transaction->expire($key, $ttlSeconds);
+
             $transaction->execute();
             return true;
         } catch (\Exception $ex) {
