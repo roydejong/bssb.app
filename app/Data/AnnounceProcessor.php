@@ -213,6 +213,10 @@ final class AnnounceProcessor
         $game->isModded = ($isModded || $game->mpCoreVersion || $game->mpExVersion)
             && $this->validateGameCanBeModded($game);
 
+        if (str_ends_with($ownerName, "Quickplay: All"))
+            // Workaround for legacy clients not identifying "all" lobbies correctly
+            $game->difficulty = LevelDifficulty::All;
+
         $this->setGameName($game, $gameName);
 
         // With all data set, check validations
@@ -520,7 +524,7 @@ final class AnnounceProcessor
 
             $this->tempLevelData = new LevelRecord();
             $this->tempLevelData->levelId = $levelId;
-            $this->tempLevelData->songName = $songName;
+            $this->tempLevelData->songName = $songName ?? "Unknown";
             $this->tempLevelData->songSubName = $songSubName;
             $this->tempLevelData->songAuthor = $songAuthorName;
             $this->tempLevelData->levelAuthor = $levelAuthorName;

@@ -546,8 +546,9 @@ class AnnounceControllerTest extends TestCase
         $request = clone self::$minimalAnnounceRequest;
         $request->json['ServerType'] = HostedGame::SERVER_TYPE_BEATTOGETHER_QUICKPLAY;
         $request->json['HostSecret'] = 'bla4321';
-        $request->json['Difficulty'] = null;
+        $request->json['Difficulty'] = LevelDifficulty::All;
         $request->json['GameName'] = '💩';
+        $request->json['OwnerName'] = 'BeatTogether Quickplay: All';
 
         $response = (new AnnounceController())->announce($request);
         $json = json_decode($response->body, true);
@@ -560,13 +561,15 @@ class AnnounceControllerTest extends TestCase
     /**
      * @depends testMinimalAnnounce
      */
-    public function testSetsQuickPlayName_BT_All_Explicit()
+    public function testSetsQuickPlayName_BT_Implicit()
     {
         $request = clone self::$minimalAnnounceRequest;
         $request->json['ServerType'] = HostedGame::SERVER_TYPE_BEATTOGETHER_QUICKPLAY;
         $request->json['HostSecret'] = 'bla4321';
-        $request->json['Difficulty'] = LevelDifficulty::All;
+        $request->json['Difficulty'] = LevelDifficulty::Hard;
+        $request->json['LevelId'] = 'custom_level_bla4321';
         $request->json['GameName'] = '💩';
+        $request->json['OwnerName'] = 'BeatTogether Quickplay: All';
 
         $response = (new AnnounceController())->announce($request);
         $json = json_decode($response->body, true);
