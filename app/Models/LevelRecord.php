@@ -94,12 +94,15 @@ class LevelRecord extends Model implements \JsonSerializable
     {
         if ($this->getIsCustomLevel()) {
             // Custom level assets - download to local if possible
-            if (str_starts_with($this->coverUrl, "https://cdn.beatsaver.com/")) {
-                if ($localCoverUrl = BeatSaver::downloadCoverArt($this->coverUrl)) {
-                    $this->coverUrl = "https://bssb.app{$localCoverUrl}";
-                    return $this->save();
-                } else {
-                    return false;
+            if ($this->coverUrl) {
+                $this->coverUrl = str_replace("eu.cdn", "cdn", $this->coverUrl);
+                if (str_starts_with($this->coverUrl, "https://cdn.beatsaver.com/")) {
+                    if ($localCoverUrl = BeatSaver::downloadCoverArt($this->coverUrl)) {
+                        $this->coverUrl = "https://bssb.app{$localCoverUrl}";
+                        return $this->save();
+                    } else {
+                        return false;
+                    }
                 }
             }
             return true;
