@@ -104,8 +104,14 @@ class HostedGame extends Model implements \JsonSerializable
     public ?string $songAuthor;
     /**
      * Difficulty of the current or most recent song, or the locked difficulty of the lobby (for Quick Play).
+     * This represents "best available" the lobby difficulty, which may not always match the level difficulty.
      */
     public ?int $difficulty;
+    /**
+     * Difficulty of the current or most recent song.
+     * Will never be set to lobby difficulty (e.g. "all").
+     */
+    public ?int $levelDifficulty;
     /**
      * Announcer's platform (e.g. "steam", "oculus")
      */
@@ -355,6 +361,11 @@ class HostedGame extends Model implements \JsonSerializable
     public function describeDifficulty(): string
     {
         return LevelDifficulty::describe($this->difficulty);
+    }
+
+    public function describeLevelDifficulty(): string
+    {
+        return LevelDifficulty::describe($this->levelDifficulty ?? $this->difficulty);
     }
 
     public function getAdjustedState(?CVersion $observerGameVersion = null): int

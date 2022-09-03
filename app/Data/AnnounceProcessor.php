@@ -23,7 +23,6 @@ final class AnnounceProcessor
     private ModClientInfo $clientInfo;
     private array $data;
     private ?LevelRecord $tempLevelData;
-    private ?int $levelDifficulty;
     private ?GameplayModifiers $gameplayModifiers;
     private ?string $sessionGameId;
     private bool $legacyLevelStarted;
@@ -287,7 +286,7 @@ final class AnnounceProcessor
 
             if ($this->serverLevel->hostedGameId === $game->id && $this->serverLevel->endedAt === null) {
                 $this->serverLevel->levelRecordId = $this->tempLevelData->id;
-                $this->serverLevel->difficulty = $this->levelDifficulty ?? $game->difficulty;
+                $this->serverLevel->difficulty = $game->levelDifficulty;
                 $this->serverLevel->characteristic = $game->characteristic;
                 $this->serverLevel->modifiers = $this->gameplayModifiers;
             }
@@ -484,7 +483,7 @@ final class AnnounceProcessor
     private function setLevelInfo(HostedGame &$game): void
     {
         $levelData = $this->get('Level');
-        $difficulty = $this->getIntNullable('Difficulty');
+        $difficulty = $this->getIntNullable('Difficulty'); // may be lobby diff, including "all", *OR* level diff
 
         if ($levelData && is_array($levelData)) {
             // Modern announce format: Level object
@@ -529,8 +528,6 @@ final class AnnounceProcessor
             $this->tempLevelData->songAuthor = $songAuthorName;
             $this->tempLevelData->levelAuthor = $levelAuthorName;
 
-            $this->levelDifficulty = $difficulty;
-
             $this->gameplayModifiers = $gameplayModifiers;
             $this->sessionGameId = $sessionGameId;
         } else {
@@ -538,6 +535,9 @@ final class AnnounceProcessor
             $this->gameplayModifiers = null;
             $this->sessionGameId = null;
         }
+
+        if ($difficulty !== LevelDifficulty::All)
+            $game->levelDifficulty = $difficulty;
 
         if ($game->getIsQuickplay()) {
             // Quick play - lobby has a fixed difficulty, should even be sent without a level

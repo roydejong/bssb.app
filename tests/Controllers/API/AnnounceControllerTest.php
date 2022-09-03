@@ -112,6 +112,7 @@ class AnnounceControllerTest extends TestCase
         $this->assertSame("GilvaSunner", $announce->songAuthor);
         $this->assertTrue($announce->isModded);
         $this->assertSame(LevelDifficulty::Easy, $announce->difficulty);
+        $this->assertSame(LevelDifficulty::Easy, $announce->levelDifficulty);
         $this->assertSame("steam", $announce->platform);
         $this->assertSame("custom-server.com", $announce->masterServerHost);
         $this->assertSame(2328, $announce->masterServerPort);
@@ -276,6 +277,7 @@ class AnnounceControllerTest extends TestCase
         $this->assertSame("Sugar", $game->songName);
         $this->assertSame("Maroon 5", $game->songAuthor);
         $this->assertSame(3, $game->difficulty);
+        $this->assertSame(3, $game->levelDifficulty);
         $this->assertSame("Standard", $game->characteristic);
     }
 
@@ -549,6 +551,11 @@ class AnnounceControllerTest extends TestCase
         $request->json['Difficulty'] = LevelDifficulty::All;
         $request->json['GameName'] = '💩';
         $request->json['OwnerName'] = 'BeatTogether Quickplay: All';
+        $request->json['Level'] = [
+            'LevelId' => 'custom_level_abc1',
+            'SongName' => 'Hey',
+            'Difficulty' => LevelDifficulty::Easy
+        ];
 
         $response = (new AnnounceController())->announce($request);
         $json = json_decode($response->body, true);
@@ -556,6 +563,8 @@ class AnnounceControllerTest extends TestCase
         $game = HostedGame::fetch(HostedGame::hash2id($json['key']));
 
         $this->assertSame("BeatTogether Quick Play - All", $game->gameName);
+        $this->assertSame(LevelDifficulty::All, $game->difficulty);
+        $this->assertSame(LevelDifficulty::Easy, $game->levelDifficulty);
     }
 
     /**
@@ -566,8 +575,12 @@ class AnnounceControllerTest extends TestCase
         $request = clone self::$minimalAnnounceRequest;
         $request->json['ServerType'] = HostedGame::SERVER_TYPE_BEATTOGETHER_QUICKPLAY;
         $request->json['HostSecret'] = 'bla4321';
-        $request->json['Difficulty'] = LevelDifficulty::Hard;
-        $request->json['LevelId'] = 'custom_level_bla4321';
+        $request->json['Difficulty'] = LevelDifficulty::Hard; // will be overridden by OwnerName
+        $request->json['Level'] = [
+            'LevelId' => 'custom_level_abc2',
+            'SongName' => 'Hey',
+            'Difficulty' => LevelDifficulty::Hard
+        ];
         $request->json['GameName'] = '💩';
         $request->json['OwnerName'] = 'BeatTogether Quickplay: All';
 
@@ -577,6 +590,8 @@ class AnnounceControllerTest extends TestCase
         $game = HostedGame::fetch(HostedGame::hash2id($json['key']));
 
         $this->assertSame("BeatTogether Quick Play - All", $game->gameName);
+        $this->assertSame(LevelDifficulty::All, $game->difficulty);
+        $this->assertSame(LevelDifficulty::Hard, $game->levelDifficulty);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

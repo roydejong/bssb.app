@@ -31,7 +31,7 @@
                                 <div>
                                     {% if game.getIsPlayingLevel() %}
                                         <i class="mdi mdi-gamepad"></i>
-                                        <span class="level-limit" title="{{ game.levelName }} on {{ game.describeDifficulty }}">Playing {{ game.levelName }} ({{ game.describeDifficulty() }})</span>
+                                        <span class="level-limit" title="{{ game.levelName }} on {{ game.describeLevelDifficulty }}">Playing {{ game.levelName }} ({{ game.describeLevelDifficulty() }})</span>
                                     {% else %}
                                         <i class="mdi mdi-account-group"></i>
                                         <span class="level-limit">{{ game.describeState() }}</span>

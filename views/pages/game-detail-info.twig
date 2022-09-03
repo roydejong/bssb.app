@@ -47,6 +47,16 @@
                                 </td>
                             </tr>
                         {% endif %}
+                        {% if game.levelDifficulty is not null and game.levelDifficulty != game.difficulty and game.getIsPlayingLevel() %}
+                            <tr>
+                                <th scope="row">
+                                    Level difficulty
+                                </th>
+                                <td>
+                                    <span class="difficulty-txt -d{{ game.levelDifficulty }}">{{ game.describeLevelDifficulty() }}</span>
+                                </td>
+                            </tr>
+                        {% endif %}
                         {% if game.getIsDedicatedServer() %}
                             <tr>
                                 <th scope="row"><abbr title="The time the current lobby was created on this server.">Lobby
