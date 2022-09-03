@@ -26,68 +26,6 @@
     }
   }
 
-  ul.timeline {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    position: relative;
-
-    &:before {
-      content: "";
-      background: #333;
-      width: 1px;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: .2rem;
-    }
-
-    li {
-      display: flex;
-      flex-direction: column;
-      padding: 1rem 0;
-      padding-left: 1.5rem;
-      font-size: 1.4rem;
-      position: relative;
-
-      abbr {
-        border: none;
-      }
-
-      .time {
-        color: #666;
-        font-size: 1.3rem;
-        margin-bottom: .5rem;
-        position: relative;
-
-        &:before {
-          content: "";
-          background: #333;
-          width: 7px;
-          height: 7px;
-          border-radius: 50%;
-          position: absolute;
-          top: .4rem;
-          bottom: 0;
-          left: -1.6rem;
-        }
-      }
-
-      a {
-        color: #fff;
-        line-height: 1.4;
-        font-weight: bold;
-      }
-      p {
-        margin: .25rem 0 0 0;
-        line-height: 1.4;
-        font-size: 1.3rem;
-        color: #aaa;
-      }
-    }
-  }
-
   a.timeline-twitter {
     clear: both;
     display: inline-block;

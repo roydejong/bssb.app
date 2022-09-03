@@ -59,6 +59,14 @@ $bssbConfig['enable_guide'] = false;
  */
 $bssbConfig['allow_boring'] = false;
 
+
+/**
+ * Twitter API configuration
+ */
+
+$bssbConfig['twitter_api_key'] = null;
+$bssbConfig['twitter_api_key_secret'] = null;
+
 /**
  * Instarecord configuration
  */

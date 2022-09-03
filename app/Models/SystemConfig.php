@@ -11,6 +11,9 @@ class SystemConfig extends Model
 
     public int $id;
     public ?string $serverMessage;
+    public ?string $twitterOauthToken;
+    public ?string $twitterOauthTokenSecret;
+    public ?string $twitterUserId;
 
     // -----------------------------------------------------------------------------------------------------------------
     // Table
@@ -47,5 +50,10 @@ class SystemConfig extends Model
     public function getCleanServerMessage(): ?string
     {
         return $this->serverMessage ? strip_tags($this->serverMessage) : null;
+    }
+
+    public function getIsTwitterConfigured(): bool
+    {
+        return ($this->twitterOauthToken && $this->twitterOauthTokenSecret && $this->twitterUserId);
     }
 }

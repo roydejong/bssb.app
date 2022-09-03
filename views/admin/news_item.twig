@@ -1,0 +1,110 @@
+{% extends "admin/_base.twig" %}
+
+{% block content %}
+    <div class="card -form">
+        <div class="inner">
+            <div class="form-control">
+                <label for="title">Title</label>
+                <input type="text" name="title" id="title" value="{{ formData.title }}" maxlength="64" required/>
+            </div>
+            <div class="form-control">
+                <label for=text">Additional text</label>
+                <textarea name="text" id="text" maxlength="215" placeholder="Optional">{{ formData.text }}</textarea>
+            </div>
+            <div class="form-control -check">
+                <input type="checkbox" name="isAlert" id="isAlert" value="1" {% if formData.isAlert %}checked{% endif %}/>
+                <label for="isAlert">Broadcast as active alert</label>
+            </div>
+            <div class="admin-previews">
+                <h3>Preview</h3>
+                <div class="site-preview">
+                    <ul class="timeline">
+                        <li class="">
+                            <span class="time">{{ changelog.publishDate|timeago_html|raw }}</span>
+                            <a href="#" title="View Tweet">!Title!</a>
+                            <p>!AdditionalText!</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="twitter-preview">
+                    <i class="mdi mdi-twitter"></i>
+                    <img class="avatar" src="/twitter-tile.png"/>
+                    <div class="text">
+                        <div class="tweeter">
+                            <strong>Beat Saber Server Browser</strong>
+                            <span>@BSSBapp</span>
+                            <span>·</span>
+                            <span>Now</span>
+                        </div>
+                        <p>!TweetText!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="publish-info">
+                <i class="mdi mdi-twitter"></i>
+                {% if creatingNew or not changelog.tweetId %}
+                    A Twitter post will be created on publish
+                {% else %}
+                    <a href="{{ changelog.url() }}" target="_blank">Twitter post</a> will not be updated (because that's impossible)
+                {% endif %}
+            </div>
+            <button type="submit" class="btn">{{ creatingNew ? "Publish item" : "Save changes" }}</button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+  class PreviewUtil {
+    static bind() {
+      this.sitePreviewLi = document.querySelector('.site-preview li');
+      this.twitterPreviewP = document.querySelector('.twitter-preview .text p');
+
+      document.addEventListener('input', () => {
+        this.sync();
+      });
+    }
+
+    static get titleValue() {
+      return document.getElementById('title').value;
+    }
+
+    static get textValue() {
+      return document.getElementById('text').value;
+    }
+
+    static get isAlertValue() {
+      return document.getElementById('isAlert').checked;
+    }
+
+    static preProcessSiteDisplayText(str) {
+      return this.removeEmoji(this.removeNewlines(str)).trim();
+    }
+
+    static removeEmoji(str) {
+      return str.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
+    }
+
+    static removeNewlines(str) {
+      return str.replaceAll("\r", "").replaceAll("\n", " ");
+    }
+
+    static sync() {
+      this.sitePreviewLi.querySelector('a').innerText = this.preProcessSiteDisplayText(this.titleValue) || "...";
+      this.sitePreviewLi.querySelector('p').innerText = this.preProcessSiteDisplayText(this.textValue);
+      if (this.isAlertValue)
+        this.sitePreviewLi.classList.add('-alert');
+      else
+        this.sitePreviewLi.classList.remove('-alert');
+      this.twitterPreviewP.innerText = (this.titleValue + "\r\n" + this.textValue).trim() || "...";
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function (e) {
+    PreviewUtil.bind();
+    PreviewUtil.sync();
+  });
+</script>
+{% endblock %}

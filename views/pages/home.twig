@@ -40,10 +40,12 @@
             {% if changelogs and changelogs|length %}
                 <ul class="timeline">
                     {% for changelog in changelogs %}
+                        {% set title = changelog.getSiteDisplayTitle() %}
+                        {% set text = changelog.getSiteDisplayText() %}
                         <li class="{{ changelog.isAlert ? "-alert" : "" }}">
                             <span class="time">{{ changelog.publishDate|timeago_html|raw }}</span>
-                            <a href="{{ changelog.url }}" target="_blank" title="View Tweet">{{ changelog.title }}</a>
-                            {% if changelog.text %}<p>{{ changelog.text }}</p>{% endif %}
+                            <a href="{{ changelog.url }}" target="_blank" title="View Tweet">{{ title }}</a>
+                            {% if text %}<p>{{ text }}</p>{% endif %}
                         </li>
                     {% endfor %}
                 </ul>

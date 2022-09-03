@@ -1,5 +1,7 @@
 <?php
 
+use app\BSSB;
+
 const DIR_BASE = __DIR__;
 const DIR_PUBLIC = DIR_BASE . "/public";
 const DIR_VIEWS = DIR_BASE . "/views";
@@ -10,3 +12,5 @@ global $bssbConfig;
 
 require_once DIR_BASE . "/vendor/autoload.php";
 require_once DIR_BASE . "/config.php";
+
+BSSB::bootstrap();

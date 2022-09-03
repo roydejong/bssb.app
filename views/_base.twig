@@ -54,7 +54,7 @@
                     </a>
                 {% endif %}
                 {% if self_is_admin %}
-                    <a href="/admin" class="-admin {% if tab == "admin" %}-active{% endif %}" title="Admin">
+                    <a href="/admin" class="-admin {% if tab == "admin" %}-active{% endif %}" title="Admin" data-turbo="false">
                         <i class="mdi mdi-shield-crown"></i>
                         <span>Admin</span>
                     </a>

@@ -15,6 +15,7 @@ class ViewRenderer
     // Setup
 
     protected Environment $twig;
+    protected array $globals;
 
     private function __construct()
     {
@@ -58,19 +59,28 @@ class ViewRenderer
                 ->set($key, $value)
                 ->toUrl();
         }));
+
+        $this->globals = [];
+    }
+
+    public function setGlobal(string $key, mixed $value): void
+    {
+        $this->globals[$key] = $value;
     }
 
     private function processContext(?array $userContext): array
     {
-        if ($userContext === null) {
-            $userContext = [];
-        }
+        $combinedContext = [];
+
+        // Write globals
+        foreach ($this->globals as $key => $value)
+            $combinedContext[$key] = $value;
 
         // Add version info (for cache busting)
         $versionFilePath = DIR_BASE . "/.version";
-        $userContext['version_hash'] = trim(@file_get_contents($versionFilePath));
-        $userContext['version_hash_short'] = substr($userContext['version_hash'],0,7);
-        $userContext['version_date'] = @filemtime($versionFilePath);
+        $combinedContext['version_hash'] = trim(@file_get_contents($versionFilePath));
+        $combinedContext['version_hash_short'] = substr($combinedContext['version_hash'],0,7);
+        $combinedContext['version_date'] = @filemtime($versionFilePath);
 
         // Add session info
         $session = Session::getInstance();
@@ -78,21 +88,26 @@ class ViewRenderer
         if ($session->getIsSteamAuthed()) {
             $player = $session->getPlayer();
 
-            $userContext['steam_authed'] = true;
-            $userContext['self_player_id'] = $player?->id ?? null;
-            $userContext['self_player_name'] = $player?->userName ?? "Steam User";
-            $userContext['self_face_render'] = $player?->renderFaceHtml();
-            $userContext['self_is_admin'] = $player?->getIsSiteAdmin();
-            $userContext['self_profile_url'] = $player?->getWebDetailUrl();
+            $combinedContext['steam_authed'] = true;
+            $combinedContext['self_player_id'] = $player?->id ?? null;
+            $combinedContext['self_player_name'] = $player?->userName ?? "Steam User";
+            $combinedContext['self_face_render'] = $player?->renderFaceHtml();
+            $combinedContext['self_is_admin'] = $player?->getIsSiteAdmin();
+            $combinedContext['self_profile_url'] = $player?->getWebDetailUrl();
         }
 
         // Config data
         global $bssbConfig;
-        $userContext['config'] = [
+        $combinedContext['config'] = [
             'enable_guide' => !!($bssbConfig['enable_guide'] ?? false)
         ];
 
-        return $userContext;
+        // Write user context last
+        if ($userContext)
+            foreach ($userContext as $key => $value)
+                $combinedContext[$key] = $value;
+
+        return $combinedContext;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

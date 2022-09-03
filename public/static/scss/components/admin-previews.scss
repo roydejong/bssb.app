@@ -1,0 +1,63 @@
+.admin-previews {
+  display: flex;
+  flex-direction: column;
+
+  > div {
+    margin-bottom: 1.5rem;
+  }
+
+  .site-preview {
+    overflow: hidden;
+    background: #202124;
+    width: 320px;
+    border-radius: 6px;
+    padding-left: 1.5rem;
+
+    ul, li {
+      width: 305px;
+    }
+  }
+
+  .twitter-preview {
+    display: flex;
+    width: 598px;
+    padding: 12px 16px;
+    background: #15202b;
+    color: #fff;
+    border: 1px solid #ccc;
+    position: relative;
+    cursor: pointer;
+
+    > i.mdi-twitter {
+      position: absolute;
+      right: 12px;
+      top: 12px;
+      font-size: 16px;
+      color: #1DA1F2;
+    }
+
+    .avatar {
+      border-radius: 50%;
+      height: 4.8rem;
+      width: 4.8rem;
+      margin-right: 12px;
+    }
+    .text {
+      max-width: 466.5px;
+      .tweeter {
+        strong {
+          font-weight: bold;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+        span {
+          color: rgba(139, 152, 165);
+        }
+      }
+
+      font: 14px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    }
+  }
+}

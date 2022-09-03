@@ -1,0 +1,50 @@
+{% extends "admin/_base.twig" %}
+
+{% block context %}
+    <a class="btn" href="/admin/news/new">Create new</a>
+{% endblock %}
+
+{% block content %}
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Published</th>
+            <th>Twitter</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for log in changelogs %}
+            <tr>
+                <td>
+                    {% if log.isAlert %}
+                        <i class="mdi mdi-alert"></i>
+                    {% endif %}
+                    <strong>{{ log.title }}</strong>
+                </td>
+                <td>{{ log.publishDate|timeago_html|raw }}</td>
+                <td>
+                    {% if log.tweetId %}
+                        <a href="{{ log.url() }}">
+                            <i class="mdi mdi-twitter"></i>
+                            <span>Tweeted</span>
+                        </a>
+                    {% else %}
+                        Not tweeted
+                    {% endif %}
+                </td>
+                <td>
+                    <a class="btn" href="/admin/news/{{ log.id }}">Edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="100%" class="not-found">
+                    No news items added yet
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

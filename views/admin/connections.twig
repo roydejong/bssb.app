@@ -1,0 +1,27 @@
+{% extends "admin/_base.twig" %}
+
+{% block content %}
+    <div class="card-pile">
+        <div class="card">
+            <div class="header">
+                <h3>
+                    <i class="mdi mdi-twitter"></i>
+                    <span>Twitter</span>
+                </h3>
+            </div>
+            <div class="inner">
+                <p class="lite">Publishes news feed items to a Twitter account.</p>
+                <p>
+                    <strong>
+                        {% if systemConfig.twitterUserId %}
+                            ✅ Connected (<a href="https://twitter.com/intent/user?user_id={{ systemConfig.twitterUserId }}" target="_blank">{{ systemConfig.twitterUserId }}</a>)
+                        {% else %}
+                            ❌ Not connected ({{ systemConfig.id }})
+                        {% endif %}
+                    </strong>
+                </p>
+                <button class="btn" type="submit" name="action" value="connect_twitter">Connect Twitter</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}

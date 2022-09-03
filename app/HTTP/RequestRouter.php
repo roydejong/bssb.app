@@ -142,6 +142,20 @@ class RequestRouter
             return new NotFoundResponse();
         }
 
+        // "before" call on controller
+        $beforeCallable = [$callable[0], 'before'];
+        if (is_callable($beforeCallable)) {
+            $beforeResult = call_user_func_array($beforeCallable, [$request]);
+
+            if ($beforeResult instanceof Response) {
+                // The before function returned an early response, do not proceed
+                return $beforeResult;
+            } else if ($beforeResult === false) {
+                // The before function returned false, abort execution (generic fallback)
+                return new Response(500, "Controller precondition failed");
+            }
+        }
+
         // Execute
         $result = call_user_func_array($callable, $_variables);
 

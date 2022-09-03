@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% if title %}{{ title }} - {% endif %}BSSB Admin</title>
+    <link href="/static/bssb.admin.css?v={{ version_hash_short }}" rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#603cba">
+    <meta name="theme-color" content="#9f00a7">
+    <meta name="robots" content="noindex, follow">
+</head>
+<body>
+    <form method="post">
+        <input type="hidden" name="__csrf" value="{{ csrf }}"/>
+        <div class="top">
+            <div class="container-h">
+                <a class="bssb" href="/" title="BSSB.app">
+                    <span>BS</span><span>SB</span>
+                </a>
+                <nav>
+                    <a href="/admin" class="{% if tab == "dash" %}-active{% endif %}">
+                        <i class="mdi mdi-monitor-dashboard"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="/admin/news" class="{% if tab == "news" %}-active{% endif %}">
+                        <i class="mdi mdi-newspaper"></i>
+                        <span>Newsfeed</span>
+                    </a>
+                    <a href="/admin/connections" class="{% if tab == "connections" %}-active{% endif %}">
+                        <i class="mdi mdi-connection"></i>
+                        <span>Connections</span>
+                    </a>
+                </nav>
+                <a class="user" href="/me" title="My profile">
+                    {{ self_face_render|raw }}
+                    <span>{{ self_player_name }}</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="top-title">
+            <div class="container-h">
+                <h1>{{ title ? title : "Untitled" }}</h1>
+                <div class="context">
+                    {% block context %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="container-v">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </form>
+
+{% block scripts %}{% endblock %}
+
+</body>
+</html>
+<link rel="stylesheet" href="/static/vendor/materialdesignicons.min.css">

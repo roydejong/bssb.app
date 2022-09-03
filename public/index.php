@@ -1,5 +1,9 @@
 <?php
 
+use app\Controllers\Admin\AdminConnectionsController;
+use app\Controllers\Admin\AdminDashController;
+use app\Controllers\Admin\AdminNewsController;
+use app\Controllers\Admin\TwitterCallbackController;
 use app\Controllers\AdminController;
 use app\Controllers\API\V1\AnnounceController;
 use app\Controllers\API\V1\AnnounceResultsController;
@@ -61,7 +65,6 @@ $router->register('/me', MeController::class, 'getMe');
 $router->register('/login', LoginController::class, 'getLogin');
 $router->register('/login/return', LoginController::class, 'getLoginReturn');
 $router->register('/settings', UserSettingsController::class, 'getUserSettings');
-$router->register('/admin', AdminController::class, 'getAdminPage');
 
 // API routes
 $router->register('/api/v1/announce', AnnounceController::class, 'announce');
@@ -74,6 +77,13 @@ $router->register('/api/v1/status', StatusController::class, 'getStatus');
 
 // API routes (v2)
 $router->register('/api/v2/unannounce', UnAnnounceControllerV2::class, 'unAnnounce');
+
+// Admin
+$router->register('/admin', AdminDashController::class, 'getDash');
+$router->register('/admin/news', AdminNewsController::class, 'getNews');
+$router->register('/admin/news/$id', AdminNewsController::class, 'getNewsItem');
+$router->register('/admin/connections', AdminConnectionsController::class, 'getConnections');
+$router->register('/callback/twitter', TwitterCallbackController::class, 'handleCallback');
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Session
