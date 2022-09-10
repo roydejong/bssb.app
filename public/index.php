@@ -1,5 +1,6 @@
 <?php
 
+use app\Controllers\Admin\AdminBansController;
 use app\Controllers\Admin\AdminConnectionsController;
 use app\Controllers\Admin\AdminDashController;
 use app\Controllers\Admin\AdminNewsController;
@@ -80,6 +81,8 @@ $router->register('/api/v2/unannounce', UnAnnounceControllerV2::class, 'unAnnoun
 
 // Admin
 $router->register('/admin', AdminDashController::class, 'getDash');
+$router->register('/admin/bans', AdminBansController::class, 'getBans');
+$router->register('/admin/bans/$id', AdminBansController::class, 'getBanItem');
 $router->register('/admin/news', AdminNewsController::class, 'getNews');
 $router->register('/admin/news/$id', AdminNewsController::class, 'getNewsItem');
 $router->register('/admin/connections', AdminConnectionsController::class, 'getConnections');

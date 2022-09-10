@@ -12,6 +12,7 @@ use app\Models\HostedGame;
 use app\Models\Joins\HostedGamePlayerWithPlayerDetails;
 use app\Models\Joins\LevelHistoryPlayerWithDetails;
 use app\Models\LevelRecord;
+use app\Models\LobbyBan;
 
 class GameDetailController
 {
@@ -63,6 +64,11 @@ class GameDetailController
         }
 
         // -------------------------------------------------------------------------------------------------------------
+        // Ban notice
+
+        $ban = LobbyBan::getServerCodeBan($game->serverCode);
+
+        // -------------------------------------------------------------------------------------------------------------
         // Response
 
         $view = new View('pages/game-detail-info.twig');
@@ -73,6 +79,7 @@ class GameDetailController
         $view->set('ldJson', $this->generateLdJson($game, $level));
         $view->set('geoCountry', $geoCountry);
         $view->set('geoText', $geoText);
+        $view->set('ban', $ban);
 
         $response = $view->asResponse();
         @$resCache->writeResponse($response);

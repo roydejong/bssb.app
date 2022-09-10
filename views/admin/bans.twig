@@ -1,0 +1,54 @@
+{% extends "admin/_base.twig" %}
+
+{% block context %}
+    <a class="btn" href="/admin/bans/new">New ban</a>
+{% endblock %}
+
+{% block content %}
+<table>
+    <thead>
+        <tr>
+            <th>Details</th>
+            <th>Banned at</th>
+            <th>Expires</th>
+            <th>Status</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ban in bans %}
+            <tr>
+                <td>
+                    <strong>{{ ban.describeBan() }}</strong><br />
+                    {{ ban.comment }}
+                </td>
+                <td>{{ ban.created|timeago_html|raw }}</td>
+                <td>
+                    {% if ban.expires %}
+                        {{ ban.expires|timeago_html|raw }}
+                    {% else %}
+                        Never
+                    {% endif %}
+                </td>
+                <td>
+                    {% if ban.hasExpired %}
+                        Expired
+                    {% else %}
+                        Active
+                    {% endif %}
+                </td>
+                <td>
+                    <a class="btn" href="/admin/bans/{{ ban.id }}">Edit</a>
+                    <button type="submit" name="delete-ban" value="{{ ban.id }}" class="btn -del" href="/admin/bans/{{ ban.id }}">Delete</button>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="100%" class="not-found">
+                    No bans yet
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

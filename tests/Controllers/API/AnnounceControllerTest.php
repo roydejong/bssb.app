@@ -7,8 +7,10 @@ use app\BeatSaber\MultiplayerLobbyState;
 use app\Common\CVersion;
 use app\Common\IPEndPoint;
 use app\Controllers\API\V1\AnnounceController;
+use app\Models\Enums\LobbyBanType;
 use app\Models\HostedGame;
 use app\Models\LevelRecord;
+use app\Models\LobbyBan;
 use app\Models\Player;
 use PHPUnit\Framework\TestCase;
 use tests\Mock\MockJsonRequest;
@@ -902,6 +904,39 @@ class AnnounceControllerTest extends TestCase
             $this->assertTrue($game->getIsQuickplay());
         } finally {
             @$game->delete();
+        }
+    }
+
+    /**
+     * @depends testMinimalAnnounce
+     */
+    public function testServerCodeBan()
+    {
+        $lobbyBan = new LobbyBan();
+        $lobbyBan->type = LobbyBanType::ServerCode;
+        $lobbyBan->value = "1BAN2";
+        $lobbyBan->comment = "ban reason";
+        if ($old = $lobbyBan->fetchExisting())
+            @$old->delete();
+        $lobbyBan->save();
+
+        try {
+            $request = clone self::$minimalAnnounceRequest;
+            $request->json['ServerCode'] = "1BAN2";
+
+            $response = (new AnnounceController())->announce($request);
+            $json = json_decode($response->body, true);
+
+            $this->assertTrue($json["success"],
+                "Announce should return success state");
+            $this->assertStringContainsString($lobbyBan->comment, $json["message"],
+                "Announce should return ban reason in message");
+
+            $game = HostedGame::fetch(HostedGame::hash2id($json['key']));
+
+            $this->assertNotNull($game->endedAt, "Announce should mark game as ended due to ban");
+        } finally {
+            @$lobbyBan->delete();
         }
     }
 }

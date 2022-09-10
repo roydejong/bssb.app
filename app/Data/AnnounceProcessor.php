@@ -16,6 +16,7 @@ use app\Models\HostedGamePlayer;
 use app\Models\LevelHistory;
 use app\Models\LevelHistoryPlayer;
 use app\Models\LevelRecord;
+use app\Models\LobbyBan;
 use app\Models\MasterServerInfo;
 
 final class AnnounceProcessor
@@ -51,16 +52,18 @@ final class AnnounceProcessor
 
     public function process(): ?HostedGame
     {
+        $this->userMessage = null;
+
         $game = $this->syncGameData();
 
         $this->syncLevelData($game);
         $this->syncPlayerData($game);
         $this->syncServerData($game);
 
+        $this->checkBanConditions($game);
+
         if ($game->getIsGameLiftServer() && $game->getIsQuickplay()) {
             $this->userMessage = "Other players can't join Official Quick Play lobbies right now, sorry";
-        } else {
-            $this->userMessage = null;
         }
 
         return $game;
@@ -406,6 +409,26 @@ final class AnnounceProcessor
     public function syncServerData(HostedGame $game): void
     {
         MasterServerInfo::syncFromGame($game);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Bans
+
+    public function checkBanConditions(HostedGame $game): void
+    {
+        if ($game->serverCode && $ban = LobbyBan::getServerCodeBan($game->serverCode)) {
+            // Server code is on ban list, kill the game
+            if (!$game->endedAt) {
+                $game->endedAt = new \DateTime('now');
+                $game->save();
+            }
+            if ($ban->comment) {
+                $this->userMessage = "Moderated: {$ban->comment}";
+            } else {
+                $this->userMessage = "Moderated: Announce was blocked";
+            }
+            return;
+        }
     }
 
     // -----------------------------------------------------------------------------------------------------------------

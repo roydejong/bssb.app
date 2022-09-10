@@ -99,6 +99,17 @@ abbr {
   &:active {
     background: #000;
   }
+
+  &.-del {
+    background: #c0392b;
+
+    &:hover {
+      box-shadow: inset 999px 999px 999px rgba(255, 255, 255, .1);
+    }
+    &:active {
+      box-shadow: inset 999px 999px 999px rgba(0, 0, 0, .25);
+    }
+  }
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -354,6 +365,18 @@ $cardMargin: 1.5rem;
   }
 }
 
+.lamp {
+  display: inline-flex;
+  height: 8px;
+  width: 8px;
+  background: #2ecc71;
+  border-radius: 50%;
+  flex-grow: 0;
+  flex-shrink: 0;
+  margin-right: 2px;
+  margin-bottom: 2px;
+}
+
 // ---------------------------------------------------------------------------------------------------------------------
 // Forms
 
@@ -368,7 +391,7 @@ $cardMargin: 1.5rem;
     cursor: pointer;
     user-select: none;
   }
-  input[type="text"], textarea {
+  input[type="text"], input[type="date"], input[type="datetime-local"], textarea, select {
     appearance: none;
     background: #fff;
     border: 1px solid #ccc;

@@ -38,20 +38,25 @@
                 </div>
             {% endif %}
 
-            {% if game.getIsUninteresting() %}
+            {% if ban %}
                 <div class="alert alert-danger">
-                    🤖 Game was hidden automatically (game is not relevant)
+                    <i class="mdi mdi-gavel"></i> This game was moderated and will be hidden from the server browser{% if ban.comment %}: <br />{{ ban.comment }}{% endif %}
                 </div>
-            {% elseif game.endedAt is not null %}
-                <div class="alert alert-danger">
-                    This game has ended and can no longer be joined.
-                </div>
-            {% endif %}
-
-            {% if game.getIsStale() and game.endedAt is null %}
-                <div class="alert alert-danger">
-                    We stopped receiving data for this game, it's probably dead.
-                </div>
+            {% else %}
+                {% if game.getIsUninteresting() %}
+                    <div class="alert alert-danger">
+                        🤖 Game was hidden automatically (game is not relevant)
+                    </div>
+                {% elseif game.endedAt is not null %}
+                    <div class="alert alert-danger">
+                        This game has ended and can no longer be joined.
+                    </div>
+                {% endif %}
+                {% if game.getIsStale() and game.endedAt is null %}
+                    <div class="alert alert-danger">
+                        We stopped receiving data for this game, it's probably dead.
+                    </div>
+                {% endif %}
             {% endif %}
 
             <div class="page-tabs">

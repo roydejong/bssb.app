@@ -1,0 +1,35 @@
+{% extends "admin/_base.twig" %}
+
+{% block content %}
+    <div class="card -form">
+        <div class="inner">
+            <div class="form-control">
+                <label for="type">Ban type</label>
+                <select name="type" id="type" required>
+                    {% for banType in banTypes %}
+                        <option value="{{ banType.value }}" {% if formData.type == banType.value %}selected{% endif %}>Server code</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-control">
+                <label for="value">Ban value</label>
+                <input type="text" name="value" id="value" value="{{ formData.value }}" maxlength="255" required/>
+            </div>
+            <div class="form-control">
+                <label for="expires">Expires</label>
+                <input type="datetime-local" name="expires" id="expires" value="{{ formData.expires ? formData.expires.format('Y-m-d H:i:s') : "" }}"/>
+            </div>
+            <div class="form-control">
+                <label for="comment">Public comment</label>
+                <textarea name="comment" id="comment" placeholder="Optional">{{ formData.comment }}</textarea>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="publish-info">
+                <i class="mdi mdi-gavel"></i>
+                <span>Matching lobbies will be hidden and blocked from announcing</span>
+            </div>
+            <button type="submit" class="btn">{{ creatingNew ? "Publish item" : "Save changes" }}</button>
+        </div>
+    </div>
+{% endblock %}
