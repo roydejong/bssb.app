@@ -44,7 +44,7 @@ class StatsController
     // Stats main page
 
     const CACHE_KEY_MAIN = "stats_page";
-    const CACHE_TTL_MAIN = 60;
+    const CACHE_TTL_MAIN = 90;
 
     public function getStats(Request $request)
     {

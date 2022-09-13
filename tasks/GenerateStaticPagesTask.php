@@ -12,6 +12,8 @@ $schedule = new Schedule();
 $task = $schedule->run(function () {
     require_once __DIR__ . "/../bootstrap.php";
 
+    define('FORCE_CACHE_GEN', true);
+
     // Homepage
     $homeController = new HomeController();
     $homeController->index(new Request());

@@ -14,7 +14,7 @@ use DateTime;
 class DedicatedServersController
 {
     const CACHE_KEY_PREFIX = "dedicated_servers_";
-    const CACHE_TTL = 30;
+    const CACHE_TTL = 90;
 
     const CUTOFF_DAYS = 3;
 

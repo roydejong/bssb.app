@@ -19,7 +19,7 @@ use app\Models\SystemConfig;
 class HomeController
 {
     const CACHE_KEY = "home_page";
-    const CACHE_TTL = 60;
+    const CACHE_TTL = 90;
 
     public function index(Request $request): Response
     {

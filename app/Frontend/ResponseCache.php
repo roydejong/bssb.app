@@ -38,6 +38,10 @@ class ResponseCache
             // User is authed - does not participate in response cache
             return false;
 
+        if (defined('FORCE_CACHE_GEN') && FORCE_CACHE_GEN)
+            // Forcing cache regen; do not return available cache
+            return false;
+
         $filePath = $this->getFilePath();
 
         if (!file_exists($filePath) || filesize($filePath) === 0) {
