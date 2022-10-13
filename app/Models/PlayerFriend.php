@@ -57,6 +57,23 @@ class PlayerFriend extends Model
             ->querySingleModel();
     }
 
+    /**
+     * @return Player[]
+     */
+    public static function fetchFriendPlayers(Player $basePlayer, bool $allowPending = false): array
+    {
+        $query = Player::query()
+            ->select('p.*')
+            ->from('player_friends pf')
+            ->innerJoin('players p ON (p.id = pf.player_two_id)')
+            ->where('pf.player_one_id = ? OR pf.player_two_id = ?', $basePlayer->id, $basePlayer->id);
+
+        if (!$allowPending)
+            $query->andWhere('pf.is_pending = 0');
+
+        return $query->queryAllModels();
+    }
+
     public static function sendFriendRequest(Player $basePlayer, Player $otherPlayer): ?PlayerFriend
     {
         if ($basePlayer->id === $otherPlayer->id)

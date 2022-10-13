@@ -6,7 +6,7 @@
     </div>
     <div class="controls">
         {% if friendship.hasFriendship %}
-            {% if friendship.isFriendshipPending %}
+            {% if friendship.isFriendshipPending and friendship.acceptedAt is null %}
                 {% if friendship.friendRequesterId == self_player_id %}
                     <a class="btn -disabled">
                         <i class="mdi mdi-check"></i>

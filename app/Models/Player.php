@@ -16,7 +16,10 @@ use SoftwarePunt\Instarecord\Model;
  */
 class Player extends Model
 {
-    public const BeatTogetherUserId = "ziuMSceapEuNN7wRGQXrZg";
+    public const UserIdBeatTogether = "ziuMSceapEuNN7wRGQXrZg";
+    public const UserIdPrefixBeatUpServer = "beatupserver:";
+    public const UserIdPrefixBeatDedi = "beatdedi:";
+    public const UserIdPrefixGameLift = "arn:aws:gamelift";
 
     public int $id;
     public string $userId;
@@ -57,14 +60,14 @@ class Player extends Model
         }
 
         if ($serverPlayer->isHost && $serverPlayer->sortIndex === -1) {
-            if ($playerRecord->userId === self::BeatTogetherUserId) {
+            if ($playerRecord->userId === self::UserIdBeatTogether) {
                 // User ID matches the fixed value for all BeatTogether-based servers
                 $playerRecord->type = PlayerType::DedicatedServerBeatTogether;
-            } else if (str_starts_with($playerRecord->userId, "beatupserver:")) {
+            } else if (str_starts_with($playerRecord->userId, self::UserIdPrefixBeatUpServer)) {
                 $playerRecord->type = PlayerType::DedicatedServerBeatUpServer;
-            } else if (str_starts_with($playerRecord->userId, "beatdedi:")) {
+            } else if (str_starts_with($playerRecord->userId, self::UserIdPrefixBeatDedi)) {
                 $playerRecord->type = PlayerType::DedicatedServerBeatDediServer;
-            } else if (str_starts_with($playerRecord->userId, "arn:aws:gamelift")) {
+            } else if (str_starts_with($playerRecord->userId, self::UserIdPrefixGameLift)) {
                 // User ID matches the fixed value for all Official GameLift servers
                 $playerRecord->type = PlayerType::DedicatedServerGameLift;
             } else {
