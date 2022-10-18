@@ -5,7 +5,7 @@ namespace app\Utils;
 class PirateDetect
 {
     private static array $pirateUserIds = ["mqsC892YHEEG91QeFPnNN1"];
-    private static array $pirateUserNames = ["ALI213", "VALVE", "YOUR_NAME_HERE"];
+    private static array $pirateUserNames = ["ALI213", "VALVE", "YOUR_NAME_HERE", "IGGGAMES"];
 
     public static function detect(string $userId, string $userName): bool
     {
