@@ -597,8 +597,8 @@ final class AnnounceProcessor
         if ($playerLimit <= 0)
             $playerLimit = 5;
 
-        if ($playerLimit > 128)
-            $playerLimit = 128;
+        if ($playerLimit > 254)
+            $playerLimit = 254;
 
         return $playerLimit;
     }
