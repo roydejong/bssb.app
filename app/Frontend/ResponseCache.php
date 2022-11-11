@@ -9,11 +9,13 @@ class ResponseCache
 {
     private string $cacheKey;
     private ?int $maxTtl;
+    private bool $allowAuthedUsers;
 
-    public function __construct(string $cacheKey, ?int $maxTtl = 60)
+    public function __construct(string $cacheKey, ?int $maxTtl = 60, bool $allowAuthedUsers = false)
     {
         $this->cacheKey = $cacheKey;
         $this->maxTtl = $maxTtl;
+        $this->allowAuthedUsers = $allowAuthedUsers;
     }
 
     private static function getBaseDir(): string
@@ -34,8 +36,9 @@ class ResponseCache
             return false;
         }
 
-        if ($this->getIsUserLoggedIn())
-            // User is authed - does not participate in response cache
+        if (!$this->allowAuthedUsers && $this->getIsUserLoggedIn())
+            // User is authed but cannot participate in this response cache
+            // In most cases we don't want this to avoid user-specific things ending up in the cache
             return false;
 
         if (defined('FORCE_CACHE_GEN') && FORCE_CACHE_GEN)

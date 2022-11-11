@@ -150,47 +150,58 @@ class StatsController
 
     public function getTopLevelsPlaylist(Request $request, string $urlSection)
     {
-        if ($urlSection !== self::TopCustomLevels) {
-            // Only supported for custom levels because official ones don't have a hash and probably won't work
-            return new NotFoundResponse();
-        }
-
-        $bpListRaw = null;
+        $resCacheKey = self::CACHE_KEY_TOP_LEVELS_PLAYLIST_PREFIX . $urlSection;
+        $resCache = new ResponseCache($resCacheKey, self::CACHE_TTL_TOP_LEVELS_PLAYLIST, allowAuthedUsers: true);
 
         $now = new \DateTime('now');
+        $nowDateText = $now->format('Y-m-d');
 
-        $resCacheKey = self::CACHE_KEY_TOP_LEVELS_PLAYLIST_PREFIX . $urlSection;
-        $resCache = new ResponseCache($resCacheKey, self::CACHE_TTL_TOP_LEVELS_PLAYLIST);
+        $fileName = "bssb-top-{$urlSection}-{$nowDateText}.bplist";
 
         if ($resCache->getIsAvailable()) {
-            // Cache hit
-            $bplRaw = $resCache->read();
-        } else {
-            // No cached version available, generate new bplist now
-            $nowDateText = $now->format('Y-m-d');
-            $nowDateTimeText = $now->format('c');
-
-            $bplist = new Bplist();
-            $bplist->setTitle("BSSB 100 Most Played Custom Levels {$nowDateText}");
-            $bplist->setAuthor("bssb.app");
-            $bplist->setDescription("Top 100 Custom Levels based on play count seen by the server browser (generated {$nowDateTimeText})");
-            $bplist->setImageFromLocalFile(DIR_BASE . "/public/static/bsassets/BSSBTop100CustomLevels256.png");
-            $bplist->setSyncUrl("https://bssb.app/stats/top/custom-levels/playlist");
-
-            $topLevels = $this->queryTopLevels(self::TopCustomLevels, 0, 100);
-            foreach ($topLevels as $levelRecord) {
-                $bplist->addSongByLevelRecord($levelRecord);
-            }
-
-            $bplRaw = $bplist->toJson();
-            $resCache->write($bplRaw);
+            // Serve from response cache
+            return self::sendPlaylistResponse($fileName, $resCache->read());
         }
 
-        // Send response
-        $nowFilenameText = $now->format('Ymd');
-        $fileName = "BSSB_Top100CustomLevels_{$nowFilenameText}.bplist";
+        // No cached version available, generate new bplist now
 
-        $res = new Response(200, $bplRaw, "application/octet-stream");
+        switch ($urlSection) {
+            case self::TopTrendingLevels:
+                $playlistTitle = "BSSB Top 100 Trending Levels {$nowDateText}";
+                $playlistDescription = "Top 100 Trending Levels based on play count seen by the server browser (generated {$nowDateText})";
+                $playlistImage = DIR_BASE . "/public/static/bsassets/BSSBTop100TrendingLevels256.png";
+                break;
+            case self::TopCustomLevels:
+                $playlistTitle = "BSSB 100 Most Played Custom Levels {$nowDateText}";
+                $playlistDescription = "Top 100 Custom Levels based on play count seen by the server browser (generated {$nowDateText})";
+                $playlistImage = DIR_BASE . "/public/static/bsassets/BSSBTop100CustomLevels256.png";
+                break;
+            default:
+                // Only supported for specific top lists
+                return new NotFoundResponse();
+        }
+
+        $bplist = new Bplist();
+        $bplist->setTitle($playlistTitle);
+        $bplist->setDescription($playlistDescription);
+        if ($playlistImage)
+            $bplist->setImageFromLocalFile($playlistImage);
+        $bplist->setAuthor("bssb.app");
+        $bplist->setSyncUrl("https://bssb.app/stats/top/{$urlSection}/playlist");
+
+        $levelResults = $this->queryTopLevels($urlSection, 0, 100);
+        foreach ($levelResults as $levelRecord) {
+            $bplist->addSongByLevelRecord($levelRecord);
+        }
+
+        $bplRaw = $bplist->toJson();
+        $resCache->write($bplRaw);
+        return self::sendPlaylistResponse($fileName, $bplRaw);
+    }
+
+    private static function sendPlaylistResponse(string $fileName, string $contents): Response
+    {
+        $res = new Response(200, $contents, "application/octet-stream");
         $res->headers['content-disposition'] = "attachment; filename={$fileName}";
         return $res;
     }
