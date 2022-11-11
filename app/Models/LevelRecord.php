@@ -20,7 +20,26 @@ class LevelRecord extends Model implements \JsonSerializable
     public ?string $levelAuthor;
     public ?int $duration;
     public ?string $description;
+    /**
+     * Legacy total play count. Incremented on level start by AnnounceProcessor.
+     */
     public int $statPlayCount;
+    /**
+     * Modern total play count based on level history. Calculated by stats cron job.
+     */
+    public int $statPlayCountAlt;
+    /**
+     * Level history count for the past 24 hours. Calculated by stats cron job.
+     */
+    public int $statPlayCountDay;
+    /**
+     * Level history count for the past 7 days. Calculated by stats cron job.
+     */
+    public int $statPlayCountWeek;
+    /**
+     * Used to sort levels by trending. Calculated by stats cron job based on 24h and 7d play count.
+     */
+    public float $trendFactor;
 
     // -----------------------------------------------------------------------------------------------------------------
     // Data helpers
