@@ -70,8 +70,7 @@ class StatsController
             ->select("SUM(stat_play_count) AS count")
             ->querySingleValue());
 
-        $topLevelsCustom = $this->queryTopLevels(self::TopCustomLevels, 0, 10);
-        $topLevelsOfficial = $this->queryTopLevels(self::TopOfficialLevels, 0, 10);
+        $topLevelsTrending = $this->queryTopLevels(self::TopTrendingLevels, 0, 10);
 
         $view = new View('pages/stats-overview.twig');
         $view->set('pageUrl', '/stats');
@@ -79,8 +78,7 @@ class StatsController
             'totalPlayerCount' => $totalPlayerCount,
             'totalLobbyCount' => $totalLobbyCount,
             'totalPlayCount' => $totalPlayCount,
-            'topLevelsCustom' => $topLevelsCustom,
-            'topLevelsOfficial' => $topLevelsOfficial
+            'topLevelsTrending' => $topLevelsTrending
         ]);
 
         $response = $view->asResponse();

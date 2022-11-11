@@ -100,7 +100,7 @@
     }
     p.lite {
       margin: 0 0 2rem 0;
-      color: var(--col-txt-muted-light);
+      color: var(--col-txt-muted-mediumlight);
       line-height: 1.5;
     }
     .stats-disclaim {
@@ -108,6 +108,10 @@
     }
     .btn.btn-primary {
       margin: 1.5rem 0;
+    }
+    .btn.btn-secondary {
+      background: #8e44ad;
+      margin-left: .5rem;
     }
     .btn.btn-playlist {
       margin: 1.5rem 0 3rem 0;

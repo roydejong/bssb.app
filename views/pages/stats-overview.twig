@@ -24,26 +24,19 @@
     </div>
     <section>
         <h2>
-            <i class="mdi mdi-trophy"></i>
-            <span>Top 10 custom levels</span>
+            <i class="mdi mdi-trending-up"></i>
+            <span>Top trending levels</span>
         </h2>
-        <p class="lite">Based on total play count seen by the server browser.</p>
-        {% include "tables/top_levels_table.twig" with {levels: stats.topLevelsCustom} %}
-        <a href="/stats/top/custom-levels" class="btn btn-primary" target="_self" title="Top 100 Custom Levels">
-            <i class="mdi mdi-view-list"></i>
-            <span>View Top 100 &raquo;</span>
+        <p class="lite">🔥 These are the hottest levels right now, based on play count seen by the server browser.</p>
+        {% include "tables/top_levels_table.twig" with {levels: stats.topLevelsTrending} %}
+        <p class="lite"><br /><i class="mdi mdi-download"></i> Protip: You can download the top lists as a playlist (bplist) from their pages!</p>
+        <a href="/stats/top/trending-levels" class="btn btn-primary" target="_self" title="Top 100 Trending Levels">
+            <i class="mdi mdi-trending-up"></i>
+            <span>View all trending levels &raquo;</span>
         </a>
-    </section>
-    <section>
-        <h2>
-            <i class="mdi mdi-trophy"></i>
-            <span>Top 10 official levels</span>
-        </h2>
-        <p class="lite">Based on total play count seen by the server browser.</p>
-        {% include "tables/top_levels_table.twig" with {levels: stats.topLevelsOfficial} %}
-        <a href="/stats/top/official-levels" class="btn btn-primary" target="_self" title="Top 100 Official Levels">
-            <i class="mdi mdi-view-list"></i>
-            <span>View Top 100 &raquo;</span>
+        <a href="/stats/top/custom-levels" class="btn btn-secondary" target="_self" title="Top 100 Custom Levels">
+            <i class="mdi mdi-trophy-variant"></i>
+            <span>View all-time Top 100 &raquo;</span>
         </a>
     </section>
 {% endblock %}
