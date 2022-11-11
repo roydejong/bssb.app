@@ -49,7 +49,7 @@ $task = $schedule->run(function () {
              *  - We only count actual level finishes with multiple players.
              *  - The biggest factor is how popular this level is right now (past 24h).
              *     - We want to reflect sudden surges, i.e. with MpEx's April 1st gag (never gonna give you up).
-             *  - A secondary factor (33.3% weight) is how popular the level was in the past week.
+             *  - A secondary factor (50% weight) is how popular the level was in the past week.
              *
              * TODO Biggest issue right now is that OST tracks win by a large margin. Maybe exclude those?
              *  But newly released DLC *is* valid for trending... maybe only exclude original OSTs?
@@ -78,7 +78,7 @@ $task = $schedule->run(function () {
 
             $levelRecord->trendFactor =
                 ($levelRecord->statPlayCountDay / $maxDailyPlays)
-                + (($levelRecord->statPlayCountWeek / $maxWeeklyPlays) * 0.333);
+                + (($levelRecord->statPlayCountWeek / $maxWeeklyPlays) * 0.5);
 
             $levelRecord->save();
         }
