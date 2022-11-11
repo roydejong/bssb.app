@@ -7,8 +7,12 @@
         <span>{{ pageTitle }}</span>
     </h1>
 
-    <p class="lead">{{ pageDescr }}</p>
-    <p class="stats-disclaim"><i class="mdi mdi-clock-outline"></i> These statistics are based on play count seen in public server browser games since January 2021.</p>
+    {% if isTrending %}
+        <p class="stats-disclaim"><i class="mdi mdi-trending-up"></i> {{ pageDescr }}</p>
+    {% else %}
+        <p class="lead">{{ pageDescr }}</p>
+        <p class="stats-disclaim"><i class="mdi mdi-clock-outline"></i> These statistics are based on play count seen in public server browser games since January 2021.</p>
+    {% endif %}
 
     {% if urlSection == "custom-levels" %}
         <a class="btn btn-playlist" href="/stats/top/{{ urlSection }}/playlist" target="_self">

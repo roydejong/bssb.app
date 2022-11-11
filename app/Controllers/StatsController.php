@@ -17,6 +17,7 @@ class StatsController
     // -----------------------------------------------------------------------------------------------------------------
     // Shared functions
 
+    const TopTrendingLevels = "trending-levels";
     const TopOfficialLevels = "official-levels";
     const TopCustomLevels = "custom-levels";
     const TopNonBeatSaverLevels = "non-beatsaver-levels";
@@ -31,11 +32,14 @@ class StatsController
 
         if ($topType === self::TopOfficialLevels)
             $query->andWhere('hash IS NULL AND level_id NOT LIKE ?', "custom_level_%");
-        else if ($topType === self::TopCustomLevels || $topType === self::TopNonBeatSaverLevels)
+        else if ($topType === self::TopTrendingLevels || $topType === self::TopCustomLevels || $topType === self::TopNonBeatSaverLevels)
             $query->andWhere('hash IS NOT NULL');
 
         if ($topType === self::TopNonBeatSaverLevels)
             $query->andWhere('beatsaver_id IS NULL');
+
+        if ($topType === self::TopTrendingLevels)
+            $query->orderBy('trend_factor DESC');
 
         return $query->queryAllModels();
     }
@@ -92,7 +96,14 @@ class StatsController
 
     public function getTopLevelsSubPage(Request $request, string $urlSection)
     {
+        $isTrending = false;
+
         switch ($urlSection) {
+            case self::TopTrendingLevels:
+                $pageTitle = "Top 100 Trending Levels";
+                $pageDescr = "These are the custom levels getting the most plays in modded Beat Saber multiplayer right now.";
+                $isTrending = true;
+                break;
             case self::TopCustomLevels:
                 $pageTitle = "Top 100 Custom Levels";
                 $pageDescr = "These are the most played custom levels in modded Beat Saber multiplayer. Check out the list, or download them all at once as a playlist!";
@@ -124,6 +135,7 @@ class StatsController
         $view->set('pageDescr', $pageDescr);
         $view->set('urlSection', $urlSection);
         $view->set('levels', $topLevels);
+        $view->set('isTrending', $isTrending);
 
         $response = $view->asResponse();
         $resCache->writeResponse($response);
