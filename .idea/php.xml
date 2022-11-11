@@ -71,7 +71,6 @@
       <path value="$PROJECT_DIR$/vendor/symfony/string" />
       <path value="$PROJECT_DIR$/vendor/symfony/yaml" />
       <path value="$PROJECT_DIR$/vendor/symfony/process" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-uuid" />
       <path value="$PROJECT_DIR$/vendor/http-interop/http-factory-guzzle" />
       <path value="$PROJECT_DIR$/vendor/hashids/hashids" />
       <path value="$PROJECT_DIR$/vendor/phpunit/php-timer" />
