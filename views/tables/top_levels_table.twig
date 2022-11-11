@@ -42,7 +42,7 @@
                     -
                 {% endif %}
             </td>
-            <td>{{ level.statPlayCount|number_format(0, ',') }}</td>
+            <td>{{ level.getBestPlayCount()|number_format(0, ',') }}</td>
             <td>{{ level.statPlayCountWeek|number_format(0, ',') }}</td>
         </tr>
     {% endfor %}

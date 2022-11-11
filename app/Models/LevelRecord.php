@@ -106,6 +106,13 @@ class LevelRecord extends Model implements \JsonSerializable
         return $text;
     }
 
+    public function getBestPlayCount(): int
+    {
+        // nb: original play count did not always count; alt play count is actual plays backed by history records
+        // eventually we'd like to only use the latter, but for now we'll prefer the "best" of the two
+        return max([$this->statPlayCount, $this->statPlayCountAlt]);
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     // OST/DLC cover art helper
 
