@@ -25,10 +25,11 @@ class StatsController
     private function queryTopLevels(string $topType, int $offset = 0, int $pageSize = 10): array
     {
         $query = LevelRecord::query()
+            ->select('*')
             ->where('stat_play_count > 0')
             ->offset($offset)
             ->limit($pageSize)
-            ->orderBy('stat_play_count DESC');
+            ->orderBy('GREATEST(stat_play_count, stat_play_count_alt) DESC');
 
         if ($topType === self::TopOfficialLevels)
             $query->andWhere('hash IS NULL AND level_id NOT LIKE ?', "custom_level_%");
