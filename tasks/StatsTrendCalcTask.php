@@ -92,6 +92,8 @@ $task = $schedule->run(function () {
                 if ($daysSinceFirstPlay > 1) {
                     $dailyAvg = $levelRecord->statPlayCountAlt / $daysSinceFirstPlay;
                     $ageBoost = ($levelRecord->statPlayCountDay / $dailyAvg) * 0.5;
+                    if ($ageBoost < 0) $ageBoost = 0;
+                    if ($ageBoost > .5) $ageBoost = .5;
                 }
             }
 
