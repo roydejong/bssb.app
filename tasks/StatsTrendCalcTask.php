@@ -62,7 +62,7 @@ $task = $schedule->run(function () {
             $baseCountQuery = LevelHistory::query()
                 ->select('COUNT(*)')
                 ->andWhere('level_record_id = ?', $levelRecord->id)
-                ->andWhere('finished_player_count > 1')
+                ->andWhere('played_player_count > 1')
                 ->limit(1);
 
             $levelRecord->statPlayCountAlt = intval((clone $baseCountQuery)
