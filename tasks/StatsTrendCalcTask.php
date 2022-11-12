@@ -95,7 +95,7 @@ $task = $schedule->run(function () {
                     $dailyAvg = $levelRecord->statPlayCountAlt / $daysSinceFirstPlay;
                     $avgBoost = ($levelRecord->statPlayCountDay / $dailyAvg);
                     if ($avgBoost < 0) $avgBoost = 0;
-                    if ($avgBoost > .5) $avgBoost = .5;
+                    if ($avgBoost > 1) $avgBoost = 1;
 
                     $ageNerf = ($daysSinceFirstPlay / 30) * .05;
                     if ($ageNerf > 1) $ageNerf = 1;
@@ -111,7 +111,7 @@ $task = $schedule->run(function () {
                 ($levelRecord->statPlayCountDay / $maxDailyPlays)
                 // plus: how popular is this level this week compared to all others? +(0.0 - 0.5)
                 + (($levelRecord->statPlayCountWeek / $maxWeeklyPlays) * 0.5)
-                // plus: how popular is this level today compared to its daily average? +(0.0 - 0.5)
+                // plus: how popular is this level today compared to its daily average? +(0.0 - 1.0)
                 + $avgBoost
                 // minus: how old is this map? (every 30 days = -0.05, maximum of -1)
                 - $ageNerf
