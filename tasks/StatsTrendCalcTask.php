@@ -100,6 +100,9 @@ $task = $schedule->run(function () {
                     $ageNerf = ($daysSinceFirstPlay / 30) * .05;
                     if ($ageNerf > 1) $ageNerf = 1;
                 }
+
+                if ($levelRecord->statPlayCountWeek <= 3)
+                    $avgBoost = 0;
             }
 
             $levelRecord->trendFactor =
