@@ -9,6 +9,7 @@ use app\HTTP\Request;
 use app\HTTP\Response;
 use app\HTTP\Responses\NotFoundResponse;
 use app\Models\HostedGame;
+use app\Models\LevelHistory;
 use app\Models\LevelRecord;
 use app\Models\Player;
 
@@ -70,6 +71,9 @@ class StatsController
         $totalPlayCount = intval(LevelRecord::query()
             ->select("SUM(stat_play_count) AS count")
             ->querySingleValue());
+        $totalPlayCountAlt = intval(LevelHistory::query()
+            ->select("COUNT(*) AS level_history")
+            ->querySingleValue());
 
         $topLevelsTrending = $this->queryTopLevels(self::TopTrendingLevels, 0, 10);
 
@@ -78,7 +82,7 @@ class StatsController
         $view->set('stats', [
             'totalPlayerCount' => $totalPlayerCount,
             'totalLobbyCount' => $totalLobbyCount,
-            'totalPlayCount' => $totalPlayCount,
+            'totalPlayCount' => max($totalPlayCount, $totalPlayCountAlt),
             'topLevelsTrending' => $topLevelsTrending
         ]);
 
