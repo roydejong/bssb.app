@@ -97,8 +97,8 @@ $task = $schedule->run(function () {
                     if ($avgBoost < 0) $avgBoost = 0;
                     if ($avgBoost > .5) $avgBoost = .5;
 
-                    $ageNerf = ($daysSinceFirstPlay / 30) * 0.1;
-                    if ($ageNerf > 2.5) $ageNerf = 2.5;
+                    $ageNerf = ($daysSinceFirstPlay / 30) * .05;
+                    if ($ageNerf > 1) $ageNerf = 1;
                 }
             }
 
@@ -110,7 +110,7 @@ $task = $schedule->run(function () {
                 + (($levelRecord->statPlayCountWeek / $maxWeeklyPlays) * 0.5)
                 // plus: how popular is this level today compared to its daily average? +(0.0 - 0.5)
                 + $avgBoost
-                // minus: how old is this map? (every 30 days = .1, maximum of -2.5)
+                // minus: how old is this map? (every 30 days = -0.05, maximum of -1)
                 - $ageNerf
             ) * 10; // just so we can store more decimals without migrating the database :)
 
