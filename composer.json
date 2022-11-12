@@ -18,7 +18,7 @@
     "softwarepunt/instarecord": "dev-master@dev",
     "hashids/hashids": "^4.1",
     "sentry/sdk": "^3.2",
-    "lavary/crunz": "^3.2",
+    "crunzphp/crunz": "^3.4",
     "xpaw/steam-openid": "^2.0",
     "robmorgan/phinx": "^0.12.10",
     "predis/predis": "^2.0",
