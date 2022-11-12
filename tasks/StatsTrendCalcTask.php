@@ -50,7 +50,7 @@ $task = $schedule->run(function () {
              *  - The biggest factor is how popular this level is right now (past 24h).
              *     - We want to reflect sudden surges, i.e. with MpEx's April 1st gag (never gonna give you up).
              *  - A secondary factor (50% weight) is how popular the level was in the past week.
-             *  - An additional boost (50% weight) is applied for maps doing better than their daily average
+             *  - An additional boost is applied for maps doing better than their daily average
              *      - Some older "challenge" maps get *a lot* of plays/repeats - they're really uninteresting.
              *
              * Remaining challenges:
@@ -91,9 +91,9 @@ $task = $schedule->run(function () {
                 $daysSinceFirstPlay = $firstPlayedDt->diff(new DateTime('now'))->days;
                 if ($daysSinceFirstPlay > 1) {
                     $dailyAvg = $levelRecord->statPlayCountAlt / $daysSinceFirstPlay;
-                    $ageBoost = ($levelRecord->statPlayCountDay / $dailyAvg) * 0.5;
+                    $ageBoost = ($levelRecord->statPlayCountDay / $dailyAvg);
                     if ($ageBoost < 0) $ageBoost = 0;
-                    if ($ageBoost > .5) $ageBoost = .5;
+                    if ($ageBoost > .5) $ageBoost = 1;
                 }
             }
 
@@ -102,7 +102,7 @@ $task = $schedule->run(function () {
                 ($levelRecord->statPlayCountDay / $maxDailyPlays)
                 // how popular is this level this week compared to all others? +(0.0 - 0.5)
                 + (($levelRecord->statPlayCountWeek / $maxWeeklyPlays) * 0.5)
-                // how popular is this level today compared to its daily average? +(0.0 - 0.5)
+                // how popular is this level today compared to its daily average? +(0.0 - 1.0)
                 + $ageBoost;
 
             $levelRecord->save();
