@@ -93,17 +93,19 @@ $task = $schedule->run(function () {
                     $dailyAvg = $levelRecord->statPlayCountAlt / $daysSinceFirstPlay;
                     $ageBoost = ($levelRecord->statPlayCountDay / $dailyAvg);
                     if ($ageBoost < 0) $ageBoost = 0;
-                    if ($ageBoost > 2) $ageBoost = 2;
+                    if ($ageBoost > 2.5) $ageBoost = 2.5;
                 }
             }
 
             $levelRecord->trendFactor =
+            (
                 // how popular is this level today compared to all others? +(0.0 - 1.0)
                 ($levelRecord->statPlayCountDay / $maxDailyPlays)
                 // how popular is this level this week compared to all others? +(0.0 - 0.5)
                 + (($levelRecord->statPlayCountWeek / $maxWeeklyPlays) * 0.5)
-                // how popular is this level today compared to its daily average? +(0.0 - 1.0)
-                + $ageBoost;
+                // how popular is this level today compared to its daily average? +(0.0 - 2.5)
+                + $ageBoost
+            ) * 10; // just so we can store more decimals without migrating the database :)
 
             $levelRecord->save();
         }
