@@ -82,7 +82,9 @@ $task = $schedule->run(function () {
                 ->andWhere('started_at >= ?', $twentyFourHoursAgo)
                 ->querySingleValue());
 
-            $ageBoost = 0.0;
+            $avgBoost = 0.0;
+            $ageNerf = 0.0;
+
             $firstPlayedValue = (clone $baseCountQuery)
                 ->select('MIN(started_at)')
                 ->querySingleValue();
@@ -91,21 +93,29 @@ $task = $schedule->run(function () {
                 $daysSinceFirstPlay = $firstPlayedDt->diff(new DateTime('now'))->days;
                 if ($daysSinceFirstPlay > 1) {
                     $dailyAvg = $levelRecord->statPlayCountAlt / $daysSinceFirstPlay;
-                    $ageBoost = ($levelRecord->statPlayCountDay / $dailyAvg);
-                    if ($ageBoost < 0) $ageBoost = 0;
-                    if ($ageBoost > 2.5) $ageBoost = 2.5;
+                    $avgBoost = ($levelRecord->statPlayCountDay / $dailyAvg);
+                    if ($avgBoost < 0) $avgBoost = 0;
+                    if ($avgBoost > 2.5) $avgBoost = 2.5;
+
+                    $ageNerf = ($daysSinceFirstPlay / 30) * 0.1;
+                    if ($ageNerf > 2.5) $ageNerf = 2.5;
                 }
             }
 
             $levelRecord->trendFactor =
             (
-                // how popular is this level today compared to all others? +(0.0 - 1.0)
+                // base: how popular is this level today compared to all others? +(0.0 - 1.0)
                 ($levelRecord->statPlayCountDay / $maxDailyPlays)
-                // how popular is this level this week compared to all others? +(0.0 - 0.5)
+                // plus: how popular is this level this week compared to all others? +(0.0 - 0.5)
                 + (($levelRecord->statPlayCountWeek / $maxWeeklyPlays) * 0.5)
-                // how popular is this level today compared to its daily average? +(0.0 - 2.5)
-                + $ageBoost
+                // plus: how popular is this level today compared to its daily average? +(0.0 - 2.5)
+                + $avgBoost
+                // minus: how old is this map? (every 30 days = .1, maximum of -2.5)
+                - $ageNerf
             ) * 10; // just so we can store more decimals without migrating the database :)
+
+            if ($levelRecord->trendFactor < 0)
+                $levelRecord->trendFactor = 0;
 
             $levelRecord->save();
         }
