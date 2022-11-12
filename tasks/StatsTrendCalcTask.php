@@ -50,9 +50,13 @@ $task = $schedule->run(function () {
              *  - The biggest factor is how popular this level is right now (past 24h).
              *     - We want to reflect sudden surges, i.e. with MpEx's April 1st gag (never gonna give you up).
              *  - A secondary factor (50% weight) is how popular the level was in the past week.
+             *  - An additional boost (50% weight) is applied for maps doing better than their daily average
+             *      - Some older "challenge" maps get *a lot* of plays/repeats - they're really uninteresting.
              *
-             * TODO Biggest issue right now is that OST tracks win by a large margin. Maybe exclude those?
-             *  But newly released DLC *is* valid for trending... maybe only exclude original OSTs?
+             * Remaining challenges:
+             *  - We are skipping OST tracks because they get significantly more plays.
+             *      - I'd actually like to show DLC because they are underrepresented, and newly released DLCs are
+             *          interesting to highlight for trends.
              */
 
             $baseCountQuery = LevelHistory::query()
@@ -63,6 +67,8 @@ $task = $schedule->run(function () {
 
             $levelRecord->statPlayCountAlt = intval((clone $baseCountQuery)
                 ->querySingleValue());
+            if ($levelRecord->statPlayCountAlt <= 0)
+                $levelRecord->statPlayCountAlt = 1;
 
             $sevenDaysAgo = new DateTime();
             $sevenDaysAgo->modify('-7 days');
@@ -76,9 +82,26 @@ $task = $schedule->run(function () {
                 ->andWhere('started_at >= ?', $twentyFourHoursAgo)
                 ->querySingleValue());
 
+            $ageBoost = 0.0;
+            $firstPlayedValue = (clone $baseCountQuery)
+                ->select('MIN(started_at)')
+                ->querySingleValue();
+            if ($firstPlayedValue) {
+                $firstPlayedDt = new DateTime($firstPlayedValue);
+                $daysSinceFirstPlay = $firstPlayedDt->diff(new DateTime('now'))->days;
+                if ($daysSinceFirstPlay > 1) {
+                    $dailyAvg = $levelRecord->statPlayCountAlt / $daysSinceFirstPlay;
+                    $ageBoost = ($levelRecord->statPlayCountDay / $dailyAvg) * 0.5;
+                }
+            }
+
             $levelRecord->trendFactor =
+                // how popular is this level today compared to all others? +(0.0 - 1.0)
                 ($levelRecord->statPlayCountDay / $maxDailyPlays)
-                + (($levelRecord->statPlayCountWeek / $maxWeeklyPlays) * 0.5);
+                // how popular is this level this week compared to all others? +(0.0 - 0.5)
+                + (($levelRecord->statPlayCountWeek / $maxWeeklyPlays) * 0.5)
+                // how popular is this level today compared to its daily average? +(0.0 - 0.5)
+                + $ageBoost;
 
             $levelRecord->save();
         }
