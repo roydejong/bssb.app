@@ -89,6 +89,7 @@ class HomeController
         // News
 
         $changelogs = Changelog::query()
+            ->where('is_hidden = 0')
             ->orderBy('publish_date DESC, id DESC')
             ->limit(5)
             ->queryAllModels();

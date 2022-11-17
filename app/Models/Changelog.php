@@ -13,6 +13,7 @@ class Changelog extends Model
     public ?string $text;
     public bool $isAlert;
     public ?string $tweetId;
+    public bool $isHidden;
 
     public function getUrl(): string
     {

@@ -11,6 +11,7 @@
             <th>Title</th>
             <th>Published</th>
             <th>Twitter</th>
+            <th>Status</th>
             <th>&nbsp;</th>
         </tr>
     </thead>
@@ -32,6 +33,13 @@
                         </a>
                     {% else %}
                         Not tweeted
+                    {% endif %}
+                </td>
+                <td>
+                    {% if log.isHidden %}
+                        <i class="mdi mdi-eye-off"></i> Hidden
+                    {% else %}
+                        <i class="mdi mdi-check-bold"></i> Published
                     {% endif %}
                 </td>
                 <td>

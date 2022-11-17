@@ -53,6 +53,7 @@ class AdminNewsController extends BaseAdminController
             if (empty($changelog->text))
                 $changelog->text = null;
             $changelog->isAlert = $request->postParams['isAlert'] ?? 0 == 1;
+            $changelog->isHidden = $request->postParams['isHidden'] ?? 0 == 1;
             if (empty($changelog->publishDate))
                 $changelog->publishDate = new \DateTime('now');
             $changelog->save();

@@ -15,6 +15,10 @@
                 <input type="checkbox" name="isAlert" id="isAlert" value="1" {% if formData.isAlert %}checked{% endif %}/>
                 <label for="isAlert">Broadcast as active alert</label>
             </div>
+            <div class="form-control -check">
+                <input type="checkbox" name="isHidden" id="isHidden" value="1" {% if formData.isHidden %}checked{% endif %}/>
+                <label for="isHidden">Hide on website news feed</label>
+            </div>
             <div class="admin-previews">
                 <h3>Preview</h3>
                 <div class="site-preview">
