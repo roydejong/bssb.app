@@ -39,6 +39,10 @@
                         <i class="mdi mdi-connection"></i>
                         <span>Connections</span>
                     </a>
+                    <a href="/admin/trends" class="{% if tab == "trends" %}-active{% endif %}">
+                        <i class="mdi mdi-trending-up"></i>
+                        <span>Trends</span>
+                    </a>
                 </nav>
                 <a class="user" href="/me" title="My profile">
                     {{ self_face_render|raw }}

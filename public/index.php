@@ -4,6 +4,7 @@ use app\Controllers\Admin\AdminBansController;
 use app\Controllers\Admin\AdminConnectionsController;
 use app\Controllers\Admin\AdminDashController;
 use app\Controllers\Admin\AdminNewsController;
+use app\Controllers\Admin\AdminTrendsController;
 use app\Controllers\Admin\TwitterCallbackController;
 use app\Controllers\AdminController;
 use app\Controllers\API\V1\AnnounceController;
@@ -88,6 +89,7 @@ $router->register('/admin/bans/$id', AdminBansController::class, 'getBanItem');
 $router->register('/admin/news', AdminNewsController::class, 'getNews');
 $router->register('/admin/news/$id', AdminNewsController::class, 'getNewsItem');
 $router->register('/admin/connections', AdminConnectionsController::class, 'getConnections');
+$router->register('/admin/trends', AdminTrendsController::class, 'getTrends');
 $router->register('/callback/twitter', TwitterCallbackController::class, 'handleCallback');
 
 // ---------------------------------------------------------------------------------------------------------------------

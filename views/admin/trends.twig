@@ -1,0 +1,50 @@
+{% extends "admin/_base.twig" %}
+
+{% block content %}
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Level</th>
+            <th>Trend</th>
+            <th>Plays</th>
+            <th>AltPlays</th>
+            <th>7d</th>
+            <th>24h</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% set levelIndex = 0  %}
+        {% for level in levels %}
+            <tr>
+                <td>
+                    {% set levelIndex = levelIndex + 1 %}
+                    #{{ levelIndex }}
+                </td>
+                <td>
+                    <strong class="break-word">
+                        {% if level.beatsaverId %}
+                            <a href="https://beatsaver.com/beatmap/{{ level.beatsaverId }}" target="_blank" title="View on BeatSaver">
+                                {{ level.name }}
+                            </a>
+                        {% else %}
+                            {{ level.name }}
+                        {% endif %}
+                    </strong>
+                </td>
+                <td><strong>{{ level.trendFactor }}</strong></td>
+                <td>{{ level.statPlayCount }}</td>
+                <td>{{ level.statPlayCountAlt }}</td>
+                <td>{{ level.statPlayCountWeek }}</td>
+                <td>{{ level.statPlayCountDay }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="100%" class="not-found">
+                    No data available
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

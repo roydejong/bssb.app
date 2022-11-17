@@ -41,6 +41,8 @@ html, body {
 }
 html {
   font-size: 10px;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 body {
   font-size: 1.5rem;
@@ -48,7 +50,7 @@ body {
   background: var(--col-bg-main);
   color: var(--col-txt-main);
   position: relative;
-  overflow-y: scroll;
+  overflow-y: hidden;
   overflow-x: hidden;
 }
 
@@ -222,6 +224,7 @@ $topTitleHeight: 8.4rem;
 .content {
   position: relative;
   margin-top: $topHeight + $topTitleHeight + 3rem;
+  margin-bottom: 3rem;
   font-size: 1.5rem;
 }
 
