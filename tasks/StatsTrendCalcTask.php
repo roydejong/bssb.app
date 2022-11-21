@@ -82,6 +82,8 @@ $task = $schedule->run(function () {
                 ->andWhere('started_at >= ?', $twentyFourHoursAgo)
                 ->querySingleValue());
 
+            $totalPlayCountForCalc = max($levelRecord->statPlayCount, $levelRecord->statPlayCountAlt);
+
             $avgBoost = 0.0;
             $ageNerf = 0.0;
 
@@ -92,7 +94,7 @@ $task = $schedule->run(function () {
                 $firstPlayedDt = new DateTime($firstPlayedValue);
                 $daysSinceFirstPlay = $firstPlayedDt->diff(new DateTime('now'))->days;
                 if ($daysSinceFirstPlay > 1) {
-                    $dailyAvg = $levelRecord->statPlayCountAlt / $daysSinceFirstPlay;
+                    $dailyAvg = $totalPlayCountForCalc / $daysSinceFirstPlay;
                     $avgBoost = ($levelRecord->statPlayCountDay / $dailyAvg);
                     if ($avgBoost < 0) $avgBoost = 0;
                     if ($avgBoost > 1) $avgBoost = 1;
