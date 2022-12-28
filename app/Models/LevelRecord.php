@@ -12,6 +12,7 @@ class LevelRecord extends Model implements \JsonSerializable
     public string $levelId;
     public ?string $hash;
     public ?string $beatsaverId;
+    public ?\DateTime $beatsaverVersionDt;
     public ?string $coverUrl;
     public string $name;
     public string $songName;
@@ -182,6 +183,7 @@ class LevelRecord extends Model implements \JsonSerializable
 
         if ($mapData) {
             $this->beatsaverId = $mapData['id'];
+            $this->beatsaverVersionDt = null;
             $this->name = $mapData['name'];
             $this->description = $mapData['description'] ?? null;
 
@@ -194,8 +196,10 @@ class LevelRecord extends Model implements \JsonSerializable
 
             if (isset($mapData['versions']) && is_array($mapData['versions'])) {
                 foreach ($mapData['versions'] as $version) {
+
                     if (strtoupper($version['hash']) === strtoupper($this->hash)) {
-                        // Found map version with matching hash, set cover url
+                        // Found map version with matching hash, set version-specific data
+                        $this->beatsaverVersionDt = new \DateTime($version['createdAt']);;
                         if (!empty($version['coverURL'])) {
                             $this->coverUrl = $version['coverURL'];
                         }
@@ -261,6 +265,7 @@ class LevelRecord extends Model implements \JsonSerializable
         if ($this->beatsaverId) {
             $previousRecordWithKey = LevelRecord::query()
                 ->where('beatsaver_id = ?', $this->beatsaverId)
+                ->andWhere('beatsaver_version_dt = ?', $this->beatsaverVersionDt)
                 ->querySingleModel();
 
             if ($previousRecordWithKey) {
