@@ -1,5 +1,15 @@
 {% extends "admin/_base.twig" %}
 
+{% block context %}
+    <form method="get">
+        <select name="filter" onchange="this.form.submit();">
+            {% for filterId, filterName in filters %}
+                <option value="{{ filterId }}" {% if filterId == selectedFilterId %}selected{% endif %}>{{ filterName }}</option>
+            {% endfor %}
+        </select>
+    </form>
+{% endblock %}
+
 {% block content %}
 <table>
     <thead>

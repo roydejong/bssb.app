@@ -15,59 +15,60 @@
     <meta name="robots" content="noindex, follow">
 </head>
 <body>
-    <form method="post">
-        <input type="hidden" name="__csrf" value="{{ csrf }}"/>
-        <div class="top">
-            <div class="container-h">
-                <a class="bssb" href="/" title="BSSB.app">
-                    <span>BS</span><span>SB</span>
-                </a>
-                <nav>
-                    <a href="/admin" class="{% if tab == "dash" %}-active{% endif %}">
-                        <i class="mdi mdi-monitor-dashboard"></i>
-                        <span>Dashboard</span>
-                    </a>
-                    <a href="/admin/bans" class="{% if tab == "bans" %}-active{% endif %}">
-                        <i class="mdi mdi-gavel"></i>
-                        <span>Bans</span>
-                    </a>
-                    <a href="/admin/news" class="{% if tab == "news" %}-active{% endif %}">
-                        <i class="mdi mdi-newspaper"></i>
-                        <span>Newsfeed</span>
-                    </a>
-                    <a href="/admin/connections" class="{% if tab == "connections" %}-active{% endif %}">
-                        <i class="mdi mdi-connection"></i>
-                        <span>Connections</span>
-                    </a>
-                    <a href="/admin/trends" class="{% if tab == "trends" %}-active{% endif %}">
-                        <i class="mdi mdi-trending-up"></i>
-                        <span>Trends</span>
-                    </a>
-                </nav>
-                <a class="user" href="/me" title="My profile">
-                    {{ self_face_render|raw }}
-                    <span>{{ self_player_name }}</span>
-                </a>
-            </div>
-        </div>
 
-        <div class="top-title">
-            <div class="container-h">
-                <h1>{{ title ? title : "Untitled" }}</h1>
-                <div class="context">
-                    {% block context %}
-                    {% endblock %}
-                </div>
-            </div>
-        </div>
+<div class="top">
+    <div class="container-h">
+        <a class="bssb" href="/" title="BSSB.app">
+            <span>BS</span><span>SB</span>
+        </a>
+        <nav>
+            <a href="/admin" class="{% if tab == "dash" %}-active{% endif %}">
+                <i class="mdi mdi-monitor-dashboard"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="/admin/bans" class="{% if tab == "bans" %}-active{% endif %}">
+                <i class="mdi mdi-gavel"></i>
+                <span>Bans</span>
+            </a>
+            <a href="/admin/news" class="{% if tab == "news" %}-active{% endif %}">
+                <i class="mdi mdi-newspaper"></i>
+                <span>Newsfeed</span>
+            </a>
+            <a href="/admin/connections" class="{% if tab == "connections" %}-active{% endif %}">
+                <i class="mdi mdi-connection"></i>
+                <span>Connections</span>
+            </a>
+            <a href="/admin/trends" class="{% if tab == "trends" %}-active{% endif %}">
+                <i class="mdi mdi-trending-up"></i>
+                <span>Trends</span>
+            </a>
+        </nav>
+        <a class="user" href="/me" title="My profile">
+            {{ self_face_render|raw }}
+            <span>{{ self_player_name }}</span>
+        </a>
+    </div>
+</div>
 
-        <div class="content">
-            <div class="container-v">
-                {% block content %}
-                {% endblock %}
-            </div>
+<div class="top-title">
+    <div class="container-h">
+        <h1>{{ title ? title : "Untitled" }}</h1>
+        <div class="context">
+            {% block context %}
+            {% endblock %}
         </div>
-    </form>
+    </div>
+</div>
+
+<form method="post">
+    <input type="hidden" name="__csrf" value="{{ csrf }}"/>
+    <div class="content">
+        <div class="container-v">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+</form>
 
 {% block scripts %}{% endblock %}
 
