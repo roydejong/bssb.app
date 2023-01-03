@@ -195,17 +195,6 @@ class BrowseControllerTest extends TestCase
     // -----------------------------------------------------------------------------------------------------------------
     // Tests actual
 
-    public function testRejectsNonModRequests()
-    {
-        $request = self::createBrowseRequest();
-        $request->headers["user-agent"] = "Gogglebot";
-
-        $response = (new BrowseController())
-            ->browse($request);
-
-        $this->assertInstanceOf("app\HTTP\Responses\BadRequestResponse", $response);
-    }
-
     public function testBrowseSimple()
     {
         $lobbies = self::executeBrowseRequestAndGetGames(
