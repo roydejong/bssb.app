@@ -4,7 +4,6 @@ namespace app\Data;
 
 use app\Data\Filters\BaseFilter;
 use app\HTTP\Request;
-use app\Models\HostedGame;
 use app\Models\Joins\HostedGameLevelRecord;
 use SoftwarePunt\Instarecord\Database\ModelQuery;
 
@@ -114,7 +113,7 @@ final class GameQuery
         }
 
         if ($this->hideStaleGames) {
-            $query->andWhere("last_update >= ?", HostedGame::getStaleGameCutoff());
+            $query->andWhere("is_stale = 0");
         }
 
         if ($this->hideEndedGames) {

@@ -22,7 +22,7 @@ class BrowseServerCodeController
          */
         $matchingGames = HostedGame::query()
             ->where('server_code = ?', $serverCode) // Must match server code
-            ->andWhere("last_update >= ?", HostedGame::getStaleGameCutoff()) // Must not be stale
+            ->andWhere("is_stale = 0") // Must not be stale
             ->andWhere("ended_at IS NULL") // Must not be ended
             ->queryAllModels();
 

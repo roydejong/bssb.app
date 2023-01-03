@@ -65,7 +65,7 @@ class BrowseController
         $baseQuery = HostedGameLevelRecord::query()
             ->select("hosted_games.*, lr.beatsaver_id, lr.cover_url, lr.name AS level_name")
             ->from("hosted_games")
-            ->where("last_update >= ?", HostedGame::getStaleGameCutoff())
+            ->where("is_stale = 0")
             ->andWhere("ended_at IS NULL")
             ->leftJoin("level_records lr ON (lr.level_id = hosted_games.level_id)")
             ->orderBy("player_count >= player_limit ASC, player_count > 1 ASC, player_limit DESC, hosted_games.id DESC");

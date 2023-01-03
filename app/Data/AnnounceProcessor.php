@@ -241,6 +241,7 @@ final class AnnounceProcessor
             $game->firstSeen = $now;
 
         $game->lastUpdate = $now;
+        $game->isStale = false;
 
         if ($game->getIsUninteresting())
             $game->endedAt = $now; // force end; we don't want to show this game

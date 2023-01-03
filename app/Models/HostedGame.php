@@ -83,6 +83,11 @@ class HostedGame extends Model implements \JsonSerializable
      */
     public \DateTime $lastUpdate;
     /**
+     * Indicates whether the last_update is too old, making this game "stale".
+     * This is periodically checked by a dedicated task: StaleGameFlagTask
+     */
+    public bool $isStale;
+    /**
      * Lobby state enum value.
      * @see MultiplayerLobbyState
      *
@@ -230,7 +235,7 @@ class HostedGame extends Model implements \JsonSerializable
 
     public function getIsStale(): bool
     {
-        return $this->lastUpdate < self::getStaleGameCutoff();
+        return $this->isStale || $this->lastUpdate < self::getStaleGameCutoff();
     }
 
     public function getIsStaleOrEnded(): bool

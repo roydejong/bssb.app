@@ -134,7 +134,7 @@ class PlayerProfileController
                 ->from("hosted_games hg")
                 ->innerJoin("hosted_game_players hgp ON (hgp.hosted_game_id = hg.id AND hgp.user_id = ?)",
                     $userId)
-                ->where("last_update >= ?", HostedGame::getStaleGameCutoff())
+                ->where("is_stale = 0")
                 ->andWhere("ended_at IS NULL")
                 ->andWhere('hgp.is_connected = 1')
                 ->orderBy('hg.id DESC')
