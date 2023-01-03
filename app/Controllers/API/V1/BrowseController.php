@@ -132,7 +132,6 @@ class BrowseController
 
         // Hide direct connect servers for <1.1.0 mod clients
         $supportsDirectConnect = $mci->getSupportsDirectConnect();
-
         if (!$supportsDirectConnect) {
             $baseQuery->andWhere('master_server_host IS NOT NULL');
         }

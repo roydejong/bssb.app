@@ -61,7 +61,7 @@ class ModClientInfo
             }
         }
 
-        if ($beatSaberPart) {
+        if ($beatSaberPart && str_contains($beatSaberPart, 'BeatSaber/')) {
             $result->beatSaberVersion = new CVersion(strtok(trim($beatSaberPart, '()'), 'BeatSaber/'));
         }
 
@@ -110,6 +110,9 @@ class ModClientInfo
             return $this->assemblyVersion->greaterThanOrEquals(new CVersion("1.1"));
         }
         // Quest does not support this currently
-        return false;
+        if ($this->getIsServerBrowserQuest()) {
+            return false;
+        }
+        return true;
     }
 }
