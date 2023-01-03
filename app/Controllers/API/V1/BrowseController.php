@@ -8,7 +8,6 @@ use app\BeatSaber\MultiplayerLobbyState;
 use app\Common\CVersion;
 use app\HTTP\Request;
 use app\HTTP\Response;
-use app\HTTP\Responses\BadRequestResponse;
 use app\HTTP\Responses\JsonResponse;
 use app\Models\HostedGame;
 use app\Models\Joins\HostedGameLevelRecord;
@@ -25,10 +24,6 @@ class BrowseController
         // Pre-flight checks
 
         $mci = $request->getModClientInfo();
-
-        if (!$request->getIsValidModClientRequest()) {
-            return new BadRequestResponse();
-        }
 
         // -------------------------------------------------------------------------------------------------------------
         // Read input
