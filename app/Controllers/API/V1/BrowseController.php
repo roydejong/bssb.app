@@ -125,7 +125,7 @@ class BrowseController
         }
 
         // Hide official (gamelift) quick play lobbies without a distinct host secret for all clients >=1.19.1
-        if ($mci->beatSaberVersion->greaterThanOrEquals(new CVersion("1.19.1"))) {
+        if ($mci->beatSaberVersion && $mci->beatSaberVersion->greaterThanOrEquals(new CVersion("1.19.1"))) {
             $baseQuery->andWhere('server_type != ? OR host_secret != owner_id',
                 HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY);
         }
