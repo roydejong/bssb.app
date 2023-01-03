@@ -29,6 +29,7 @@ class BrowseControllerTest extends TestCase
 
         $oldSteam = self::createSampleGame(6, "OldSteam", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 1, false);
         $oldSteam->lastUpdate = (clone $oldSteam->lastUpdate)->modify('-10 minutes');
+        $oldSteam->isStale = true;
         $oldSteam->firstSeen = $oldSteam->lastUpdate;
         self::assertTrue($oldSteam->getIsStale(), "Setup sanity check: OldSteam game should be stale");
         $oldSteam->save();
