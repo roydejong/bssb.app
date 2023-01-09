@@ -71,7 +71,11 @@ class GameDetailController
         // -------------------------------------------------------------------------------------------------------------
         // Response
 
+        $baseUrl = "/game/{$game->getHashId()}";
+
         $view = new View('pages/game-detail-info.twig');
+        $view->set('pageUrl', $baseUrl);
+        $view->set('baseUrl', $baseUrl);
         $view->set('pageTitle', $game->gameName);
         $view->set('baseUrl', $game->getWebDetailUrl());
         $view->set('game', $game);
@@ -114,8 +118,11 @@ class GameDetailController
         // -------------------------------------------------------------------------------------------------------------
         // Response
 
+        $baseUrl = "/game/{$game->getHashId()}";
+
         $view = new View('pages/game-detail-players.twig');
-        $view->set('baseUrl', $game->getWebDetailUrl());
+        $view->set('pageUrl', "{$baseUrl}/players");
+        $view->set('baseUrl', $baseUrl);
         $view->set('game', $game);
         $view->set('level', $level);
         $view->set('players', $players);
@@ -185,7 +192,10 @@ class GameDetailController
         // -------------------------------------------------------------------------------------------------------------
         // Response
 
+        $baseUrl = "/game/{$game->getHashId()}";
+
         $view = new View('pages/game-detail-plays.twig');
+        $view->set('pageUrl', "{$baseUrl}/plays");
         $view->set('baseUrl', $baseUrl);
         $view->set('game', $game);
         $view->set('level', $level);

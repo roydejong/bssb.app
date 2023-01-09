@@ -121,6 +121,7 @@ class BefriendController
         // Response
 
         $view = new View("pages/befriend.twig");
+        $view->set('pageUrl', "/befriend");
         $view->set('pageTitle', 'Add friends');
         $view->set('queryValue', $queryValue);
         $view->set('results', $results);

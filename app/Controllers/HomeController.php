@@ -98,6 +98,7 @@ class HomeController
         // Render
 
         $view = new View('pages/home.twig');
+        $view->set('pageUrl', '/');
         $view->set('serverMessage', (SystemConfig::fetchInstance())
             ->getCleanServerMessage());
         $view->set('queryResult', $queryResult);

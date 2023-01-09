@@ -39,6 +39,7 @@ class ResultsController
         // -------------------------------------------------------------------------------------------------------------
 
         $view = new View("pages/results-detail.twig");
+        $view->set('pageUrl', "/results/{$levelHistory->sessionGameId}");
         $view->set('pageTitle', "{$level->describeSong()} - {$game->gameName}");
         $view->set('pageDescr', "Multiplayer level results for {$level->describeSong()} in {$game->gameName}");
         $view->set('levelHistory', $levelHistory);

@@ -61,6 +61,7 @@ class UserSettingsController
         // Response
 
         $view = new View('pages/user-settings.twig');
+        $view->set('pageUrl', '/settings');
         $view->set('__token', $session->getCsrfToken(self::CsrfKey));
         $view->set('formData', $formData);
         $view->set('formError', $formError);

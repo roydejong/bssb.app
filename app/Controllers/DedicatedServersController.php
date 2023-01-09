@@ -101,6 +101,7 @@ class DedicatedServersController
         // Response
 
         $view = new View('pages/stats-dedicated-servers.twig');
+        $view->set('pageUrl', "/dedicated-servers");
         $view->set('servers', $dedicatedServers);
         $view->set('geoData', $geoData);
         $view->set('cutoffDays', $cutoffDays);

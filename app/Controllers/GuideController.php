@@ -37,19 +37,24 @@ class GuideController
 
         $currentGameVersion = new CVersion(self::VersionLatest);
 
+        $pageUrl = "/guide";
+
         if ($request->method === "POST") {
             $platform = $request->postParams['platform'];
             $version = $request->postParams['version'];
 
+            $pageUrl = "/guide/{$platform}/{$version}";
+
             if (isset(self::$platformOptions[$platform]) &&
                 (in_array($version, self::$allGameVersions) || $version === "other")) {
-                return new RedirectResponse("/guide/{$platform}/{$version}", 303);
+                return new RedirectResponse($pageUrl, 303);
             } else {
                 return new Response(400);
             }
         }
 
         $view = new View('pages/guide.twig');
+        $view->set('pageUrl', $pageUrl);
         $view->set('pageTitle', "Multiplayer Modding Guide");
         $view->set('pageDescr', "An interactive guide that will help you play custom songs in Beat Saber multiplayer.");
         $view->set('lastUpdate', self::LastUpdate);

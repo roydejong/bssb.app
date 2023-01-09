@@ -20,6 +20,7 @@ class DownloadController
         }
 
         $view = new View('pages/download.twig');
+        $view->set('pageUrl', '/download');
         $view->set('pageTitle', "Download Mod");
         $view->set('pageDescr', "Download the Server Browser mod to share and join multiplayer lobbies in Beat Saber.");
         $response = $view->asResponse();

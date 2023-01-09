@@ -57,6 +57,9 @@ class PlayerProfileController
         $isMe = $viewerPlayer?->id === $player->id;
         $isDedicatedServer = $player->getIsDedicatedServer();
 
+        $baseUrl = "/player/{$player->getUrlSafeUserId()}";
+        $pageUrl = $baseUrl;
+
         // -------------------------------------------------------------------------------------------------------------
         // Tabs
 
@@ -77,6 +80,7 @@ class PlayerProfileController
                     $loadStats = false;
                     $loadHistory = true;
                     $loadCurrent = false;
+                    $pageUrl = "/player/{$player->getUrlSafeUserId()}/{$tabId}";
                     break;
                 case "friends":
                     $tabId = "friends";
@@ -89,6 +93,7 @@ class PlayerProfileController
                         // Friends list is visible to self only
                         return new RedirectResponse('/me');
                     }
+                    $pageUrl = "/player/{$player->getUrlSafeUserId()}/{$tabId}";
                     break;
                 default:
                     return new NotFoundResponse();
@@ -110,7 +115,6 @@ class PlayerProfileController
 
         $enablePrivacyShield = $player->type === PlayerType::PlayerObserved || !$player->showHistory;
 
-        $baseUrl = $player->getWebDetailUrl();
         $paginationBaseUrl = $tabId !== "info" ? ($baseUrl . "/{$tabId}") : null;
 
         $stats = [];
@@ -187,6 +191,8 @@ class PlayerProfileController
         // Response
 
         $view = new View("pages/{$templateName}.twig");
+        $view->set('baseUrl', $player->getWebDetailUrl());
+        $view->set('pageUrl', $pageUrl);
         $view->set('player', $player);
         $view->set('pageTitle', "{$player->getDisplayName()}'s {$titleSuffix}");
         $view->set('pageDescr', "{$player->getDisplayName()} is a Beat Saber multiplayer {$player->describeType(true)}. View their {$titleSuffix} here.");

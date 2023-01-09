@@ -80,6 +80,7 @@ class MasterServersController
         // -------------------------------------------------------------------------------------------------------------
 
         $view = new View('pages/stats-master-servers.twig');
+        $view->set('pageUrl', "/master-servers");
         $view->set('servers', $masterServerHosts);
         $view->set('sevenDayGameCounts', $sevenDayGameCounts);
         $view->set('masterServerInfo', $masterServerInfoIndexed);
