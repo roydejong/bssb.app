@@ -631,6 +631,8 @@ class HostedGame extends Model implements \JsonSerializable
             $sz['levelHistory'] = LevelHistoryWithLevelRecord::queryHistoryForGame($this->id, 10);
         }
 
+        unset($sz['isStale']);
+
         return $sz;
     }
 

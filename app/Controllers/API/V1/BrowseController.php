@@ -29,7 +29,6 @@ class BrowseController
         // Read input
 
         $searchQuery = $request->queryParams['query'] ?? null;
-        $platformConstraint = $request->queryParams['platform'] ?? null;
         $isVanilla = intval($request->queryParams['vanilla'] ?? 0) === 1;
         $includeLevel = intval($request->queryParams['includeLevel'] ?? 0) === 1;
 
