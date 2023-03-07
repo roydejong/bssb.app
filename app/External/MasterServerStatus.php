@@ -95,7 +95,7 @@ final class MasterServerStatus
         ]);
 
         if (str_ends_with($statusUrl, "/beat_saber_multiplayer_status")) {
-            $statusUrl .= "?access_token=OC%7C238236400888545%7C&service_environment=production";
+            $statusUrl .= "?access_token=OC%7C238236400888545%7C&service_environment=ProductionA";
         }
 
         $rawResponse = @file_get_contents($statusUrl, context: $context);
