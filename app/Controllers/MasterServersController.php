@@ -45,7 +45,7 @@ class MasterServersController
         $sevenDayGameCounts = HostedGame::query()
             ->select(' master_server_host, COUNT(*) game_count')
             ->groupBy('master_server_host')
-//            ->andWhere('last_update >= ?', $oneWeekAgo)
+            ->andWhere('last_update >= ?', $oneWeekAgo)
             ->queryKeyValueArray();
 
         $masterServerHostsFinal = [];
