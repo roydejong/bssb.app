@@ -2,6 +2,7 @@
 
 namespace app\Controllers;
 
+use app\External\MasterServerStatus;
 use app\Frontend\ResponseCache;
 use app\Frontend\View;
 use app\HTTP\Request;
@@ -44,7 +45,7 @@ class MasterServersController
         $sevenDayGameCounts = HostedGame::query()
             ->select(' master_server_host, COUNT(*) game_count')
             ->groupBy('master_server_host')
-            ->andWhere('last_update >= ?', $oneWeekAgo)
+//            ->andWhere('last_update >= ?', $oneWeekAgo)
             ->queryKeyValueArray();
 
         $masterServerHostsFinal = [];
@@ -85,6 +86,7 @@ class MasterServersController
         $view->set('sevenDayGameCounts', $sevenDayGameCounts);
         $view->set('masterServerInfo', $masterServerInfoIndexed);
         $view->set('pageTitle', "Master Servers - Statistics");
+        $view->set('officialServiceEnv', MasterServerStatus::LiveGameServiceEnv);
 
         $response = $view->asResponse();
         $resCache->writeResponse($response);

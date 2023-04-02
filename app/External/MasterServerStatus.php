@@ -82,6 +82,8 @@ final class MasterServerStatus
     // -----------------------------------------------------------------------------------------------------------------
     // Fetch
 
+    const LiveGameServiceEnv = "ProductionB";
+
     public static function tryFetch(string $statusUrl): ?MasterServerStatus
     {
         if (!str_starts_with($statusUrl, "https://") && !str_starts_with($statusUrl, "http://"))
@@ -95,7 +97,7 @@ final class MasterServerStatus
         ]);
 
         if (str_ends_with($statusUrl, "/beat_saber_multiplayer_status")) {
-            $statusUrl .= "?access_token=OC%7C238236400888545%7C&service_environment=ProductionA";
+            $statusUrl .= "?access_token=OC%7C238236400888545%7C&service_environment=" . self::LiveGameServiceEnv;
         }
 
         $rawResponse = @file_get_contents($statusUrl, context: $context);
