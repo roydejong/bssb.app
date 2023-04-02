@@ -24,10 +24,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Install PHP 8.1
+    - name: Install PHP 8.2
       uses: shivammathur/setup-php@v2
       with:
-        php-version: 8.1
+        php-version: 8.2
         extensions: json, phar, tokenizer, curl, iconv, mbstring
         coverage: xdebug
         tools: none
