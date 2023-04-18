@@ -19,5 +19,5 @@ storage/cache
 .phpunit.result.cache
 
 # Generated files
-public/static/bssb.css
-public/static/bssb.css.map
+public/static/*.css
+public/static/*.css.map

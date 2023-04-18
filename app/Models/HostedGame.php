@@ -122,11 +122,24 @@ class HostedGame extends Model implements \JsonSerializable
      */
     public string $platform = ModPlatformId::UNKNOWN;
     /**
+     * Modern Graph API HTTP URL.
+     * Replaces master server functionality for 1.29 clients and newer.
+     *
+     * @var string|null
+     */
+    public ?string $masterGraphUrl;
+    /**
      * Host name for the Master Server this game is hosted on.
+     * Deprecated in game as of 1.29 in favor of Graph API.
+     *
+     * @see $masterGraphUrl
      */
     public ?string $masterServerHost;
     /**
      * Port number for the Master Server this game is hosted on.
+     * Deprecated in game as of 1.29 in favor of Graph API.
+     *
+     * @see $masterGraphUrl
      */
     public ?int $masterServerPort;
     /**

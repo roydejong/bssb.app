@@ -251,7 +251,8 @@ class AnnounceControllerTest extends TestCase
             'ServerCode' => 'MODRN',
             'OwnerId' => 'unit_test_testModernizedV1Announce',
             'HostSecret' => "testModernizedV1Announce",
-            'MasterServerEp' => 'server.host.com:1234',
+            'MasterGraphUrl' => 'https://server.host.com:1234',
+            'MasterStatusUrl' => 'https://server.host.com:4567',
             'Level' => [
                 'Difficulty' => 3,
                 'Characteristic' => 'Standard',
@@ -273,8 +274,10 @@ class AnnounceControllerTest extends TestCase
 
         $game = HostedGame::fetch(HostedGame::hash2id($responseJson['key']));
 
-        $this->assertSame("server.host.com", $game->masterServerHost);
-        $this->assertSame(1234, $game->masterServerPort);
+        $this->assertSame("https://server.host.com:1234", $game->masterGraphUrl);
+        $this->assertSame("https://server.host.com:4567", $game->masterStatusUrl);
+        $this->assertSame(null, $game->masterServerHost);
+        $this->assertSame(null, $game->masterServerPort);
         $this->assertSame("Sugar", $game->levelId);
         $this->assertSame("Sugar", $game->songName);
         $this->assertSame("Maroon 5", $game->songAuthor);

@@ -454,17 +454,20 @@ final class AnnounceProcessor
 
     private function setMasterServerData(HostedGame &$game): void
     {
-        $masterServerEp = $this->getString('MasterServerEp');
+        $game->masterGraphUrl = $this->getString('MasterGraphUrl');
+        $game->masterStatusUrl = $this->getString('MasterStatusUrl');
 
-        if ($masterServerEp) {
-            // Modern announce format: MasterServerEp
-            $epParts = explode(':', $masterServerEp, 2);
-            $game->masterServerHost = $epParts[0] ?? null;
-            $game->masterServerPort = isset($epParts[1]) ? intval($epParts[1]) : null;
-        } else {
-            // Legacy announce format: separate fields
-            $game->masterServerHost = $this->getString('MasterServerHost');
-            $game->masterServerPort = $this->getInt('MasterServerPort', 2328);
+        if (!$game->masterGraphUrl) {
+            // No Graph URL provided, expecting traditional master server (1.28 and older)
+            $masterServerEp = $this->getString('MasterServerEp');
+            if ($masterServerEp) {
+                $epParts = explode(':', $masterServerEp, 2);
+                $game->masterServerHost = $epParts[0] ?? null;
+                $game->masterServerPort = isset($epParts[1]) ? intval($epParts[1]) : null;
+            } else {
+                $game->masterServerHost = $this->getString('MasterServerHost');
+                $game->masterServerPort = $this->getInt('MasterServerPort', 2328);
+            }
         }
 
         // Automatically provide platform type if we can infer it from master server
@@ -477,13 +480,15 @@ final class AnnounceProcessor
             }
         }
 
-        // If GameLift host, set master server info manually for display in stats
-        if ($game->getIsGameLiftServer() && empty($game->masterServerHost)) {
-            $game->masterServerHost = "graph.oculus.com";
+        // If GameLift host, set any missing master server info automatically for stats
+        if ($game->getIsGameLiftServer()) {
+            if (empty($game->masterGraphUrl))
+                $game->masterGraphUrl = "https://graph.oculus.com";
+            if (empty($game->masterStatusUrl))
+                $game->masterStatusUrl = "https://graph.oculus.com";
+            if (empty($game->masterServerHost))
+                $game->masterServerHost = "graph.oculus.com";
         }
-
-        // Status URL (as of BSSB 1.0+)
-        $game->masterStatusUrl = $this->getString('MasterStatusUrl');
     }
 
     private function setClientInfo(HostedGame &$game): void
