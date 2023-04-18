@@ -18,6 +18,7 @@ use app\Models\LevelHistoryPlayer;
 use app\Models\LevelRecord;
 use app\Models\LobbyBan;
 use app\Models\MasterServerInfo;
+use app\Utils\UrlInfo;
 
 final class AnnounceProcessor
 {
@@ -457,7 +458,11 @@ final class AnnounceProcessor
         $game->masterGraphUrl = $this->getString('MasterGraphUrl');
         $game->masterStatusUrl = $this->getString('MasterStatusUrl');
 
-        if (!$game->masterGraphUrl) {
+        if ($game->masterGraphUrl) {
+            // Using modern Graph API (1.29+), set derived master server host for grouping/stats
+            $urlInfo = new UrlInfo($game->masterGraphUrl);
+            $game->masterServerHost = $urlInfo->host;
+        } else {
             // No Graph URL provided, expecting traditional master server (1.28 and older)
             $masterServerEp = $this->getString('MasterServerEp');
             if ($masterServerEp) {

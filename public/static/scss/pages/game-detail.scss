@@ -205,13 +205,16 @@
       padding: 2px 8px;
 
       &.bg-primary { background: #007bff; }
-      &.bg-secondary { background: #6c757d; }
-      &.bg-success { background: #28a745; }
-      &.bg-dark { background: #0a3d62; }
 
       &:last-right {
         margin-right: 0;
       }
     }
   }
+}
+
+.badge {
+  &.bg-secondary { background: #6c757d; }
+  &.bg-success { background: #28a745; }
+  &.bg-dark { background: #0a3d62; }
 }

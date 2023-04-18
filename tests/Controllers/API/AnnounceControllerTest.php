@@ -276,7 +276,7 @@ class AnnounceControllerTest extends TestCase
 
         $this->assertSame("https://server.host.com:1234", $game->masterGraphUrl);
         $this->assertSame("https://server.host.com:4567", $game->masterStatusUrl);
-        $this->assertSame(null, $game->masterServerHost);
+        $this->assertSame("server.host.com", $game->masterServerHost);
         $this->assertSame(null, $game->masterServerPort);
         $this->assertSame("Sugar", $game->levelId);
         $this->assertSame("Sugar", $game->songName);

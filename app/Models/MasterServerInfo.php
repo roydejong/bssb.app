@@ -3,8 +3,10 @@
 namespace app\Models;
 
 use app\BeatSaber\MasterServer;
+use app\Common\CVersion;
 use app\External\GeoIp;
 use app\External\MasterServerStatus;
+use app\Utils\UrlInfo;
 use SoftwarePunt\Instarecord\Database\Column;
 use SoftwarePunt\Instarecord\Model;
 
@@ -14,8 +16,9 @@ class MasterServerInfo extends Model
     // Columns
 
     public int $id;
-    public string $host;
-    public int $port;
+    public ?string $graphUrl;
+    public ?string $host;
+    public ?int $port;
     public ?string $statusUrl;
     public bool $lockStatusUrl;
     public ?string $resolvedIp;
@@ -38,6 +41,29 @@ class MasterServerInfo extends Model
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    // Data
+
+    public function getSupportsGraph(): bool
+    {
+        return !empty($this->graphUrl);
+    }
+
+    public function getSupportsLegacy(): bool
+    {
+        if (empty($this->host) || empty($this->port))
+            // Missing info
+            return false;
+
+        $status = $this->getLastStatus();
+
+        if ($status?->minimumAppVersion && $status->minimumAppVersion->greaterThanOrEquals(new CVersion("1.29.0")))
+            // Not supported (anymore) by minimum app version
+            return false;
+
+        return true;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     // Status check
 
     public function getLastStatus(): ?MasterServerStatus
@@ -50,16 +76,28 @@ class MasterServerInfo extends Model
 
     public function refreshStatus(): void
     {
-        if (filter_var($this->host, FILTER_VALIDATE_IP) !== false) {
-            // Hostname is valid IP
-            $this->resolvedIp = $this->host;
-        } else {
-            // DNS Resolve
-            $this->resolvedIp = gethostbyname($this->host);
+        if ($this->graphUrl) {
+            // Modern master server with Graph API (>=1.29)
+            $urlInfo = new UrlInfo($this->graphUrl);
 
+            // DNS Resolve
+            $this->resolvedIp = gethostbyname($urlInfo->host);
             if ($this->resolvedIp === $this->host) {
                 // If gethostbyname() fails it seems to just return the hostname itself
                 $this->resolvedIp = null;
+            }
+        } else {
+            // Legacy master server (<=1.28)
+            if (filter_var($this->host, FILTER_VALIDATE_IP) !== false) {
+                // Hostname is valid IP
+                $this->resolvedIp = $this->host;
+            } else {
+                // DNS Resolve
+                $this->resolvedIp = gethostbyname($this->host);
+                if ($this->resolvedIp === $this->host) {
+                    // If gethostbyname() fails it seems to just return the hostname itself
+                    $this->resolvedIp = null;
+                }
             }
         }
 
@@ -89,10 +127,54 @@ class MasterServerInfo extends Model
 
     private static array $_cachedInfos = [];
 
-    public static function fetchOrCreate(string $host, int $port): MasterServerInfo
+    public static function fetchOrCreateForGraphUrl(string $graphUrl): MasterServerInfo
     {
-        $cacheKey = "{$host}:{$port}";
+        $urlInfo = new UrlInfo($graphUrl);
+        $urlNormalized = $urlInfo->rebuild();
 
+        $cacheKey = $urlInfo->host;
+        $masterServerInfo = self::$_cachedInfos[$cacheKey] ?? null;
+
+        if (!$masterServerInfo) {
+            $nowStr = (new \DateTime('now'))->format(Column::DATE_TIME_FORMAT);
+
+            // Try lookup by host (merge with legacy records whenever possible)
+            $masterServerInfo = MasterServerInfo::query()
+                ->where('host = ?', $urlInfo->host)
+                ->querySingleModel();
+
+            /**
+             * @var $masterServerInfo MasterServerInfo|null
+             */
+            if ($masterServerInfo) {
+                // Add Graph URL to legacy record
+                $masterServerInfo->graphUrl = $graphUrl;
+                $masterServerInfo->save();
+            } else {
+                // Upsert new/existing record
+                $recordId = MasterServerInfo::query()
+                    ->insert()
+                    ->values(['graph_url' => $urlNormalized, 'host' => $urlInfo->host, 'port' => null, 'first_seen' => $nowStr, 'last_seen' => $nowStr])
+                    ->onDuplicateKeyUpdate(['graph_url' => $urlNormalized], 'id')
+                    ->executeInsert();
+
+                $masterServerInfo = MasterServerInfo::fetch($recordId);
+
+                if (empty($masterServerInfo->host)) {
+                    // Add hostname to modern record for grouping purposes
+                    $masterServerInfo->host = $urlInfo->host;
+                    $masterServerInfo->save();
+                }
+            }
+        }
+
+        self::$_cachedInfos[$cacheKey] = $masterServerInfo;
+        return $masterServerInfo;
+    }
+
+    public static function fetchOrCreateForLegacyMaster(string $host, int $port): MasterServerInfo
+    {
+        $cacheKey = $host;
         $masterServerInfo = self::$_cachedInfos[$cacheKey] ?? null;
 
         if (!$masterServerInfo) {
@@ -100,7 +182,7 @@ class MasterServerInfo extends Model
 
             $recordId = MasterServerInfo::query()
                 ->insert()
-                ->values(['host' => $host, 'port' => $port, 'first_seen' => $nowStr, 'last_seen' => $nowStr])
+                ->values(['graph_url' => null, 'host' => $host, 'port' => $port, 'first_seen' => $nowStr, 'last_seen' => $nowStr])
                 ->onDuplicateKeyUpdate(['host' => $host, 'port' => $port], 'id')
                 ->executeInsert();
 
@@ -116,7 +198,11 @@ class MasterServerInfo extends Model
         if (!$game->masterServerHost || !$game->masterServerPort)
             return null;
 
-        $masterServerInfo = self::fetchOrCreate($game->masterServerHost, $game->masterServerPort);
+        if ($game->masterGraphUrl) {
+            $masterServerInfo = self::fetchOrCreateForGraphUrl($game->masterGraphUrl);
+        } else {
+            $masterServerInfo = self::fetchOrCreateForLegacyMaster($game->masterServerHost, $game->masterServerPort);
+        }
 
         $masterServerInfo->setStatusUrlIfBetter($game->masterStatusUrl);
 

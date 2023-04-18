@@ -52,6 +52,24 @@
                             {% else %}
                                 <span><code>{{ server.master_server_host }}:{{ server.master_server_port }}</code></span>
                             {% endif %}
+                            <div class="tags">
+                                {% if info.getSupportsGraph() %}
+                                    <div class="badge bg-success" data-toggle="tooltip"
+                                         data-placement="bottom"
+                                         title="Supports modern Graph API matchmaking (1.29 and newer)">
+                                        <i class="mdi mdi-graphql"></i>
+                                        <span>Graph</span>
+                                    </div>&nbsp;
+                                {% endif %}
+                                {% if info.getSupportsLegacy() %}
+                                    <div class="badge bg-primary" data-toggle="tooltip"
+                                         data-placement="bottom"
+                                         title="Supports classic master server connections (1.28 and older)">
+                                        <i class="mdi mdi-server"></i>
+                                        <span>Classic</span>
+                                    </div>
+                                {% endif %}
+                            </div>
                         </div>
                     </td>
                     <td>
