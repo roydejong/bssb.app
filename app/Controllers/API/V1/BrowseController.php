@@ -105,6 +105,12 @@ class BrowseController
             $baseQuery->andWhere('is_modded = 1');
         }
 
+        if (!$mci->getSupportsLegacyMasterServers()) {
+            // Newer client: must use a graph API, legacy master servers won't work
+            $baseQuery->andWhere('master_graph_url IS NOT NULL');
+            // TODO ..OR direct connects (if we can still make that work...)
+        }
+
         // Hide Quick Play games if unsupported by mod version or requested by filter
         if (!$mci->getSupportsQuickPlayServers() || $filterQuickPlay) {
             $baseQuery->andWhere('server_type IS NULL OR server_type NOT IN (?)',

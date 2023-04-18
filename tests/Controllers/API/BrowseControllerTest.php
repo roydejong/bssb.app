@@ -52,6 +52,8 @@ class BrowseControllerTest extends TestCase
         self::createSampleGame(null, "VanillaQuickPlay", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 3, false, hostSecret: "abc123", serverType: HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY, endpoint: new IPEndPoint("1.2.3.4", "1234"));
 
         self::createSampleGame(null, "DirectConnect", true, null, ModPlatformId::STEAM, 0, customGameVersion: new CVersion("1.23.0"), serverType: HostedGame::SERVER_TYPE_BEATDEDI_CUSTOM, endpoint: new IPEndPoint("1.2.3.4", "1234"));
+
+        self::createSampleGame(null, "129GraphGame", true, null, ModPlatformId::STEAM, 0, customGameVersion: new CVersion("1.29.0"), serverType: HostedGame::SERVER_TYPE_BEATTOGETHER_DEDICATED, endpoint: new IPEndPoint("1.2.3.4", "1234"), graphUrl: "http://beat.some.url:1234");
     }
 
     public static function tearDownAfterClass(): void
@@ -75,7 +77,7 @@ class BrowseControllerTest extends TestCase
                                              ?int      $playerCount = null, bool $inProgress = false,
                                              ?CVersion $customGameVersion = null, ?string $hostSecret = null,
                                              ?string   $serverType = null, ?IPEndPoint $endpoint = null,
-                                             ?string   $ownerId = null): HostedGame
+                                             ?string   $ownerId = null, ?string $graphUrl = null): HostedGame
     {
         $hg = new HostedGame();
 
@@ -93,7 +95,12 @@ class BrowseControllerTest extends TestCase
         $hg->firstSeen = new \DateTime('now');
         $hg->lastUpdate = $hg->firstSeen;
 
-        if ($masterServer) {
+        if ($graphUrl) {
+            $hg->masterGraphUrl = $graphUrl;
+            $hg->masterServerHost = parse_url($graphUrl)['host'];
+            $hg->masterServerPort = null;
+            $hg->platform = ModPlatformId::STEAM;
+        } else if ($masterServer) {
             $hg->masterServerHost = $masterServer;
             $hg->masterServerPort = 1234;
 
@@ -242,8 +249,8 @@ class BrowseControllerTest extends TestCase
 
         $this->assertNotSame($pageOne, $pageTwo);
 
-        // NB: -1 for OldSteam, -1 for EndedSteam, -1 for BadGameVersion, -1 for 1.18.1, -3 for 1.19.1, -1 for 1.23.0
-        $expectedTotalItems = self::$createdSampleGameCount - 8;
+        // NB: -1 for OldSteam, -1 for EndedSteam, -1 for BadGameVersion, -1 for 1.18.1, -3 for 1.19.1, -1 for 1.23.0, -1 for 1.29.0/Graph
+        $expectedTotalItems = self::$createdSampleGameCount - 9;
 
         $this->assertGreaterThanOrEqual($expectedTotalItems, count($pageOne) + count($pageTwo),
             "Pages one and two should make up the sample game count together");
@@ -533,6 +540,19 @@ class BrowseControllerTest extends TestCase
         $lobbies = self::executeBrowseRequestAndGetGames($request);
         $this->assertContainsGameWithName("DirectConnect", $lobbies,
             "ServerBrowser SHOULD return Direct Connect games on mod >= 1.1.0");
+    }
+
+    public function testModernClientRequiresGraphUrlServers()
+    {
+        $request = self::createBrowseRequest([]);
+        $request->headers["user-agent"] = "ServerBrowser/2.0.0 (BeatSaber/1.29.0) (steam)";
+        $lobbies = self::executeBrowseRequestAndGetGames($request);
+        $this->assertContainsGameWithName("129GraphGame", $lobbies,
+            "ServerBrowser SHOULD return 1.29 games with a graph URL");
+        $this->assertNotContainsGameWithName("DirectConnect", $lobbies,
+            "ServerBrowser SHOULD NOT return Direct Connect games for 1.29 (not yet supported... TODO)");
+        $this->assertNotContainsGameWithName("ModdedSteamCrossplayX", $lobbies,
+            "ServerBrowser SHOULD NOT return legacy master server games for 1.29");
     }
 
     public function testExplicitServerTypeFilter()

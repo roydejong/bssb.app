@@ -269,7 +269,8 @@ class HostedGame extends Model implements \JsonSerializable
 
     public function getIsDirectConnect(): bool
     {
-        return empty($this->masterServerHost) && !empty($this->endpoint) && !$this->getIsGameLiftServer();
+        return empty($this->masterGraphUrl) && empty($this->masterServerHost) && !empty($this->endpoint)
+            && !$this->getIsGameLiftServer();
     }
 
     public function getIsOfficial(): bool

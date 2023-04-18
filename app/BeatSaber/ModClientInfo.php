@@ -85,6 +85,12 @@ class ModClientInfo
         return $this->modName === self::MOD_SERVER_BROWSER_QUEST;
     }
 
+    public function getSupportsLegacyMasterServers(): bool
+    {
+        // Legacy master servers are not supported from 1.29 onwards (Graph API only)
+        return $this->beatSaberVersion->lessThan(new CVersion("1.29.0"));
+    }
+
     public function getSupportsQuickPlayServers(): bool
     {
         // Server Browser PC added this feature in v0.7
