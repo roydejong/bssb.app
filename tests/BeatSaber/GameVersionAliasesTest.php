@@ -52,4 +52,13 @@ class GameVersionAliasesTest extends TestCase
             "1.22.0 should return all (8) aliased version for 1.21.0 - 1.27.0 sorted in order"
         );
     }
+
+    public function testGetAliasesFor_1_29()
+    {
+        $this->assertEquals(
+            [new CVersion("1.29.0"), new CVersion("1.29.1")],
+            GameVersionAliases::getAliasesFor(new CVersion("1.29.0"), true),
+            "1.29.0 should return aliased versions (1.29.1+)"
+        );
+    }
 }

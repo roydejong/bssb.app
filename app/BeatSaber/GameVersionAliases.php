@@ -66,6 +66,8 @@ final class GameVersionAliases
         "1.25.0" => "1.22.0",
         "1.26.0" => "1.22.0",
         "1.26.1" => "1.22.0",
-        "1.27.0" => "1.22.0"
+        "1.27.0" => "1.22.0",
+        // 1.29+ breaks compatibility from legacy master server
+        "1.29.1" => "1.29.0"
     ];
 }
