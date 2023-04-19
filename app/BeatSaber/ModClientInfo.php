@@ -88,6 +88,8 @@ class ModClientInfo
     public function getSupportsLegacyMasterServers(): bool
     {
         // Legacy master servers are not supported from 1.29 onwards (Graph API only)
+        if (!$this->beatSaberVersion)
+            return true;
         return $this->beatSaberVersion->lessThan(new CVersion("1.29.0"));
     }
 
