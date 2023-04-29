@@ -2,6 +2,7 @@
 
 namespace app\Controllers;
 
+use app\Common\RemoteEndPoint;
 use app\External\GeoIp;
 use app\Frontend\ResponseCache;
 use app\Frontend\View;
@@ -59,8 +60,15 @@ class GameDetailController
         $geoText = null;
 
         if ($game->endpoint) {
-            $geoCountry = $geoIp->getCountryCode($game->endpoint);
-            $geoText = $geoIp->describeLocation($game->endpoint);
+            $endpointParsed = RemoteEndPoint::tryParse($game->endpoint);
+
+            if ($endpointParsed) {
+                if ($endpointParsed->getHostIsDnsName())
+                    $endpointParsed->tryResolve();
+
+                $geoCountry = $geoIp->getCountryCode($endpointParsed->host);
+                $geoText = $geoIp->describeLocation($endpointParsed->host);
+            }
         }
 
         // -------------------------------------------------------------------------------------------------------------

@@ -2,6 +2,7 @@
 
 namespace app\Controllers;
 
+use app\Common\RemoteEndPoint;
 use app\External\GeoIp;
 use app\Frontend\ResponseCache;
 use app\Frontend\View;
@@ -87,13 +88,21 @@ class DedicatedServersController
         foreach ($dedicatedServers as $dedicatedServer) {
             $endpoint = (string)$dedicatedServer->endpoint;
 
-            if (isset($geoData[$endpoint])) {
+            if (isset($geoData[$endpoint]))
                 continue;
-            }
+
+            $endpointParsed = RemoteEndPoint::tryParse($endpoint);
+
+            if (!$endpointParsed)
+                continue;
+
+            if ($endpointParsed->getHostIsDnsName())
+                if (!$endpointParsed->tryResolve())
+                    continue;
 
             $geoData[$endpoint] = [
-                'countryCode' => $geoIp->getCountryCode($endpoint),
-                'text' => $geoIp->describeLocation($endpoint)
+                'countryCode' => $geoIp->getCountryCode($endpointParsed->host),
+                'text' => $geoIp->describeLocation($endpointParsed->host)
             ];
         }
 

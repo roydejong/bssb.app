@@ -2,6 +2,7 @@
 
 namespace app\Controllers;
 
+use app\Common\RemoteEndPoint;
 use app\Data\Filters\GameVersionFilter;
 use app\Data\Filters\ModdedLobbyFilter;
 use app\Data\Filters\ServerTypeFilter;
@@ -75,13 +76,21 @@ class HomeController
         foreach ($queryResult->games as $game) {
             $endpoint = (string)$game->endpoint;
 
-            if (!$endpoint || isset($geoData[$endpoint])) {
+            if (isset($geoData[$endpoint]))
                 continue;
-            }
+
+            $endpointParsed = RemoteEndPoint::tryParse($endpoint);
+
+            if (!$endpointParsed)
+                continue;
+
+            if ($endpointParsed->getHostIsDnsName())
+                if (!$endpointParsed->tryResolve())
+                    continue;
 
             $geoData[$endpoint] = [
-                'countryCode' => $geoIp->getCountryCode($endpoint),
-                'text' => $geoIp->describeLocation($endpoint)
+                'countryCode' => $geoIp->getCountryCode($endpointParsed->host),
+                'text' => $geoIp->describeLocation($endpointParsed->host)
             ];
         }
 

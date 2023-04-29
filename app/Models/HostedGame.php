@@ -9,7 +9,7 @@ use app\BeatSaber\ModPlatformId;
 use app\BeatSaber\MultiplayerLobbyState;
 use app\BSSB;
 use app\Common\CVersion;
-use app\Common\IPEndPoint;
+use app\Common\RemoteEndPoint;
 use app\Models\Joins\LevelHistoryWithLevelRecord;
 use app\Models\Traits\HasBeatmapCharacteristic;
 use app\Utils\PirateDetect;
@@ -187,7 +187,7 @@ class HostedGame extends Model implements \JsonSerializable
     /**
      * The actual server endpoint the client connected to. Used for direct connections.
      */
-    public ?IPEndPoint $endpoint;
+    public ?RemoteEndPoint $endpoint;
     /**
      * The User ID of the current party leader, the player in control of the server.
      */

@@ -10,7 +10,7 @@ use app\BeatSaber\ModClientInfo;
 use app\BeatSaber\ModPlatformId;
 use app\BeatSaber\MultiplayerLobbyState;
 use app\Common\CVersion;
-use app\Common\IPEndPoint;
+use app\Common\RemoteEndPoint;
 use app\Models\HostedGame;
 use app\Models\HostedGamePlayer;
 use app\Models\LevelHistory;
@@ -138,10 +138,10 @@ final class AnnounceProcessor
         return $this->getCVersion($key)?->toString(3);
     }
 
-    private function getEndpoint(string $key): ?IPEndPoint
+    private function getEndpoint(string $key): ?RemoteEndPoint
     {
         $strVal = $this->getString($key);
-        return $strVal ? IPEndPoint::tryParse($strVal) : null;
+        return $strVal ? RemoteEndPoint::tryParse($strVal) : null;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

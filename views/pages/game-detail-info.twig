@@ -90,23 +90,22 @@
                             <th scope="row">Type</th>
                             <td>{{ game.describeServerType() }}</td>
                         </tr>
-                        {% if game.endpoint and game.getIsDedicatedServer()
-                            and (game.getIsGameLiftServer() or game.masterServerHost) %}
+                        {% if game.endpoint %}
                             <tr>
                                 <th scope="row">Endpoint</th>
                                 <td><code>{{ game.endpoint }}</code></td>
                             </tr>
-                            {% if geoText %}
-                                <tr>
-                                    <th scope="row" width="220">Location (GeoIP)</th>
-                                    <td>
-                                        {% if geoCountry %}
-                                            <img src="/static/flags/{{ geoCountry|lower }}.png" alt="{{ geoCountry }}"/>
-                                        {% endif %}
-                                        <span>{{ geoText }}</span>
-                                    </td>
-                                </tr>
-                            {% endif %}
+                        {% endif %}
+                        {% if geoText %}
+                            <tr>
+                                <th scope="row" width="220">Location (GeoIP)</th>
+                                <td>
+                                    {% if geoCountry %}
+                                        <img src="/static/flags/{{ geoCountry|lower }}.png" alt="{{ geoCountry }}"/>
+                                    {% endif %}
+                                    <span>{{ geoText }}</span>
+                                </td>
+                            </tr>
                         {% endif %}
                         <tr>
                             <th scope="row"><abbr title="The first time this server's endpoint was seen by the Server Browser.">First

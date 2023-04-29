@@ -5,7 +5,7 @@ use app\BeatSaber\MasterServer;
 use app\BeatSaber\ModPlatformId;
 use app\BeatSaber\MultiplayerLobbyState;
 use app\Common\CVersion;
-use app\Common\IPEndPoint;
+use app\Common\RemoteEndPoint;
 use app\Controllers\API\V1\AnnounceController;
 use app\Models\Enums\LobbyBanType;
 use app\Models\HostedGame;
@@ -126,7 +126,7 @@ class AnnounceControllerTest extends TestCase
         $this->assertEquals(new CVersion("6.9.42"), $announce->gameVersion);
         $this->assertSame(HostedGame::SERVER_TYPE_NORMAL_DEDICATED, $announce->serverType);
         $this->assertSame("abc1234", $announce->hostSecret);
-        $this->assertEquals(new IPEndPoint("1.2.3.4", 2312), $announce->endpoint);
+        $this->assertEquals(new RemoteEndPoint("1.2.3.4", 2312), $announce->endpoint);
         $this->assertSame("unit_test_testFullAnnounceMgr", $announce->managerId);
 
         self::$fullAnnounceTestResult = $announce;

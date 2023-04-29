@@ -5,7 +5,7 @@ use app\BeatSaber\ModPlatformId;
 use app\BeatSaber\MultiplayerLobbyState;
 use app\Common\CString;
 use app\Common\CVersion;
-use app\Common\IPEndPoint;
+use app\Common\RemoteEndPoint;
 use app\Controllers\API\V1\BrowseController;
 use app\HTTP\Request;
 use app\Models\HostedGame;
@@ -49,11 +49,11 @@ class BrowseControllerTest extends TestCase
 
         self::createSampleGame(0, "BadGameVersion", masterServer: "some.master.server", customGameVersion: new CVersion("1.2.3"));
 
-        self::createSampleGame(null, "VanillaQuickPlay", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 3, false, hostSecret: "abc123", serverType: HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY, endpoint: new IPEndPoint("1.2.3.4", "1234"));
+        self::createSampleGame(null, "VanillaQuickPlay", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 3, false, hostSecret: "abc123", serverType: HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY, endpoint: new RemoteEndPoint("1.2.3.4", "1234"));
 
-        self::createSampleGame(null, "DirectConnect", true, null, ModPlatformId::STEAM, 0, customGameVersion: new CVersion("1.23.0"), serverType: HostedGame::SERVER_TYPE_BEATDEDI_CUSTOM, endpoint: new IPEndPoint("1.2.3.4", "1234"));
+        self::createSampleGame(null, "DirectConnect", true, null, ModPlatformId::STEAM, 0, customGameVersion: new CVersion("1.23.0"), serverType: HostedGame::SERVER_TYPE_BEATDEDI_CUSTOM, endpoint: new RemoteEndPoint("1.2.3.4", "1234"));
 
-        self::createSampleGame(null, "129GraphGame", true, null, ModPlatformId::STEAM, 0, customGameVersion: new CVersion("1.29.0"), serverType: HostedGame::SERVER_TYPE_BEATTOGETHER_DEDICATED, endpoint: new IPEndPoint("1.2.3.4", "1234"), graphUrl: "http://beat.some.url:1234");
+        self::createSampleGame(null, "129GraphGame", true, null, ModPlatformId::STEAM, 0, customGameVersion: new CVersion("1.29.0"), serverType: HostedGame::SERVER_TYPE_BEATTOGETHER_DEDICATED, endpoint: new RemoteEndPoint("1.2.3.4", "1234"), graphUrl: "http://beat.some.url:1234");
     }
 
     public static function tearDownAfterClass(): void
@@ -76,7 +76,7 @@ class BrowseControllerTest extends TestCase
                                              ?string   $masterServer = null, ?string $platform = null,
                                              ?int      $playerCount = null, bool $inProgress = false,
                                              ?CVersion $customGameVersion = null, ?string $hostSecret = null,
-                                             ?string   $serverType = null, ?IPEndPoint $endpoint = null,
+                                             ?string   $serverType = null, ?RemoteEndPoint $endpoint = null,
                                              ?string   $ownerId = null, ?string $graphUrl = null): HostedGame
     {
         $hg = new HostedGame();

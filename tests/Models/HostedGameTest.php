@@ -3,7 +3,7 @@
 use app\BeatSaber\MasterServer;
 use app\BeatSaber\MultiplayerLobbyState;
 use app\Common\CVersion;
-use app\Common\IPEndPoint;
+use app\Common\RemoteEndPoint;
 use app\Models\HostedGame;
 use PHPUnit\Framework\TestCase;
 
@@ -32,7 +32,7 @@ class HostedGameTest extends TestCase
         $this->assertFalse($game->getIsDirectConnect(),
             "Games without endpoint should not be recognized as direct connect");
 
-        $game->endpoint = new IPEndPoint("host.com", 1234);
+        $game->endpoint = new RemoteEndPoint("host.com", 1234);
         $this->assertTrue($game->getIsDirectConnect(),
             "Games with endpoint, but no master server, should be recognized as direct connect");
 
@@ -78,7 +78,7 @@ class HostedGameTest extends TestCase
 
         $game = new HostedGame();
         $game->masterServerHost = null;
-        $game->endpoint = new IPEndPoint("host.com", 1234);
+        $game->endpoint = new RemoteEndPoint("host.com", 1234);
         $this->assertTrue($game->getIsDirectConnect());
         $this->assertFalse($game->getIsOfficial(),
             "Games without master server, with endpoint, are direct connect and should not be marked official");
