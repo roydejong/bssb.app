@@ -2,7 +2,6 @@
 
 namespace app\Controllers;
 
-use app\Common\RemoteEndPoint;
 use app\External\GeoIp;
 use app\Frontend\ResponseCache;
 use app\Frontend\View;
@@ -75,6 +74,9 @@ class DedicatedServersController
             return new RedirectResponse($baseUrl);
         }
 
+        /**
+         * @var $dedicatedServers HostedGame[]
+         */
         $dedicatedServers = $paginator
             ->getPaginatedQuery()
             ->queryAllModels();
@@ -86,23 +88,21 @@ class DedicatedServersController
         $geoData = [];
 
         foreach ($dedicatedServers as $dedicatedServer) {
-            $endpoint = (string)$dedicatedServer->endpoint;
-
-            if (isset($geoData[$endpoint]))
+            if (!$dedicatedServer->endpoint)
                 continue;
 
-            $endpointParsed = RemoteEndPoint::tryParse($endpoint);
+            $endpointText = (string)$dedicatedServer->endpoint;
 
-            if (!$endpointParsed)
+            if (isset($geoData[$endpointText]))
                 continue;
 
-            if ($endpointParsed->getHostIsDnsName())
-                if (!$endpointParsed->tryResolve())
+            if ($dedicatedServer->endpoint->getHostIsDnsName())
+                if (!$dedicatedServer->endpoint->tryResolve())
                     continue;
 
-            $geoData[$endpoint] = [
-                'countryCode' => $geoIp->getCountryCode($endpointParsed->host),
-                'text' => $geoIp->describeLocation($endpointParsed->host)
+            $geoData[$endpointText] = [
+                'countryCode' => $geoIp->getCountryCode($dedicatedServer->endpoint->host),
+                'text' => $geoIp->describeLocation($dedicatedServer->endpoint->host)
             ];
         }
 

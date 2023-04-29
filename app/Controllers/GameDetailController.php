@@ -2,7 +2,6 @@
 
 namespace app\Controllers;
 
-use app\Common\RemoteEndPoint;
 use app\External\GeoIp;
 use app\Frontend\ResponseCache;
 use app\Frontend\View;
@@ -54,21 +53,20 @@ class GameDetailController
         // -------------------------------------------------------------------------------------------------------------
         // GeoIP info
 
-        $geoIp = new GeoIp();
+        $endpointResolved = null;
 
+        $geoIp = new GeoIp();
         $geoCountry = null;
         $geoText = null;
 
         if ($game->endpoint) {
-            $endpointParsed = RemoteEndPoint::tryParse($game->endpoint);
+            $endpointResolved = clone $game->endpoint;
 
-            if ($endpointParsed) {
-                if ($endpointParsed->getHostIsDnsName())
-                    $endpointParsed->tryResolve();
+            if ($endpointResolved->getHostIsDnsName())
+                $endpointResolved->tryResolve();
 
-                $geoCountry = $geoIp->getCountryCode($endpointParsed->host);
-                $geoText = $geoIp->describeLocation($endpointParsed->host);
-            }
+            $geoCountry = $geoIp->getCountryCode($endpointResolved->host);
+            $geoText = $geoIp->describeLocation($endpointResolved->host);
         }
 
         // -------------------------------------------------------------------------------------------------------------
