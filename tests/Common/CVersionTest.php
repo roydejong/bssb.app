@@ -88,4 +88,10 @@ class CVersionTest extends TestCase
         $this->assertSame("1.2.3+some-special-indicator",
             (new CVersion("1.2.3+some-special-indicator"))->toString());
     }
+
+    public function testIgnoresBeatSaberVersionSuffix()
+    {
+        $this->assertSame("1.29.1",
+            (new CVersion("1.29.1_4575554838"))->toString());
+    }
 }
