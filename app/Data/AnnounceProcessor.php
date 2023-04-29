@@ -222,6 +222,11 @@ final class AnnounceProcessor
 
         $this->setGameName($game, $gameName);
 
+        // Resolve GameLift endpoint hostnames -- they're long and useless, and probably temporary anyway
+        if ($game->getIsGameLiftServer() && $game->endpoint?->getHostIsDnsName()) {
+            $game->endpoint->tryResolve();
+        }
+
         // With all data set, check validations
         if (!$this->validateMasterServer($game->masterServerHost))
             throw new AnnounceException("Announce rejected: master server is blacklisted");

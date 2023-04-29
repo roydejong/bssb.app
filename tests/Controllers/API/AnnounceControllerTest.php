@@ -887,12 +887,14 @@ class AnnounceControllerTest extends TestCase
             'OwnerId' => 'arn:aws:gamelift:us-west-2::gamesession/fleet-74bf89ba-3702-4b24-907c-9f29969d86a6/us-east-1/9473d9cc-5dfe-47d7-874f-c60daeca7570',
             'HostSecret' => 'arn:aws:gamelift:us-west-2::gamesession/fleet-74bf89ba-3702-4b24-907c-9f29969d86a6/us-east-1/9473d9cc-5dfe-47d7-874f-c60daeca7570',
             'MasterServerHost' => null,
-            'Endpoint' => "54.208.127.212:8116",
+            // actual endpoint is e.g. 7c1t32rfflrb3w6jf9iz3hjhn2pu45oeand92ux4jdwzdgz8m279plr09bsouww.s6hjwbrdwxun4vk2mm9j0fhpike8ci2g.us-west-2.amazongamelift.com:8118
+            // ...but we want to test resolution and those hostnames will probably disappear
+            'Endpoint' => "google.com:8118",
             'ServerType' => "vanilla_quickplay"
         ]);
         $request->method = "POST";
         $request->path = "/api/v1/announce";
-        $request->headers["user-agent"] = "ServerBrowser/1.0.0 (BeatSaber/1.22.1) (steam)";
+        $request->headers["user-agent"] = "ServerBrowser/1.2.0 (BeatSaber/1.29.1) (steam)";
 
         $response = (new AnnounceController())->announce($request);
         $json = json_decode($response->body, true);
@@ -905,6 +907,10 @@ class AnnounceControllerTest extends TestCase
             $this->assertSame("us-east-1", $game->tryGetGameLiftRegion());
             $this->assertEmpty($game->serverCode);
             $this->assertTrue($game->getIsQuickplay());
+            $this->assertSame($game->endpoint->port, 8118,
+                "Port should be parsed successfully from endpoint string");
+            $this->assertTrue($game->endpoint->getHostIsIpAddress(),
+                "Hostname should be auto resolved from endpoint string for any GameLift hosts");
         } finally {
             @$game->delete();
         }
