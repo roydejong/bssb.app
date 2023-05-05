@@ -48,9 +48,9 @@
                             {% if info.isOfficial %}
                                 <span><code>{{ server.master_server_host }}</code></span>
                             {% elseif info.resolvedIp %}
-                                <span><code>{{ info.resolvedIp }}:{{ server.master_server_port }}</code></span>
+                                <span><code>{{ info.resolvedIp }}{% if server.master_server_port %}:{{ server.master_server_port }}{% endif %}</code></span>
                             {% else %}
-                                <span><code>{{ server.master_server_host }}:{{ server.master_server_port }}</code></span>
+                                <span><code>{{ server.master_server_host }}:{% if server.master_server_port %}:{{ server.master_server_port }}{% endif %}</code></span>
                             {% endif %}
                             <div class="tags">
                                 {% if info.getSupportsGraph() %}
