@@ -195,7 +195,8 @@ class MasterServerInfo extends Model
 
     public static function syncFromGame(HostedGame $game): ?MasterServerInfo
     {
-        if (!$game->masterServerHost || !$game->masterServerPort)
+        if (!$game->masterGraphUrl && (!$game->masterServerHost || !$game->masterServerPort))
+            // Not enough data
             return null;
 
         if ($game->masterGraphUrl) {
