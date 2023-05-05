@@ -8,7 +8,15 @@ $schedule = new Schedule();
 $task = $schedule->run(function () {
     require_once __DIR__ . "/../bootstrap.php";
 
-    foreach (MasterServerInfo::all() as $masterServer) {
+    $lastSeenCutoff = new DateTime('now');
+    $lastSeenCutoff->modify('- 1 month');
+
+    $masterServers = MasterServerInfo::query()
+        ->where('last_seen >= ?', $lastSeenCutoff)
+        ->orderBy('last_seen DESC, id DESC')
+        ->queryAllModels();
+
+    foreach ($masterServers as $masterServer) {
         /**
          * @var $masterServer MasterServerInfo
          */
