@@ -113,9 +113,9 @@ class ModClientInfo
 
     public function getSupportsDirectConnect(): bool
     {
-        // Server Browser PC added this feature properly in v1.1
+        // Server Browser PC added re-adds this feature in v1.4
         if ($this->getIsServerBrowserPc()) {
-            return $this->assemblyVersion->greaterThanOrEquals(new CVersion("1.1"));
+            return $this->assemblyVersion->greaterThanOrEquals(new CVersion("1.4"));
         }
         // Quest does not support this currently
         if ($this->getIsServerBrowserQuest()) {

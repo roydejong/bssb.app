@@ -536,7 +536,7 @@ class BrowseControllerTest extends TestCase
     public function testNewerBrowserIncludesDirectConnectServers()
     {
         $request = self::createBrowseRequest([]);
-        $request->headers["user-agent"] = "ServerBrowser/1.1.0 (BeatSaber/1.23.0) (steam)";
+        $request->headers["user-agent"] = "ServerBrowser/1.4.0 (BeatSaber/1.23.0) (steam)";
         $lobbies = self::executeBrowseRequestAndGetGames($request);
         $this->assertContainsGameWithName("DirectConnect", $lobbies,
             "ServerBrowser SHOULD return Direct Connect games on mod >= 1.1.0");

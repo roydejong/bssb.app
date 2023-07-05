@@ -107,8 +107,15 @@ class BrowseController
 
         if (!$mci->getSupportsLegacyMasterServers()) {
             // Newer client: must use a graph API, legacy master servers won't work
-            $baseQuery->andWhere('master_graph_url IS NOT NULL');
-            // TODO ..OR direct connects (if we can still make that work...)
+            if ($mci->getSupportsDirectConnect()) {
+                // ..OR direct connect!
+                $baseQuery->andWhere('master_graph_url IS NOT NULL OR (master_server_host IS NULL AND endpoint IS NOT NULL)');
+            } else {
+                $baseQuery->andWhere('master_graph_url IS NOT NULL');
+            }
+        } else if (!$mci->getSupportsDirectConnect()) {
+            // Hide direct connect servers for older mod clients
+            $baseQuery->andWhere('master_server_host IS NOT NULL');
         }
 
         // Hide Quick Play games if unsupported by mod version or requested by filter
@@ -133,12 +140,6 @@ class BrowseController
         if ($mci->beatSaberVersion && $mci->beatSaberVersion->greaterThanOrEquals(new CVersion("1.19.1"))) {
             $baseQuery->andWhere('server_type != ? OR host_secret != owner_id',
                 HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY);
-        }
-
-        // Hide direct connect servers for <1.1.0 mod clients
-        $supportsDirectConnect = $mci->getSupportsDirectConnect();
-        if (!$supportsDirectConnect) {
-            $baseQuery->andWhere('master_server_host IS NOT NULL');
         }
 
         // -------------------------------------------------------------------------------------------------------------
