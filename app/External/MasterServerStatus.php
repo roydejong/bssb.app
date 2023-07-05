@@ -82,7 +82,7 @@ final class MasterServerStatus
     // -----------------------------------------------------------------------------------------------------------------
     // Fetch
 
-    const LiveGameServiceEnv = "ProductionB";
+    const LiveGameServiceEnv = "ProductionA";
 
     public static function tryFetch(string $statusUrl): ?MasterServerStatus
     {
