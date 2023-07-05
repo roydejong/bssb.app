@@ -11,6 +11,7 @@ use app\BeatSaber\ModPlatformId;
 use app\BeatSaber\MultiplayerLobbyState;
 use app\Common\CVersion;
 use app\Common\RemoteEndPoint;
+use app\Models\Enums\EncryptionMode;
 use app\Models\HostedGame;
 use app\Models\HostedGamePlayer;
 use app\Models\LevelHistory;
@@ -162,6 +163,7 @@ final class AnnounceProcessor
         $modPlatform = ModPlatformId::normalize($this->getString('Platform'));
         $endpoint = $this->getEndpoint('Endpoint');
         $gameName = $this->getString('GameName', "Untitled Beat Game");
+        $encryptionMode = $this->getString('EncryptionMode');
 
         if (empty($ownerId))
             throw new AnnounceException("Announce must always include OwnerId and ServerCode");
@@ -226,6 +228,8 @@ final class AnnounceProcessor
         if ($game->getIsGameLiftServer() && $game->endpoint?->getHostIsDnsName()) {
             $game->endpoint->tryResolve();
         }
+
+        $this->setEncryptionMode($game, $encryptionMode);
 
         // With all data set, check validations
         if (!$this->validateMasterServer($game->masterServerHost))
@@ -588,6 +592,47 @@ final class AnnounceProcessor
             // Custom - lobby has no difficulty, we just derive it from the level difficulty
             if ($difficulty !== null && $difficulty !== LevelDifficulty::All)
                 $game->difficulty = $difficulty;
+        }
+    }
+
+    private function setEncryptionMode(HostedGame &$game, ?string $encryptionMode): void
+    {
+        $game->encryptionMode = null;
+
+        if ($encryptionMode = EncryptionMode::tryFrom($encryptionMode)) {
+            $game->encryptionMode = $encryptionMode;
+            return;
+        }
+
+        // Automatically try to determine encryption mode if possible
+
+        if ($game->getIsDirectConnect()) {
+            // Direct connection: typically no encryption used
+            $game->encryptionMode = EncryptionMode::None;
+            return;
+        }
+
+        if ($game->masterGraphUrl) {
+            // Graph API connection: typically uses direct encryption
+            if ($game->gameVersion->greaterThanOrEquals(new CVersion("1.31"))) {
+                if ($game->getIsOfficial()) {
+                    // Official on v1.31+: always uses DTLS
+                    $game->encryptionMode = EncryptionMode::EnetDtls;
+                } else {
+                    // Unofficial on v1.31+: most bypass DTLS
+                    $game->encryptionMode = EncryptionMode::None;
+                }
+            } else {
+                // <v1.31: all use direct handshake with dedi
+                $game->encryptionMode = EncryptionMode::DirectHandshake;
+            }
+            return;
+        }
+
+        if ($game->masterServerHost && $game->masterServerPort) {
+            // Old master server
+            $game->encryptionMode = EncryptionMode::MasterHandshake;
+            return;
         }
     }
 

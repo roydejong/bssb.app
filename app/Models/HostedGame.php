@@ -10,6 +10,7 @@ use app\BeatSaber\MultiplayerLobbyState;
 use app\BSSB;
 use app\Common\CVersion;
 use app\Common\RemoteEndPoint;
+use app\Models\Enums\EncryptionMode;
 use app\Models\Joins\LevelHistoryWithLevelRecord;
 use app\Models\Traits\HasBeatmapCharacteristic;
 use app\Utils\PirateDetect;
@@ -192,6 +193,11 @@ class HostedGame extends Model implements \JsonSerializable
      * The User ID of the current party leader, the player in control of the server.
      */
     public ?string $managerId;
+    /**
+     * Flags what type of encryption this connection uses, if any.
+     * Set to NULL if unknown or undetermined for this server.
+     */
+    public ?EncryptionMode $encryptionMode;
 
     // -----------------------------------------------------------------------------------------------------------------
     // Relationships

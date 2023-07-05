@@ -141,6 +141,18 @@
                                 {% endif %}
                             </td>
                         </tr>
+                        {% if game.encryptionMode %}
+                            <tr>
+                                <th scope="row">
+                                    <abbr title="Some servers use an encrypted connection to the game server (TLS). Note third-party servers generally do not offer a secure implementation.">
+                                        Encryption
+                                    </abbr>
+                                </th>
+                                <td>
+                                    {{ game.encryptionMode.describe() }}
+                                </td>
+                            </tr>
+                        {% endif %}
                         </tbody>
                     </table>
                 </div>

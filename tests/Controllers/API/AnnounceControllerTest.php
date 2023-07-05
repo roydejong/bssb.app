@@ -7,6 +7,7 @@ use app\BeatSaber\MultiplayerLobbyState;
 use app\Common\CVersion;
 use app\Common\RemoteEndPoint;
 use app\Controllers\API\V1\AnnounceController;
+use app\Models\Enums\EncryptionMode;
 use app\Models\Enums\LobbyBanType;
 use app\Models\HostedGame;
 use app\Models\LevelRecord;
@@ -76,7 +77,8 @@ class AnnounceControllerTest extends TestCase
             'ServerType' => HostedGame::SERVER_TYPE_NORMAL_DEDICATED,
             'HostSecret' => 'abc1234',
             'Endpoint' => '1.2.3.4:2312',
-            'ManagerId' => 'unit_test_testFullAnnounceMgr'
+            'ManagerId' => 'unit_test_testFullAnnounceMgr',
+            'EncryptionMode' => 'enet_dtls'
         ]);
         $request->method = "POST";
         $request->path = "/api/v1/announce";
@@ -128,6 +130,7 @@ class AnnounceControllerTest extends TestCase
         $this->assertSame("abc1234", $announce->hostSecret);
         $this->assertEquals(new RemoteEndPoint("1.2.3.4", 2312), $announce->endpoint);
         $this->assertSame("unit_test_testFullAnnounceMgr", $announce->managerId);
+        $this->assertSame(EncryptionMode::EnetDtls, $announce->encryptionMode);
 
         self::$fullAnnounceTestResult = $announce;
 
@@ -200,10 +203,11 @@ class AnnounceControllerTest extends TestCase
         $request = new MockJsonRequest([
             'ServerCode' => '12345',
             'OwnerId' => 'unit_test_testMinimalAnnounce',
-            'HostSecret' => null
+            'HostSecret' => "required_for_newer_versions"
         ]);
         $request->method = "POST";
         $request->path = "/api/v1/announce";
+        $request->headers["user-agent"] = "ServerBrowser/1.2.3 (BeatSaber/4.5.6) (steam)";
 
         self::$minimalAnnounceRequest = $request;
 
@@ -235,8 +239,9 @@ class AnnounceControllerTest extends TestCase
         $this->assertNull($announce->endedAt);
         $this->assertEmpty($announce->fetchPlayers());
         $this->assertNull($announce->mpExVersion);
-        $this->assertNull($announce->hostSecret);
+        $this->assertSame("required_for_newer_versions", $announce->hostSecret);
         $this->assertNull($announce->endpoint);
+        $this->assertNull($announce->encryptionMode);
     }
 
     /**
@@ -284,6 +289,8 @@ class AnnounceControllerTest extends TestCase
         $this->assertSame(3, $game->difficulty);
         $this->assertSame(3, $game->levelDifficulty);
         $this->assertSame("Standard", $game->characteristic);
+        $this->assertSame(EncryptionMode::DirectHandshake, $game->encryptionMode,
+            "Direct handshake mode should be automatically determined (graph client on older game version)");
     }
 
     /**
@@ -297,7 +304,7 @@ class AnnounceControllerTest extends TestCase
         $request = new MockJsonRequest([
             'ServerCode' => '12345',
             'OwnerId' => 'unit_test_testMinimalAnnounce',
-            'HostSecret' => null,
+            'HostSecret' => "required_for_newer_versions",
             'GameName' => 'setting a name'
         ]);
         $request->method = "POST";
