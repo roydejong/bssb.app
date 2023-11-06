@@ -9,6 +9,7 @@ use app\HTTP\Request;
 use app\HTTP\Response;
 use app\Models\HostedGame;
 use app\Models\MasterServerInfo;
+use app\Utils\LocalOrReservedHostDetect;
 use DateTime;
 
 class MasterServersController
@@ -74,6 +75,9 @@ class MasterServersController
         $masterServerInfoIndexed = [];
 
         foreach ($masterServerInfo as $info) {
+            if (LocalOrReservedHostDetect::isLocalOrReserved($info->host))
+                continue;
+
             $key = "{$info->host}:{$info->port}";
             $masterServerInfoIndexed[$key] = $info;
         }
