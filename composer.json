@@ -38,6 +38,9 @@
     "preferred-install": {
       "softwarepunt/*": "source",
       "*": "dist"
+    },
+    "allow-plugins": {
+      "php-http/discovery": false
     }
   }
 }
