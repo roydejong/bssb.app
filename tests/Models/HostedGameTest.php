@@ -96,7 +96,7 @@ class HostedGameTest extends TestCase
         $this->assertTrue($game->getIsOfficial(), "Games on any *.mp server should be official");
     }
 
-    public function testGetIsUninteresting()
+    public function testGetIsLocalOrReservedHost()
     {
         global $bssbConfig;
 
@@ -106,12 +106,34 @@ class HostedGameTest extends TestCase
         }
 
         $game = new HostedGame();
+
+        // Positives
         $game->masterServerHost = "localhost";
-        $this->assertTrue($game->getIsUninteresting(), "Some specific host names are uninteresting");
+        $this->assertTrue($game->getIsLocalOrReservedHost(),
+            "localhost should be detected as private / reserved (localhost)");
+        $game->masterServerHost = "some-lan-entry.local";
+        $this->assertTrue($game->getIsLocalOrReservedHost(),
+            "*.local should be detected as private / reserved (reserved LAN TLD)");
         $game->masterServerHost = "127.0.0.1";
-        $this->assertTrue($game->getIsUninteresting(), "Some specific host names are uninteresting");
+        $this->assertTrue($game->getIsLocalOrReservedHost(),
+            "127.0.0.1 should be detected as private / reserved (IPv4 loopback)");
+        $game->masterServerHost = "::1";
+        $this->assertTrue($game->getIsLocalOrReservedHost(),
+            "::1 should be detected as private / reserved (IPv6 loopback)");
+        $game->masterServerHost = "10.9.0.2";
+        $this->assertTrue($game->getIsLocalOrReservedHost(),
+            "10.9.0.2 should be detected as private / reserved (IPv4 private)");
+        $game->masterServerHost = "fe80::ffff:ffff:ffff:ffff";
+        $this->assertTrue($game->getIsLocalOrReservedHost(),
+            "fe80::ffff:ffff:ffff:ffff should be detected as private / reserved (IPv6 link-local)");
+
+        // Negatives
         $game->masterServerHost = "any.other.host.really";
-        $this->assertFalse($game->getIsUninteresting());
+        $this->assertFalse($game->getIsLocalOrReservedHost(),
+            "Non-blocklisted hostnames should NOT be detected as private / reserved");
+        $game->masterServerHost = "3.163.189.118";
+        $this->assertFalse($game->getIsLocalOrReservedHost(),
+            "Regular WAN addresses NOT be detected as private / reserved");
     }
 
     public function testIsPirate()

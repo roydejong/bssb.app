@@ -13,6 +13,7 @@ use app\Common\RemoteEndPoint;
 use app\Models\Enums\EncryptionMode;
 use app\Models\Joins\LevelHistoryWithLevelRecord;
 use app\Models\Traits\HasBeatmapCharacteristic;
+use app\Utils\LocalOrReservedHostDetect;
 use app\Utils\PirateDetect;
 use DateTime;
 use Hashids\Hashids;
@@ -564,28 +565,19 @@ class HostedGame extends Model implements \JsonSerializable
         return $this->getIsBeatDedi();
     }
 
-    public function getIsUninteresting(): bool
+    public function getIsLocalOrReservedHost(): bool
     {
         global $bssbConfig;
-
-        if ($bssbConfig['allow_boring'] ?? false) {
+        if ($bssbConfig['allow_boring'] ?? false)
             return false;
-        }
 
-        $badHostPrefixes = [
-            "localhost",
-            "192.",
-            "127.",
-        ];
+        if (LocalOrReservedHostDetect::isLocalOrReserved($this->masterServerHost ?? ""))
+            // Local / private master server host
+            return true;
 
-        foreach ($badHostPrefixes as $badPrefix) {
-            if ($this->masterServerHost && str_starts_with($this->masterServerHost, $badPrefix)) {
-                return true;
-            }
-            if ($this->endpoint && str_starts_with($this->endpoint, $badPrefix)) {
-                return true;
-            }
-        }
+        if (LocalOrReservedHostDetect::isLocalOrReserved($this->endpoint?->host ?? ""))
+            // Local / private dedicated server host
+            return true;
 
         return false;
     }

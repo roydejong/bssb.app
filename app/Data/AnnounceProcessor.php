@@ -66,6 +66,8 @@ final class AnnounceProcessor
 
         if ($game->getIsGameLiftServer() && $game->getIsQuickplay()) {
             $this->userMessage = "Other players can't join Official Quick Play lobbies right now, sorry";
+        } else if ($game->getIsLocalOrReservedHost()) {
+            $this->userMessage = "You can't announce lobbies for local / LAN / reserved hosts, sorry";
         }
 
         return $game;
@@ -253,7 +255,7 @@ final class AnnounceProcessor
         $game->lastUpdate = $now;
         $game->isStale = false;
 
-        if ($game->getIsUninteresting())
+        if ($game->getIsLocalOrReservedHost())
             $game->endedAt = $now; // force end; we don't want to show this game
         else
             $game->endedAt = null;
