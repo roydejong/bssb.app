@@ -1,6 +1,5 @@
 <?php
 
-use app\Controllers\DedicatedServersController;
 use app\Controllers\HomeController;
 use app\Controllers\MasterServersController;
 use app\Controllers\StatsController;
@@ -27,10 +26,6 @@ $task = $schedule->run(function () {
     // Master Server list
     $masterServersController = new MasterServersController();
     $masterServersController->getServerList(new Request());
-
-    // Dedicated Server list
-    $dedicatedServersController = new DedicatedServersController();
-    $dedicatedServersController->getServerList(new Request());
 });
 
 $task

@@ -60,7 +60,6 @@ $router->register('/player/$userId/$profileSection', PlayerProfileController::cl
 $router->register('/befriend', BefriendController::class, 'getBefriend');
 $router->register('/privacy', PrivacyController::class, 'getPrivacy');
 $router->register('/master-servers', MasterServersController::class, 'getServerList');
-$router->register('/dedicated-servers', DedicatedServersController::class, 'getServerList');
 $router->register('/results/$guid', ResultsController::class, 'getResultsDetail');
 
 // Auth + user
