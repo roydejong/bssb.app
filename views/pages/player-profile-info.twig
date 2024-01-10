@@ -12,7 +12,7 @@
                 <table class="card-table -fully-rounded table table-bordered">
                     <tbody>
                     <tr>
-                        <th scope="row">User type</th>
+                        <th scope="row">Player Type</th>
                         <td>{{ player.describeType() }}</td>
                     </tr>
                     {% if player.platformType %}
@@ -32,11 +32,14 @@
                         </tr>
                     {% endif %}
                     <tr>
-                        <th scope="row">First seen</th>
+                        <td colspan="2"><hr /></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">First Seen</th>
                         <td>{{ player.firstSeen.format("F Y") }}</td>
                     </tr>
                     <tr>
-                        <th scope="row">Last seen</th>
+                        <th scope="row">Last Seen</th>
                         {% if activeNow %}
                             <td>
                                 <div class="active-lamp -on"></div>
@@ -47,25 +50,40 @@
                         {% endif %}
                     </tr>
                     <tr>
-                        <th scope="row">Lobbies hosted</th>
-                        <td>{{ stats.hosts }}</td>
+                        <th scope="row">Lobbies Hosted</th>
+                        <td>{{ stats.hosts|number_format(0, '', ',') }}</td>
                     </tr>
                     {% if not isDedicatedServer %}
                         <tr>
-                            <th scope="row">Lobbies joined</th>
-                            <td>{{ stats.joins }}</td>
+                            <th scope="row">Lobbies Joined</th>
+                            <td>{{ stats.joins|number_format(0, '', ',') }}</td>
                         </tr>
                         <tr>
-                            <th scope="row">Levels played</th>
-                            <td>{{ stats.plays }}</td>
+                            <td colspan="2"><hr /></td>
                         </tr>
                         <tr>
-                            <th scope="row">Total score</th>
+                            <th scope="row">Levels Played</th>
+                            <td>{{ stats.plays|number_format(0, '', ',') }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Total Score</th>
                             <td>{{ stats.totalScore|number_format(0, '', ',') }}</td>
                         </tr>
                         <tr>
-                            <th scope="row">Total good cuts</th>
-                            <td>{{ stats.goodCuts|number_format(0, '', ',') }} ({{ stats.hitAcc|number_format(2, '.', '') }}%)</td>
+                            <th scope="row">Good / Bad / Miss Cuts</th>
+                            <td class="-gbm">
+                                <span {% if stats.goodCuts > 0 %}class="g"{% endif %}>{{ stats.goodCuts|number_format(0, '', ',') }}</span> /
+                                <span {% if stats.badCuts > 0 %}class="b"{% endif %}>{{ stats.badCuts|number_format(0, '', ',') }}</span> /
+                                <span {% if stats.missCount > 0 %}class="m"{% endif %}>{{ stats.missCount|number_format(0, '', ',') }}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Hit Accuracy</th>
+                            <td>{{ stats.hitAcc|number_format(2, '.', '') }}%</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Max Combo</th>
+                            <td>{{ stats.maxCombo|number_format(0, '', ',') }}</td>
                         </tr>
                     {% endif %}
                     </tbody>

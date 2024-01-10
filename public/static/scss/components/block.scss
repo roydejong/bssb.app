@@ -127,6 +127,16 @@
         color: var(--col-saber-left);
         font-family: monospace;
       }
+
+      hr {
+        height: 1px;
+        border: 0;
+        background: rgba(255, 255, 255, 0.1);
+        width: 100%;
+        display: block;
+        margin: 1rem 0;
+        padding: 0;
+      }
     }
   }
 }

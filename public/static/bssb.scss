@@ -140,6 +140,26 @@ abbr {
 @import "scss/footer";
 
 // ---------------------------------------------------------------------------------------------------------------------
+// Common / shared typographic
+
+// Good-bad-miss indicator
+.-gbm {
+  color: #666;
+  span {
+    color: #888;
+  }
+  span.g {
+    color: #27ae60;
+  }
+  span.b {
+    color: #f39c12;
+  }
+  span.m {
+    color: #c0392b;
+  }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
 // Component imports
 
 @import "scss/components/alert";
