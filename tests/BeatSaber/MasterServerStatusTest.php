@@ -1,7 +1,5 @@
 <?php
 
-namespace tests;
-
 use app\BeatSaber\Enums\MultiplayerAvailabilityStatus;
 use app\Common\CVersion;
 use app\External\MasterServerStatus;
