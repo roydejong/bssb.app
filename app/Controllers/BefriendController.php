@@ -2,14 +2,10 @@
 
 namespace app\Controllers;
 
-use app\BeatSaber\Enums\PlayerLevelEndState;
 use app\Frontend\View;
 use app\HTTP\Request;
 use app\HTTP\Responses\RedirectResponse;
-use app\Models\HostedGame;
-use app\Models\HostedGamePlayer;
 use app\Models\Joins\PlayerRelationshipJoin;
-use app\Models\LevelHistoryPlayer;
 use app\Models\Player;
 use app\Models\PlayerFriend;
 use app\Session\Session;
@@ -131,49 +127,5 @@ class BefriendController
 
         $response = $view->asResponse($isSubmission ? 422 : 200);
         return $response;
-    }
-
-    private function queryPlayerStats(Player $player): array
-    {
-        $stats = [];
-
-        $stats['hostCount'] = HostedGame::query()
-                ->select('COUNT(id)')
-                ->where('owner_id = ? OR manager_id = ?', $player->userId, $player->userId)
-                ->querySingleValue() ?? 0;
-
-        $stats['joinCount'] = HostedGamePlayer::query()
-                ->select('COUNT(id)')
-                ->where('user_id = ? AND is_host = 0', $player->userId)
-                ->querySingleValue() ?? 0;
-
-        $stats['playCount'] = 0;
-        $stats['totalScore'] = 0;
-        $stats['goodCuts'] = 0;
-        $stats['badCuts'] = 0;
-        $stats['missCount'] = 0;
-
-        $sumStats = LevelHistoryPlayer::query()
-            ->select('COUNT(id) AS playCount, SUM(modified_score) AS totalScore, SUM(good_cuts) AS goodCuts, SUM(bad_cuts) AS badCuts, SUM(miss_count) AS missCount')
-            ->where('player_id = ?', $player->id)
-            ->andWhere('end_state != ?', PlayerLevelEndState::NotStarted->value)
-            ->limit(1)
-            ->querySingleRow();
-        foreach ($sumStats as $key => $value)
-            $stats[$key] = intval($value ?? 0);
-
-        $maxHitCount = $stats['goodCuts'] + $stats['badCuts'] + $stats['missCount'];
-        $stats['hitCountPercentage'] = $maxHitCount > 0 ? ($stats['goodCuts'] / $maxHitCount) : 0;
-
-        return $stats;
-    }
-
-    private function loadFriendsData(Player $player)
-    {
-        $friendships = PlayerFriend::query()
-            ->where('player_one_id = ? OR player_two_id = ?', $player->id, $player->id)
-            ->queryAllModels();
-
-        return $friendships;
     }
 }
