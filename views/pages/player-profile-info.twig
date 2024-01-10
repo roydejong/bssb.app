@@ -48,16 +48,16 @@
                     </tr>
                     <tr>
                         <th scope="row">Lobbies hosted</th>
-                        <td>{{ stats.hostCount }}</td>
+                        <td>{{ stats.hosts }}</td>
                     </tr>
                     {% if not isDedicatedServer %}
                         <tr>
                             <th scope="row">Lobbies joined</th>
-                            <td>{{ stats.joinCount }}</td>
+                            <td>{{ stats.joins }}</td>
                         </tr>
                         <tr>
                             <th scope="row">Levels played</th>
-                            <td>{{ stats.playCount }}</td>
+                            <td>{{ stats.plays }}</td>
                         </tr>
                         <tr>
                             <th scope="row">Total score</th>
@@ -65,7 +65,7 @@
                         </tr>
                         <tr>
                             <th scope="row">Total good cuts</th>
-                            <td>{{ stats.goodCuts|number_format(0, '', ',') }} ({{ (stats.hitCountPercentage * 100)|number_format(2, '.', '') }}%)</td>
+                            <td>{{ stats.goodCuts|number_format(0, '', ',') }} ({{ stats.hitAcc|number_format(2, '.', '') }}%)</td>
                         </tr>
                     {% endif %}
                     </tbody>

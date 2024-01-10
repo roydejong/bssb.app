@@ -12,6 +12,7 @@ use app\HTTP\Responses\NotFoundResponse;
 use app\Models\LevelHistory;
 use app\Models\LevelHistoryPlayer;
 use app\Models\Player;
+use app\Models\ProfileStats;
 
 class AnnounceResultsController
 {
@@ -150,6 +151,9 @@ class AnnounceResultsController
                     $player->placement = null; // did not start level, do not rank
                 }
                 $player->save();
+
+                // Update profile stats
+                ProfileStats::flagUpdateNeeded($player->id);
             }
 
             $levelHistory->playedPlayerCount = $playedPlayerCount;
