@@ -9,6 +9,9 @@ final class AddProfileStatsForKnownPlayers extends AbstractMigration
 {
     public function up(): void
     {
+        // Temp disable sql mode bullshit (ONLY_FULL_GROUP_BY)
+        $this->execute("SET SESSION sql_mode = '';");
+
         $knownPlayerIds = LevelHistoryPlayer::query()
             ->select('DISTINCT player_id')
             ->orderBy('id DESC')
