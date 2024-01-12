@@ -146,4 +146,36 @@ class LevelHistoryPlayer extends Model
 
         return self::tryParseBadge()?->getIconUrl();
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Save hook
+
+    public function save(): bool
+    {
+        $ok = parent::save();
+
+        if ($ok) {
+            if ($this->sniffTestCheating()) {
+                Player::query()
+                    ->update()
+                    ->set(['is_cheater' => true])
+                    ->where('id = ?', $this->playerId)
+                    ->execute();
+            }
+        }
+
+        return $ok;
+    }
+
+    public function sniffTestCheating(): bool
+    {
+        // A bit rough but good enough score check -- Good cuts x 115 score; 8x multiplier (ignoring modifiers)
+        $maxMultipliedPotential = $this->goodCuts * 115 * 8;
+        if ($this->multipliedScore >= $maxMultipliedPotential) {
+            return true;
+        }
+
+        // Passed the sniff test
+        return false;
+    }
 }
