@@ -76,6 +76,12 @@
                                       title="This player is announcing the lobby to the Server Browser">
                                                             📢 Announcer</span>
                             {% endif %}
+                            {% if player.isCheater %}
+                                <span class="badge bg-danger" data-toggle="tooltip"
+                                      data-placement="bottom"
+                                      title="This player has been seen cheating in multiplayer games">
+                                                            💩 Cheater</span>
+                            {% endif %}
                         {% else %}
                             <span>Disconnected</span>
                         {% endif %}

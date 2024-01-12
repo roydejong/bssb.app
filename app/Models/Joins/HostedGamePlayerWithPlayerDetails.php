@@ -11,6 +11,7 @@ class HostedGamePlayerWithPlayerDetails extends HostedGamePlayer
     public string $userName;
     public ?string $skinColorId;
     public ?string $eyesId;
+    public bool $isCheater;
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -20,7 +21,7 @@ class HostedGamePlayerWithPlayerDetails extends HostedGamePlayer
     public static function queryAllForHostedGame(int $hostedGameId): array
     {
         return HostedGamePlayerWithPlayerDetails::query()
-            ->select('hgp.*, p.*, pav.skin_color_id, pav.eyes_id, p.id AS id, hgp.user_name AS user_name')
+            ->select('hgp.*, p.*, pav.skin_color_id, pav.eyes_id, p.id AS id, hgp.user_name AS user_name, p.is_cheater')
             ->from('hosted_game_players hgp')
             ->where('hosted_game_id = ?', $hostedGameId)
             ->innerJoin('players p ON (p.user_id = hgp.user_id)')
