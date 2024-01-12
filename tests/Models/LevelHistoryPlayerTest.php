@@ -61,6 +61,9 @@ class LevelHistoryPlayerTest extends TestCase
 
     public function testSniffTestCheating()
     {
+        // Do not trigger on incomplete
+        $this->assertCheatNotDetected(0, 0, 0, 0, 0);
+
         // https://bssb.app/results/610b733c-921a-4f75-b042-c977a6478dd0 [final score cheat]
         $this->assertCheatDetected(173758256, 837, 13, 95, 136);
         // https://bssb.app/results/a5df9330-7558-4aee-9d86-140b2df79f2d [final score cheat]

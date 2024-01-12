@@ -169,11 +169,14 @@ class LevelHistoryPlayer extends Model
 
     public function sniffTestCheating(): bool
     {
+        if (!$this->multipliedScore || !$this->modifiedScore)
+            // Not enough data to sniff
+            return false;
+
         // A bit rough but good enough score check -- Good cuts x 115 score; 8x multiplier (ignoring modifiers)
         $maxMultipliedPotential = $this->goodCuts * 115 * 8;
-        if ($this->multipliedScore >= $maxMultipliedPotential) {
+        if ($this->multipliedScore > $maxMultipliedPotential)
             return true;
-        }
 
         // Passed the sniff test
         return false;
