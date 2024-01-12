@@ -34,6 +34,7 @@ class Player extends Model
     public bool $showSteam = true;
     public bool $showScoreSaber = true;
     public bool $showHistory = true;
+    public bool $isCheater = false;
 
     // -----------------------------------------------------------------------------------------------------------------
     // Create/update
@@ -259,6 +260,7 @@ class Player extends Model
         $view->set('skinColorId', $skinColorId);
         $view->set('eyesId', $eyesId);
         $view->set('isDedicatedServer', $this->getIsDedicatedServer());
+        $view->set('isCheater', $this->isCheater);
         return $view->render();
     }
 

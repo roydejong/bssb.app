@@ -100,3 +100,14 @@
     margin: 0 1rem;
   }
 }
+
+.face.-cheater {
+  background-color: transparent !important;
+  background-image: url('/static/stuff/dunce.png') !important;
+  background-size: contain !important;
+  box-shadow: none !important;
+
+  .eyes {
+    display: none !important;
+  }
+}

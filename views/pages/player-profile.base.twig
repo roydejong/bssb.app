@@ -45,6 +45,12 @@
                 </div>
             {% endif %}
 
+            {% if player.isCheater %}
+                <div class="alert">
+                    💩 This player has been seen cheating in multiplayer games. For shame!
+                </div>
+            {% endif %}
+
             <div class="page-tabs">
                 <a href="{{ profileBaseUrl }}" class="{% if profileTab == "info" %}-active{% endif %}">
                     <i class="mdi mdi-account"></i>

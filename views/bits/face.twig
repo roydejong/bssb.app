@@ -11,7 +11,7 @@
 {% endif %}
 
 {% if not isDedicatedServer %}
-    <div class="face -size-{{ size }} -skin-{{ skinColorId }}">
+    <div class="face -size-{{ size }} -skin-{{ skinColorId }} {% if isCheater %}-cheater{% endif %}">
         <div class="eyes -{{ eyesId }}"></div>
     </div>
 {% else %}
