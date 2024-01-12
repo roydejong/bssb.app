@@ -130,6 +130,11 @@ class ProfileStats extends Model
             $this->$key = intval($value ?? 0);
         }
 
+        // Overflows
+        if ($this->totalScore > 18446744073709551615) {
+            $this->totalScore = 18446744073709551615;
+        }
+
         // Unflag dirty
         $this->needsUpdate = false;
 
