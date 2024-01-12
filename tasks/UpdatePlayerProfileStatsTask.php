@@ -14,7 +14,12 @@ $task = $schedule->run(function () {
 
     foreach ($pendingStats as $profileStats) {
         if ($player = Player::fetch($profileStats->playerId)) {
-            $profileStats->recalculate($player);
+            try {
+                echo "Recalculating stats for player {$player->id}...\n";
+                $profileStats->recalculate($player);
+            } catch (Exception $ex) {
+                echo " >>> Error recalculating stats for player {$player->id}: {$ex->getMessage()}\n";
+            }
         }
         $runTime = microtime(true) - $startTime;
         if ($runTime >= 59) {
