@@ -153,7 +153,7 @@ class AnnounceResultsController
                 $player->save();
 
                 // Update profile stats
-                ProfileStats::flagUpdateNeeded($player->id);
+                ProfileStats::flagUpdateNeeded($player->playerId);
             }
 
             $levelHistory->playedPlayerCount = $playedPlayerCount;
