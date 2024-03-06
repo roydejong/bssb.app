@@ -14,6 +14,7 @@ use app\Controllers\API\V1\BrowseDetailController;
 use app\Controllers\API\V1\BrowseServerCodeController;
 use app\Controllers\API\V1\StatusController;
 use app\Controllers\API\V1\UnAnnounceController;
+use app\Controllers\API\V2\SteamAvatarController;
 use app\Controllers\API\V2\SyncFriendsController;
 use app\Controllers\API\V2\UnAnnounceControllerV2;
 use app\Controllers\BefriendController;
@@ -80,6 +81,7 @@ $router->register('/api/v1/status', StatusController::class, 'getStatus');
 // API routes (v2)
 $router->register('/api/v2/unannounce', UnAnnounceControllerV2::class, 'unAnnounce');
 $router->register('/api/v2/sync_friends', SyncFriendsController::class, 'syncFriends');
+$router->register('/api/v2/steam_avatar', SteamAvatarController::class, 'steamAvatar');
 
 // Admin
 $router->register('/admin', AdminDashController::class, 'getDash');
