@@ -91,6 +91,15 @@ class Player extends Model
         return $playerRecord;
     }
 
+    public static function tryFromPlatformUserId(string $modPlatformId, string $platformUserId): ?Player
+    {
+        $hashedUserId = MultiplayerUserId::hash($modPlatformId, $platformUserId);
+
+        return Player::query()
+            ->where('user_id = ?', $hashedUserId)
+            ->querySingleModel();
+    }
+
     public static function fromSteamId(string $steamId, ?string $steamUserName = null): Player
     {
         $hashedUserId = MultiplayerUserId::hash("Steam", $steamId);
