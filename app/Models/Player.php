@@ -35,6 +35,9 @@ class Player extends Model
     public bool $showScoreSaber = true;
     public bool $showHistory = true;
     public bool $isCheater = false;
+    public bool $platformAuthed = false;
+    public ?string $platformAvatarUrl = null;
+    public bool $platformOwnershipConfirmed = false;
 
     // -----------------------------------------------------------------------------------------------------------------
     // Create/update

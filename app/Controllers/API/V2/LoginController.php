@@ -49,22 +49,18 @@ class LoginController
 
         // Platform auth
         $authTicket = strval($json['AuthenticationToken'] ?? "");
-        $authResult = null;
+        $steamAuthResult = null;
 
-        if (!empty($authTicket))
-        {
-            if ($modPlatformId == ModPlatformId::STEAM)
-            {
-                $authResult = Steam::tryAuthenticateTicket($authTicket);
-
-                if ($authResult?->isValid())
-                {
+        if (!empty($authTicket)) {
+            if ($modPlatformId == ModPlatformId::STEAM) {
+                $steamAuthResult = Steam::tryAuthenticateTicket($authTicket);
+                if ($steamAuthResult?->isValid() && $steamAuthResult->steamid == $platformUserId) {
                     // Steam authentication success!
                     $hasAuthenticated = true;
+                } else {
+                    $errorMessage = "Steam authentication failed";
                 }
-            }
-            else
-            {
+            } else {
                 // TODO Oculus
                 // TODO Self-issued token
                 $errorMessage = "Unsupported platform for authentication";
@@ -87,21 +83,32 @@ class LoginController
             $player->save();
         }
 
-        if ($player && $player->id)
-        {
+        $avatarUrl = null;
+
+        if ($player && $player->id) {
             $playerValid = true;
 
-            // Bump last seen, update with any new data
-            if (empty($player->platformUserId))
-            {
+            // Update player with any new data
+            if (empty($player->platformUserId)) {
                 $player->platformType = $modPlatformId;
                 $player->platformUserId = $platformUserId;
             }
-            $player->lastSeen = new \DateTime('now');
+            if ($hasAuthenticated) {
+                $player->lastSeen = new \DateTime('now');
+                $player->platformAuthed = true;
+                if ($steamAuthResult) {
+                    if (!$player->platformOwnershipConfirmed) {
+                        $player->platformOwnershipConfirmed = ($steamAuthResult->ownersteamid === $steamAuthResult->steamid);
+                    }
+                    $steamPlayerSummary = Steam::GetPlayerSummary($platformUserId);
+                    if ($steamPlayerSummary) {
+                        $avatarUrl = $steamPlayerSummary->avatarfull;
+                        $player->platformAvatarUrl = $avatarUrl;
+                    }
+                }
+            }
             $player->save();
-        }
-        else
-        {
+        } else {
             $errorMessage = "Not authenticated; player not yet registered";
         }
 
@@ -112,7 +119,7 @@ class LoginController
             'success' => $playerValid,
             'authenticated' => $hasAuthenticated,
             'errorMessage' => $errorMessage,
-            'debug' => $authResult ? json_encode($authResult) : null
+            'avatarUrl' => $avatarUrl
         ]);
     }
 }
