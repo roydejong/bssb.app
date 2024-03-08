@@ -2,7 +2,9 @@
 
 namespace app\External;
 
+use app\BSSB;
 use app\External\Models\SteamAuthenticateUserTicketResponse;
+use app\External\Models\SteamPlayerSummary;
 
 class Steam
 {
@@ -17,23 +19,39 @@ class Steam
             "ticket" => $ticket
         ]);
 
-        // Example response:
-        // {
-        //   "response":{
-        //      "params":{
-        //         "result":"OK",
-        //         "steamid":"76561198002398493",
-        //         "ownersteamid":"76561198002398493",
-        //         "vacbanned":false,
-        //         "publisherbanned":false
-        //      }
-        //   }
-        //}
-
         if ($response === null || !isset($response["response"]["params"]))
             return null;
 
         return new SteamAuthenticateUserTicketResponse($response["response"]["params"]);
+    }
+
+    public static function GetPlayerSummary(string $steamUserId, bool $allowCached = true): ?SteamPlayerSummary
+    {
+        $redis = BSSB::getRedis();
+        $cacheKey = "steamPlayerSummary:$steamUserId";
+
+        $playerData = null;
+
+        if ($allowCached) {
+            $cachedResult = $redis->getString($cacheKey);
+            if ($cachedResult !== null) {
+                $playerData = json_decode($cachedResult, true);
+            }
+        }
+
+        if (!$playerData) {
+            $response = self::makeApiRequest("/ISteamUser/GetPlayerSummaries/v0002", [
+                "steamids" => $steamUserId
+            ]);
+
+            if ($response === null || !isset($response["response"]["players"][0]))
+                return null;
+
+            $playerData = $response["response"]["players"][0];
+            $redis->set($cacheKey, json_encode($playerData), 3600);
+        }
+
+        return new SteamPlayerSummary($playerData);
     }
 
     public static function makeApiRequest(string $path, array $params): ?array

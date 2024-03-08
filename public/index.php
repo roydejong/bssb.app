@@ -79,6 +79,7 @@ $router->register('/api/v1/browse/code/$serverCode', BrowseServerCodeController:
 $router->register('/api/v1/status', StatusController::class, 'getStatus');
 
 // API routes (v2)
+$router->register('/api/v2/browse', \app\Controllers\API\V2\BrowseController::class, 'browse');
 $router->register('/api/v2/login', \app\Controllers\API\V2\LoginController::class, 'login');
 $router->register('/api/v2/unannounce', UnAnnounceControllerV2::class, 'unAnnounce');
 $router->register('/api/v2/sync_friends', SyncFriendsController::class, 'syncFriends');
