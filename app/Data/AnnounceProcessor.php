@@ -95,7 +95,7 @@ final class AnnounceProcessor
     {
         $val = $this->get($key, $defaultValue);
 
-        if ($val === $defaultValue)
+        if ($val === null || $val === $defaultValue)
             return $val;
 
         if (!is_string($val))
@@ -103,7 +103,7 @@ final class AnnounceProcessor
 
         $val = trim($val);
 
-        if (empty($val))
+        if (trim($val) === "")
             return $defaultValue;
 
         return $val;
@@ -671,7 +671,10 @@ final class AnnounceProcessor
 
     private function validateServerCode(?string $serverCode, bool $isQuickPlay, bool $isDirectConnect): bool
     {
-        if (empty($serverCode) && ($isQuickPlay || $isDirectConnect))
+        // Valid server codes include "0", so we can't use empty() here
+        $serverCodeEmpty = $serverCode === null || trim($serverCode) === "";
+
+        if ($serverCodeEmpty && ($isQuickPlay || $isDirectConnect))
             // Official servers have with empty server codes for Quick Play
             // BeatTogether Quick Play servers do have a server code anyway which is fine
             // Direct connect servers also do not have a server code (since there is no master server)
@@ -679,7 +682,7 @@ final class AnnounceProcessor
 
         // Normally speaking, we want a 5-character alphanumeric server code
         // Exception: BeatUpServer may use < 5 length server codes
-        return !empty($serverCode) && strlen($serverCode) <= 5 && ctype_alnum($serverCode);
+        return !$serverCodeEmpty && strlen($serverCode) <= 5 && ctype_alnum($serverCode);
     }
 
     private function validateMasterServer(?string $masterServerHost): bool

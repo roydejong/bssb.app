@@ -955,4 +955,24 @@ class AnnounceControllerTest extends TestCase
             @$lobbyBan->delete();
         }
     }
+
+    /**
+     * @depends testMinimalAnnounce
+     */
+    public function testServerCodeZero()
+    {
+        $request = clone self::$minimalAnnounceRequest;
+        $request->json['ServerCode'] = "0";
+
+        $response = (new AnnounceController())->announce($request);
+        $json = json_decode($response->body, true);
+
+        $this->assertTrue($json["success"],
+            "Announce should return success state");
+
+        $game = HostedGame::fetch(HostedGame::hash2id($json['key']));
+
+        $this->assertSame("0", $game->serverCode,
+            "Server code should be set to 0");
+    }
 }
