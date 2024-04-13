@@ -14,6 +14,7 @@ use app\Controllers\API\V1\BrowseDetailController;
 use app\Controllers\API\V1\BrowseServerCodeController;
 use app\Controllers\API\V1\StatusController;
 use app\Controllers\API\V1\UnAnnounceController;
+use app\Controllers\API\V2\ConfigController;
 use app\Controllers\API\V2\SteamAvatarController;
 use app\Controllers\API\V2\SyncFriendsController;
 use app\Controllers\API\V2\UnAnnounceControllerV2;
@@ -69,7 +70,7 @@ $router->register('/login', LoginController::class, 'getLogin');
 $router->register('/login/return', LoginController::class, 'getLoginReturn');
 $router->register('/settings', UserSettingsController::class, 'getUserSettings');
 
-// API routes
+// API routes (v1)
 $router->register('/api/v1/announce', AnnounceController::class, 'announce');
 $router->register('/api/v1/announce_results', AnnounceResultsController::class, 'announceResults');
 $router->register('/api/v1/unannounce', UnAnnounceController::class, 'unAnnounce');
@@ -80,10 +81,10 @@ $router->register('/api/v1/status', StatusController::class, 'getStatus');
 
 // API routes (v2)
 $router->register('/api/v2/browse', \app\Controllers\API\V2\BrowseController::class, 'browse');
+$router->register('/api/v2/config', ConfigController::class, 'getConfig');
 $router->register('/api/v2/login', \app\Controllers\API\V2\LoginController::class, 'login');
-$router->register('/api/v2/unannounce', UnAnnounceControllerV2::class, 'unAnnounce');
 $router->register('/api/v2/sync_friends', SyncFriendsController::class, 'syncFriends');
-$router->register('/api/v2/steam_avatar', SteamAvatarController::class, 'steamAvatar');
+$router->register('/api/v2/unannounce', UnAnnounceControllerV2::class, 'unAnnounce');
 
 // Admin
 $router->register('/admin', AdminDashController::class, 'getDash');
