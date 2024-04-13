@@ -17,6 +17,10 @@ final class MasterServerStatus
     public ?\DateTime $maintenanceStartTime = null;
     public ?\DateTime $maintenanceEndTime = null;
     public bool $useGamelift = false;
+    public ?string $name = null;
+    public ?string $description = null;
+    public ?string $imageUrl = null;
+    public ?int $maxPlayers = null;
 
     private function __construct(string $originalJson)
     {
@@ -30,7 +34,11 @@ final class MasterServerStatus
             'status' => $this->status?->value ?? 0,
             'maintenance_start_time' => $this->maintenanceStartTime?->getTimestamp() ?? null,
             'maintenance_end_time' => $this->maintenanceEndTime?->getTimestamp() ?? null,
-            'use_gamelift' => $this->useGamelift
+            'use_gamelift' => $this->useGamelift,
+            'name' => $this->name,
+            'description' => $this->description,
+            'image_url' => $this->imageUrl,
+            'max_players' => $this->maxPlayers
         ];
     }
 
@@ -66,6 +74,10 @@ final class MasterServerStatus
         $status->maintenanceStartTime = self::tryParseTimestamp(intval($data['maintenance_start_time'] ?? $data['maintenanceStartTime'] ?? 0));
         $status->maintenanceEndTime = self::tryParseTimestamp(intval($data['maintenance_end_time'] ?? $data['maintenanceEndTime'] ?? 0));
         $status->useGamelift = intval($data['use_gamelift'] ?? $data['useGamelift'] ?? 0) === 1;
+        $status->name = $data['name'] ?? null;
+        $status->description = $data['description'] ?? null;
+        $status->imageUrl = $data['image_url'] ?? $data['imageUrl'] ?? null;
+        $status->maxPlayers = intval($data['max_players'] ?? $data['maxPlayers'] ?? 0);
         return $status;
     }
 
@@ -82,7 +94,7 @@ final class MasterServerStatus
     // -----------------------------------------------------------------------------------------------------------------
     // Fetch
 
-    const LiveGameServiceEnv = "ProductionA";
+    const LiveGameServiceEnv = "ProductionC";
 
     public static function tryFetch(string $statusUrl): ?MasterServerStatus
     {
