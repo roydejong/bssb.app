@@ -291,7 +291,7 @@ class MasterServerInfo extends Model
             'description' => $this->description,
             'imageUrl' => $this->imageUrl,
             'maxPlayers' => $this->maxPlayers,
-            'useSsl' => false
+            'useSsl' => $this->useSsl
         ];
     }
 }
