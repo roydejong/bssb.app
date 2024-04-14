@@ -44,7 +44,7 @@ class ConfigController
         // Response
 
         return new JsonResponse([
-            "master_servers" => $masterServersSz
+            "masterServers" => $masterServersSz
         ]);
     }
 }
