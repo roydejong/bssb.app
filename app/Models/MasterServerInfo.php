@@ -17,7 +17,14 @@ class MasterServerInfo extends Model
 
     public int $id;
     public ?string $graphUrl;
+    public bool $useSsl;
+    /**
+     * Legacy master server hostname / IP.
+     */
     public ?string $host;
+    /**
+     * Legacy master server port.
+     */
     public ?int $port;
     public ?string $statusUrl;
     public bool $lockStatusUrl;
@@ -139,6 +146,7 @@ class MasterServerInfo extends Model
                         $this->imageUrl = $statusObj->imageUrl;
                     if ($statusObj->maxPlayers)
                         $this->maxPlayers = $statusObj->maxPlayers;
+                    $this->useSsl = $this->isOfficial || $statusObj->useSsl;
                 }
             } else {
                 $this->lastStatusJson = null;
@@ -282,7 +290,8 @@ class MasterServerInfo extends Model
             'name' => $this->niceName,
             'description' => $this->description,
             'imageUrl' => $this->imageUrl,
-            'maxPlayers' => $this->maxPlayers
+            'maxPlayers' => $this->maxPlayers,
+            'useSsl' => false
         ];
     }
 }
