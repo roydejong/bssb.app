@@ -24,6 +24,7 @@ by [BeatSaberServerBrowser](https://github.com/roydejong/BeatSaberServerBrowser)
     - `curl`, `dom`, `json`, `mbstring`, `pdo`, `xml`
 - [Composer](https://getcomposer.org/)
 - MySQL (or compatible) database
+- [Sass](https://sass-lang.com/install/)
 
 ### Installation
 
@@ -89,3 +90,11 @@ To enable cron jobs, by adding the following line to the crontab:
 ```
 * * * * * cd /var/www/bssb.app && vendor/bin/crunz schedule:run
 ```
+
+### CSS
+
+To generate stylesheets:
+
+``
+sass --update public/static/
+``
