@@ -43,4 +43,17 @@ class PlayerAvatarTest extends TestCase
         $this->assertSame('Glasses01', $avatar->glassesId);
         $this->assertSame('Moustache02', $avatar->facialHairId);
     }
+
+    public function testFillAvatarData_WithUnityHexColors()
+    {
+        $avatar = new PlayerAvatar();
+
+        $avatar->fillAvatarData([
+            'skinColorId' => 'Alien',
+            'headTopPrimaryColor' => '#7C0033FF'
+        ]);
+
+        $this->assertSame('Alien', $avatar->skinColorId);
+        $this->assertSame('#7C0033FF', $avatar->headTopPrimaryColor);
+    }
 }
