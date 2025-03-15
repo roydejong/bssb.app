@@ -35,6 +35,9 @@ class Player extends Model
     public bool $showScoreSaber = true;
     public bool $showHistory = true;
     public bool $isCheater = false;
+    public bool $platformAuthed = false;
+    public ?string $platformAvatarUrl = null;
+    public bool $platformOwnershipConfirmed = false;
 
     // -----------------------------------------------------------------------------------------------------------------
     // Create/update
@@ -89,6 +92,15 @@ class Player extends Model
         $playerRecord->save();
 
         return $playerRecord;
+    }
+
+    public static function tryFromPlatformUserId(string $modPlatformId, string $platformUserId): ?Player
+    {
+        $hashedUserId = MultiplayerUserId::hash($modPlatformId, $platformUserId);
+
+        return Player::query()
+            ->where('user_id = ?', $hashedUserId)
+            ->querySingleModel();
     }
 
     public static function fromSteamId(string $steamId, ?string $steamUserName = null): Player

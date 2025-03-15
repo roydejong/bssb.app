@@ -61,10 +61,14 @@ class PlayerAvatar extends Model implements \JsonSerializable
         }
     }
 
-    private function convertUnityColorToHex(?array $unityColorData): string
+    private function convertUnityColorToHex(array|string|null $unityColorData): string
     {
-        if (!$unityColorData) {
+        if (empty($unityColorData)) {
             return "#ffffffff";
+        }
+
+        if (is_string($unityColorData) && preg_match('/^#[0-9a-fA-F]{8}$/', $unityColorData)) {
+            return $unityColorData;
         }
 
         $r = 255;

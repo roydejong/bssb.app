@@ -17,14 +17,36 @@ class MasterServerInfo extends Model
 
     public int $id;
     public ?string $graphUrl;
+    public bool $useSsl;
+    /**
+     * Legacy master server hostname / IP.
+     */
     public ?string $host;
+    /**
+     * Legacy master server port.
+     */
     public ?int $port;
     public ?string $statusUrl;
     public bool $lockStatusUrl;
     public ?string $resolvedIp;
     public ?string $geoipCountry;
     public ?string $geoipText;
+    /**
+     * Server display name (from status API response).
+     */
     public ?string $niceName;
+    /**
+     * Server description (from status API response).
+     */
+    public ?string $description;
+    /**
+     * Maximum amount of players (from status API response).
+     */
+    public ?string $imageUrl;
+    /**
+     * Maximum amount of players (from status API response).
+     */
+    public ?int $maxPlayers;
     public bool $isOfficial;
     public \DateTime $firstSeen;
     public \DateTime $lastSeen;
@@ -113,6 +135,19 @@ class MasterServerInfo extends Model
         if ($this->statusUrl) {
             if ($status = MasterServerStatus::tryFetch($this->statusUrl)) {
                 $this->lastStatusJson = $status->asJson();
+
+                // Status fields copy
+                if ($statusObj = $this->getLastStatus()) {
+                    if ($statusObj->name)
+                        $this->niceName = $statusObj->name;
+                    if ($statusObj->description)
+                        $this->description = $statusObj->description;
+                    if ($statusObj->imageUrl)
+                        $this->imageUrl = $statusObj->imageUrl;
+                    if ($statusObj->maxPlayers)
+                        $this->maxPlayers = $statusObj->maxPlayers;
+                    $this->useSsl = $this->isOfficial || $statusObj->useSsl;
+                }
             } else {
                 $this->lastStatusJson = null;
             }
@@ -242,5 +277,22 @@ class MasterServerInfo extends Model
             return;
 
         $this->statusUrl = $statusUrl;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Serialize
+
+    public function serializeForConfig(): array
+    {
+        return [
+            'graphUrl' => $this->graphUrl,
+            'statusUrl' => $this->statusUrl,
+            'name' => $this->niceName,
+            'description' => $this->description,
+            'imageUrl' => $this->imageUrl,
+            'maxPlayers' => $this->maxPlayers,
+            'useSsl' => $this->useSsl,
+            'lastUpdated' => $this->lastUpdated
+        ];
     }
 }

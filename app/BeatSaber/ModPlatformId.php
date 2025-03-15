@@ -43,4 +43,18 @@ class ModPlatformId
 
         return $input;
     }
+
+    public static function fromUserInfoPlatform(mixed $input): string
+    {
+        // Game enum: Test = 0, Steam = 1, Oculus = 2, PS4 = 3, PS5 = 4
+        switch (intval($input))
+        {
+            case 1:
+                return self::STEAM;
+            case 2:
+                return self::OCULUS;
+            default:
+                return self::UNKNOWN;
+        }
+    }
 }
