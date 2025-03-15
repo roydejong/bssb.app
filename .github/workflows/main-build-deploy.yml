@@ -24,18 +24,18 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Install PHP 8.2
+    - name: Install PHP 8.3
       uses: shivammathur/setup-php@v2
       with:
-        php-version: 8.2
-        extensions: json, phar, tokenizer, curl, iconv, mbstring
+        php-version: 8.3
+        extensions: json, curl, redis, pcntl, intl, gettext, fileinfo, zip, phar, curl, iconv, mbstring
         coverage: xdebug
         tools: none
 
-    - name: Validate composer.json and composer.lock
+    - name: Validate composer files
       run: composer validate
 
-    - name: Cache Composer packages
+    - name: Cache composer packages
       id: composer-cache
       uses: actions/cache@v2
       with:
@@ -46,7 +46,7 @@ jobs:
 
     - name: Install dependencies
       if: steps.composer-cache.outputs.cache-hit != 'true'
-      run: composer install --prefer-dist --no-progress --no-suggest
+      run: composer install --prefer-dist --no-progress
 
     - name: Copy config file
       run: cp config.github.php config.php
