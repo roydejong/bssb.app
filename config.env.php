@@ -7,7 +7,7 @@ use SoftwarePunt\Instarecord\Instarecord;
 global $bssbConfig;
 
 if (!defined('IS_TEST_RUN') && getenv('SENTRY_DSN')) {
-    Sentry\init(['dsn' => 'SENTRY_DSN']);
+    Sentry\init(['dsn' => getenv('SENTRY_DSN')]);
 }
 
 $enableCache = !!getenv('CACHE_ENABLED');
