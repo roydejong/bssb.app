@@ -36,13 +36,16 @@ docker-compose up -d
 You can set the following environment variables (in an `.env` file, or in your shell environment) to control the
 configuration of the application:
 
-| Variable            | Description                                                                                                                        |
-|---------------------|------------------------------------------------------------------------------------------------------------------------------------|
-| `MYSQL_PASSWORD`    | Password for the MySQL database user. MUST be set to a non-empty value.                                                            |
-| `SENTRY_DSN`        | To enable error reporting to [Sentry](https://sentry.io/welcome/), set this to your Data Source Name (DSN).                        |
-| `CACHE_ENABLED`     | Enable compilation / view caching. Recommended for production.                                                                     |
-| `HASHIDS_SALT`      | Salt for calculating hashids. Randomize to prevent iteration of IDs in URLs.                                                       |
-| `STEAM_WEB_API_KEY` | [Steam Web API Key](https://steamcommunity.com/dev) for authenticating users via Steam. If empty, Steam integration will not work. |
+| Variable                  | Description                                                                                                                        |
+|---------------------------|------------------------------------------------------------------------------------------------------------------------------------|
+| `MYSQL_PASSWORD`          | Password for the MySQL database user. MUST be set to a non-empty value.                                                            |
+| `SENTRY_DSN`              | To enable error reporting to [Sentry](https://sentry.io/welcome/), set this to your Data Source Name (DSN).                        |
+| `CACHE_ENABLED`           | Enable compilation / view caching. Recommended for production.                                                                     |
+| `HASHIDS_SALT`            | Salt for calculating hashids. Randomize to prevent iteration of IDs in URLs.                                                       |
+| `STEAM_WEB_API_KEY`       | [Steam Web API Key](https://steamcommunity.com/dev) for authenticating users via Steam. If empty, Steam integration will not work. |
+| `MASTER_SERVER_BLACKLIST` | Comma-separated list of master server hosts to block/ignore announce messages from.                                                |
+| `TWITTER_API_KEY`         | Optional Twitter API Key for automating news posts to Twitter.                                                                     |
+| `TWITTER_API_KEY_SECRET`  | Optional Twitter API Secret Key for automating news posts to Twitter.                                                              |
 
 ## 🤓 Setup: Manual
 
