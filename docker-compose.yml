@@ -13,8 +13,8 @@ services:
     environment:
       DOCKER_ENV: 1
       MYSQL_DATABASE: bssb
-      MYSQL_USER: root
-      MYSQL_PASSWORD: my_password
+      MYSQL_USER: bssb
+      MYSQL_PASSWORD: bssb
       SENTRY_DSN: ${SENTRY_DSN}
       CACHE_ENABLED: ${CACHE_ENABLED}
       HASHIDS_SALT: ${HASHIDS_SALT}
@@ -33,9 +33,9 @@ services:
       - "3306:3306"
     environment:
       MYSQL_DATABASE: bssb
-      MYSQL_USER: my_user
-      MYSQL_PASSWORD: my_password
-      MYSQL_ROOT_PASSWORD: my_password
+      MYSQL_USER: bssb
+      MYSQL_PASSWORD: bssb
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
     restart: always
 
   redis:
