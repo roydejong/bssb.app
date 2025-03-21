@@ -1,7 +1,7 @@
 ########################################################################################################################
 # Prebuild: Sass
 
-FROM node:18 as sass_build
+FROM node:18 AS sass_build
 WORKDIR /app
 COPY . /app
 RUN npm install -g sass && sass --update /app/public --style compressed --no-source-map
