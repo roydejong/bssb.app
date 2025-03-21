@@ -6,7 +6,7 @@
 
 ## Overview
 
-This is the PHP source code powering the API server that is used
+This is the PHP source code powering the website and API that is used
 by [BeatSaberServerBrowser](https://github.com/roydejong/BeatSaberServerBrowser).
 
 ### Features
@@ -15,16 +15,48 @@ by [BeatSaberServerBrowser](https://github.com/roydejong/BeatSaberServerBrowser)
 - 😎 Lets mod users browse and filter compatible and relevant games
 - 🌐 Provides a public site where you can view games and stats
 
-## Setup
+## 🐋 Setup: Docker
+
+The easiest way to run the application is using Docker. You can use the provided `docker-compose.yml` file to set up the
+application.
+
+### Requirements
+
+- Docker
+- Docker Compose
+
+### Installation
+
+Clone the repository, then run the following command to start the application:
+
+```bash
+docker-compose up -d
+```
+
+You can set the following environment variables (in an `.env` file, or in your shell environment) to control the
+configuration of the application:
+
+| Variable            | Description                                                                                                                        |
+|---------------------|------------------------------------------------------------------------------------------------------------------------------------|
+| `MYSQL_PASSWORD`    | Password for the MySQL database user. MUST be set to a non-empty value.                                                            |
+| `SENTRY_DSN`        | To enable error reporting to [Sentry](https://sentry.io/welcome/), set this to your Data Source Name (DSN).                        |
+| `CACHE_ENABLED`     | Enable compilation / view caching. Recommended for production.                                                                     |
+| `HASHIDS_SALT`      | Salt for calculating hashids. Randomize to prevent iteration of IDs in URLs.                                                       |
+| `STEAM_WEB_API_KEY` | [Steam Web API Key](https://steamcommunity.com/dev) for authenticating users via Steam. If empty, Steam integration will not work. |
+
+## 🤓 Setup: Manual
+
+If you can't or don't want to use Docker, you can set up the application manually.
 
 ### Requirements
 
 - Web server (recommended: nginx)
-- PHP 8.3+ with extensions:
+- PHP 8.4+ with extensions:
     - `curl`, `dom`, `json`, `mbstring`, `pdo`, `xml`
 - [Composer](https://getcomposer.org/)
 - MySQL (or compatible) database
-- [Sass](https://sass-lang.com/install/)
+- Redis
+- [node-sass](https://sass-lang.com/install/)
 
 ### Installation
 

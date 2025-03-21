@@ -1,0 +1,45 @@
+#ohno {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+
+  .block {
+    display: flex;
+    max-width: 500px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 1px solid #4a5461;
+    border-radius: 8px;
+    padding: 42px;
+    font-size: 16px;
+
+    h1 {
+      font-size: 24px;
+      margin: 0 0 16px 0;
+    }
+
+    p {
+      margin: 0 0 16px 0;
+      text-align: left;
+    }
+
+    .icon {
+      margin: 16px 0;
+
+      i {
+        font-size: 48px;
+        color: var(--col-saber-left);
+      }
+    }
+
+    > *:first-child {
+      margin-top: 0;
+    }
+    > *:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

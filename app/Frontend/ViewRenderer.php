@@ -22,7 +22,7 @@ class ViewRenderer
         global $bssbConfig;
 
         $this->twig = new Environment(new FilesystemLoader(DIR_VIEWS), [
-            'cache' => $bssbConfig['cache_enabled'] ? DIR_CACHE : false
+            'cache' => $bssbConfig && $bssbConfig['cache_enabled'] ? DIR_CACHE : false
         ]);
 
         $this->twig->addFilter(new TwigFilter('timeago', function ($input): string {

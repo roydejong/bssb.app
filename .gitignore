@@ -21,3 +21,6 @@ storage/cache
 # Generated files
 public/static/*.css
 public/static/*.css.map
+
+# Env
+.env
