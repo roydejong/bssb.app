@@ -6,10 +6,16 @@ use SoftwarePunt\Instarecord\Instarecord;
 
 global $bssbConfig;
 
-$bssbConfig['cache_enabled'] = true;
-$bssbConfig['response_cache_enabled'] = true;
-$bssbConfig['hashids_salt'] = getenv('hashids_salt');
-$bssbConfig['steam_web_api_key'] = getenv('steam_web_api_key');
+if (!defined('IS_TEST_RUN') && getenv('SENTRY_DSN')) {
+    Sentry\init(['dsn' => 'SENTRY_DSN']);
+}
+
+$enableCache = !!getenv('CACHE_ENABLED');
+
+$bssbConfig['cache_enabled'] = $enableCache;
+$bssbConfig['response_cache_enabled'] = $enableCache;
+$bssbConfig['hashids_salt'] = getenv('HASHIDS_SALT') ?: "🧂";
+$bssbConfig['steam_web_api_key'] = getenv('STEAM_WEB_API_KEY') ?: "";
 $bssbConfig['master_server_blacklist'] = [];
 $bssbConfig['allow_multiple_results'] = false;
 $bssbConfig['enable_guide'] = false;
