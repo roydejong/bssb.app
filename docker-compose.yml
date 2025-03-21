@@ -1,0 +1,41 @@
+volumes:
+  mysqldb:
+  webstorage:
+
+services:
+  app:
+    container_name: app
+    build: .
+    volumes:
+      - webstorage:/var/www/html/storage
+    ports:
+      - "8080:8080"
+    environment:
+      DOCKER_ENV: 1
+      MYSQL_DATABASE: bssb
+      MYSQL_USER: root
+      MYSQL_PASSWORD: my_password
+    restart: on-failure
+    depends_on:
+      - db
+      - redis
+
+  db:
+    container_name: mysql
+    image: percona/percona-server
+    volumes:
+      - mysqldb:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: bssb
+      MYSQL_USER: my_user
+      MYSQL_PASSWORD: my_password
+      MYSQL_ROOT_PASSWORD: my_password
+    restart: always
+
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - "6379:6379"
