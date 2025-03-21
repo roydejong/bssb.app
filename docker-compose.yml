@@ -26,10 +26,10 @@ services:
       CACHE_ENABLED: ${CACHE_ENABLED}
       HASHIDS_SALT: ${HASHIDS_SALT}
       STEAM_WEB_API_KEY: ${STEAM_WEB_API_KEY}
-    restart: on-failure
     depends_on:
       - db
       - redis
+    restart: always
 
   db:
     container_name: mysql
@@ -54,3 +54,4 @@ services:
       - "6379:6379"
     networks:
       - internal_network
+    restart: always
