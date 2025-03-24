@@ -15,8 +15,8 @@ use app\Models\SystemConfig;
 
 class BrowseController
 {
-    public const PAGE_SIZE = 6;
-    public const PAGE_SIZE_MAX = 12;
+    public const PAGE_SIZE = 32;
+    public const PAGE_SIZE_MAX = 32;
 
     public function browse(Request $request): Response
     {
