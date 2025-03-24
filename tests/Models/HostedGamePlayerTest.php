@@ -66,6 +66,11 @@ class HostedGamePlayerTest extends TestCase
         $this->assertTrue($player->getIsBot());
 
         $player = new HostedGamePlayer();
+        $player->userId = "BOT#RMIC";
+        $player->userName = "BOT#RMIC";
+        $this->assertTrue($player->getIsBot());
+
+        $player = new HostedGamePlayer();
         $player->userId = "ABCDEF";
         $player->userName = "Dedicated Server";
         $player->sortIndex = -1;
