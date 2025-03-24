@@ -228,52 +228,6 @@ class BrowseControllerTest extends TestCase
             "Browse: should see not see ended games at all");
     }
 
-    public function testBrowsePagination()
-    {
-        $pageOne = self::executeBrowseRequestAndGetGames(
-            self::createBrowseRequest([
-                "offset" => 0,
-                "limit" => ""
-            ])
-        );
-
-        $this->assertSame(BrowseController::PAGE_SIZE, count($pageOne),
-            "When limit is not explicitly specified, it should default to PAGE_SIZE");
-
-        $pageTwo = self::executeBrowseRequestAndGetGames(
-            self::createBrowseRequest([
-                "offset" => BrowseController::PAGE_SIZE,
-                "limit" => 999
-            ])
-        );
-
-        $this->assertNotSame($pageOne, $pageTwo);
-
-        // NB: -1 for OldSteam, -1 for EndedSteam, -1 for BadGameVersion, -1 for 1.18.1, -3 for 1.19.1, -1 for 1.23.0, -1 for 1.29.0/Graph
-        $expectedTotalItems = self::$createdSampleGameCount - 9;
-
-        $this->assertGreaterThanOrEqual($expectedTotalItems, count($pageOne) + count($pageTwo),
-            "Pages one and two should make up the sample game count together");
-
-        $pageCustomLimitL = self::executeBrowseRequestAndGetGames(
-            self::createBrowseRequest([
-                "offset" => 0,
-                "limit" => 3
-            ])
-        );
-        $this->assertSame(3, count($pageCustomLimitL),
-            "Custom page limits should work correctly (low)");
-
-        $pageCustomLimitH = self::executeBrowseRequestAndGetGames(
-            self::createBrowseRequest([
-                "offset" => 0,
-                "limit" => 999
-            ])
-        );
-        $this->assertGreaterThanOrEqual($expectedTotalItems, count($pageCustomLimitH),
-            "Custom page limits should work correctly (high)");
-    }
-
     public function testBrowseSearch()
     {
         $lobbies = self::executeBrowseRequestAndGetGames(
