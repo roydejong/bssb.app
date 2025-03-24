@@ -121,7 +121,7 @@ class BrowseController
         // Hide Quick Play games if unsupported by mod version or requested by filter
         if (!$mci->getSupportsQuickPlayServers() || $filterQuickPlay) {
             $baseQuery->andWhere('server_type IS NULL OR server_type NOT IN (?)',
-                [HostedGame::SERVER_TYPE_BEATTOGETHER_QUICKPLAY, HostedGame::SERVER_TYPE_BEATDEDI_QUICKPLAY,
+                [HostedGame::SERVER_TYPE_BEATTOGETHER_QUICKPLAY, HostedGame::SERVER_TYPE_BEATNET_QUICKPLAY,
                     HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY]);
         }
 

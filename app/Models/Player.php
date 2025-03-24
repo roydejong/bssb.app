@@ -18,7 +18,7 @@ class Player extends Model
 {
     public const UserIdBeatTogether = "ziuMSceapEuNN7wRGQXrZg";
     public const UserIdPrefixBeatUpServer = "beatupserver:";
-    public const UserIdPrefixBeatDedi = "beatdedi:";
+    public const UserIdPrefixBeatNet = "beatnet:";
     public const UserIdPrefixGameLift = "arn:aws:gamelift";
 
     public int $id;
@@ -66,8 +66,8 @@ class Player extends Model
                 $playerRecord->type = PlayerType::DedicatedServerBeatTogether;
             } else if (str_starts_with($playerRecord->userId, self::UserIdPrefixBeatUpServer)) {
                 $playerRecord->type = PlayerType::DedicatedServerBeatUpServer;
-            } else if (str_starts_with($playerRecord->userId, self::UserIdPrefixBeatDedi)) {
-                $playerRecord->type = PlayerType::DedicatedServerBeatDediServer;
+            } else if (str_starts_with($playerRecord->userId, self::UserIdPrefixBeatNet)) {
+                $playerRecord->type = PlayerType::DedicatedServerBeatNetServer;
             } else if (str_starts_with($playerRecord->userId, self::UserIdPrefixGameLift)) {
                 // User ID matches the fixed value for all Official GameLift servers
                 $playerRecord->type = PlayerType::DedicatedServerGameLift;
@@ -167,7 +167,7 @@ class Player extends Model
             || $this->type === PlayerType::DedicatedServerGameLift
             || $this->type === PlayerType::DedicatedServerBeatTogether
             || $this->type === PlayerType::DedicatedServerBeatUpServer
-            || $this->type === PlayerType::DedicatedServerBeatDediServer);
+            || $this->type === PlayerType::DedicatedServerBeatNetServer);
     }
 
     public function describeType(bool $shorten = false): string
@@ -189,7 +189,7 @@ class Player extends Model
             PlayerType::DedicatedServer => "Dedicated Server",
             PlayerType::DedicatedServerBeatTogether => "BeatTogether Server",
             PlayerType::DedicatedServerBeatUpServer => "BeatUpServer",
-            PlayerType::DedicatedServerBeatDediServer => "BeatDedi",
+            PlayerType::DedicatedServerBeatNetServer => "BeatNet",
             default => "Unknown",
         };
         if ($shorten) {

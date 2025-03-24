@@ -128,7 +128,7 @@ class Request
     public function getIsValidClientRequest(): bool
     {
         return $this->getIsValidModClientRequest()
-            || $this->getIsValidBeatDediRequest();
+            || $this->getIsValidBeatNetRequest();
     }
 
     public function getIsValidModClientRequest(): bool
@@ -153,7 +153,7 @@ class Request
         return true;
     }
 
-    public function getIsValidBeatDediRequest(): bool
+    public function getIsValidBeatNetRequest(): bool
     {
         if (empty($this->headers["x-bssb"])) {
             return false;
@@ -161,7 +161,7 @@ class Request
 
         $mci = $this->getModClientInfo();
 
-        if ($mci->modName !== ModClientInfo::MOD_BEATDEDI || empty($mci->assemblyVersion) || empty($mci->beatSaberVersion)) {
+        if ($mci->modName !== ModClientInfo::MOD_BEATNET || empty($mci->assemblyVersion) || empty($mci->beatSaberVersion)) {
             return false;
         }
 

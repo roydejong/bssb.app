@@ -51,8 +51,8 @@ class HostedGamePlayerTest extends TestCase
         $this->assertFalse($player->getIsBot());
 
         $player = new HostedGamePlayer();
-        $player->userId = "BeatDedi/abcdef";
-        $player->userName = "BeatDedi";
+        $player->userId = "BeatNet:abcdef";
+        $player->userName = "BeatNet";
         $this->assertTrue($player->getIsBot());
 
         $player = new HostedGamePlayer();

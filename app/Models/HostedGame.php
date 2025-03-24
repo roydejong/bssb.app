@@ -28,8 +28,8 @@ class HostedGame extends Model implements \JsonSerializable
 
     public const SERVER_TYPE_BEATTOGETHER_DEDICATED = "beattogether_dedicated";
     public const SERVER_TYPE_BEATTOGETHER_QUICKPLAY = "beattogether_quickplay";
-    public const SERVER_TYPE_BEATDEDI_CUSTOM = "beatdedi_custom";
-    public const SERVER_TYPE_BEATDEDI_QUICKPLAY = "beatdedi_quickplay";
+    public const SERVER_TYPE_BEATNET_CUSTOM = "beatnet_custom";
+    public const SERVER_TYPE_BEATNET_QUICKPLAY = "beatnet_quickplay";
     public const SERVER_TYPE_BEATUPSERVER_DEDICATED = "beatupserver_dedicated";
     public const SERVER_TYPE_BEATUPSERVER_QUICKPLAY = "beatupserver_quickplay";
     public const SERVER_TYPE_NORMAL_DEDICATED = "vanilla_dedicated";
@@ -165,7 +165,7 @@ class HostedGame extends Model implements \JsonSerializable
     public ?string $mpExVersion;
     /**
      * The name of the mod or software used to send the announcement.
-     * Examples: "ServerBrowser", "ServerBrowserQuest", "BeatDedi"
+     * Examples: "ServerBrowser", "ServerBrowserQuest", "BeatNet"
      */
     public string $modName = "ServerBrowser";
     /**
@@ -432,8 +432,8 @@ class HostedGame extends Model implements \JsonSerializable
         return match ($this->serverType) {
             self::SERVER_TYPE_BEATTOGETHER_DEDICATED => "BeatTogether Dedicated",
             self::SERVER_TYPE_BEATTOGETHER_QUICKPLAY => "BeatTogether Quickplay",
-            self::SERVER_TYPE_BEATDEDI_CUSTOM => "BeatDedi Custom",
-            self::SERVER_TYPE_BEATDEDI_QUICKPLAY => "BeatDedi Quickplay",
+            self::SERVER_TYPE_BEATNET_CUSTOM => "BeatNet Custom",
+            self::SERVER_TYPE_BEATNET_QUICKPLAY => "BeatNet Quickplay",
             self::SERVER_TYPE_NORMAL_QUICKPLAY => ($isOfficial ? "Official Quickplay" : "Unofficial Quickplay"),
             self::SERVER_TYPE_NORMAL_DEDICATED => ($isOfficial ? "Official Dedicated" : "Unofficial Dedicated"),
             self::SERVER_TYPE_BEATUPSERVER_QUICKPLAY => "BeatUpServer Quickplay",
@@ -490,8 +490,8 @@ class HostedGame extends Model implements \JsonSerializable
 
     public function getMinPlayerCount(): int
     {
-        if ($this->getIsBeatDedi()) {
-            // BeatDedi may report a zero player count
+        if ($this->getIsBeatNet()) {
+            // BeatNet may report a zero player count
             return 0;
         }
 
@@ -509,16 +509,16 @@ class HostedGame extends Model implements \JsonSerializable
             $this->serverType === self::SERVER_TYPE_BEATTOGETHER_QUICKPLAY;
     }
 
-    public function getIsBeatDedi(): bool
+    public function getIsBeatNet(): bool
     {
-        return $this->serverType === self::SERVER_TYPE_BEATDEDI_CUSTOM ||
-            $this->serverType === self::SERVER_TYPE_BEATDEDI_QUICKPLAY;
+        return $this->serverType === self::SERVER_TYPE_BEATNET_CUSTOM ||
+            $this->serverType === self::SERVER_TYPE_BEATNET_QUICKPLAY;
     }
 
     public function getIsQuickplay(): bool
     {
         return $this->serverType === self::SERVER_TYPE_BEATTOGETHER_QUICKPLAY ||
-            $this->serverType === self::SERVER_TYPE_BEATDEDI_QUICKPLAY ||
+            $this->serverType === self::SERVER_TYPE_BEATNET_QUICKPLAY ||
             $this->serverType === self::SERVER_TYPE_NORMAL_QUICKPLAY;
     }
 
@@ -562,7 +562,7 @@ class HostedGame extends Model implements \JsonSerializable
 
     public function getCanBeEmpty(): bool
     {
-        return $this->getIsBeatDedi();
+        return $this->getIsBeatNet();
     }
 
     public function getIsLocalOrReservedHost(): bool

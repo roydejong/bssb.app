@@ -128,32 +128,32 @@ class RequestTest extends TestCase
         $this->assertTrue($request4->getIsValidClientRequest());
     }
 
-    public function testGetIsValidBeatDediRequest()
+    public function testGetIsValidBeatNetRequest()
     {
         $request1 = new Request();
         $request1->method = "GET";
         $request1->path = "/";
 
-        $this->assertFalse($request1->getIsValidBeatDediRequest(),
+        $this->assertFalse($request1->getIsValidBeatNetRequest(),
             "request1 should be invalid: missing X-BSSB and valid User-Agent");
         $this->assertFalse($request1->getIsValidClientRequest());
 
         $request2 = new Request();
         $request2->method = "GET";
         $request2->path = "/";
-        $request2->headers["user-agent"] = "BeatDedi/0.1.0.0 (BeatSaber/1.16.1) (dedi)";
+        $request2->headers["user-agent"] = "BeatNet/0.1.0.0 (BeatSaber/1.16.1) (dedi)";
 
-        $this->assertFalse($request2->getIsValidBeatDediRequest(),
+        $this->assertFalse($request2->getIsValidBeatNetRequest(),
             "request2 should be invalid: missing X-BSSB");
         $this->assertFalse($request2->getIsValidClientRequest());
 
         $request3 = new Request();
         $request3->method = "GET";
         $request3->path = "/";
-        $request3->headers["user-agent"] = "BeatDedi/0.1.0.0 (BeatSaber/1.16.1) (dedi)";
+        $request3->headers["user-agent"] = "BeatNet/0.1.0.0 (BeatSaber/1.16.1) (dedi)";
         $request3->headers["x-bssb"] = "✔";
 
-        $this->assertTrue($request3->getIsValidBeatDediRequest(),
+        $this->assertTrue($request3->getIsValidBeatNetRequest(),
             "request3 should be valid: have valid user agent and X-BSSB");
         $this->assertTrue($request3->getIsValidClientRequest());
     }

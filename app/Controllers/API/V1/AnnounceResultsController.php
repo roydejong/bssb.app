@@ -24,7 +24,7 @@ class AnnounceResultsController
         // Input
 
         $isClientRequest = $request->getIsValidModClientRequest();
-        $isDediRequest = $request->getIsValidBeatDediRequest();
+        $isDediRequest = $request->getIsValidBeatNetRequest();
 
         if ((!$isClientRequest && !$isDediRequest)
             || !$request->getIsJsonRequest()

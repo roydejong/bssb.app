@@ -51,7 +51,7 @@ class BrowseControllerTest extends TestCase
 
         self::createSampleGame(null, "VanillaQuickPlay", false, MasterServer::OFFICIAL_HOSTNAME_STEAM, ModPlatformId::STEAM, 3, false, hostSecret: "abc123", serverType: HostedGame::SERVER_TYPE_NORMAL_QUICKPLAY, endpoint: new RemoteEndPoint("1.2.3.4", "1234"));
 
-        self::createSampleGame(null, "DirectConnect", true, null, ModPlatformId::STEAM, 0, customGameVersion: new CVersion("1.23.0"), serverType: HostedGame::SERVER_TYPE_BEATDEDI_CUSTOM, endpoint: new RemoteEndPoint("1.2.3.4", "1234"));
+        self::createSampleGame(null, "DirectConnect", true, null, ModPlatformId::STEAM, 0, customGameVersion: new CVersion("1.23.0"), serverType: HostedGame::SERVER_TYPE_BEATNET_CUSTOM, endpoint: new RemoteEndPoint("1.2.3.4", "1234"));
 
         self::createSampleGame(null, "129GraphGame", true, null, ModPlatformId::STEAM, 0, customGameVersion: new CVersion("1.29.0"), serverType: HostedGame::SERVER_TYPE_BEATTOGETHER_DEDICATED, endpoint: new RemoteEndPoint("1.2.3.4", "1234"), graphUrl: "http://beat.some.url:1234");
     }

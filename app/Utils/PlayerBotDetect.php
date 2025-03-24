@@ -4,7 +4,7 @@ namespace app\Utils;
 
 class PlayerBotDetect
 {
-    private static array $botPrefixes = ["BeatDedi/", "DEVBOT/", "BottyMcBot/"];
+    private static array $botPrefixes = ["BeatNet:", "DEVBOT/", "BottyMcBot/"];
 
     public static function detect(string $userId, string $userName): bool
     {

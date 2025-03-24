@@ -54,9 +54,9 @@ class ServerTypeFilter extends BaseFilter
                     else
                         $finalOptions["other_quickplay"] = "Other Quick Play";
                     break;
-                case HostedGame::SERVER_TYPE_BEATDEDI_CUSTOM:
-                case HostedGame::SERVER_TYPE_BEATDEDI_QUICKPLAY:
-                    $finalOptions["beatdedi"] = "BeatDedi";
+                case HostedGame::SERVER_TYPE_BEATNET_CUSTOM:
+                case HostedGame::SERVER_TYPE_BEATNET_QUICKPLAY:
+                    $finalOptions["beatnet"] = "BeatNet";
                     break;
                 default:
                     $finalOptions[$serverType] = $serverType;
@@ -101,10 +101,10 @@ class ServerTypeFilter extends BaseFilter
                 HostedGame::SERVER_TYPE_NORMAL_DEDICATED,
                 HostedGame::SERVER_TYPE_PLAYER_HOST,
             ]);
-        } else if ($inputValue === "beatdedi") {
+        } else if ($inputValue === "beatnet") {
             $baseQuery->andWhere('server_type IN (?)', [
-                HostedGame::SERVER_TYPE_BEATDEDI_QUICKPLAY,
-                HostedGame::SERVER_TYPE_BEATDEDI_CUSTOM,
+                HostedGame::SERVER_TYPE_BEATNET_QUICKPLAY,
+                HostedGame::SERVER_TYPE_BEATNET_CUSTOM,
             ]);
         } else {
             $baseQuery->andWhere('server_type = ?', $inputValue);
