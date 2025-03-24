@@ -16,8 +16,11 @@ USER root
 RUN apk add --no-cache php84-pdo_mysql
 USER nobody
 
-# nginx confg
+# nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# supervisord config
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Copy app (after sass build step)
 COPY --chown=nobody --from=sass_build /app /var/www/html
