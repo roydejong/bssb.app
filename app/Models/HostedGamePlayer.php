@@ -67,7 +67,7 @@ class HostedGamePlayer extends Model
     {
         $player = Player::fromServerPlayer($this);
 
-        if (!empty($platformType) && $platformType !== "unknown" && intval($platformType) !== 0)
+        if (!empty($platformType) && $platformType !== "unknown" && $platformType !== "0")
             $player->platformType = ModPlatformId::normalize($platformType);
 
         if ($platformUserId)
